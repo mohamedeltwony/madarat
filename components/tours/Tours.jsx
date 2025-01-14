@@ -28,12 +28,12 @@ export default function Tours() {
         
         console.log('GraphQL Response:', data);
         
-        if (!data?.trips?.nodes) {
-          throw new Error('No trips data in response');
+        if (!data?.posts?.nodes) {
+          throw new Error('No posts data in response');
         }
 
-        setTours(data.trips.nodes);
-        setPageInfo(data.trips.pageInfo);
+        setTours(data.posts.nodes);
+        setPageInfo(data.posts.pageInfo);
       } catch (error) {
         console.error('Error fetching tours:', error);
         console.error('Error details:', {
@@ -60,8 +60,8 @@ export default function Tours() {
         }
       });
 
-      setTours([...tours, ...data.trips.nodes]);
-      setPageInfo(data.trips.pageInfo);
+      setTours([...tours, ...data.posts.nodes]);
+      setPageInfo(data.posts.pageInfo);
     } catch (error) {
       console.error('Error loading more tours:', error);
     }
