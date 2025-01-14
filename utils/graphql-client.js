@@ -7,7 +7,7 @@ export const client = new ApolloClient({
 
 export const GET_TRIPS = gql`
   query GetTrips($first: Int, $after: String) {
-    posts(first: $first, after: $after, where: { status: PUBLISH, postType: "trip" }) {
+    trips(first: $first, after: $after) {
       nodes {
         id
         title
@@ -68,7 +68,7 @@ export const GET_ACTIVITIES = gql`
 
 export const GET_TRIP_BY_SLUG = gql`
   query GetTripBySlug($slug: String!) {
-    tripBy(slug: $slug) {
+    trip(id: $slug, idType: SLUG) {
       id
       title
       content
