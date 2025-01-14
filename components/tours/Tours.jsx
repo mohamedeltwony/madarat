@@ -9,6 +9,7 @@ import Pagination from '../common/Pagination';
 export default function Tours() {
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [pageInfo, setPageInfo] = useState({
     hasNextPage: false,
     endCursor: null
@@ -17,16 +18,30 @@ export default function Tours() {
   useEffect(() => {
     async function fetchTours() {
       setLoading(true);
+      setError(null);
       try {
+        console.log('Fetching tours with GraphQL URL:', process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL);
         const { data } = await client.query({
           query: GET_TRIPS,
           variables: { first: 9 }
         });
         
+        console.log('GraphQL Response:', data);
+        
+        if (!data?.trips?.nodes) {
+          throw new Error('No trips data in response');
+        }
+
         setTours(data.trips.nodes);
         setPageInfo(data.trips.pageInfo);
       } catch (error) {
         console.error('Error fetching tours:', error);
+        console.error('Error details:', {
+          message: error.message,
+          networkError: error.networkError,
+          graphQLErrors: error.graphQLErrors
+        });
+        setError(error.message);
       }
       setLoading(false);
     }
@@ -54,6 +69,14 @@ export default function Tours() {
 
   if (loading) {
     return <div>Loading tours...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading tours: {error}</div>;
+  }
+
+  if (!tours.length) {
+    return <div>No tours found. Please check the WordPress GraphQL configuration.</div>;
   }
 
   return (

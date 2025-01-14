@@ -1,13 +1,13 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
 export const client = new ApolloClient({
-  uri: process.env.WORDPRESS_GRAPHQL_URL,
+  uri: process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL || 'https://madaratalkon.com/graphql',
   cache: new InMemoryCache(),
 });
 
 export const GET_TRIPS = gql`
   query GetTrips($first: Int, $after: String) {
-    trips(first: $first, after: $after) {
+    posts(first: $first, after: $after, where: { postType: TRIP }) {
       nodes {
         id
         title

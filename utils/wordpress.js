@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const WORDPRESS_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'https://app.madaratalkon.com/wp-json/wp/v2';
+const WORDPRESS_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'https://madaratalkon.com/wp-json/wp/v2';
 const DEFAULT_PLACEHOLDER = '/img/placeholder.jpg';
 
 const api = axios.create({
