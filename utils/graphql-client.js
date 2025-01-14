@@ -1,13 +1,38 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
+const graphqlUrl = process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL || 'https://madaratalkon.com/graphql';
+console.log('Using GraphQL URL:', graphqlUrl);
+
 export const client = new ApolloClient({
-  uri: process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL || 'https://madaratalkon.com/graphql',
+  uri: graphqlUrl,
   cache: new InMemoryCache(),
+  defaultOptions: {
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
 });
+
+// Log any GraphQL errors
+const withErrorLogging = async (promise) => {
+  try {
+    const result = await promise;
+    console.log('GraphQL Response:', result);
+    return result;
+  } catch (error) {
+    console.error('GraphQL Error:', {
+      message: error.message,
+      networkError: error.networkError?.result,
+      graphQLErrors: error.graphQLErrors,
+    });
+    throw error;
+  }
+};
 
 export const GET_TRIPS = gql`
   query GetTrips($first: Int, $after: String) {
-    posts(first: $first, after: $after, where: { postType: "trip" }) {
+    posts(first: $first, after: $after, where: { status: PUBLISH }) {
       nodes {
         id
         title
@@ -31,6 +56,10 @@ export const GET_TRIPS = gql`
     }
   }
 `;
+
+// Wrap the client query method with error logging
+const originalQuery = client.query.bind(client);
+client.query = (...args) => withErrorLogging(originalQuery(...args));
 
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
