@@ -9,7 +9,7 @@ import TourItinerary from "../sections/TourItinerary";
 import TourServices from "../sections/TourServices";
 import TourReviews from "../sections/TourReviews";
 import Faq from "../Faq";
-import RoadMap2 from "../RoadMap2";
+import Roadmap2 from "../Roadmap2";
 
 export default function SingleThree({ tour }) {
   return (
