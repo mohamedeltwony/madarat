@@ -20,14 +20,18 @@ export default function Tours() {
       setLoading(true);
       setError(null);
       try {
-        console.log('Fetching tours with GraphQL URL:', process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL);
-        const { data } = await client.query({
+        console.log('GraphQL URL:', process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL);
+        const { data, errors } = await client.query({
           query: GET_TRIPS,
           variables: { first: 9 }
         });
         
-        console.log('GraphQL Response:', data);
+        console.log('GraphQL Response:', { data, errors });
         
+        if (errors) {
+          throw new Error(errors.map(e => e.message).join(', '));
+        }
+
         if (!data?.posts?.nodes) {
           throw new Error('No posts data in response');
         }
@@ -38,8 +42,9 @@ export default function Tours() {
         console.error('Error fetching tours:', error);
         console.error('Error details:', {
           message: error.message,
-          networkError: error.networkError,
-          graphQLErrors: error.graphQLErrors
+          networkError: error.networkError?.result,
+          graphQLErrors: error.graphQLErrors,
+          stack: error.stack
         });
         setError(error.message);
       }

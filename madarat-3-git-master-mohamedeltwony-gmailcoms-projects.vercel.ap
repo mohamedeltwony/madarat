@@ -1,0 +1,32 @@
+background-redux-new.js:1 Uncaught (in promise) Error: No tab with id: 1299507190.
+Unchecked runtime.lastError: Cannot create item with duplicate id LastPass https://madarat-3-git-master-mohamedeltwony-gmailcoms-projects.vercel.app/
+Unchecked runtime.lastError: Cannot create item with duplicate id separator https://madarat-3-git-master-mohamedeltwony-gmailcoms-projects.vercel.app/
+Unchecked runtime.lastError: Cannot create item with duplicate id Add Item https://madarat-3-git-master-mohamedeltwony-gmailcoms-projects.vercel.app/
+Unchecked runtime.lastError: Cannot create item with duplicate id Add Password https://madarat-3-git-master-mohamedeltwony-gmailcoms-projects.vercel.app/
+Unchecked runtime.lastError: Cannot create item with duplicate id Add Address https://madarat-3-git-master-mohamedeltwony-gmailcoms-projects.vercel.app/
+Unchecked runtime.lastError: Cannot create item with duplicate id Add Payment Card https://madarat-3-git-master-mohamedeltwony-gmailcoms-projects.vercel.app/
+Unchecked runtime.lastError: Cannot create item with duplicate id Add other item https://madarat-3-git-master-mohamedeltwony-gmailcoms-projects.vercel.app/
+Unchecked runtime.lastError: Cannot create item with duplicate id Save all entered data https://madarat-3-git-master-mohamedeltwony-gmailcoms-projects.vercel.app/
+Unchecked runtime.lastError: Cannot create item with duplicate id Generate Secure Password https://madarat-3-git-master-mohamedeltwony-gmailcoms-projects.vercel.app/
+Unchecked runtime.lastError: The page keeping the extension port is moved into back/forward cache, so the message channel is closed.
+Unchecked runtime.lastError: The page keeping the extension port is moved into back/forward cache, so the message channel is closed.
+web-client-content-script.js:2 Uncaught (in promise) Error: Access to storage is not allowed from this context.
+madaratalkon.com/wp-json/wp/v2%20/trip?_embed&per_page=100:1 
+        
+        
+       Failed to load resource: the server responded with a status of 404 ()
+hook.js:608 Error in getDestinations: AxiosError
+overrideMethod @ hook.js:608
+madaratalkon.com/wp-json/wp/v2%20/destination?per_page=100:1 
+        
+        
+       Failed to load resource: the server responded with a status of 404 ()
+hook.js:608 Error fetching destinations: Object
+overrideMethod @ hook.js:608
+page-b8d3c70a7bc7dc2c.js:1 Destinations data: Array(0)length: 0[[Prototype]]: Array(0)at: ƒ at()concat: ƒ concat()constructor: ƒ Array()copyWithin: ƒ copyWithin()entries: ƒ entries()every: ƒ every()fill: ƒ fill()filter: ƒ filter()find: ƒ find()findIndex: ƒ findIndex()findLast: ƒ findLast()findLastIndex: ƒ findLastIndex()flat: ƒ flat()flatMap: ƒ flatMap()forEach: ƒ forEach()includes: ƒ includes()indexOf: ƒ indexOf()join: ƒ join()keys: ƒ keys()lastIndexOf: ƒ lastIndexOf()length: 0map: ƒ map()pop: ƒ pop()push: ƒ push()reduce: ƒ reduce()reduceRight: ƒ reduceRight()reverse: ƒ reverse()shift: ƒ shift()slice: ƒ slice()some: ƒ some()sort: ƒ sort()splice: ƒ splice()toLocaleString: ƒ toLocaleString()toReversed: ƒ toReversed()toSorted: ƒ toSorted()toSpliced: ƒ toSpliced()toString: ƒ toString()unshift: ƒ unshift()values: ƒ values()with: ƒ with()Symbol(Symbol.iterator): ƒ values()Symbol(Symbol.unscopables): {at: true, copyWithin: true, entries: true, fill: true, find: true, …}[[Prototype]]: Object
+madaratalkon.com/wp-json/wp/v2%20/trip?_embed&per_page=100:1 
+        
+        
+       Failed to load resource: the server responded with a status of 404 ()
+hook.js:608 Error in getDestinations: AxiosError
+overrideMethod @ hook.js:608
