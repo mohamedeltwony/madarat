@@ -2,57 +2,35 @@ import { client, GET_TRIPS, GET_DESTINATIONS, GET_TRIP_BY_SLUG } from './graphql
 
 export async function getTours() {
   try {
-    console.log('🔄 Fetching tours with GraphQL...');
-    const { data, errors } = await client.query({ query: GET_TRIPS });
-    
-    if (errors) {
-      console.error('❌ GraphQL Errors:', errors);
+    console.log('🔄 Starting getTours function...');
+    const { data } = await client.query({
+      query: GET_TRIPS
+    });
+
+    if (!data?.allTrips) {
+      console.warn('⚠️ No trips found in response');
       return [];
     }
 
-    console.log('📦 Raw GraphQL Response:', data);
-
-    if (!data?.posts?.nodes) {
-      console.warn('⚠️ No posts found in response');
-      return [];
-    }
-
-    // Filter for posts that look like tours based on their categories
-    const tours = data.posts.nodes
-      .filter(post => {
-        const categories = post.categories?.nodes || [];
-        const categoryNames = categories.map(c => c.name.toLowerCase());
-        const categorySlugs = categories.map(c => c.slug.toLowerCase());
-        
-        // Log all categories found
-        console.log(`📑 Categories for post "${post.title}":`, categoryNames);
-        
-        // Check if any category matches tour-related terms
-        return categoryNames.some(name => 
-          name.includes('tour') || 
-          name.includes('trip') || 
-          name.includes('رحلات') ||
-          name === 'travel'
-        ) || categorySlugs.some(slug => 
-          slug.includes('tour') || 
-          slug.includes('trip') || 
-          slug.includes('travel')
-        );
-      })
-      .map(post => ({
-        id: post.id,
-        title: post.title,
-        slug: post.slug,
-        excerpt: post.excerpt,
-        content: post.content,
-        featuredImage: post.featuredImage?.node?.sourceUrl || null,
-        categories: post.categories?.nodes || []
-      }));
-
-    console.log(`🎯 Found ${tours.length} tours`);
-    return tours;
+    return data.allTrips.map(trip => ({
+      id: trip.id,
+      title: trip.title,
+      slug: trip.slug || '',
+      excerpt: trip.excerpt || '',
+      content: trip.content || '',
+      tripFields: {
+        price: '',
+        duration: '',
+        location: '',
+        difficulty: '',
+        gallery: [],
+        itinerary: '',
+        included: '',
+        notIncluded: ''
+      }
+    }));
   } catch (error) {
-    console.error('Error fetching tours:', error);
+    console.error('❌ Error in getTours:', error);
     return [];
   }
 }
@@ -114,11 +92,11 @@ export async function getDestinations() {
   }
 }
 
-export async function getTourBySlug(slug) {
+export async function getTourBySlug(id) {
   try {
     const { data, errors } = await client.query({
       query: GET_TRIP_BY_SLUG,
-      variables: { slug }
+      variables: { id }
     });
 
     if (errors) {
@@ -126,21 +104,29 @@ export async function getTourBySlug(slug) {
       return null;
     }
 
-    if (!data?.post) {
-      console.warn(`⚠️ No post found with slug: ${slug}`);
+    if (!data?.trip) {
+      console.warn(`⚠️ No trip found with id: ${id}`);
       return null;
     }
 
     return {
-      id: data.post.id,
-      title: data.post.title,
-      content: data.post.content,
-      excerpt: data.post.excerpt,
-      featuredImage: data.post.featuredImage?.node?.sourceUrl || null,
-      categories: data.post.categories?.nodes || []
+      id: data.trip.id,
+      title: data.trip.title,
+      content: data.trip.content || '',
+      excerpt: data.trip.excerpt || '',
+      tripFields: {
+        price: data.trip.tripFields?.price || '',
+        duration: data.trip.tripFields?.duration || '',
+        location: data.trip.tripFields?.location || '',
+        difficulty: data.trip.tripFields?.difficulty || '',
+        gallery: data.trip.tripFields?.gallery || [],
+        itinerary: data.trip.tripFields?.itinerary || '',
+        included: data.trip.tripFields?.included || '',
+        notIncluded: data.trip.tripFields?.notIncluded || ''
+      }
     };
   } catch (error) {
-    console.error(`Error fetching post with slug ${slug}:`, error);
+    console.error(`Error fetching trip with id ${id}:`, error);
     return null;
   }
 } 

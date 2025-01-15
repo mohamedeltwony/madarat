@@ -27,6 +27,10 @@ const DEBUG_QUERY = gql`
         label
       }
     }
+    allTrips {
+      id
+      title
+    }
     posts(first: 5) {
       nodes {
         __typename
@@ -46,37 +50,32 @@ const DEBUG_QUERY = gql`
         }
       }
     }
-    categories {
-      nodes {
-        name
-        slug
-        count
-      }
-    }
   }
 `;
 
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100, where: { status: PUBLISH }) {
-      nodes {
-        id
-        title
-        slug
-        excerpt
-        content
-        featuredImage {
-          node {
-            sourceUrl
-          }
+    allTrips {
+      id
+      title
+      slug
+      excerpt
+      content
+      featuredImage {
+        node {
+          sourceUrl
         }
-        categories {
-          nodes {
-            name
-            slug
-          }
-        }
+      }
+      tripFields {
+        price
+        duration
+        location
+        difficulty
+        gallery
+        itinerary
+        included
+        notIncluded
       }
     }
   }
@@ -110,22 +109,21 @@ export const GET_DESTINATIONS = gql`
 
 // Query to get a single trip by slug
 export const GET_TRIP_BY_SLUG = gql`
-  query GetTripBySlug($slug: ID!) {
-    post(id: $slug, idType: SLUG) {
+  query GetTripBySlug($id: ID!) {
+    trip(id: $id) {
       id
       title
       content
       excerpt
-      featuredImage {
-        node {
-          sourceUrl
-        }
-      }
-      categories {
-        nodes {
-          name
-          slug
-        }
+      tripFields {
+        price
+        duration
+        location
+        difficulty
+        gallery
+        itinerary
+        included
+        notIncluded
       }
     }
   }
@@ -147,33 +145,23 @@ client.query({
     console.warn('⚠️ No content types found');
   }
   
-  if (result.data?.categories?.nodes) {
-    console.log('🏷️ Available Categories:');
-    result.data.categories.nodes.forEach(cat => {
-      console.log(`  - ${cat.name} (${cat.slug}) - ${cat.count} posts`);
+  if (result.data?.allTrips) {
+    console.log('🎫 Available Trips:', result.data.allTrips.length);
+    result.data.allTrips.forEach(trip => {
+      console.log(`  - [${trip.id}] ${trip.title}`);
     });
   } else {
-    console.warn('⚠️ No categories found');
+    console.warn('⚠️ No trips found or allTrips not available');
   }
-  
-  if (result.data?.posts?.nodes) {
-    console.log('📝 Sample Posts:');
-    result.data.posts.nodes.forEach(post => {
-      console.log(`  - ${post.title}`);
-      console.log(`    Categories:`, post.categories?.nodes?.map(c => c.name) || []);
-    });
-  } else {
-    console.warn('⚠️ No posts found');
-  }
-  
+
   if (result.errors) {
-    console.error('❌ GraphQL Query Errors:', result.errors);
+    console.error('❌ GraphQL Query Errors:', JSON.stringify(result.errors, null, 2));
   }
 }).catch(error => {
   console.error('❌ GraphQL Debug Query Error:', {
     message: error.message,
     networkError: error.networkError?.result?.errors || error.networkError,
-    graphQLErrors: error.graphQLErrors,
+    graphQLErrors: error.graphQLErrors
   });
 });
 
