@@ -31,7 +31,7 @@ export const DEBUG_QUERY = gql`
 // Simpler query to get all published posts
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100) {
+    posts(first: 100, where: { status: PUBLISH, contentType: "tour" }) {
       nodes {
         id
         title
@@ -51,7 +51,7 @@ export const GET_TRIPS = gql`
 
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(first: 100) {
+    posts(first: 100, where: { status: PUBLISH, contentType: "destination" }) {
       nodes {
         id
         title
