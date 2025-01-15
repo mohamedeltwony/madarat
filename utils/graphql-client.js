@@ -17,7 +17,7 @@ export const client = new ApolloClient({
 // Debug query to show available data
 const DEBUG_QUERY = gql`
   query DebugQuery {
-    posts {
+    posts(first: 100) {
       nodes {
         id
         title
@@ -27,6 +27,11 @@ const DEBUG_QUERY = gql`
             name
             slug
           }
+        }
+        acf {
+          price
+          duration
+          location
         }
       }
     }
@@ -46,6 +51,12 @@ client.query({
   query: DEBUG_QUERY
 }).then(result => {
   console.log('=== WordPress GraphQL Debug Info ===');
+  console.log('Raw GraphQL Response:', result);
+  
+  if (result.errors) {
+    console.error('GraphQL Query Errors:', result.errors);
+  }
+  
   if (result.data?.categories?.nodes) {
     console.log('Available Categories:', result.data.categories.nodes.map(cat => ({
       name: cat.name,
@@ -53,10 +64,12 @@ client.query({
       count: cat.count
     })));
   }
+  
   if (result.data?.posts?.nodes) {
-    console.log('Posts with Categories:', result.data.posts.nodes.map(post => ({
+    console.log('Posts with Categories and ACF:', result.data.posts.nodes.map(post => ({
       title: post.title,
-      categories: post.categories.nodes.map(cat => cat.name)
+      categories: post.categories?.nodes?.map(cat => cat.name) || [],
+      acf: post.acf
     })));
   }
 }).catch(error => {
@@ -64,18 +77,18 @@ client.query({
     message: error.message,
     networkError: error.networkError?.result?.errors || error.networkError,
     graphQLErrors: error.graphQLErrors,
+    stack: error.stack
   });
 });
 
-// Query to get all published trips (using travel and adventure categories)
+// Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100, where: { status: PUBLISH, categoryIn: ["travel", "adventure"] }) {
+    posts(first: 100, where: { status: PUBLISH }) {
       nodes {
         id
         title
         slug
-        date
         excerpt
         categories {
           nodes {
@@ -88,31 +101,22 @@ export const GET_TRIPS = gql`
             sourceUrl
           }
         }
-        ... on Post {
-          acf {
-            price
-            duration
-            location
-            rating
-            ratingCount
-            difficulty
-            included
-            notIncluded
-            itinerary
-            gallery {
-              sourceUrl
-            }
-          }
+        acf {
+          price
+          duration
+          location
+          rating
+          ratingCount
         }
       }
     }
   }
 `;
 
-// Query to get all published destinations (using specific location categories)
+// Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(first: 100, where: { status: PUBLISH, categoryIn: ["افضل-الاماكن-السياحية-فى-شرق-اوربا", "البوسنة"] }) {
+    posts(first: 100, where: { status: PUBLISH }) {
       nodes {
         id
         title
@@ -129,12 +133,10 @@ export const GET_DESTINATIONS = gql`
             sourceUrl
           }
         }
-        ... on Post {
-          acf {
-            location
-            rating
-            ratingCount
-          }
+        acf {
+          location
+          rating
+          ratingCount
         }
       }
     }
@@ -159,20 +161,18 @@ export const GET_TRIP_BY_SLUG = gql`
           sourceUrl
         }
       }
-      ... on Post {
-        acf {
-          price
-          duration
-          location
-          rating
-          ratingCount
-          difficulty
-          included
-          notIncluded
-          itinerary
-          gallery {
-            sourceUrl
-          }
+      acf {
+        price
+        duration
+        location
+        rating
+        ratingCount
+        difficulty
+        included
+        notIncluded
+        itinerary
+        gallery {
+          sourceUrl
         }
       }
     }

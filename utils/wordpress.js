@@ -8,23 +8,25 @@ export async function getTours() {
     });
 
     if (errors) {
-      console.error('GraphQL Errors:', errors);
+      console.error('GraphQL Errors in getTours:', errors);
       return [];
     }
 
     if (!data?.posts?.nodes) {
-      console.log('No tours data found in response:', data);
+      console.log('No posts data found in response:', data);
       return [];
     }
 
-    // Filter posts that have either "travel" or "adventure" category
+    // Filter posts that have travel or adventure categories
     const tours = data.posts.nodes.filter(post => 
       post.categories?.nodes?.some(cat => 
-        cat.slug === 'travel' || cat.slug === 'adventure'
+        ['travel', 'adventure', 'البوسنة'].includes(cat.slug)
       )
     );
 
     console.log('Found tours:', tours.length);
+    console.log('Tour data:', tours);
+
     return tours.map(tour => ({
       id: tour.id,
       title: tour.title,
@@ -36,16 +38,17 @@ export async function getTours() {
         duration: tour.acf?.duration || '',
         location: tour.acf?.location || '',
         rating: parseFloat(tour.acf?.rating) || 0,
-        ratingCount: parseInt(tour.acf?.ratingCount) || 0,
-        difficulty: tour.acf?.difficulty || '',
-        included: tour.acf?.included?.split('\n').filter(item => item.trim()) || [],
-        notIncluded: tour.acf?.notIncluded?.split('\n').filter(item => item.trim()) || [],
-        itinerary: tour.acf?.itinerary || '',
-        gallery: tour.acf?.gallery?.map(img => img.sourceUrl) || []
+        ratingCount: parseInt(tour.acf?.ratingCount) || 0
       }
     }));
   } catch (error) {
-    console.error('Error fetching tours:', error);
+    console.error('Error in getTours:', error);
+    if (error.graphQLErrors) {
+      console.error('GraphQL Errors:', error.graphQLErrors);
+    }
+    if (error.networkError) {
+      console.error('Network Error:', error.networkError);
+    }
     return [];
   }
 }
@@ -58,23 +61,25 @@ export async function getDestinations() {
     });
 
     if (errors) {
-      console.error('GraphQL Errors:', errors);
+      console.error('GraphQL Errors in getDestinations:', errors);
       return [];
     }
 
     if (!data?.posts?.nodes) {
-      console.log('No destinations data found in response:', data);
+      console.log('No posts data found in response:', data);
       return [];
     }
 
     // Filter posts that have location categories
     const destinations = data.posts.nodes.filter(post => 
       post.categories?.nodes?.some(cat => 
-        cat.slug === 'افضل-الاماكن-السياحية-فى-شرق-اوربا' || cat.slug === 'البوسنة'
+        ['افضل-الاماكن-السياحية-فى-شرق-اوربا', 'البوسنة'].includes(cat.slug)
       )
     );
 
     console.log('Found destinations:', destinations.length);
+    console.log('Destination data:', destinations);
+
     return destinations.map(destination => ({
       id: destination.id,
       title: destination.title,
@@ -89,6 +94,12 @@ export async function getDestinations() {
     }));
   } catch (error) {
     console.error('Error in getDestinations:', error);
+    if (error.graphQLErrors) {
+      console.error('GraphQL Errors:', error.graphQLErrors);
+    }
+    if (error.networkError) {
+      console.error('Network Error:', error.networkError);
+    }
     return [];
   }
 }
@@ -102,14 +113,16 @@ export async function getTourBySlug(slug) {
     });
 
     if (errors) {
-      console.error('GraphQL Errors:', errors);
+      console.error('GraphQL Errors in getTourBySlug:', errors);
       return null;
     }
 
     if (!data?.post) {
-      console.log('No tour found for slug:', slug);
+      console.log('No post found for slug:', slug);
       return null;
     }
+
+    console.log('Found tour data:', data.post);
 
     const post = data.post;
     return {
@@ -132,7 +145,13 @@ export async function getTourBySlug(slug) {
       }
     };
   } catch (error) {
-    console.error('Error fetching tour by slug:', error);
+    console.error('Error in getTourBySlug:', error);
+    if (error.graphQLErrors) {
+      console.error('GraphQL Errors:', error.graphQLErrors);
+    }
+    if (error.networkError) {
+      console.error('Network Error:', error.networkError);
+    }
     return null;
   }
 } 
