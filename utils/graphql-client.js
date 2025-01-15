@@ -84,7 +84,7 @@ client.query({
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(where: { status: PUBLISH, contentType: "trip" }) {
+    posts(where: { status: PUBLISH, categoryIn: ["رحلات", "trips", "tour", "tours"] }) {
       nodes {
         id
         title
@@ -96,13 +96,17 @@ export const GET_TRIPS = gql`
             sourceUrl
           }
         }
-        tripFields {
+        categories {
+          nodes {
+            name
+            slug
+          }
+        }
+        customFields {
           price
           duration
           location
-          gallery {
-            sourceUrl
-          }
+          gallery
         }
       }
     }
@@ -114,7 +118,7 @@ console.log('📦 GET_TRIPS query prepared:', GET_TRIPS.loc?.source.body);
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(where: { status: PUBLISH, contentType: "trip" }) {
+    posts(where: { status: PUBLISH, categoryIn: ["الوجهات", "destinations", "location"] }) {
       nodes {
         id
         title
@@ -126,11 +130,15 @@ export const GET_DESTINATIONS = gql`
             sourceUrl
           }
         }
-        tripFields {
-          location
-          gallery {
-            sourceUrl
+        categories {
+          nodes {
+            name
+            slug
           }
+        }
+        customFields {
+          location
+          gallery
         }
       }
     }
@@ -152,15 +160,17 @@ export const GET_TRIP_BY_SLUG = gql`
           sourceUrl
         }
       }
-      ... on Trip {
-        tripFields {
-          price
-          duration
-          location
-          gallery {
-            sourceUrl
-          }
+      categories {
+        nodes {
+          name
+          slug
         }
+      }
+      customFields {
+        price
+        duration
+        location
+        gallery
       }
     }
   }

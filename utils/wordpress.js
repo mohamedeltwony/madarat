@@ -18,13 +18,16 @@ export async function getTours() {
       excerpt: post.excerpt,
       content: post.content,
       featuredImage: post.featuredImage?.node?.sourceUrl || null,
-      price: post.tripFields?.price || '',
-      duration: post.tripFields?.duration || '',
-      location: post.tripFields?.location || '',
-      gallery: post.tripFields?.gallery?.map(img => img.sourceUrl) || []
+      categories: post.categories?.nodes || [],
+      price: post.customFields?.price || '',
+      duration: post.customFields?.duration || '',
+      location: post.customFields?.location || '',
+      gallery: post.customFields?.gallery ? post.customFields.gallery.split(',') : []
     }));
 
-    console.log(`🎯 Found ${tours.length} tours`);
+    console.log(`🎯 Found ${tours.length} tours with categories:`, 
+      tours.map(t => ({ title: t.title, categories: t.categories.map(c => c.name) }))
+    );
     return tours;
   } catch (error) {
     console.error('Error fetching tours:', error);
@@ -44,7 +47,7 @@ export async function getDestinations() {
     }
 
     const destinations = data.posts.nodes
-      .filter(post => post.tripFields?.location)
+      .filter(post => post.customFields?.location)
       .map(post => ({
         id: post.id,
         title: post.title,
@@ -52,11 +55,14 @@ export async function getDestinations() {
         excerpt: post.excerpt,
         content: post.content,
         featuredImage: post.featuredImage?.node?.sourceUrl || null,
-        location: post.tripFields?.location || '',
-        gallery: post.tripFields?.gallery?.map(img => img.sourceUrl) || []
+        categories: post.categories?.nodes || [],
+        location: post.customFields?.location || '',
+        gallery: post.customFields?.gallery ? post.customFields.gallery.split(',') : []
       }));
 
-    console.log(`🎯 Found ${destinations.length} destinations`);
+    console.log(`🎯 Found ${destinations.length} destinations with categories:`,
+      destinations.map(d => ({ title: d.title, categories: d.categories.map(c => c.name) }))
+    );
     return destinations;
   } catch (error) {
     console.error('Error fetching destinations:', error);
@@ -82,10 +88,11 @@ export async function getTourBySlug(slug) {
       content: data.post.content,
       excerpt: data.post.excerpt,
       featuredImage: data.post.featuredImage?.node?.sourceUrl || null,
-      price: data.post.tripFields?.price || '',
-      duration: data.post.tripFields?.duration || '',
-      location: data.post.tripFields?.location || '',
-      gallery: data.post.tripFields?.gallery?.map(img => img.sourceUrl) || []
+      categories: data.post.categories?.nodes || [],
+      price: data.post.customFields?.price || '',
+      duration: data.post.customFields?.duration || '',
+      location: data.post.customFields?.location || '',
+      gallery: data.post.customFields?.gallery ? data.post.customFields.gallery.split(',') : []
     };
   } catch (error) {
     console.error(`Error fetching tour with slug ${slug}:`, error);
