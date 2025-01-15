@@ -67,10 +67,10 @@ client.query({
   });
 });
 
-// Query to get all published trips
+// Query to get all published trips (using travel and adventure categories)
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100, where: { status: PUBLISH, categoryIn: ["tours", "رحلات"] }) {
+    posts(first: 100, where: { status: PUBLISH, categoryIn: ["travel", "adventure"] }) {
       nodes {
         id
         title
@@ -88,18 +88,20 @@ export const GET_TRIPS = gql`
             sourceUrl
           }
         }
-        tripFields {
-          price
-          duration
-          location
-          rating
-          ratingCount
-          difficulty
-          included
-          notIncluded
-          itinerary
-          gallery {
-            sourceUrl
+        ... on Post {
+          acf {
+            price
+            duration
+            location
+            rating
+            ratingCount
+            difficulty
+            included
+            notIncluded
+            itinerary
+            gallery {
+              sourceUrl
+            }
           }
         }
       }
@@ -107,10 +109,10 @@ export const GET_TRIPS = gql`
   }
 `;
 
-// Query to get all published destinations
+// Query to get all published destinations (using specific location categories)
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(first: 100, where: { status: PUBLISH, categoryIn: ["destinations", "الوجهات"] }) {
+    posts(first: 100, where: { status: PUBLISH, categoryIn: ["افضل-الاماكن-السياحية-فى-شرق-اوربا", "البوسنة"] }) {
       nodes {
         id
         title
@@ -127,10 +129,12 @@ export const GET_DESTINATIONS = gql`
             sourceUrl
           }
         }
-        tripFields {
-          location
-          rating
-          ratingCount
+        ... on Post {
+          acf {
+            location
+            rating
+            ratingCount
+          }
         }
       }
     }
@@ -155,18 +159,20 @@ export const GET_TRIP_BY_SLUG = gql`
           sourceUrl
         }
       }
-      tripFields {
-        price
-        duration
-        location
-        rating
-        ratingCount
-        difficulty
-        included
-        notIncluded
-        itinerary
-        gallery {
-          sourceUrl
+      ... on Post {
+        acf {
+          price
+          duration
+          location
+          rating
+          ratingCount
+          difficulty
+          included
+          notIncluded
+          itinerary
+          gallery {
+            sourceUrl
+          }
         }
       }
     }

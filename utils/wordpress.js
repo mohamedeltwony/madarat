@@ -17,10 +17,10 @@ export async function getTours() {
       return [];
     }
 
-    // Filter posts that have either "tours" or "رحلات" category
+    // Filter posts that have either "travel" or "adventure" category
     const tours = data.posts.nodes.filter(post => 
       post.categories?.nodes?.some(cat => 
-        cat.slug === 'tours' || cat.slug === 'رحلات'
+        cat.slug === 'travel' || cat.slug === 'adventure'
       )
     );
 
@@ -31,17 +31,17 @@ export async function getTours() {
       slug: tour.slug,
       excerpt: tour.excerpt,
       featuredImage: tour.featuredImage,
-      tripFields: tour.tripFields || {
-        price: 0,
-        duration: '',
-        location: '',
-        rating: 0,
-        ratingCount: 0,
-        difficulty: '',
-        included: [],
-        notIncluded: [],
-        itinerary: '',
-        gallery: []
+      tripFields: {
+        price: tour.acf?.price || 0,
+        duration: tour.acf?.duration || '',
+        location: tour.acf?.location || '',
+        rating: parseFloat(tour.acf?.rating) || 0,
+        ratingCount: parseInt(tour.acf?.ratingCount) || 0,
+        difficulty: tour.acf?.difficulty || '',
+        included: tour.acf?.included?.split('\n').filter(item => item.trim()) || [],
+        notIncluded: tour.acf?.notIncluded?.split('\n').filter(item => item.trim()) || [],
+        itinerary: tour.acf?.itinerary || '',
+        gallery: tour.acf?.gallery?.map(img => img.sourceUrl) || []
       }
     }));
   } catch (error) {
@@ -67,10 +67,10 @@ export async function getDestinations() {
       return [];
     }
 
-    // Filter posts that have either "destinations" or "الوجهات" category
+    // Filter posts that have location categories
     const destinations = data.posts.nodes.filter(post => 
       post.categories?.nodes?.some(cat => 
-        cat.slug === 'destinations' || cat.slug === 'الوجهات'
+        cat.slug === 'افضل-الاماكن-السياحية-فى-شرق-اوربا' || cat.slug === 'البوسنة'
       )
     );
 
@@ -81,10 +81,10 @@ export async function getDestinations() {
       slug: destination.slug,
       excerpt: destination.excerpt,
       featuredImage: destination.featuredImage,
-      tripFields: destination.tripFields || {
-        location: '',
-        rating: 0,
-        ratingCount: 0
+      tripFields: {
+        location: destination.acf?.location || '',
+        rating: parseFloat(destination.acf?.rating) || 0,
+        ratingCount: parseInt(destination.acf?.ratingCount) || 0
       }
     }));
   } catch (error) {
@@ -118,17 +118,17 @@ export async function getTourBySlug(slug) {
       content: post.content,
       categories: post.categories?.nodes || [],
       featuredImage: post.featuredImage,
-      tripFields: post.tripFields || {
-        price: 0,
-        duration: '',
-        location: '',
-        rating: 0,
-        ratingCount: 0,
-        difficulty: '',
-        included: [],
-        notIncluded: [],
-        itinerary: '',
-        gallery: []
+      tripFields: {
+        price: post.acf?.price || 0,
+        duration: post.acf?.duration || '',
+        location: post.acf?.location || '',
+        rating: parseFloat(post.acf?.rating) || 0,
+        ratingCount: parseInt(post.acf?.ratingCount) || 0,
+        difficulty: post.acf?.difficulty || '',
+        included: post.acf?.included?.split('\n').filter(item => item.trim()) || [],
+        notIncluded: post.acf?.notIncluded?.split('\n').filter(item => item.trim()) || [],
+        itinerary: post.acf?.itinerary || '',
+        gallery: post.acf?.gallery?.map(img => img.sourceUrl) || []
       }
     };
   } catch (error) {
