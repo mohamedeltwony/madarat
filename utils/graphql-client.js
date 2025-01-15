@@ -27,12 +27,12 @@ const DEBUG_QUERY = gql`
         label
       }
     }
-    posts(first: 10) {
+    categories {
       nodes {
-        __typename
         id
-        title
-        status
+        name
+        slug
+        count
       }
     }
   }
@@ -56,13 +56,13 @@ client.query({
     console.warn('⚠️ No content types found');
   }
   
-  if (result.data?.posts?.nodes) {
-    console.log('📝 Sample Posts:');
-    result.data.posts.nodes.forEach(post => {
-      console.log(`  - [${post.__typename}] ${post.title} (${post.status})`);
+  if (result.data?.categories?.nodes) {
+    console.log('🏷️ Available Categories:');
+    result.data.categories.nodes.forEach(cat => {
+      console.log(`  - ${cat.name} (${cat.slug}) - ${cat.count} posts`);
     });
   } else {
-    console.warn('⚠️ No posts found');
+    console.warn('⚠️ No categories found');
   }
   
   if (result.errors) {
@@ -79,28 +79,22 @@ client.query({
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    tours(first: 100, where: { status: PUBLISH }) {
+    posts(first: 100, where: { status: PUBLISH, categoryIn: ["البوسنة"] }) {
       nodes {
         id
         title
         slug
-        tourDetails {
-          price
-          duration
-          location
-          rating
-          ratingCount
-          difficulty
-          included
-          notIncluded
-          itinerary
-          gallery {
-            sourceUrl
-          }
-        }
+        excerpt
+        content
         featuredImage {
           node {
             sourceUrl
+          }
+        }
+        categories {
+          nodes {
+            name
+            slug
           }
         }
       }
@@ -113,22 +107,22 @@ console.log('📦 GET_TRIPS query prepared:', GET_TRIPS.loc?.source.body);
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    destinations(first: 100, where: { status: PUBLISH }) {
+    posts(first: 100, where: { status: PUBLISH, categoryIn: ["افضل-الاماكن-السياحية-فى-شرق-اوربا"] }) {
       nodes {
         id
         title
         slug
-        destinationDetails {
-          location
-          description
-          attractions
-          image {
-            sourceUrl
-          }
-        }
+        excerpt
+        content
         featuredImage {
           node {
             sourceUrl
+          }
+        }
+        categories {
+          nodes {
+            name
+            slug
           }
         }
       }
@@ -138,30 +132,23 @@ export const GET_DESTINATIONS = gql`
 
 console.log('🌍 GET_DESTINATIONS query prepared:', GET_DESTINATIONS.loc?.source.body);
 
-// Query to get a single tour by slug
+// Query to get a single post by slug
 export const GET_TRIP_BY_SLUG = gql`
   query GetTripBySlug($slug: ID!) {
-    tour(id: $slug, idType: SLUG) {
+    post(id: $slug, idType: SLUG) {
       id
       title
       content
-      tourDetails {
-        price
-        duration
-        location
-        rating
-        ratingCount
-        difficulty
-        included
-        notIncluded
-        itinerary
-        gallery {
-          sourceUrl
-        }
-      }
+      excerpt
       featuredImage {
         node {
           sourceUrl
+        }
+      }
+      categories {
+        nodes {
+          name
+          slug
         }
       }
     }

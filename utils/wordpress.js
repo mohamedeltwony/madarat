@@ -12,44 +12,41 @@ export async function getTours() {
       return [];
     }
 
-    if (!data) {
-      console.warn('⚠️ No data returned from GraphQL');
+    if (!data?.posts?.nodes) {
+      console.warn('⚠️ No tours found in response');
       return [];
     }
 
-    if (!data.tours?.nodes) {
-      console.warn('⚠️ No tours found in response. Data received:', data);
-      return [];
-    }
-
-    const tours = data.tours.nodes;
-    console.log(`✅ Found ${tours.length} tours`);
+    const posts = data.posts.nodes;
+    console.log(`✅ Found ${posts.length} tours`);
     
     // Log each tour's basic info
-    tours.forEach(tour => {
-      console.log(`  📍 Tour: ${tour.title}`);
-      console.log(`    - Slug: ${tour.slug}`);
-      console.log(`    - Price: ${tour.tourDetails?.price}`);
-      console.log(`    - Duration: ${tour.tourDetails?.duration}`);
-      console.log(`    - Location: ${tour.tourDetails?.location}`);
+    posts.forEach(post => {
+      console.log(`  📍 Tour: ${post.title}`);
+      console.log(`    - Slug: ${post.slug}`);
+      console.log(`    - Categories: ${post.categories.nodes.map(cat => cat.name).join(', ')}`);
     });
 
-    return tours.map(tour => ({
-      id: tour.id,
-      title: tour.title,
-      slug: tour.slug,
-      featuredImage: tour.featuredImage,
+    return posts.map(post => ({
+      id: post.id,
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt,
+      content: post.content,
+      featuredImage: post.featuredImage,
+      categories: post.categories.nodes,
       tripFields: {
-        price: tour.tourDetails?.price || 0,
-        duration: tour.tourDetails?.duration || '',
-        location: tour.tourDetails?.location || '',
-        rating: parseFloat(tour.tourDetails?.rating) || 0,
-        ratingCount: parseInt(tour.tourDetails?.ratingCount) || 0,
-        difficulty: tour.tourDetails?.difficulty || '',
-        included: tour.tourDetails?.included?.split('\n').filter(item => item.trim()) || [],
-        notIncluded: tour.tourDetails?.notIncluded?.split('\n').filter(item => item.trim()) || [],
-        itinerary: tour.tourDetails?.itinerary || '',
-        gallery: tour.tourDetails?.gallery?.map(img => img.sourceUrl) || []
+        // Extract trip details from content/excerpt if needed
+        price: extractPriceFromContent(post.content),
+        duration: extractDurationFromContent(post.content),
+        location: extractLocationFromContent(post.content),
+        rating: 5, // Default rating
+        ratingCount: 1, // Default rating count
+        difficulty: 'Medium', // Default difficulty
+        included: [], // Can be extracted from content if needed
+        notIncluded: [], // Can be extracted from content if needed
+        itinerary: post.content, // Use full content as itinerary
+        gallery: post.featuredImage ? [post.featuredImage.node.sourceUrl] : []
       }
     }));
   } catch (error) {
@@ -74,36 +71,34 @@ export async function getDestinations() {
       return [];
     }
 
-    if (!data) {
-      console.warn('⚠️ No data returned from GraphQL');
+    if (!data?.posts?.nodes) {
+      console.warn('⚠️ No destinations found in response');
       return [];
     }
 
-    if (!data.destinations?.nodes) {
-      console.warn('⚠️ No destinations found in response. Data received:', data);
-      return [];
-    }
-
-    const destinations = data.destinations.nodes;
-    console.log(`✅ Found ${destinations.length} destinations`);
+    const posts = data.posts.nodes;
+    console.log(`✅ Found ${posts.length} destinations`);
     
     // Log each destination's basic info
-    destinations.forEach(destination => {
-      console.log(`  📍 Destination: ${destination.title}`);
-      console.log(`    - Slug: ${destination.slug}`);
-      console.log(`    - Location: ${destination.destinationDetails?.location}`);
+    posts.forEach(post => {
+      console.log(`  📍 Destination: ${post.title}`);
+      console.log(`    - Slug: ${post.slug}`);
+      console.log(`    - Categories: ${post.categories.nodes.map(cat => cat.name).join(', ')}`);
     });
 
-    return destinations.map(destination => ({
-      id: destination.id,
-      title: destination.title,
-      slug: destination.slug,
-      featuredImage: destination.featuredImage,
+    return posts.map(post => ({
+      id: post.id,
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt,
+      content: post.content,
+      featuredImage: post.featuredImage,
+      categories: post.categories.nodes,
       tripFields: {
-        location: destination.destinationDetails?.location || '',
-        description: destination.destinationDetails?.description || '',
-        attractions: destination.destinationDetails?.attractions || [],
-        image: destination.destinationDetails?.image?.sourceUrl || destination.featuredImage?.node?.sourceUrl
+        location: extractLocationFromContent(post.content),
+        description: post.excerpt || '',
+        attractions: [], // Can be extracted from content if needed
+        image: post.featuredImage?.node?.sourceUrl
       }
     }));
   } catch (error) {
@@ -129,40 +124,35 @@ export async function getTourBySlug(slug) {
       return null;
     }
 
-    if (!data) {
-      console.warn('⚠️ No data returned from GraphQL');
-      return null;
-    }
-
-    if (!data.tour) {
+    if (!data?.post) {
       console.warn('⚠️ No tour found for slug:', slug);
       return null;
     }
 
-    const tour = data.tour;
+    const post = data.post;
     console.log('✅ Found tour:', {
-      title: tour.title,
-      price: tour.tourDetails?.price,
-      duration: tour.tourDetails?.duration,
-      location: tour.tourDetails?.location
+      title: post.title,
+      categories: post.categories.nodes.map(cat => cat.name).join(', ')
     });
 
     return {
-      id: tour.id,
-      title: tour.title,
-      content: tour.content,
-      featuredImage: tour.featuredImage,
+      id: post.id,
+      title: post.title,
+      content: post.content,
+      excerpt: post.excerpt,
+      featuredImage: post.featuredImage,
+      categories: post.categories.nodes,
       tripFields: {
-        price: tour.tourDetails?.price || 0,
-        duration: tour.tourDetails?.duration || '',
-        location: tour.tourDetails?.location || '',
-        rating: parseFloat(tour.tourDetails?.rating) || 0,
-        ratingCount: parseInt(tour.tourDetails?.ratingCount) || 0,
-        difficulty: tour.tourDetails?.difficulty || '',
-        included: tour.tourDetails?.included?.split('\n').filter(item => item.trim()) || [],
-        notIncluded: tour.tourDetails?.notIncluded?.split('\n').filter(item => item.trim()) || [],
-        itinerary: tour.tourDetails?.itinerary || '',
-        gallery: tour.tourDetails?.gallery?.map(img => img.sourceUrl) || []
+        price: extractPriceFromContent(post.content),
+        duration: extractDurationFromContent(post.content),
+        location: extractLocationFromContent(post.content),
+        rating: 5, // Default rating
+        ratingCount: 1, // Default rating count
+        difficulty: 'Medium', // Default difficulty
+        included: [], // Can be extracted from content if needed
+        notIncluded: [], // Can be extracted from content if needed
+        itinerary: post.content, // Use full content as itinerary
+        gallery: post.featuredImage ? [post.featuredImage.node.sourceUrl] : []
       }
     };
   } catch (error) {
@@ -173,4 +163,20 @@ export async function getTourBySlug(slug) {
     });
     return null;
   }
+}
+
+// Helper functions to extract information from content
+function extractPriceFromContent(content) {
+  // Add logic to extract price from content
+  return 0;
+}
+
+function extractDurationFromContent(content) {
+  // Add logic to extract duration from content
+  return '';
+}
+
+function extractLocationFromContent(content) {
+  // Add logic to extract location from content
+  return '';
 } 
