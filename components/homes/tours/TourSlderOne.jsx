@@ -6,7 +6,7 @@ import SwiperCore from "swiper";
 import { Navigation, Pagination } from "swiper/modules";
 import { useEffect, useState } from "react";
 import Stars from "@/components/common/Stars";
-import { getDestinations } from "@/utils/wordpress";
+import { getTours } from "@/utils/wordpress";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,30 +15,45 @@ SwiperCore.use([Navigation, Pagination]);
 
 export default function TourSlderOne() {
   const [showSwiper, setShowSwiper] = useState(false);
-  const [destinations, setDestinations] = useState([]);
+  const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchDestinations = async () => {
+    const fetchTours = async () => {
       try {
-        const data = await getDestinations();
-        setDestinations(data);
+        console.log('Fetching tours...');
+        const data = await getTours();
+        console.log('Tours data:', data);
+        setTours(data);
+        setError(null);
       } catch (error) {
-        console.error('Error fetching destinations:', error);
+        console.error('Error fetching tours:', error);
+        setError(error.message);
       } finally {
         setLoading(false);
         setShowSwiper(true);
       }
     };
 
-    fetchDestinations();
+    fetchTours();
   }, []);
 
   if (loading) {
     return (
       <div className="layout-pt-xl layout-pb-xl text-center">
         <div className="container">
-          <div className="text-18">Loading destinations...</div>
+          <div className="text-18">Loading tours...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="layout-pt-xl layout-pb-xl text-center">
+        <div className="container">
+          <div className="text-18 text-red-500">Error: {error}</div>
         </div>
       </div>
     );
@@ -52,13 +67,13 @@ export default function TourSlderOne() {
         <div className="row justify-between items-end y-gap-10">
           <div className="col-auto">
             <h2 data-aos="fade-up" data-aos-delay="" className="text-30 md:text-24">
-              Top Trending Destinations
+              Top Trending Tours
             </h2>
           </div>
 
           <div className="col-auto">
             <Link
-              href={"/destinations"}
+              href={"/tours"}
               data-aos="fade-right"
               data-aos-delay=""
               className="buttonArrow d-flex items-center"
@@ -71,7 +86,7 @@ export default function TourSlderOne() {
 
         <div className="relative pt-40 sm:pt-20">
           <div className="overflow-hidden pb-30">
-            {showSwiper && destinations.length > 0 && (
+            {showSwiper && tours.length > 0 && (
               <Swiper
                 spaceBetween={30}
                 navigation={true}
@@ -94,10 +109,10 @@ export default function TourSlderOne() {
                 }}
                 className="tourSlider"
               >
-                {destinations.map((destination) => (
-                  <SwiperSlide key={destination.id}>
+                {tours.map((tour) => (
+                  <SwiperSlide key={tour.id}>
                     <Link
-                      href={`/tours/${destination.slug}`}
+                      href={`/tours/${tour.slug}`}
                       className="tourCard -type-1 py-10 px-10 border-1 rounded-12 bg-white -hover-shadow"
                     >
                       <div className="tourCard__header">
@@ -105,8 +120,8 @@ export default function TourSlderOne() {
                           <Image
                             width={421}
                             height={301}
-                            src={destination.imageSrc}
-                            alt={destination.title}
+                            src={tour.featuredImage?.node?.sourceUrl || '/img/placeholder.jpg'}
+                            alt={tour.title}
                             className="img-ratio rounded-12"
                           />
                         </div>
@@ -119,31 +134,31 @@ export default function TourSlderOne() {
                       <div className="tourCard__content px-10 pt-10">
                         <div className="tourCard__location d-flex items-center text-13 text-light-2">
                           <i className="icon-pin d-flex text-16 text-light-2 mr-5"></i>
-                          {destination.location}
+                          {tour.tripFields?.location}
                         </div>
 
                         <h3 className="tourCard__title text-16 fw-500 mt-5">
-                          <span>{destination.title}</span>
+                          <span>{tour.title}</span>
                         </h3>
 
                         <div className="tourCard__rating d-flex items-center text-13 mt-5">
                           <div className="d-flex x-gap-5">
-                            <Stars star={destination.rating} />
+                            <Stars star={tour.tripFields?.rating || 0} />
                           </div>
 
                           <span className="text-dark-1 ml-10">
-                            {destination.rating} ({destination.ratingCount})
+                            {tour.tripFields?.rating || 0} ({tour.tripFields?.ratingCount || 0})
                           </span>
                         </div>
 
                         <div className="d-flex justify-between items-center border-1-top text-13 text-dark-1 pt-10 mt-10">
                           <div className="d-flex items-center">
                             <i className="icon-clock text-16 mr-5"></i>
-                            {destination.duration}
+                            {tour.tripFields?.duration}
                           </div>
 
                           <div>
-                            From <span className="text-16 fw-500">${destination.price}</span>
+                            From <span className="text-16 fw-500">${tour.tripFields?.price || 0}</span>
                           </div>
                         </div>
                       </div>
@@ -153,9 +168,9 @@ export default function TourSlderOne() {
               </Swiper>
             )}
             
-            {showSwiper && destinations.length === 0 && (
+            {showSwiper && tours.length === 0 && (
               <div className="text-center py-50">
-                <div className="text-18">No destinations found.</div>
+                <div className="text-18">No tours found.</div>
               </div>
             )}
           </div>

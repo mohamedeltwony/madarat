@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation, Pagination } from "swiper/modules";
 import { useEffect, useState } from "react";
-import { getAllDestinations } from "@/utils/wordpress";
+import { getDestinations } from "@/utils/wordpress";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -16,15 +16,19 @@ export default function DestinationSlider() {
   const [showSwiper, setShowSwiper] = useState(false);
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
-        const data = await getAllDestinations();
+        console.log('Fetching destinations...');
+        const data = await getDestinations();
         console.log('Destinations data:', data);
         setDestinations(data);
+        setError(null);
       } catch (error) {
         console.error('Error fetching destinations:', error);
+        setError(error.message);
       } finally {
         setLoading(false);
         setShowSwiper(true);
@@ -33,10 +37,6 @@ export default function DestinationSlider() {
 
     fetchDestinations();
   }, []);
-
-  const handleImageError = (e) => {
-    e.target.src = '/img/placeholder.jpg';
-  };
 
   if (loading) {
     return (
@@ -48,8 +48,20 @@ export default function DestinationSlider() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="layout-pt-xl layout-pb-xl text-center">
+        <div className="container">
+          <div className="text-18 text-red-500">Error: {error}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <section className="layout-pt-xl layout-pb-xl relative">
+      <div className="sectionBg -w-1530 rounded-12 bg-light-1"></div>
+
       <div className="container">
         <div className="row justify-between items-end y-gap-10">
           <div className="col-auto">
@@ -60,12 +72,12 @@ export default function DestinationSlider() {
 
           <div className="col-auto">
             <Link
-              href="/destinations"
+              href={"/destinations"}
               data-aos="fade-right"
               data-aos-delay=""
               className="buttonArrow d-flex items-center"
             >
-              <span>See all destinations</span>
+              <span>See all</span>
               <i className="icon-arrow-top-right text-16 ml-10"></i>
             </Link>
           </div>
@@ -100,36 +112,20 @@ export default function DestinationSlider() {
                   <SwiperSlide key={destination.id}>
                     <Link
                       href={`/destinations/${destination.slug}`}
-                      className="tourCard -type-1 rounded-12 position-relative"
+                      className="destinationCard -type-1 d-block rounded-12"
                     >
-                      <div className="tourCard__image">
-                        <div className="ratio ratio-28:20">
-                          <Image
-                            width={421}
-                            height={301}
-                            src={destination.imageSrc}
-                            alt={destination.name}
-                            className="img-ratio rounded-12 object-cover"
-                            onError={handleImageError}
-                            priority
-                          />
-                        </div>
+                      <div className="destinationCard__image">
+                        <Image
+                          width={300}
+                          height={200}
+                          src={destination.featuredImage?.node?.sourceUrl || '/img/placeholder.jpg'}
+                          alt={destination.title}
+                          className="rounded-12 js-lazy"
+                        />
                       </div>
 
-                      <div className="tourCard__content px-20 pt-20 pb-20 bg-white rounded-12">
-                        <h3 className="tourCard__title text-18 fw-500">
-                          <span>{destination.name}</span>
-                        </h3>
-
-                        <div className="text-14 text-light-2 mt-5">
-                          {destination.count} {destination.count === 1 ? 'Trip' : 'Trips'} Available
-                        </div>
-
-                        {destination.description && (
-                          <div className="text-14 mt-5 text-light-2 line-clamp-2"
-                            dangerouslySetInnerHTML={{ __html: destination.description }}
-                          />
-                        )}
+                      <div className="destinationCard__content px-20 py-20">
+                        <h4 className="text-18 fw-500 text-dark-1">{destination.title}</h4>
                       </div>
                     </Link>
                   </SwiperSlide>
