@@ -27,10 +27,12 @@ const DEBUG_QUERY = gql`
         label
       }
     }
-    allTrips {
-      id
-      title
-      slug
+    trips {
+      nodes {
+        id
+        title
+        status
+      }
     }
   }
 `;
@@ -53,9 +55,9 @@ client.query({
     console.warn('⚠️ No content types found');
   }
   
-  if (result.data?.posts?.nodes) {
+  if (result.data?.trips?.nodes) {
     console.log('🏷️ Available Posts:');
-    result.data.posts.nodes.forEach(post => {
+    result.data.trips.nodes.forEach(post => {
       console.log(`  - ${post.title} (ID: ${post.id})`);
     });
   } else {
@@ -76,7 +78,7 @@ client.query({
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(where: { status: PUBLISH, categoryName: "trips" }) {
+    trips(where: { status: PUBLISH }) {
       nodes {
         id
         title
@@ -88,10 +90,12 @@ export const GET_TRIPS = gql`
             sourceUrl
           }
         }
-        categories {
-          nodes {
-            name
-            slug
+        tripFields {
+          price
+          duration
+          location
+          gallery {
+            sourceUrl
           }
         }
       }
@@ -104,7 +108,7 @@ console.log('📦 GET_TRIPS query prepared:', GET_TRIPS.loc?.source.body);
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(where: { status: PUBLISH, categoryName: "destinations" }) {
+    trips(where: { status: PUBLISH }) {
       nodes {
         id
         title
@@ -116,10 +120,10 @@ export const GET_DESTINATIONS = gql`
             sourceUrl
           }
         }
-        categories {
-          nodes {
-            name
-            slug
+        tripFields {
+          location
+          gallery {
+            sourceUrl
           }
         }
       }
@@ -132,13 +136,21 @@ console.log('🌍 GET_DESTINATIONS query prepared:', GET_DESTINATIONS.loc?.sourc
 // Query to get a single trip by slug
 export const GET_TRIP_BY_SLUG = gql`
   query GetTripBySlug($slug: ID!) {
-    post(id: $slug, idType: SLUG) {
+    trip(id: $slug, idType: SLUG) {
       id
       title
       content
       excerpt
       featuredImage {
         node {
+          sourceUrl
+        }
+      }
+      tripFields {
+        price
+        duration
+        location
+        gallery {
           sourceUrl
         }
       }
