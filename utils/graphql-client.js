@@ -14,24 +14,34 @@ export const client = new ApolloClient({
   },
 });
 
+// First, let's query all available post types
+export const DEBUG_QUERY = gql`
+  query DebugQuery {
+    contentTypes {
+      nodes {
+        name
+        graphqlSingleName
+        graphqlPluralName
+        label
+      }
+    }
+  }
+`;
+
+// Simpler query to get all published posts
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(where: { status: PUBLISH, postType: TRIP }) {
+    posts(first: 100) {
       nodes {
         id
         title
         slug
         date
+        status
+        contentTypeName
         featuredImage {
           node {
             sourceUrl
-          }
-        }
-        ... on Trip {
-          tripFields {
-            price
-            duration
-            location
           }
         }
       }
@@ -41,11 +51,13 @@ export const GET_TRIPS = gql`
 
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(where: { status: PUBLISH, postType: DESTINATION }) {
+    posts(first: 100) {
       nodes {
         id
         title
         slug
+        status
+        contentTypeName
         featuredImage {
           node {
             sourceUrl
@@ -56,52 +68,26 @@ export const GET_DESTINATIONS = gql`
   }
 `;
 
-export const GET_TRIP_BY_SLUG = gql`
-  query GetTripBySlug($slug: ID!) {
-    trip(id: $slug, idType: SLUG) {
-      id
-      title
-      content
-      featuredImage {
-        node {
-          sourceUrl
-        }
-      }
-      tripFields {
-        price
-        duration
-        location
-        itinerary
-        included
-        notIncluded
-        gallery {
-          sourceUrl
-        }
-      }
-    }
-  }
-`;
-
-// Add debug query to check schema
-export const DEBUG_QUERY = gql`
-  query DebugQuery {
-    contentTypes {
-      nodes {
-        name
-        graphqlSingleName
-        graphqlPluralName
-      }
-    }
-  }
-`;
-
-// Run debug query on startup
+// Run debug queries on startup
 client.query({
   query: DEBUG_QUERY
 }).then(result => {
-  console.log('Available Content Types:', result.data?.contentTypes?.nodes);
+  console.log('Available Content Types:', JSON.stringify(result.data?.contentTypes?.nodes, null, 2));
 }).catch(error => {
   console.error('GraphQL Debug Query Error:', {
+    message: error.message,
+    networkError: error.networkError?.result,
+    graphQLErrors: error.graphQLErrors,
+  });
+});
+
+// Test query to get all posts
+client.query({
+  query: GET_TRIPS
+}).then(result => {
+  console.log('All Posts:', JSON.stringify(result.data?.posts?.nodes, null, 2));
+}).catch(error => {
+  console.error('GraphQL Posts Query Error:', {
     message: error.message,
     networkError: error.networkError?.result,
     graphQLErrors: error.graphQLErrors,
