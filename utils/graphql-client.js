@@ -16,7 +16,7 @@ export const client = new ApolloClient({
 
 console.log('🚀 Apollo Client initialized');
 
-// Debug query to check available content types and post types
+// Debug query to check available content types
 const DEBUG_QUERY = gql`
   query DebugQuery {
     contentTypes {
@@ -27,12 +27,10 @@ const DEBUG_QUERY = gql`
         label
       }
     }
-    trips(first: 100) {
-      nodes {
-        id
-        title
-        status
-      }
+    allTrips {
+      id
+      title
+      slug
     }
   }
 `;
@@ -78,24 +76,14 @@ client.query({
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    trips(first: 100, where: { status: PUBLISH }) {
-      nodes {
-        id
-        title
-        slug
-        excerpt
-        content
-        featuredImage {
-          node {
-            sourceUrl
-          }
-        }
-        categories {
-          nodes {
-            name
-            slug
-          }
-        }
+    allTrips {
+      id
+      title
+      slug
+      excerpt
+      content
+      featuredImage {
+        sourceUrl
       }
     }
   }
@@ -106,24 +94,14 @@ console.log('📦 GET_TRIPS query prepared:', GET_TRIPS.loc?.source.body);
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    trips(first: 100, where: { status: PUBLISH }) {
-      nodes {
-        id
-        title
-        slug
-        excerpt
-        content
-        featuredImage {
-          node {
-            sourceUrl
-          }
-        }
-        categories {
-          nodes {
-            name
-            slug
-          }
-        }
+    allTrips {
+      id
+      title
+      slug
+      excerpt
+      content
+      featuredImage {
+        sourceUrl
       }
     }
   }
@@ -133,22 +111,14 @@ console.log('🌍 GET_DESTINATIONS query prepared:', GET_DESTINATIONS.loc?.sourc
 
 // Query to get a single trip by slug
 export const GET_TRIP_BY_SLUG = gql`
-  query GetTripBySlug($slug: ID!) {
-    trip(id: $slug, idType: SLUG) {
+  query GetTripBySlug($slug: String!) {
+    trip(slug: $slug) {
       id
       title
       content
       excerpt
       featuredImage {
-        node {
-          sourceUrl
-        }
-      }
-      categories {
-        nodes {
-          name
-          slug
-        }
+        sourceUrl
       }
     }
   }
