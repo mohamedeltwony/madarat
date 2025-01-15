@@ -3,73 +3,27 @@ import { client, GET_TRIPS, GET_DESTINATIONS, GET_TRIP_BY_SLUG } from './graphql
 export async function getTours() {
   try {
     console.log('🔄 Fetching tours with GraphQL...');
-    const { data, errors } = await client.query({
-      query: GET_TRIPS
-    });
-
-    if (errors) {
-      console.error('❌ GraphQL Errors in getTours:', errors);
-      errors.forEach(error => {
-        console.error('  Error:', error.message);
-        if (error.locations) {
-          console.error('  Locations:', error.locations);
-        }
-        if (error.path) {
-          console.error('  Path:', error.path);
-        }
-      });
-      return [];
-    }
-
-    console.log('📦 Raw GraphQL Response:', JSON.stringify(data, null, 2));
+    const { data } = await client.query({ query: GET_TRIPS });
+    console.log('📦 Raw GraphQL Response:', data);
 
     if (!data?.posts?.nodes) {
       console.warn('⚠️ No tours found in response');
       return [];
     }
 
-    const posts = data.posts.nodes;
-    console.log(`✅ Found ${posts.length} tours`);
-    
-    // Log each tour's basic info
-    posts.forEach(post => {
-      console.log(`  📍 Tour: ${post.title}`);
-      console.log(`    - Slug: ${post.slug}`);
-      console.log(`    - Categories: ${post.categories.nodes.map(cat => cat.name).join(', ')}`);
-      console.log(`    - Has Featured Image: ${!!post.featuredImage}`);
-      console.log(`    - Excerpt Length: ${post.excerpt?.length || 0}`);
-      console.log(`    - Content Length: ${post.content?.length || 0}`);
-    });
-
-    return posts.map(post => ({
+    const tours = data.posts.nodes.map(post => ({
       id: post.id,
       title: post.title,
       slug: post.slug,
       excerpt: post.excerpt,
       content: post.content,
-      featuredImage: post.featuredImage,
-      categories: post.categories.nodes,
-      tripFields: {
-        // Extract trip details from content/excerpt if needed
-        price: extractPriceFromContent(post.content),
-        duration: extractDurationFromContent(post.content),
-        location: extractLocationFromContent(post.content),
-        rating: 5, // Default rating
-        ratingCount: 1, // Default rating count
-        difficulty: 'Medium', // Default difficulty
-        included: [], // Can be extracted from content if needed
-        notIncluded: [], // Can be extracted from content if needed
-        itinerary: post.content, // Use full content as itinerary
-        gallery: post.featuredImage ? [post.featuredImage.node.sourceUrl] : []
-      }
+      featuredImage: post.featuredImage?.node?.sourceUrl || null
     }));
+
+    console.log('Tours data:', tours);
+    return tours;
   } catch (error) {
-    console.error('❌ Error in getTours:', {
-      message: error.message,
-      graphQLErrors: error.graphQLErrors,
-      networkError: error.networkError?.result?.errors || error.networkError,
-      stack: error.stack
-    });
+    console.error('Error fetching tours:', error);
     return [];
   }
 }
@@ -77,151 +31,52 @@ export async function getTours() {
 export async function getDestinations() {
   try {
     console.log('🔄 Fetching destinations with GraphQL...');
-    const { data, errors } = await client.query({
-      query: GET_DESTINATIONS
-    });
-
-    if (errors) {
-      console.error('❌ GraphQL Errors in getDestinations:', errors);
-      errors.forEach(error => {
-        console.error('  Error:', error.message);
-        if (error.locations) {
-          console.error('  Locations:', error.locations);
-        }
-        if (error.path) {
-          console.error('  Path:', error.path);
-        }
-      });
-      return [];
-    }
-
-    console.log('🌍 Raw GraphQL Response:', JSON.stringify(data, null, 2));
+    const { data } = await client.query({ query: GET_DESTINATIONS });
+    console.log('🌍 Raw GraphQL Response:', data);
 
     if (!data?.posts?.nodes) {
       console.warn('⚠️ No destinations found in response');
       return [];
     }
 
-    const posts = data.posts.nodes;
-    console.log(`✅ Found ${posts.length} destinations`);
-    
-    // Log each destination's basic info
-    posts.forEach(post => {
-      console.log(`  📍 Destination: ${post.title}`);
-      console.log(`    - Slug: ${post.slug}`);
-      console.log(`    - Categories: ${post.categories.nodes.map(cat => cat.name).join(', ')}`);
-      console.log(`    - Has Featured Image: ${!!post.featuredImage}`);
-      console.log(`    - Excerpt Length: ${post.excerpt?.length || 0}`);
-      console.log(`    - Content Length: ${post.content?.length || 0}`);
-    });
-
-    return posts.map(post => ({
+    const destinations = data.posts.nodes.map(post => ({
       id: post.id,
       title: post.title,
       slug: post.slug,
       excerpt: post.excerpt,
       content: post.content,
-      featuredImage: post.featuredImage,
-      categories: post.categories.nodes,
-      tripFields: {
-        location: extractLocationFromContent(post.content),
-        description: post.excerpt || '',
-        attractions: [], // Can be extracted from content if needed
-        image: post.featuredImage?.node?.sourceUrl
-      }
+      featuredImage: post.featuredImage?.node?.sourceUrl || null
     }));
+
+    console.log('Destinations data:', destinations);
+    return destinations;
   } catch (error) {
-    console.error('❌ Error in getDestinations:', {
-      message: error.message,
-      graphQLErrors: error.graphQLErrors,
-      networkError: error.networkError?.result?.errors || error.networkError,
-      stack: error.stack
-    });
+    console.error('Error fetching destinations:', error);
     return [];
   }
 }
 
 export async function getTourBySlug(slug) {
   try {
-    console.log('🔄 Fetching tour by slug:', slug);
-    const { data, errors } = await client.query({
+    const { data } = await client.query({
       query: GET_TRIP_BY_SLUG,
       variables: { slug }
     });
 
-    if (errors) {
-      console.error('❌ GraphQL Errors in getTourBySlug:', errors);
-      errors.forEach(error => {
-        console.error('  Error:', error.message);
-        if (error.locations) {
-          console.error('  Locations:', error.locations);
-        }
-        if (error.path) {
-          console.error('  Path:', error.path);
-        }
-      });
-      return null;
-    }
-
-    console.log('🎯 Raw GraphQL Response:', JSON.stringify(data, null, 2));
-
     if (!data?.post) {
-      console.warn('⚠️ No tour found for slug:', slug);
+      console.warn(`⚠️ No tour found with slug: ${slug}`);
       return null;
     }
-
-    const post = data.post;
-    console.log('✅ Found tour:', {
-      title: post.title,
-      categories: post.categories.nodes.map(cat => cat.name).join(', '),
-      hasFeaturedImage: !!post.featuredImage,
-      excerptLength: post.excerpt?.length || 0,
-      contentLength: post.content?.length || 0
-    });
 
     return {
-      id: post.id,
-      title: post.title,
-      content: post.content,
-      excerpt: post.excerpt,
-      featuredImage: post.featuredImage,
-      categories: post.categories.nodes,
-      tripFields: {
-        price: extractPriceFromContent(post.content),
-        duration: extractDurationFromContent(post.content),
-        location: extractLocationFromContent(post.content),
-        rating: 5, // Default rating
-        ratingCount: 1, // Default rating count
-        difficulty: 'Medium', // Default difficulty
-        included: [], // Can be extracted from content if needed
-        notIncluded: [], // Can be extracted from content if needed
-        itinerary: post.content, // Use full content as itinerary
-        gallery: post.featuredImage ? [post.featuredImage.node.sourceUrl] : []
-      }
+      id: data.post.id,
+      title: data.post.title,
+      content: data.post.content,
+      excerpt: data.post.excerpt,
+      featuredImage: data.post.featuredImage?.node?.sourceUrl || null
     };
   } catch (error) {
-    console.error('❌ Error in getTourBySlug:', {
-      message: error.message,
-      graphQLErrors: error.graphQLErrors,
-      networkError: error.networkError?.result?.errors || error.networkError,
-      stack: error.stack
-    });
+    console.error(`Error fetching tour with slug ${slug}:`, error);
     return null;
   }
-}
-
-// Helper functions to extract information from content
-function extractPriceFromContent(content) {
-  // Add logic to extract price from content
-  return 0;
-}
-
-function extractDurationFromContent(content) {
-  // Add logic to extract duration from content
-  return '';
-}
-
-function extractLocationFromContent(content) {
-  // Add logic to extract location from content
-  return '';
 } 

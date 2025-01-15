@@ -53,13 +53,13 @@ client.query({
     console.warn('⚠️ No content types found');
   }
   
-  if (result.data?.trips?.nodes) {
-    console.log('🏷️ Available Trips:');
-    result.data.trips.nodes.forEach(trip => {
-      console.log(`  - ${trip.title} (ID: ${trip.id}) - Status: ${trip.status}`);
+  if (result.data?.posts?.nodes) {
+    console.log('🏷️ Available Posts:');
+    result.data.posts.nodes.forEach(post => {
+      console.log(`  - ${post.title} (ID: ${post.id})`);
     });
   } else {
-    console.warn('⚠️ No trips found');
+    console.warn('⚠️ No posts found');
   }
   
   if (result.errors) {
@@ -76,14 +76,18 @@ client.query({
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    allTrips {
-      id
-      title
-      slug
-      excerpt
-      content
-      featuredImage {
-        sourceUrl
+    posts(where: { status: PUBLISH }) {
+      nodes {
+        id
+        title
+        slug
+        excerpt
+        content
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
       }
     }
   }
@@ -94,14 +98,18 @@ console.log('📦 GET_TRIPS query prepared:', GET_TRIPS.loc?.source.body);
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    allTrips {
-      id
-      title
-      slug
-      excerpt
-      content
-      featuredImage {
-        sourceUrl
+    posts(where: { status: PUBLISH }) {
+      nodes {
+        id
+        title
+        slug
+        excerpt
+        content
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
       }
     }
   }
@@ -111,14 +119,16 @@ console.log('🌍 GET_DESTINATIONS query prepared:', GET_DESTINATIONS.loc?.sourc
 
 // Query to get a single trip by slug
 export const GET_TRIP_BY_SLUG = gql`
-  query GetTripBySlug($slug: String!) {
-    trip(slug: $slug) {
+  query GetTripBySlug($slug: ID!) {
+    post(id: $slug, idType: SLUG) {
       id
       title
       content
       excerpt
       featuredImage {
-        sourceUrl
+        node {
+          sourceUrl
+        }
       }
     }
   }
