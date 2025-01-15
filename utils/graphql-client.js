@@ -16,7 +16,7 @@ export const client = new ApolloClient({
 
 console.log('🚀 Apollo Client initialized');
 
-// Debug query to check available content types and categories
+// Debug query to check available content types and post types
 const DEBUG_QUERY = gql`
   query DebugQuery {
     contentTypes {
@@ -27,18 +27,11 @@ const DEBUG_QUERY = gql`
         label
       }
     }
-    categories(first: 100) {
+    trips(first: 100) {
       nodes {
         id
-        databaseId
-        name
-        slug
-        count
-        posts {
-          nodes {
-            title
-          }
-        }
+        title
+        status
       }
     }
   }
@@ -62,19 +55,13 @@ client.query({
     console.warn('⚠️ No content types found');
   }
   
-  if (result.data?.categories?.nodes) {
-    console.log('🏷️ Available Categories:');
-    result.data.categories.nodes.forEach(cat => {
-      console.log(`  - ${cat.name} (${cat.slug}) - ID: ${cat.databaseId}`);
-      if (cat.posts?.nodes?.length > 0) {
-        console.log('    Posts:');
-        cat.posts.nodes.forEach(post => {
-          console.log(`      - ${post.title}`);
-        });
-      }
+  if (result.data?.trips?.nodes) {
+    console.log('🏷️ Available Trips:');
+    result.data.trips.nodes.forEach(trip => {
+      console.log(`  - ${trip.title} (ID: ${trip.id}) - Status: ${trip.status}`);
     });
   } else {
-    console.warn('⚠️ No categories found');
+    console.warn('⚠️ No trips found');
   }
   
   if (result.errors) {
@@ -91,7 +78,7 @@ client.query({
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100, where: { status: PUBLISH, categoryId: 19 }) {
+    trips(first: 100, where: { status: PUBLISH }) {
       nodes {
         id
         title
@@ -119,7 +106,7 @@ console.log('📦 GET_TRIPS query prepared:', GET_TRIPS.loc?.source.body);
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(first: 100, where: { status: PUBLISH, categoryId: 18 }) {
+    trips(first: 100, where: { status: PUBLISH }) {
       nodes {
         id
         title
@@ -144,10 +131,10 @@ export const GET_DESTINATIONS = gql`
 
 console.log('🌍 GET_DESTINATIONS query prepared:', GET_DESTINATIONS.loc?.source.body);
 
-// Query to get a single post by slug
+// Query to get a single trip by slug
 export const GET_TRIP_BY_SLUG = gql`
   query GetTripBySlug($slug: ID!) {
-    post(id: $slug, idType: SLUG) {
+    trip(id: $slug, idType: SLUG) {
       id
       title
       content
