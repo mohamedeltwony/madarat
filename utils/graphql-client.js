@@ -28,17 +28,16 @@ export const DEBUG_QUERY = gql`
   }
 `;
 
-// Simpler query to get all published posts
+// Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100, where: { status: PUBLISH, contentType: "tour" }) {
+    posts(first: 100, where: { status: PUBLISH, categoryName: "trips" }) {
       nodes {
         id
         title
         slug
         date
         status
-        contentTypeName
         featuredImage {
           node {
             sourceUrl
@@ -49,19 +48,35 @@ export const GET_TRIPS = gql`
   }
 `;
 
+// Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(first: 100, where: { status: PUBLISH, contentType: "destination" }) {
+    posts(first: 100, where: { status: PUBLISH, categoryName: "destinations" }) {
       nodes {
         id
         title
         slug
         status
-        contentTypeName
         featuredImage {
           node {
             sourceUrl
           }
+        }
+      }
+    }
+  }
+`;
+
+// Query to get a single trip by slug
+export const GET_TRIP_BY_SLUG = gql`
+  query GetTripBySlug($slug: ID!) {
+    post(id: $slug, idType: SLUG) {
+      id
+      title
+      content
+      featuredImage {
+        node {
+          sourceUrl
         }
       }
     }
