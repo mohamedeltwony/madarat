@@ -14,7 +14,7 @@ export const client = new ApolloClient({
   },
 });
 
-// First, let's query all available post types
+// First, let's query all available post types and categories
 export const DEBUG_QUERY = gql`
   query DebugQuery {
     contentTypes {
@@ -25,19 +25,32 @@ export const DEBUG_QUERY = gql`
         label
       }
     }
+    categories {
+      nodes {
+        name
+        slug
+        count
+      }
+    }
   }
 `;
 
-// Query to get all published trips
+// Query to get all published posts without filtering
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100, where: { status: PUBLISH, categoryName: "trips" }) {
+    posts(first: 100, where: { status: PUBLISH }) {
       nodes {
         id
         title
         slug
         date
         status
+        categories {
+          nodes {
+            name
+            slug
+          }
+        }
         featuredImage {
           node {
             sourceUrl
@@ -51,12 +64,18 @@ export const GET_TRIPS = gql`
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(first: 100, where: { status: PUBLISH, categoryName: "destinations" }) {
+    posts(first: 100, where: { status: PUBLISH }) {
       nodes {
         id
         title
         slug
         status
+        categories {
+          nodes {
+            name
+            slug
+          }
+        }
         featuredImage {
           node {
             sourceUrl
@@ -74,6 +93,12 @@ export const GET_TRIP_BY_SLUG = gql`
       id
       title
       content
+      categories {
+        nodes {
+          name
+          slug
+        }
+      }
       featuredImage {
         node {
           sourceUrl
@@ -88,6 +113,7 @@ client.query({
   query: DEBUG_QUERY
 }).then(result => {
   console.log('Available Content Types:', JSON.stringify(result.data?.contentTypes?.nodes, null, 2));
+  console.log('Available Categories:', JSON.stringify(result.data?.categories?.nodes, null, 2));
 }).catch(error => {
   console.error('GraphQL Debug Query Error:', {
     message: error.message,
