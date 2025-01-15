@@ -27,11 +27,17 @@ const DEBUG_QUERY = gql`
         label
       }
     }
-    trips {
+    posts(first: 5) {
       nodes {
+        __typename
         id
         title
         status
+        contentType {
+          node {
+            name
+          }
+        }
       }
     }
   }
@@ -55,9 +61,9 @@ client.query({
     console.warn('⚠️ No content types found');
   }
   
-  if (result.data?.trips?.nodes) {
+  if (result.data?.posts?.nodes) {
     console.log('🏷️ Available Posts:');
-    result.data.trips.nodes.forEach(post => {
+    result.data.posts.nodes.forEach(post => {
       console.log(`  - ${post.title} (ID: ${post.id})`);
     });
   } else {
@@ -78,7 +84,7 @@ client.query({
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    trips(where: { status: PUBLISH }) {
+    posts(where: { status: PUBLISH, contentType: "trip" }) {
       nodes {
         id
         title
@@ -108,7 +114,7 @@ console.log('📦 GET_TRIPS query prepared:', GET_TRIPS.loc?.source.body);
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    trips(where: { status: PUBLISH }) {
+    posts(where: { status: PUBLISH, contentType: "trip" }) {
       nodes {
         id
         title
@@ -136,7 +142,7 @@ console.log('🌍 GET_DESTINATIONS query prepared:', GET_DESTINATIONS.loc?.sourc
 // Query to get a single trip by slug
 export const GET_TRIP_BY_SLUG = gql`
   query GetTripBySlug($slug: ID!) {
-    trip(id: $slug, idType: SLUG) {
+    post(id: $slug, idType: SLUG) {
       id
       title
       content
@@ -146,12 +152,14 @@ export const GET_TRIP_BY_SLUG = gql`
           sourceUrl
         }
       }
-      tripFields {
-        price
-        duration
-        location
-        gallery {
-          sourceUrl
+      ... on Trip {
+        tripFields {
+          price
+          duration
+          location
+          gallery {
+            sourceUrl
+          }
         }
       }
     }
