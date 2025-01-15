@@ -76,7 +76,7 @@ client.query({
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(where: { status: PUBLISH }) {
+    posts(where: { status: PUBLISH, categoryName: "trips" }) {
       nodes {
         id
         title
@@ -86,6 +86,12 @@ export const GET_TRIPS = gql`
         featuredImage {
           node {
             sourceUrl
+          }
+        }
+        categories {
+          nodes {
+            name
+            slug
           }
         }
       }
@@ -98,7 +104,7 @@ console.log('📦 GET_TRIPS query prepared:', GET_TRIPS.loc?.source.body);
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(where: { status: PUBLISH }) {
+    posts(where: { status: PUBLISH, categoryName: "destinations" }) {
       nodes {
         id
         title
@@ -108,6 +114,12 @@ export const GET_DESTINATIONS = gql`
         featuredImage {
           node {
             sourceUrl
+          }
+        }
+        categories {
+          nodes {
+            name
+            slug
           }
         }
       }

@@ -11,14 +11,17 @@ export async function getTours() {
       return [];
     }
 
-    const tours = data.posts.nodes.map(post => ({
-      id: post.id,
-      title: post.title,
-      slug: post.slug,
-      excerpt: post.excerpt,
-      content: post.content,
-      featuredImage: post.featuredImage?.node?.sourceUrl || null
-    }));
+    const tours = data.posts.nodes
+      .filter(post => post.categories?.nodes?.some(cat => cat.slug === 'trips' || cat.name.toLowerCase() === 'trips'))
+      .map(post => ({
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        content: post.content,
+        featuredImage: post.featuredImage?.node?.sourceUrl || null,
+        categories: post.categories?.nodes || []
+      }));
 
     console.log('Tours data:', tours);
     return tours;
@@ -39,14 +42,17 @@ export async function getDestinations() {
       return [];
     }
 
-    const destinations = data.posts.nodes.map(post => ({
-      id: post.id,
-      title: post.title,
-      slug: post.slug,
-      excerpt: post.excerpt,
-      content: post.content,
-      featuredImage: post.featuredImage?.node?.sourceUrl || null
-    }));
+    const destinations = data.posts.nodes
+      .filter(post => post.categories?.nodes?.some(cat => cat.slug === 'destinations' || cat.name.toLowerCase() === 'destinations'))
+      .map(post => ({
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        content: post.content,
+        featuredImage: post.featuredImage?.node?.sourceUrl || null,
+        categories: post.categories?.nodes || []
+      }));
 
     console.log('Destinations data:', destinations);
     return destinations;
