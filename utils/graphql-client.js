@@ -14,22 +14,28 @@ export const client = new ApolloClient({
   },
 });
 
-// Simpler debug query to test basic connectivity
+// Debug query to show available data
 const DEBUG_QUERY = gql`
   query DebugQuery {
-    # Test if we can get any posts
     posts {
       nodes {
         id
         title
         status
+        categories {
+          nodes {
+            name
+            slug
+          }
+        }
       }
     }
-    # Test if categories work
     categories {
       nodes {
         id
         name
+        slug
+        count
       }
     }
   }
@@ -40,28 +46,31 @@ client.query({
   query: DEBUG_QUERY
 }).then(result => {
   console.log('=== WordPress GraphQL Debug Info ===');
-  console.log('Raw Response:', result);
-  if (result.data?.posts?.nodes) {
-    console.log('Posts found:', result.data.posts.nodes.length);
-    console.log('First few posts:', result.data.posts.nodes.slice(0, 3));
-  }
   if (result.data?.categories?.nodes) {
-    console.log('Categories found:', result.data.categories.nodes.length);
-    console.log('Category names:', result.data.categories.nodes.map(cat => cat.name));
+    console.log('Available Categories:', result.data.categories.nodes.map(cat => ({
+      name: cat.name,
+      slug: cat.slug,
+      count: cat.count
+    })));
+  }
+  if (result.data?.posts?.nodes) {
+    console.log('Posts with Categories:', result.data.posts.nodes.map(post => ({
+      title: post.title,
+      categories: post.categories.nodes.map(cat => cat.name)
+    })));
   }
 }).catch(error => {
   console.error('GraphQL Debug Query Error:', {
     message: error.message,
     networkError: error.networkError?.result?.errors || error.networkError,
     graphQLErrors: error.graphQLErrors,
-    stack: error.stack,
   });
 });
 
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100, where: { status: PUBLISH }) {
+    posts(first: 100, where: { status: PUBLISH, categoryIn: ["tours", "رحلات"] }) {
       nodes {
         id
         title
@@ -79,6 +88,20 @@ export const GET_TRIPS = gql`
             sourceUrl
           }
         }
+        tripFields {
+          price
+          duration
+          location
+          rating
+          ratingCount
+          difficulty
+          included
+          notIncluded
+          itinerary
+          gallery {
+            sourceUrl
+          }
+        }
       }
     }
   }
@@ -87,7 +110,7 @@ export const GET_TRIPS = gql`
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(first: 100, where: { status: PUBLISH }) {
+    posts(first: 100, where: { status: PUBLISH, categoryIn: ["destinations", "الوجهات"] }) {
       nodes {
         id
         title
@@ -103,6 +126,11 @@ export const GET_DESTINATIONS = gql`
           node {
             sourceUrl
           }
+        }
+        tripFields {
+          location
+          rating
+          ratingCount
         }
       }
     }
@@ -124,6 +152,20 @@ export const GET_TRIP_BY_SLUG = gql`
       }
       featuredImage {
         node {
+          sourceUrl
+        }
+      }
+      tripFields {
+        price
+        duration
+        location
+        rating
+        ratingCount
+        difficulty
+        included
+        notIncluded
+        itinerary
+        gallery {
           sourceUrl
         }
       }
