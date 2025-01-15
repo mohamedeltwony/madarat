@@ -14,81 +14,66 @@ export const client = new ApolloClient({
   },
 });
 
-// Debug query to see what's available
+// Simpler debug query to test basic connectivity
 const DEBUG_QUERY = gql`
   query DebugQuery {
-    # Check content types
-    contentTypes {
-      nodes {
-        name
-        graphqlSingleName
-        graphqlPluralName
-        label
-        isCustom
-      }
-    }
-    # Check taxonomies
-    taxonomies {
-      nodes {
-        name
-        graphqlSingleName
-        graphqlPluralName
-        label
-      }
-    }
-    # Check categories
-    categories {
-      nodes {
-        name
-        slug
-        count
-      }
-    }
-    # Check all registered types
-    types {
-      __typename
-    }
-    # Check if trips post type exists
-    trips {
+    # Test if we can get any posts
+    posts {
       nodes {
         id
         title
-        slug
+        status
+      }
+    }
+    # Test if categories work
+    categories {
+      nodes {
+        id
+        name
       }
     }
   }
 `;
 
-// Run debug queries on startup
+// Run debug query with better error handling
 client.query({
   query: DEBUG_QUERY
 }).then(result => {
   console.log('=== WordPress GraphQL Debug Info ===');
-  console.log('Content Types:', JSON.stringify(result.data?.contentTypes?.nodes, null, 2));
-  console.log('Taxonomies:', JSON.stringify(result.data?.taxonomies?.nodes, null, 2));
-  console.log('Categories:', JSON.stringify(result.data?.categories?.nodes, null, 2));
-  console.log('Available Types:', JSON.stringify(result.data?.types, null, 2));
-  if (result.data?.trips) {
-    console.log('Trips:', JSON.stringify(result.data?.trips?.nodes, null, 2));
+  console.log('Raw Response:', result);
+  if (result.data?.posts?.nodes) {
+    console.log('Posts found:', result.data.posts.nodes.length);
+    console.log('First few posts:', result.data.posts.nodes.slice(0, 3));
+  }
+  if (result.data?.categories?.nodes) {
+    console.log('Categories found:', result.data.categories.nodes.length);
+    console.log('Category names:', result.data.categories.nodes.map(cat => cat.name));
   }
 }).catch(error => {
   console.error('GraphQL Debug Query Error:', {
     message: error.message,
-    networkError: error.networkError?.result,
+    networkError: error.networkError?.result?.errors || error.networkError,
     graphQLErrors: error.graphQLErrors,
+    stack: error.stack,
   });
 });
 
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100, where: { status: PUBLISH, categoryName: "tours" }) {
+    posts(first: 100, where: { status: PUBLISH }) {
       nodes {
         id
         title
         slug
         date
         excerpt
+        categories {
+          nodes {
+            name
+            slug
+          }
+        }
         featuredImage {
           node {
             sourceUrl
@@ -102,12 +87,18 @@ export const GET_TRIPS = gql`
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(first: 100, where: { status: PUBLISH, categoryName: "destinations" }) {
+    posts(first: 100, where: { status: PUBLISH }) {
       nodes {
         id
         title
         slug
         excerpt
+        categories {
+          nodes {
+            name
+            slug
+          }
+        }
         featuredImage {
           node {
             sourceUrl
@@ -125,6 +116,12 @@ export const GET_TRIP_BY_SLUG = gql`
       id
       title
       content
+      categories {
+        nodes {
+          name
+          slug
+        }
+      }
       featuredImage {
         node {
           sourceUrl
