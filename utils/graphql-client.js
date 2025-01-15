@@ -16,7 +16,7 @@ export const client = new ApolloClient({
 
 console.log('🚀 Apollo Client initialized');
 
-// Debug query to check available content types
+// Debug query to check available content types and categories
 const DEBUG_QUERY = gql`
   query DebugQuery {
     contentTypes {
@@ -27,12 +27,18 @@ const DEBUG_QUERY = gql`
         label
       }
     }
-    categories {
+    categories(first: 100) {
       nodes {
         id
+        databaseId
         name
         slug
         count
+        posts {
+          nodes {
+            title
+          }
+        }
       }
     }
   }
@@ -59,7 +65,13 @@ client.query({
   if (result.data?.categories?.nodes) {
     console.log('🏷️ Available Categories:');
     result.data.categories.nodes.forEach(cat => {
-      console.log(`  - ${cat.name} (${cat.slug}) - ${cat.count} posts`);
+      console.log(`  - ${cat.name} (${cat.slug}) - ID: ${cat.databaseId}`);
+      if (cat.posts?.nodes?.length > 0) {
+        console.log('    Posts:');
+        cat.posts.nodes.forEach(post => {
+          console.log(`      - ${post.title}`);
+        });
+      }
     });
   } else {
     console.warn('⚠️ No categories found');
@@ -79,7 +91,7 @@ client.query({
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100, where: { status: PUBLISH, categoryIn: ["البوسنة"] }) {
+    posts(first: 100, where: { status: PUBLISH, categoryId: 19 }) {
       nodes {
         id
         title
@@ -107,7 +119,7 @@ console.log('📦 GET_TRIPS query prepared:', GET_TRIPS.loc?.source.body);
 // Query to get all published destinations
 export const GET_DESTINATIONS = gql`
   query GetDestinations {
-    posts(first: 100, where: { status: PUBLISH, categoryIn: ["افضل-الاماكن-السياحية-فى-شرق-اوربا"] }) {
+    posts(first: 100, where: { status: PUBLISH, categoryId: 18 }) {
       nodes {
         id
         title

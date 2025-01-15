@@ -9,8 +9,19 @@ export async function getTours() {
 
     if (errors) {
       console.error('❌ GraphQL Errors in getTours:', errors);
+      errors.forEach(error => {
+        console.error('  Error:', error.message);
+        if (error.locations) {
+          console.error('  Locations:', error.locations);
+        }
+        if (error.path) {
+          console.error('  Path:', error.path);
+        }
+      });
       return [];
     }
+
+    console.log('📦 Raw GraphQL Response:', JSON.stringify(data, null, 2));
 
     if (!data?.posts?.nodes) {
       console.warn('⚠️ No tours found in response');
@@ -25,6 +36,9 @@ export async function getTours() {
       console.log(`  📍 Tour: ${post.title}`);
       console.log(`    - Slug: ${post.slug}`);
       console.log(`    - Categories: ${post.categories.nodes.map(cat => cat.name).join(', ')}`);
+      console.log(`    - Has Featured Image: ${!!post.featuredImage}`);
+      console.log(`    - Excerpt Length: ${post.excerpt?.length || 0}`);
+      console.log(`    - Content Length: ${post.content?.length || 0}`);
     });
 
     return posts.map(post => ({
@@ -53,7 +67,8 @@ export async function getTours() {
     console.error('❌ Error in getTours:', {
       message: error.message,
       graphQLErrors: error.graphQLErrors,
-      networkError: error.networkError
+      networkError: error.networkError?.result?.errors || error.networkError,
+      stack: error.stack
     });
     return [];
   }
@@ -68,8 +83,19 @@ export async function getDestinations() {
 
     if (errors) {
       console.error('❌ GraphQL Errors in getDestinations:', errors);
+      errors.forEach(error => {
+        console.error('  Error:', error.message);
+        if (error.locations) {
+          console.error('  Locations:', error.locations);
+        }
+        if (error.path) {
+          console.error('  Path:', error.path);
+        }
+      });
       return [];
     }
+
+    console.log('🌍 Raw GraphQL Response:', JSON.stringify(data, null, 2));
 
     if (!data?.posts?.nodes) {
       console.warn('⚠️ No destinations found in response');
@@ -84,6 +110,9 @@ export async function getDestinations() {
       console.log(`  📍 Destination: ${post.title}`);
       console.log(`    - Slug: ${post.slug}`);
       console.log(`    - Categories: ${post.categories.nodes.map(cat => cat.name).join(', ')}`);
+      console.log(`    - Has Featured Image: ${!!post.featuredImage}`);
+      console.log(`    - Excerpt Length: ${post.excerpt?.length || 0}`);
+      console.log(`    - Content Length: ${post.content?.length || 0}`);
     });
 
     return posts.map(post => ({
@@ -105,7 +134,8 @@ export async function getDestinations() {
     console.error('❌ Error in getDestinations:', {
       message: error.message,
       graphQLErrors: error.graphQLErrors,
-      networkError: error.networkError
+      networkError: error.networkError?.result?.errors || error.networkError,
+      stack: error.stack
     });
     return [];
   }
@@ -121,8 +151,19 @@ export async function getTourBySlug(slug) {
 
     if (errors) {
       console.error('❌ GraphQL Errors in getTourBySlug:', errors);
+      errors.forEach(error => {
+        console.error('  Error:', error.message);
+        if (error.locations) {
+          console.error('  Locations:', error.locations);
+        }
+        if (error.path) {
+          console.error('  Path:', error.path);
+        }
+      });
       return null;
     }
+
+    console.log('🎯 Raw GraphQL Response:', JSON.stringify(data, null, 2));
 
     if (!data?.post) {
       console.warn('⚠️ No tour found for slug:', slug);
@@ -132,7 +173,10 @@ export async function getTourBySlug(slug) {
     const post = data.post;
     console.log('✅ Found tour:', {
       title: post.title,
-      categories: post.categories.nodes.map(cat => cat.name).join(', ')
+      categories: post.categories.nodes.map(cat => cat.name).join(', '),
+      hasFeaturedImage: !!post.featuredImage,
+      excerptLength: post.excerpt?.length || 0,
+      contentLength: post.content?.length || 0
     });
 
     return {
@@ -159,7 +203,8 @@ export async function getTourBySlug(slug) {
     console.error('❌ Error in getTourBySlug:', {
       message: error.message,
       graphQLErrors: error.graphQLErrors,
-      networkError: error.networkError
+      networkError: error.networkError?.result?.errors || error.networkError,
+      stack: error.stack
     });
     return null;
   }
