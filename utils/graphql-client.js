@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
 const graphqlUrl = process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL?.trim() || 'https://madaratalkon.com/graphql';
-console.log('Using GraphQL URL:', graphqlUrl);
+console.log('🌐 GraphQL URL:', graphqlUrl);
 
 export const client = new ApolloClient({
   uri: graphqlUrl,
@@ -14,118 +14,88 @@ export const client = new ApolloClient({
   },
 });
 
-// Debug query to show available data
+console.log('🚀 Apollo Client initialized');
+
+// Debug query to check available content types
 const DEBUG_QUERY = gql`
   query DebugQuery {
-    posts(first: 100) {
+    contentTypes {
       nodes {
+        name
+        graphqlSingleName
+        graphqlPluralName
+        label
+      }
+    }
+    posts(first: 10) {
+      nodes {
+        __typename
         id
         title
         status
-        categories {
-          nodes {
-            name
-            slug
-          }
-        }
-        acf {
-          price
-          duration
-          location
-        }
-      }
-    }
-    categories {
-      nodes {
-        id
-        name
-        slug
-        count
       }
     }
   }
 `;
+
+console.log('🔍 Running debug query to check WordPress setup...');
 
 // Run debug query with better error handling
 client.query({
   query: DEBUG_QUERY
 }).then(result => {
   console.log('=== WordPress GraphQL Debug Info ===');
-  console.log('Raw GraphQL Response:', result);
   
-  if (result.errors) {
-    console.error('GraphQL Query Errors:', result.errors);
-  }
-  
-  if (result.data?.categories?.nodes) {
-    console.log('Available Categories:', result.data.categories.nodes.map(cat => ({
-      name: cat.name,
-      slug: cat.slug,
-      count: cat.count
-    })));
+  if (result.data?.contentTypes?.nodes) {
+    console.log('📚 Available Content Types:');
+    result.data.contentTypes.nodes.forEach(type => {
+      console.log(`  - ${type.label} (${type.name})`);
+      console.log(`    GraphQL: Single: ${type.graphqlSingleName}, Plural: ${type.graphqlPluralName}`);
+    });
+  } else {
+    console.warn('⚠️ No content types found');
   }
   
   if (result.data?.posts?.nodes) {
-    console.log('Posts with Categories and ACF:', result.data.posts.nodes.map(post => ({
-      title: post.title,
-      categories: post.categories?.nodes?.map(cat => cat.name) || [],
-      acf: post.acf
-    })));
+    console.log('📝 Sample Posts:');
+    result.data.posts.nodes.forEach(post => {
+      console.log(`  - [${post.__typename}] ${post.title} (${post.status})`);
+    });
+  } else {
+    console.warn('⚠️ No posts found');
+  }
+  
+  if (result.errors) {
+    console.error('❌ GraphQL Query Errors:', result.errors);
   }
 }).catch(error => {
-  console.error('GraphQL Debug Query Error:', {
+  console.error('❌ GraphQL Debug Query Error:', {
     message: error.message,
     networkError: error.networkError?.result?.errors || error.networkError,
     graphQLErrors: error.graphQLErrors,
-    stack: error.stack
   });
 });
 
 // Query to get all published trips
 export const GET_TRIPS = gql`
   query GetTrips {
-    posts(first: 100, where: { status: PUBLISH }) {
+    tours(first: 100, where: { status: PUBLISH }) {
       nodes {
         id
         title
         slug
-        excerpt
-        categories {
-          nodes {
-            name
-            slug
-          }
-        }
-        featuredImage {
-          node {
-            sourceUrl
-          }
-        }
-        acf {
+        tourDetails {
           price
           duration
           location
           rating
           ratingCount
-        }
-      }
-    }
-  }
-`;
-
-// Query to get all published destinations
-export const GET_DESTINATIONS = gql`
-  query GetDestinations {
-    posts(first: 100, where: { status: PUBLISH }) {
-      nodes {
-        id
-        title
-        slug
-        excerpt
-        categories {
-          nodes {
-            name
-            slug
+          difficulty
+          included
+          notIncluded
+          itinerary
+          gallery {
+            sourceUrl
           }
         }
         featuredImage {
@@ -133,35 +103,49 @@ export const GET_DESTINATIONS = gql`
             sourceUrl
           }
         }
-        acf {
+      }
+    }
+  }
+`;
+
+console.log('📦 GET_TRIPS query prepared:', GET_TRIPS.loc?.source.body);
+
+// Query to get all published destinations
+export const GET_DESTINATIONS = gql`
+  query GetDestinations {
+    destinations(first: 100, where: { status: PUBLISH }) {
+      nodes {
+        id
+        title
+        slug
+        destinationDetails {
           location
-          rating
-          ratingCount
+          description
+          attractions
+          image {
+            sourceUrl
+          }
+        }
+        featuredImage {
+          node {
+            sourceUrl
+          }
         }
       }
     }
   }
 `;
 
-// Query to get a single post by slug
+console.log('🌍 GET_DESTINATIONS query prepared:', GET_DESTINATIONS.loc?.source.body);
+
+// Query to get a single tour by slug
 export const GET_TRIP_BY_SLUG = gql`
   query GetTripBySlug($slug: ID!) {
-    post(id: $slug, idType: SLUG) {
+    tour(id: $slug, idType: SLUG) {
       id
       title
       content
-      categories {
-        nodes {
-          name
-          slug
-        }
-      }
-      featuredImage {
-        node {
-          sourceUrl
-        }
-      }
-      acf {
+      tourDetails {
         price
         duration
         location
@@ -175,6 +159,24 @@ export const GET_TRIP_BY_SLUG = gql`
           sourceUrl
         }
       }
+      featuredImage {
+        node {
+          sourceUrl
+        }
+      }
     }
   }
-`; 
+`;
+
+console.log('🎯 GET_TRIP_BY_SLUG query prepared:', GET_TRIP_BY_SLUG.loc?.source.body);
+
+// Add event listener for unhandled promise rejections
+if (typeof window !== 'undefined') {
+  window.addEventListener('unhandledrejection', event => {
+    console.error('❌ Unhandled Promise Rejection:', {
+      reason: event.reason,
+      message: event.reason?.message,
+      stack: event.reason?.stack
+    });
+  });
+} 

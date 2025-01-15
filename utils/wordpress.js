@@ -2,156 +2,175 @@ import { client, GET_TRIPS, GET_DESTINATIONS, GET_TRIP_BY_SLUG } from './graphql
 
 export async function getTours() {
   try {
-    console.log('Fetching tours with GraphQL...');
+    console.log('🔄 Fetching tours with GraphQL...');
     const { data, errors } = await client.query({
       query: GET_TRIPS
     });
 
     if (errors) {
-      console.error('GraphQL Errors in getTours:', errors);
+      console.error('❌ GraphQL Errors in getTours:', errors);
       return [];
     }
 
-    if (!data?.posts?.nodes) {
-      console.log('No posts data found in response:', data);
+    if (!data) {
+      console.warn('⚠️ No data returned from GraphQL');
       return [];
     }
 
-    // Filter posts that have travel or adventure categories
-    const tours = data.posts.nodes.filter(post => 
-      post.categories?.nodes?.some(cat => 
-        ['travel', 'adventure', 'البوسنة'].includes(cat.slug)
-      )
-    );
+    if (!data.tours?.nodes) {
+      console.warn('⚠️ No tours found in response. Data received:', data);
+      return [];
+    }
 
-    console.log('Found tours:', tours.length);
-    console.log('Tour data:', tours);
+    const tours = data.tours.nodes;
+    console.log(`✅ Found ${tours.length} tours`);
+    
+    // Log each tour's basic info
+    tours.forEach(tour => {
+      console.log(`  📍 Tour: ${tour.title}`);
+      console.log(`    - Slug: ${tour.slug}`);
+      console.log(`    - Price: ${tour.tourDetails?.price}`);
+      console.log(`    - Duration: ${tour.tourDetails?.duration}`);
+      console.log(`    - Location: ${tour.tourDetails?.location}`);
+    });
 
     return tours.map(tour => ({
       id: tour.id,
       title: tour.title,
       slug: tour.slug,
-      excerpt: tour.excerpt,
       featuredImage: tour.featuredImage,
       tripFields: {
-        price: tour.acf?.price || 0,
-        duration: tour.acf?.duration || '',
-        location: tour.acf?.location || '',
-        rating: parseFloat(tour.acf?.rating) || 0,
-        ratingCount: parseInt(tour.acf?.ratingCount) || 0
+        price: tour.tourDetails?.price || 0,
+        duration: tour.tourDetails?.duration || '',
+        location: tour.tourDetails?.location || '',
+        rating: parseFloat(tour.tourDetails?.rating) || 0,
+        ratingCount: parseInt(tour.tourDetails?.ratingCount) || 0,
+        difficulty: tour.tourDetails?.difficulty || '',
+        included: tour.tourDetails?.included?.split('\n').filter(item => item.trim()) || [],
+        notIncluded: tour.tourDetails?.notIncluded?.split('\n').filter(item => item.trim()) || [],
+        itinerary: tour.tourDetails?.itinerary || '',
+        gallery: tour.tourDetails?.gallery?.map(img => img.sourceUrl) || []
       }
     }));
   } catch (error) {
-    console.error('Error in getTours:', error);
-    if (error.graphQLErrors) {
-      console.error('GraphQL Errors:', error.graphQLErrors);
-    }
-    if (error.networkError) {
-      console.error('Network Error:', error.networkError);
-    }
+    console.error('❌ Error in getTours:', {
+      message: error.message,
+      graphQLErrors: error.graphQLErrors,
+      networkError: error.networkError
+    });
     return [];
   }
 }
 
 export async function getDestinations() {
   try {
-    console.log('Fetching destinations with GraphQL...');
+    console.log('🔄 Fetching destinations with GraphQL...');
     const { data, errors } = await client.query({
       query: GET_DESTINATIONS
     });
 
     if (errors) {
-      console.error('GraphQL Errors in getDestinations:', errors);
+      console.error('❌ GraphQL Errors in getDestinations:', errors);
       return [];
     }
 
-    if (!data?.posts?.nodes) {
-      console.log('No posts data found in response:', data);
+    if (!data) {
+      console.warn('⚠️ No data returned from GraphQL');
       return [];
     }
 
-    // Filter posts that have location categories
-    const destinations = data.posts.nodes.filter(post => 
-      post.categories?.nodes?.some(cat => 
-        ['افضل-الاماكن-السياحية-فى-شرق-اوربا', 'البوسنة'].includes(cat.slug)
-      )
-    );
+    if (!data.destinations?.nodes) {
+      console.warn('⚠️ No destinations found in response. Data received:', data);
+      return [];
+    }
 
-    console.log('Found destinations:', destinations.length);
-    console.log('Destination data:', destinations);
+    const destinations = data.destinations.nodes;
+    console.log(`✅ Found ${destinations.length} destinations`);
+    
+    // Log each destination's basic info
+    destinations.forEach(destination => {
+      console.log(`  📍 Destination: ${destination.title}`);
+      console.log(`    - Slug: ${destination.slug}`);
+      console.log(`    - Location: ${destination.destinationDetails?.location}`);
+    });
 
     return destinations.map(destination => ({
       id: destination.id,
       title: destination.title,
       slug: destination.slug,
-      excerpt: destination.excerpt,
       featuredImage: destination.featuredImage,
       tripFields: {
-        location: destination.acf?.location || '',
-        rating: parseFloat(destination.acf?.rating) || 0,
-        ratingCount: parseInt(destination.acf?.ratingCount) || 0
+        location: destination.destinationDetails?.location || '',
+        description: destination.destinationDetails?.description || '',
+        attractions: destination.destinationDetails?.attractions || [],
+        image: destination.destinationDetails?.image?.sourceUrl || destination.featuredImage?.node?.sourceUrl
       }
     }));
   } catch (error) {
-    console.error('Error in getDestinations:', error);
-    if (error.graphQLErrors) {
-      console.error('GraphQL Errors:', error.graphQLErrors);
-    }
-    if (error.networkError) {
-      console.error('Network Error:', error.networkError);
-    }
+    console.error('❌ Error in getDestinations:', {
+      message: error.message,
+      graphQLErrors: error.graphQLErrors,
+      networkError: error.networkError
+    });
     return [];
   }
 }
 
 export async function getTourBySlug(slug) {
   try {
-    console.log('Fetching tour by slug:', slug);
+    console.log('🔄 Fetching tour by slug:', slug);
     const { data, errors } = await client.query({
       query: GET_TRIP_BY_SLUG,
       variables: { slug }
     });
 
     if (errors) {
-      console.error('GraphQL Errors in getTourBySlug:', errors);
+      console.error('❌ GraphQL Errors in getTourBySlug:', errors);
       return null;
     }
 
-    if (!data?.post) {
-      console.log('No post found for slug:', slug);
+    if (!data) {
+      console.warn('⚠️ No data returned from GraphQL');
       return null;
     }
 
-    console.log('Found tour data:', data.post);
+    if (!data.tour) {
+      console.warn('⚠️ No tour found for slug:', slug);
+      return null;
+    }
 
-    const post = data.post;
+    const tour = data.tour;
+    console.log('✅ Found tour:', {
+      title: tour.title,
+      price: tour.tourDetails?.price,
+      duration: tour.tourDetails?.duration,
+      location: tour.tourDetails?.location
+    });
+
     return {
-      id: post.id,
-      title: post.title,
-      content: post.content,
-      categories: post.categories?.nodes || [],
-      featuredImage: post.featuredImage,
+      id: tour.id,
+      title: tour.title,
+      content: tour.content,
+      featuredImage: tour.featuredImage,
       tripFields: {
-        price: post.acf?.price || 0,
-        duration: post.acf?.duration || '',
-        location: post.acf?.location || '',
-        rating: parseFloat(post.acf?.rating) || 0,
-        ratingCount: parseInt(post.acf?.ratingCount) || 0,
-        difficulty: post.acf?.difficulty || '',
-        included: post.acf?.included?.split('\n').filter(item => item.trim()) || [],
-        notIncluded: post.acf?.notIncluded?.split('\n').filter(item => item.trim()) || [],
-        itinerary: post.acf?.itinerary || '',
-        gallery: post.acf?.gallery?.map(img => img.sourceUrl) || []
+        price: tour.tourDetails?.price || 0,
+        duration: tour.tourDetails?.duration || '',
+        location: tour.tourDetails?.location || '',
+        rating: parseFloat(tour.tourDetails?.rating) || 0,
+        ratingCount: parseInt(tour.tourDetails?.ratingCount) || 0,
+        difficulty: tour.tourDetails?.difficulty || '',
+        included: tour.tourDetails?.included?.split('\n').filter(item => item.trim()) || [],
+        notIncluded: tour.tourDetails?.notIncluded?.split('\n').filter(item => item.trim()) || [],
+        itinerary: tour.tourDetails?.itinerary || '',
+        gallery: tour.tourDetails?.gallery?.map(img => img.sourceUrl) || []
       }
     };
   } catch (error) {
-    console.error('Error in getTourBySlug:', error);
-    if (error.graphQLErrors) {
-      console.error('GraphQL Errors:', error.graphQLErrors);
-    }
-    if (error.networkError) {
-      console.error('Network Error:', error.networkError);
-    }
+    console.error('❌ Error in getTourBySlug:', {
+      message: error.message,
+      graphQLErrors: error.graphQLErrors,
+      networkError: error.networkError
+    });
     return null;
   }
 } 
