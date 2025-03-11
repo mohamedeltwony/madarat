@@ -1,0 +1,21 @@
+@use "sass:color";
+
+// Colors
+$color-primary: #1a365d;
+// Use color.adjust instead of darken for Sass 3.0 compatibility
+$color-primary-dark: color.adjust($color-primary, $lightness: -10%);
+$color-gray-100: #f7fafc;
+$color-gray-500: #718096;
+
+// Progress bar
+$progressbar-color: $color-primary;
+
+/* Export variables to JS */
+.variables {
+  --progressbar-color: #{$progressbar-color};
+}
+
+/* Static exports as JS object for compatibility */
+:export {
+  progressbarColor: $progressbar-color;
+}

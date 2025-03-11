@@ -1,0 +1,64 @@
+$font-family-default: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono,
+  Courier New, monospace;
+
+// Typography Scale
+// Using a modular scale with ratio 1.25 (major third)
+
+// Typography Mixins and Utility Classes
+
+// Heading Mixins
+@mixin heading-1 {
+  font-size: var(--font-size-3xl);
+  line-height: var(--line-height-tight);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+@mixin heading-2 {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-tight);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+@mixin heading-3 {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-snug);
+  font-weight: var(--font-weight-semibold);
+}
+
+@mixin heading-4 {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-snug);
+  font-weight: var(--font-weight-semibold);
+}
+
+// Body Text Mixins
+@mixin body-large {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+}
+
+@mixin body-base {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+}
+
+@mixin body-small {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+}
+
+// Caption & Label Mixins
+@mixin caption {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-relaxed);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+@mixin label {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-snug);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+}

@@ -1,0 +1,24 @@
+# Next.js WordPress Starter Documentation
+
+Welcome to the documentation for the Next.js WordPress Starter project. This documentation provides comprehensive information about the project's architecture, components, and usage.
+
+## Documentation Structure
+
+- [Overview](./overview.md): Project purpose and core features
+- [Getting Started](./getting-started.md): Setup and installation guide
+- [Architecture](./architecture.md): Project structure and technical design
+- [Key Components](./components.md): Breakdown of main components
+- [Styling](./styling.md): CSS and styling approach
+- [Data Fetching](./data-fetching.md): Working with WordPress data
+- [Deployment](./deployment.md): How to deploy the site
+- [Maintenance](./maintenance.md): Keeping the project updated
+- [React 19 Migration](./react-19-migration.md): Notes on migrating to React 19
+
+## Quick Links
+
+- [GitHub Repository](https://github.com/colbyfayock/next-wordpress-starter)
+- [Live Demo](https://next-wordpress-starter.spacejelly.dev)
+
+## About This Documentation
+
+This documentation is designed to help developers understand and work with the Next.js WordPress Starter project. It includes detailed information about the project's structure, components, and how to customize and extend it. 

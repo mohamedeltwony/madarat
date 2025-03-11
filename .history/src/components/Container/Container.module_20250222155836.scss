@@ -1,0 +1,19 @@
+@import "styles/settings/__settings";
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+// For hero section, allow full width
+:global(.hero) .container {
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+}

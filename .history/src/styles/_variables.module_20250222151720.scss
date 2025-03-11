@@ -1,0 +1,12 @@
+// Colors
+$color-primary: #1a365d;
+$color-primary-dark: darken($color-primary, 10%);
+$color-gray-100: #f7fafc;
+$color-gray-500: #718096;
+
+// Progress bar
+$progressbar-color: $color-primary;
+
+:export {
+  progressbarColor: $progressbar-color;
+}

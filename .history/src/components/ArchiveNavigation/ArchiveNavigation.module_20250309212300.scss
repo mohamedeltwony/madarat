@@ -1,0 +1,43 @@
+@use "sass:color";
+@import "styles/settings/__settings";
+
+.archiveNavigation {
+  border-radius: 5px;
+  background-color: $color-gray-100;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.yearLink {
+  font-weight: bold;
+  color: $color-primary;
+  margin-bottom: 0.5rem;
+  display: block;
+  
+  &.active {
+    color: color.adjust($color-primary, $lightness: -10%);
+  }
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.monthsList {
+  margin-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+.monthLink {
+  display: block;
+  margin-bottom: 0.25rem;
+  
+  &.active {
+    font-weight: bold;
+    color: $color-primary;
+  }
+  
+  &:hover {
+    text-decoration: underline;
+  }
+} 

@@ -1,0 +1,329 @@
+.morphGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  max-width: var(--container-width);
+  margin: 0 auto;
+  
+  @media (prefers-reduced-motion: no-preference) {
+    opacity: 0;
+    animation: fadeIn var(--transition-normal) forwards;
+  }
+}
+
+.morphItem {
+  height: 500px;
+  text-decoration: none;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  box-shadow: var(--shadow-md);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.3)
+    );
+    z-index: 1;
+    transition: background var(--transition-normal);
+  }
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+
+    &::before {
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.4)
+      );
+    }
+
+    .glassContent {
+      transform: translateY(-8px);
+    }
+  }
+
+  // Accessibility focus styles
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+  }
+
+  &:focus:not(:focus-visible) {
+    box-shadow: var(--shadow-md);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+  }
+}
+
+.glassContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--spacing-lg);
+  z-index: 2;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--glass-border);
+  transition: all var(--transition-normal);
+
+  h3 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: var(--spacing-sm) 0;
+    line-height: var(--line-height-tight);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.glassTag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-lg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition-fast);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+  }
+}
+
+// Variations with subtle differences
+.glassItem1 {
+  .glassContent {
+    background: linear-gradient(
+      to top,
+      var(--glass-bg),
+      rgba(255, 255, 255, 0.5)
+    );
+  }
+}
+
+.glassItem2 {
+  .glassContent {
+    background: linear-gradient(
+      135deg,
+      var(--glass-bg) 0%,
+      rgba(255, 255, 255, 0.6) 100%
+    );
+  }
+}
+
+.glassItem3 {
+  .glassContent {
+    background: linear-gradient(
+      to bottom,
+      var(--glass-bg),
+      rgba(255, 255, 255, 0.65)
+    );
+  }
+}
+
+// Loading animation
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+  .morphGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .morphGrid {
+    grid-template-columns: 1fr;
+    padding: var(--spacing-md);
+  }
+
+  .morphItem {
+    height: 400px;
+  }
+
+  .glassContent {
+    padding: var(--spacing-md);
+
+    h3 {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+// Reduced motion preferences
+@media (prefers-reduced-motion: reduce) {
+  .morphItem {
+    transition: none;
+
+    &:hover {
+      transform: none;
+
+      .glassContent {
+        transform: none;
+      }
+    }
+  }
+
+  .glassTag {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+/* Skeuomorphism Styles */
+.skeuItem {
+  background: #f4f4f4;
+  padding: 1rem;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+    
+    .notepad {
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+
+.notepad {
+  background: white;
+  height: 100%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  border: 1px solid #e0e0e0;
+}
+
+.notepadHeader {
+  height: 30px;
+  background: #f8f8f8;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 1rem;
+}
+
+.spiral {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d1d1d1;
+}
+
+.notepadContent {
+  padding: 1.5rem;
+
+  h3 {
+    font-family: 'Courier New', monospace;
+    color: #333;
+    margin: 1rem 0;
+    font-size: 1.3rem;
+  }
+}
+
+.date {
+  color: #666;
+  font-size: 0.9rem;
+  font-family: 'Courier New', monospace;
+}
+
+.polaroid {
+  width: 100%;
+  padding-top: 75%;
+  background-size: cover;
+  background-position: center;
+  border: 8px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: rotate(-2deg);
+  margin-top: 1rem;
+}
+
+/* Claymorphism Styles */
+.clayItem {
+  background: #f0f0f0;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+    
+    .clayContent {
+      transform: scale(1.02);
+    }
+  }
+}
+
+.clayContent {
+  background: white;
+  height: 100%;
+  border-radius: 20px;
+  padding: 1rem;
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.1),
+    -8px -8px 16px rgba(255, 255, 255, 0.8);
+  transition: transform 0.3s ease;
+}
+
+.clayImage {
+  width: 100%;
+  padding-top: 60%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.clayText {
+  padding: 1rem;
+
+  h3 {
+    color: #333;
+    font-size: 1.3rem;
+    margin: 0.5rem 0;
+  }
+}
+
+.clayTag {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #f8f8f8;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #666;
+  box-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.1),
+    -2px -2px 4px rgba(255, 255, 255, 0.8);
+} 

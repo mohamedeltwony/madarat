@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "env": {
+    "WORDPRESS_API_URL": "https://madaratalkon.com",
+    "WORDPRESS_GRAPHQL_ENDPOINT": "https://madaratalkon.com/graphql",
+    "WORDPRESS_MENU_LOCATION_NAVIGATION": "PRIMARY",
+    "WORDPRESS_PLUGIN_SEO": "true",
+    "POSTS_PRERENDER_COUNT": "5",
+    "OG_IMAGE_DIRECTORY": "/images/og"
+  }
+} 

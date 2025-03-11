@@ -1,0 +1,44 @@
+@import "styles/settings/__settings";
+
+.description {
+  text-align: center;
+  line-height: 1.5;
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.posts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+// Responsive breakpoints
+@media (max-width: 1200px) {
+  .posts {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .posts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .posts {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Add support for actual CSS masonry when browsers support it
+@supports (grid-template-rows: masonry) {
+  .posts {
+    grid-template-rows: masonry;
+    align-tracks: stretch;
+  }
+}

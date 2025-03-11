@@ -1,0 +1,25 @@
+# GraphQL Endpoints Guide
+
+This file provides a guide to the GraphQL endpoints used in this project.
+
+## Available Endpoints
+
+- **WordPress GraphQL Endpoint:**
+  - URL: \${process.env.WORDPRESS_GRAPHQL_ENDPOINT}
+  - Description: This endpoint is used to fetch data from the WordPress backend.
+
+## Sample Queries
+
+Add sample queries here with descriptions.
+
+```graphql
+# Example query to fetch posts
+query GetPosts {
+  posts {
+    nodes {
+      id
+      title
+      content
+    }
+  }
+}
