@@ -1,0 +1,439 @@
+@import "styles/settings/__settings";
+
+// Local breakpoint definitions
+$breakpoint-small: 768px;
+$breakpoint-medium: 992px;
+$breakpoint-large: 1200px;
+
+// Common Lead Form Styles
+.leadForm {
+  width: 100%;
+  
+  .formTitle {
+    font-size: 1.3rem;
+    color: $color-gray-900;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  
+  .formSubtitle {
+    font-size: 0.95rem;
+    color: $color-gray-600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .formGroup {
+    margin-bottom: 1.25rem;
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: $color-gray-800;
+    }
+    
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid $color-gray-300;
+      border-radius: 0.375rem;
+      transition: border-color 0.15s ease-in-out;
+      
+      &:focus {
+        outline: none;
+        border-color: $color-primary;
+        box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+      }
+      
+      &.inputError {
+        border-color: #e53935;
+      }
+    }
+  }
+  
+  .errorText {
+    color: #e53935;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+  
+  .formActions {
+    margin-top: 1.5rem;
+  }
+  
+  .successMessage {
+    padding: 2rem 1rem;
+    text-align: center;
+    
+    .successIcon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 1rem;
+      background-color: rgba($color-primary, 0.1);
+      color: $color-primary;
+      font-size: 1.5rem;
+      font-weight: bold;
+      border-radius: 50%;
+    }
+    
+    h3 {
+      font-size: 1.25rem;
+      color: $color-gray-900;
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      color: $color-gray-600;
+    }
+  }
+}
+
+// Popup Styles
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.popupContent {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+  
+  &.visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  // Glass effect
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: $color-gray-600;
+  cursor: pointer;
+  z-index: 10;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $color-gray-900;
+  }
+}
+
+.popupImageContainer {
+  margin-bottom: 1.5rem;
+  
+  .popupImage {
+    width: 100%;
+    height: auto;
+    border-radius: 0.375rem;
+  }
+}
+
+.popupHeader {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: $color-gray-900;
+  }
+  
+  .urgencyText {
+    color: #f57c00;
+    font-weight: 500;
+  }
+}
+
+// Welcome Popup Specific
+.welcomePopup {
+  text-align: center;
+}
+
+// Exit Popup Specific
+.exitPopup {
+  border-top: 5px solid #f57c00;
+}
+
+// Chatbot Styles
+.chatbot {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 350px;
+  height: 450px;
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+  
+  // Glass effect
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  &.open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  @media (max-width: $breakpoint-small) {
+    width: 300px;
+    height: 400px;
+    bottom: 70px;
+  }
+}
+
+.chatHeader {
+  padding: 1rem;
+  background-color: $color-primary;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  
+  .closeChat {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+}
+
+.chatMessages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message {
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.botMessage {
+  align-self: flex-start;
+  background-color: $color-gray-100;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 0;
+}
+
+.userMessage {
+  align-self: flex-end;
+  background-color: $color-primary;
+  color: white;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 0;
+}
+
+.typing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: $color-gray-500;
+  margin: 0 2px;
+  
+  &:nth-child(1) {
+    animation: bounce 1s infinite 0.2s;
+  }
+  
+  &:nth-child(2) {
+    animation: bounce 1s infinite 0.4s;
+  }
+  
+  &:nth-child(3) {
+    animation: bounce 1s infinite 0.6s;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.formMessage {
+  width: 100%;
+  max-width: 100%;
+}
+
+.chatFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+  label {
+    font-weight: 500;
+    color: $color-gray-800;
+  }
+  
+  input {
+    padding: 0.5rem;
+    border: 1px solid $color-gray-300;
+    border-radius: 0.25rem;
+  }
+  
+  .chatFormSubmit {
+    padding: 0.5rem;
+    background-color: $color-primary;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-weight: 500;
+    
+    &:hover {
+      background-color: darken($color-primary, 10%);
+    }
+  }
+}
+
+.chatInput {
+  padding: 0.75rem;
+  border-top: 1px solid $color-gray-200;
+  display: flex;
+  gap: 0.5rem;
+  
+  input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid $color-gray-300;
+    border-radius: 1.5rem;
+    
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+    }
+  }
+  
+  button {
+    padding: 0.5rem 1rem;
+    background-color: $color-primary;
+    color: white;
+    border: none;
+    border-radius: 1.5rem;
+    cursor: pointer;
+    
+    &:hover:not(:disabled) {
+      background-color: darken($color-primary, 10%);
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Sticky Sidebar
+.stickySidebar {
+  position: sticky;
+  top: 2rem;
+  width: 100%;
+}
+
+.sidebarContent {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  
+  // Glass effect
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebarImageContainer {
+  margin-bottom: 1.5rem;
+  
+  .sidebarImage {
+    width: 100%;
+    height: auto;
+    border-radius: 0.375rem;
+  }
+}
+
+// Specific Form Styles
+.popupForm {
+  .formTitle, .formSubtitle {
+    text-align: center;
+  }
+}
+
+.sidebarForm {
+  .formTitle, .formSubtitle {
+    text-align: center;
+  }
+} 

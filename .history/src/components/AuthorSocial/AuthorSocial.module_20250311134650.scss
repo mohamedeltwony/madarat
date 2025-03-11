@@ -1,0 +1,66 @@
+@import "styles/settings/__settings";
+
+.socialContainer {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.socialTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $color-gray-800;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.socialLinks {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: $color-gray-100;
+  color: $color-gray-800;
+  font-size: 1.25rem;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-3px);
+    
+    &:nth-child(1) {
+      background-color: #1DA1F2;
+      color: white;
+    }
+    
+    &:nth-child(2) {
+      background-color: #1877F2;
+      color: white;
+    }
+    
+    &:nth-child(3) {
+      background-color: #E4405F;
+      color: white;
+    }
+    
+    &:nth-child(4) {
+      background-color: #0A66C2;
+      color: white;
+    }
+    
+    &:nth-child(5) {
+      background-color: #333333;
+      color: white;
+    }
+  }
+} 

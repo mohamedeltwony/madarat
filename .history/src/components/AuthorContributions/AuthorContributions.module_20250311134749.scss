@@ -1,0 +1,92 @@
+@import "styles/settings/__settings";
+
+.contributionsContainer {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.contributionsTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $color-gray-800;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.contributionsChart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 150px;
+  margin-bottom: 1.5rem;
+}
+
+.chartColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.chartBar {
+  width: 80%;
+  background-color: $color-primary;
+  border-radius: 2px 2px 0 0;
+  transition: height 0.3s ease;
+  
+  &:hover {
+    background-color: darken($color-primary, 10%);
+  }
+}
+
+.chartLabel {
+  font-size: 0.7rem;
+  color: $color-gray-600;
+  margin-top: 0.5rem;
+  transform: rotate(-45deg);
+  white-space: nowrap;
+}
+
+.contributionsSummary {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: $color-gray-700;
+  
+  strong {
+    color: $color-primary;
+    font-weight: 600;
+  }
+}
+
+.contributionsLoading, .contributionsError {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba($color-primary, 0.2);
+  border-radius: 50%;
+  border-top-color: $color-primary;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+} 

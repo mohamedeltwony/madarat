@@ -1,0 +1,38 @@
+// Breakpoint variables for responsive design
+$breakpoint-small: 768px;
+$breakpoint-medium: 992px;
+$breakpoint-large: 1200px;
+
+// Mixin for responsive design (min-width queries)
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == small {
+    @media (min-width: $breakpoint-small) {
+      @content;
+    }
+  } @else if $breakpoint == medium {
+    @media (min-width: $breakpoint-medium) {
+      @content;
+    }
+  } @else if $breakpoint == large {
+    @media (min-width: $breakpoint-large) {
+      @content;
+    }
+  }
+}
+
+// Mixin for responsive design (max-width queries)
+@mixin respond-down-to($breakpoint) {
+  @if $breakpoint == small {
+    @media (max-width: $breakpoint-small - 1) {
+      @content;
+    }
+  } @else if $breakpoint == medium {
+    @media (max-width: $breakpoint-medium - 1) {
+      @content;
+    }
+  } @else if $breakpoint == large {
+    @media (max-width: $breakpoint-large - 1) {
+      @content;
+    }
+  }
+} 

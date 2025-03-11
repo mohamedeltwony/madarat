@@ -1,0 +1,53 @@
+.dashboardHeader {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  
+  @media (min-width: $breakpoint-small) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  h1 {
+    margin-bottom: 1.5rem;
+    
+    @media (min-width: $breakpoint-small) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.dashboardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  background-color: $color-primary;
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: darken($color-primary, 10%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+} 

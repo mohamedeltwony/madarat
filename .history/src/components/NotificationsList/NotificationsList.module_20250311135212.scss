@@ -1,0 +1,142 @@
+@import "styles/settings/__settings";
+
+.notificationsContainer {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.notificationsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.notificationsTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $color-gray-800;
+  margin: 0;
+}
+
+.markAllRead {
+  background: none;
+  border: none;
+  color: $color-primary;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: darken($color-primary, 10%);
+    text-decoration: underline;
+  }
+}
+
+.notificationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notificationItem {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease;
+  
+  &.unread {
+    background-color: rgba($color-primary, 0.05);
+  }
+  
+  &.read {
+    background-color: white;
+  }
+  
+  &:hover {
+    background-color: $color-gray-100;
+  }
+}
+
+.notificationIcon {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: $color-gray-200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  
+  span {
+    font-size: 1.25rem;
+  }
+}
+
+.notificationContent {
+  flex: 1;
+}
+
+.notificationText {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  color: $color-gray-800;
+  line-height: 1.4;
+}
+
+.notificationDate {
+  font-size: 0.8rem;
+  color: $color-gray-600;
+}
+
+.unreadDot {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: $color-primary;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 2rem 0;
+  color: $color-gray-600;
+  font-style: italic;
+}
+
+.notificationsLoading, .notificationsError {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba($color-primary, 0.2);
+  border-radius: 50%;
+  border-top-color: $color-primary;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+} 
