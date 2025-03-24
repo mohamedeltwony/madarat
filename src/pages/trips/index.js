@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Meta from '../../components/Meta';
 import styles from '../../styles/pages/Trips.module.scss';
 
-export default function TripsArchive({ trips = [] }) {
+const TRIPS_PER_PAGE = 20;
+
+export default function TripsArchive({ trips = [], totalPages = 1 }) {
+  const router = useRouter();
   const [filteredTrips, setFilteredTrips] = useState(trips);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDestination, setSelectedDestination] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(parseInt(router.query.page) || 1);
 
   useEffect(() => {
     if (!Array.isArray(trips)) {
@@ -39,6 +44,20 @@ export default function TripsArchive({ trips = [] }) {
       console.error('Error filtering trips:', err);
     }
   }, [searchQuery, selectedDestination, trips]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    router.push({
+      pathname: '/trips',
+      query: { page }
+    }, undefined, { shallow: true });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Calculate pagination indexes
+  const startIndex = (currentPage - 1) * TRIPS_PER_PAGE;
+  const endIndex = startIndex + TRIPS_PER_PAGE;
+  const currentTrips = filteredTrips.slice(startIndex, endIndex);
 
   if (error) {
     return (
@@ -74,7 +93,7 @@ export default function TripsArchive({ trips = [] }) {
         </Container>
       </Section>
 
-      <Section>
+      <Section className={styles.trips}>
         <Container>
           <div className={styles.filters}>
             <div className={styles.searchBox}>
@@ -109,44 +128,88 @@ export default function TripsArchive({ trips = [] }) {
 
           {isLoading ? (
             <div className={styles.loading}>جاري التحميل...</div>
-          ) : filteredTrips.length > 0 ? (
-            <div className={styles.tripsGrid}>
-              {filteredTrips.map((trip) => (
-                <Link
-                  key={trip.id}
-                  href={`/trips/${trip.slug}`}
-                  className={styles.tripCard}
-                >
-                  <div className={styles.tripImage}>
-                    {trip.image ? (
-                      <img
-                        src={trip.image}
-                        alt={trip.title}
-                        className={styles.image}
-                      />
-                    ) : (
-                      <div className={styles.placeholderImage}>
-                        لا توجد صورة
-                      </div>
-                    )}
-                  </div>
-                  <div className={styles.tripContent}>
-                    <h2 className={styles.tripTitle}>{trip.title}</h2>
-                    <p className={styles.tripDescription}>
-                      {trip.description}
-                    </p>
-                    <div className={styles.tripMeta}>
-                      <span className={styles.destination}>
-                        {trip.destination?.title || 'غير محدد'}
-                      </span>
-                      <span className={styles.duration}>
-                        {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}
-                      </span>
+          ) : currentTrips.length > 0 ? (
+            <>
+              <div className={styles.tripsGrid}>
+                {currentTrips.map((trip) => (
+                  <Link
+                    key={trip.id}
+                    href={`/trips/${trip.slug}`}
+                    className={styles.tripCard}
+                  >
+                    <div className={styles.tripImage}>
+                      {trip.featured_image?.sizes?.medium?.source_url ? (
+                        <img
+                          src={trip.featured_image.sizes.medium.source_url}
+                          alt={trip.title}
+                          className={styles.image}
+                        />
+                      ) : trip._embedded?.['wp:featuredmedia']?.[0]?.source_url ? (
+                        <img
+                          src={trip._embedded['wp:featuredmedia'][0].source_url}
+                          alt={trip.title}
+                          className={styles.image}
+                        />
+                      ) : trip.featured_media_url ? (
+                        <img
+                          src={trip.featured_media_url}
+                          alt={trip.title}
+                          className={styles.image}
+                        />
+                      ) : (
+                        <div className={styles.placeholderImage}>
+                          لا توجد صورة
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                    <div className={styles.tripContent}>
+                      <h2 className={styles.tripTitle}>{trip.title}</h2>
+                      <p className={styles.tripDescription}>
+                        {trip.description}
+                      </p>
+                      <div className={styles.tripMeta}>
+                        <span className={styles.destination}>
+                          {trip.destination?.title || 'غير محدد'}
+                        </span>
+                        <span className={styles.duration}>
+                          {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}
+                        </span>
+                        <span className={styles.price}>
+                          {trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'السعر غير متوفر'}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              {Math.ceil(filteredTrips.length / TRIPS_PER_PAGE) > 1 && (
+                <div className={styles.pagination}>
+                  <button
+                    className={styles.pageButton}
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    السابق
+                  </button>
+                  {[...Array(Math.ceil(filteredTrips.length / TRIPS_PER_PAGE))].map((_, index) => (
+                    <button
+                      key={index + 1}
+                      className={`${styles.pageButton} ${currentPage === index + 1 ? styles.active : ''}`}
+                      onClick={() => handlePageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                  <button
+                    className={styles.pageButton}
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === Math.ceil(filteredTrips.length / TRIPS_PER_PAGE)}
+                  >
+                    التالي
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className={styles.noTrips}>
               لم نجد رحلات تطابق بحثك
@@ -161,7 +224,7 @@ export default function TripsArchive({ trips = [] }) {
 export async function getStaticProps() {
   try {
     const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/trip?per_page=100&_embed'
+      `https://madaratalkon.com/wp-json/wp/v2/trip?per_page=100&_embed`
     );
 
     if (!response.ok) {
@@ -169,7 +232,7 @@ export async function getStaticProps() {
     }
 
     const trips = await response.json();
-    console.log('API Response:', trips); // Debug log
+    const totalPages = Math.ceil(trips.length / TRIPS_PER_PAGE);
 
     // Format trips data
     const formattedTrips = trips.map((trip) => {
@@ -199,17 +262,18 @@ export async function getStaticProps() {
         title: trip.title?.rendered || '',
         slug: trip.slug || '',
         description: trip.excerpt?.rendered?.replace(/<[^>]*>/g, '') || '',
-        image: trip.featured_media_url || null,
+        featured_image: trip.featured_image || null,
         duration,
         destination,
+        wp_travel_engine_setting_trip_actual_price: trip.wp_travel_engine_setting_trip_actual_price || null,
+        price: trip.price || null,
       };
     });
-
-    console.log('Formatted Trips:', formattedTrips); // Debug log
 
     return {
       props: {
         trips: formattedTrips,
+        totalPages,
       },
       revalidate: 3600, // Revalidate every hour
     };
@@ -218,6 +282,7 @@ export async function getStaticProps() {
     return {
       props: {
         trips: [],
+        totalPages: 1,
         error: 'Failed to fetch trips'
       },
       revalidate: 60, // Retry more frequently on error
