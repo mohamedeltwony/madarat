@@ -49,6 +49,11 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
+                    <Link href="/trips" legacyBehavior>
+                      <a>جميع الرحلات</a>
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/destinations/europe" legacyBehavior>
                       <a>أوروبا</a>
                     </Link>

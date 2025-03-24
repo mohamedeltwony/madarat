@@ -1,222 +1,193 @@
 @import "styles/settings/__settings";
 @import "styles/settings/_typography";
 
-.bentoGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  padding: 2rem;
-  max-width: var(--container-width);
-  margin: 0 auto;
+.destinationsContainer {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding: 2rem 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.bentoItem {
+.destinationsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.destinationCard {
   position: relative;
-  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 16px;
   overflow: hidden;
-  background: #fff;
+  transition: all 0.3s ease;
   text-decoration: none;
-  color: var(--color-text);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  height: 360px;
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  aspect-ratio: 3/2;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-
-    .image {
-      transform: scale(1.05);
-    }
-
-    .overlay {
-      opacity: 0.75;
-    }
-
-    .content {
-      transform: translateY(-4px);
-    }
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
   }
-}
-
-.imageWrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.image {
-  object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.4) 60%,
-    rgba(0, 0, 0, 0.8) 100%
-  );
-  opacity: 0.7;
-  transition: opacity 0.4s ease;
-}
-
-.content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 2rem;
-  color: white;
-  z-index: 2;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.icon {
-  font-size: var(--font-size-md);
-  color: var(--color-primary);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-.title {
-  @include heading-3;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  margin: 0;
 }
 
 .tripCount {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
-  align-self: flex-start;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-
-  .count {
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-bold);
-    margin-right: 0.5rem;
-  }
-
-  .label {
-    font-size: var(--font-size-xs);
-    opacity: 0.9;
-  }
-}
-
-.description {
-  @include body-text;
-  line-height: var(--line-height-normal);
-  opacity: 0.95;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin: 0;
-}
-
-.footer {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding-top: 1rem;
-  margin-top: auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.explore {
-  @include small-text;
-  font-weight: var(--font-weight-medium);
-  opacity: 0.9;
-  transition: opacity 0.3s ease;
-
-  &:hover {
-    opacity: 1;
-  }
+.countNumber {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.arrow {
+.countLabel {
+  font-size: 0.8rem;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.imageWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-// Responsive styles
-@media (max-width: 1200px) {
-  .bentoGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    padding: 1.5rem;
-  }
+.destinationCard:hover .image {
+  transform: scale(1.05);
+}
 
-  .bentoItem {
-    height: 320px;
-  }
+.placeholderImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.9rem;
+}
 
-  .title {
-    font-size: var(--font-size-h4);
-  }
+.content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.description {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.noDestinations {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 @media (max-width: 768px) {
-  .bentoGrid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding: 1rem;
+  .destinationsContainer {
+    padding: 1rem 0;
   }
 
-  .bentoItem {
-    height: 280px;
-  }
-
-  .content {
-    padding: 1.5rem;
-    gap: 0.5rem;
-  }
-
-  .title {
-    font-size: var(--font-size-h5);
-  }
-
-  .description {
-    font-size: var(--font-size-xs);
-    -webkit-line-clamp: 2;
+  .destinationsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: 0 1rem;
   }
 
   .tripCount {
-    padding: 0.4rem 0.8rem;
-    
-    .count {
-      font-size: var(--font-size-xs);
-    }
-    
-    .label {
-      font-size: var(--font-size-xxs);
-    }
+    width: 50px;
+    height: 50px;
+    top: 0.5rem;
+    left: 0.5rem;
   }
 
-  .footer {
-    padding-top: 0.75rem;
+  .countNumber {
+    font-size: 1.2rem;
+  }
+
+  .countLabel {
+    font-size: 0.7rem;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .description {
+    font-size: 0.85rem;
   }
 } 

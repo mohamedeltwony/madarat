@@ -59,7 +59,10 @@ const Footer = () => {
                   <Link href="/contact">اتصل بنا</Link>
                 </li>
                 <li>
-                  <Link href="/packages">الرحلات</Link>
+                  <Link href="/trips">الرحلات</Link>
+                </li>
+                <li>
+                  <Link href="/packages">الباقات</Link>
                 </li>
                 <li>
                   <Link href="/services">الخدمات</Link>

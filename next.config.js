@@ -8,6 +8,14 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['madaratalkon.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'madaratalkon.com',
+        port: '',
+        pathname: '/wp-content/uploads/**',
+      },
+    ],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     formats: ['image/webp'],
@@ -44,17 +52,36 @@ const nextConfig = {
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff'
-          }
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, OPTIONS',
+          },
         ],
       },
     ];
   },
   env: {
     OG_IMAGE_DIRECTORY: '/images/og',
-    POSTS_PRERENDER_COUNT: 5,
+    POSTS_PRERENDER_COUNT: '5',
     WORDPRESS_GRAPHQL_ENDPOINT: process.env.WORDPRESS_GRAPHQL_ENDPOINT,
     WORDPRESS_MENU_LOCATION_NAVIGATION: process.env.WORDPRESS_MENU_LOCATION_NAVIGATION || 'PRIMARY',
-    WORDPRESS_PLUGIN_SEO: false,
+    WORDPRESS_PLUGIN_SEO: 'false',
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://madaratalkon.com/wp-json/:path*',
+      },
+    ];
+  },
+  onError: (err) => {
+    console.error('Next.js build error:', err);
   },
 };
 

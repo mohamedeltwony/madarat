@@ -1,92 +1,71 @@
+import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { FaMapMarkerAlt, FaArrowLeft } from 'react-icons/fa';
+import Image from 'next/legacy/image';
 import styles from './BentoDestinations.module.scss';
 
-const stripHtml = (html) => {
-  if (!html) return '';
-  return html.replace(/<[^>]*>/g, '').trim();
-};
+const BentoDestinations = ({ destinations = [] }) => {
+  console.log('BentoDestinations received destinations:', destinations);
 
-const BentoDestinations = ({ destinations }) => {
-  if (!destinations || !Array.isArray(destinations)) return null;
-
-  // Define different box sizes for visual hierarchy
-  const boxSizes = {
-    large: 'large',
-    medium: 'medium',
-    small: 'small'
-  };
-
-  // Assign box sizes based on trip count
-  const getBoxSize = (tripCount) => {
-    if (tripCount >= 10) return boxSizes.large;
-    if (tripCount >= 5) return boxSizes.medium;
-    return boxSizes.small;
-  };
+  if (!destinations || destinations.length === 0) {
+    return (
+      <div className={styles.noDestinations}>
+        <p>لا توجد وجهات سياحية متاحة حالياً</p>
+      </div>
+    );
+  }
 
   return (
-    <div className={styles.bentoGrid}>
-      {destinations.map((destination, index) => {
-        const tripCount = destination.tripCount || 0;
-        const boxSize = getBoxSize(tripCount);
-        const cleanDescription = stripHtml(destination.description);
-        const cleanName = stripHtml(destination.name);
-        const imageUrl = destination.image || '/images/destinations/default.jpg';
-        
-        return (
-          <Link 
-            key={destination.id} 
-            href={`/destination/${destination.slug}`}
-            className={`${styles.bentoItem} ${styles[boxSize]} ${styles[`item${index + 1}`]}`}
-          >
-            <div className={styles.imageWrapper}>
-              <Image
-                src={imageUrl}
-                alt={cleanName}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className={styles.image}
-                priority={index < 6}
-                onError={(e) => {
-                  // If image fails to load, replace with default
-                  e.target.src = '/images/destinations/default.jpg';
-                }}
-              />
-              <div className={styles.overlay} />
-            </div>
-            
-            <div className={styles.content}>
-              <div className={styles.header}>
-                <FaMapMarkerAlt className={styles.icon} />
-                <h3 className={styles.title}>{cleanName}</h3>
+    <div className={styles.destinationsContainer}>
+      <div className={styles.destinationsGrid}>
+        {destinations.map((destination) => {
+          if (!destination || !destination.id) {
+            console.error('Invalid destination data:', destination);
+            return null;
+          }
+
+          return (
+            <Link 
+              key={destination.id} 
+              href={`/destinations/${destination.slug}/trips`}
+              className={styles.destinationCard}
+            >
+              <div className={styles.tripCount}>
+                <span className={styles.countNumber}>{destination.tripCount || 0}</span>
+                <span className={styles.countLabel}>رحلات</span>
               </div>
-              
-              {tripCount > 0 && (
-                <div className={styles.tripCount}>
-                  <span className={styles.count}>{tripCount}</span>
-                  <span className={styles.label}>
-                    {tripCount === 1 ? 'رحلة' : 'رحلات'}
-                  </span>
-                </div>
-              )}
-              
-              {cleanDescription && (
-                <p className={styles.description}>
-                  {cleanDescription.length > 120 
-                    ? `${cleanDescription.slice(0, 120)}...` 
-                    : cleanDescription}
-                </p>
-              )}
-              
-              <div className={styles.footer}>
-                <span className={styles.explore}>استكشف الوجهة</span>
-                <FaArrowLeft className={styles.arrow} />
+              <div className={styles.imageWrapper}>
+                {destination.image ? (
+                  <Image
+                    src={destination.image}
+                    alt={destination.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className={styles.image}
+                    priority={true}
+                    onError={(e) => {
+                      console.error('Image loading error:', e);
+                      e.target.src = '/images/placeholder.jpg';
+                    }}
+                    onLoad={(e) => {
+                      console.log('Image loaded successfully:', destination.title);
+                    }}
+                  />
+                ) : (
+                  <div className={styles.placeholderImage}>
+                    <span>No image available</span>
+                  </div>
+                )}
               </div>
-            </div>
-          </Link>
-        );
-      })}
+              <div className={styles.content}>
+                <h3 className={styles.title}>{destination.title}</h3>
+                {destination.description && (
+                  <p className={styles.description}>{destination.description}</p>
+                )}
+              </div>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 };

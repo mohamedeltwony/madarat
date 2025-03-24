@@ -21,7 +21,7 @@ import UIStyles from '@/components/UI/UI.module.scss';
 import React, { useState } from 'react';
 import Head from 'next/head';
 
-export default function Home({ posts, pagination, destinations, featuredAuthors, archives }) {
+export default function Home({ posts = [], pagination, destinations = [], featuredAuthors = [], archives = [] }) {
   const { metadata = {} } = useSite();
   const { title } = metadata;
   const [showForm, setShowForm] = useState(false);
@@ -59,16 +59,55 @@ export default function Home({ posts, pagination, destinations, featuredAuthors,
         <Section className={styles.destinationsSection}>
           <Container>
             <h2 className={styles.sectionTitle}>الوجهات السياحية</h2>
-            <BentoDestinations destinations={destinations} />
+            {!destinations || destinations.length === 0 ? (
+              <div className={styles.noDestinations}>
+                <p>جاري تحميل الوجهات السياحية...</p>
+              </div>
+            ) : (
+              <BentoDestinations destinations={destinations} />
+            )}
           </Container>
         </Section>
 
-        <Section className={styles.morphSection}>
-          <Container>
-            <h2 className={styles.sectionTitle}>Featured Stories</h2>
-            <MorphPosts posts={posts.slice(0, 3)} />
-          </Container>
-        </Section>
+        {posts.length > 0 && (
+          <>
+            <Section className={styles.morphSection}>
+              <Container>
+                <h2 className={styles.sectionTitle}>Featured Stories</h2>
+                <MorphPosts posts={posts.slice(0, 3)} />
+              </Container>
+            </Section>
+
+            <Section>
+              <Container>
+                <h2 className={styles.sectionTitle}>Latest Stories</h2>
+                <BentoPosts posts={posts.slice(3, 9)} />
+              </Container>
+            </Section>
+
+            <Section className={styles.latestPosts}>
+              <Container>
+                <h2 className={styles.sectionTitle}>More Adventures</h2>
+                <ul className={styles.posts}>
+                  {posts.slice(9).map((post) => {
+                    return (
+                      <li key={post.slug}>
+                        <PostCard post={post} />
+                      </li>
+                    );
+                  })}
+                </ul>
+                {pagination && (
+                  <Pagination
+                    currentPage={pagination?.currentPage}
+                    pagesCount={pagination?.pagesCount}
+                    basePath="/posts"
+                  />
+                )}
+              </Container>
+            </Section>
+          </>
+        )}
 
         {/* New Features Section */}
         <Section className={styles.featuresSection}>
@@ -162,35 +201,6 @@ export default function Home({ posts, pagination, destinations, featuredAuthors,
             </div>
           </Container>
         </Section>
-
-        <Section>
-          <Container>
-            <h2 className={styles.sectionTitle}>Latest Stories</h2>
-            <BentoPosts posts={posts.slice(3, 9)} />
-          </Container>
-        </Section>
-
-        <Section className={styles.latestPosts}>
-          <Container>
-            <h2 className={styles.sectionTitle}>More Adventures</h2>
-            <ul className={styles.posts}>
-              {posts.slice(9).map((post) => {
-                return (
-                  <li key={post.slug}>
-                    <PostCard post={post} />
-                  </li>
-                );
-              })}
-            </ul>
-            {pagination && (
-              <Pagination
-                currentPage={pagination?.currentPage}
-                pagesCount={pagination?.pagesCount}
-                basePath="/posts"
-              />
-            )}
-          </Container>
-        </Section>
       </Layout>
       
       {/* Lead Form Popup */}
@@ -252,83 +262,97 @@ export default function Home({ posts, pagination, destinations, featuredAuthors,
 
 export async function getStaticProps() {
   try {
-    const { posts, pagination } = await getPaginatedPosts({
-      queryIncludes: 'archive',
+    console.log('Starting to fetch destinations...');
+    
+    const response = await fetch('https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100', {
+      headers: {
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      next: { revalidate: 60 }, // Revalidate every 60 seconds
     });
 
-    // Fetch destinations from the REST API with per_page set to 100
-    const destinationsResponse = await fetch(
-      `${process.env.WORDPRESS_API_URL || 'https://madaratalkon.com'}/wp-json/wp/v2/destination?per_page=100`
-    );
-
-    if (!destinationsResponse.ok) {
-      throw new Error(`Failed to fetch destinations: ${destinationsResponse.status}`);
+    if (!response.ok) {
+      console.error('Failed to fetch destinations:', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+      });
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const destinationsData = await destinationsResponse.json();
+    const destinations = await response.json();
+    console.log('Raw destinations data:', destinations);
 
-    // Format destinations data from the REST API response
-    const destinations = destinationsData.map(destination => {
-      // Get the best available image URL from thumbnail sizes
-      let imageUrl = null;
-      if (destination.thumbnail?.sizes) {
-        const sizes = destination.thumbnail.sizes;
-        // Try to get the destination-thumb-size first, then fall back to other sizes
-        imageUrl = sizes['destination-thumb-size']?.source_url ||
-                  sizes['large']?.source_url ||
-                  sizes['medium_large']?.source_url ||
-                  sizes['medium']?.source_url ||
-                  destination.thumbnail?.full?.source_url;
-      }
+    if (!Array.isArray(destinations)) {
+      console.error('Destinations data is not an array:', destinations);
+      throw new Error('Invalid destinations data format');
+    }
 
-      return {
-        id: destination.id,
-        name: destination.name,
-        slug: destination.slug,
-        description: destination.description,
-        image: imageUrl,
-        tripCount: destination.count || 0,
-      };
-    });
+    const formattedDestinations = destinations.map(dest => ({
+      id: dest.id,
+      title: dest.name,
+      description: dest.description || '',
+      image: dest.thumbnail?.file ? `https://madaratalkon.com/wp-content/uploads/${dest.thumbnail.file}` : null,
+      link: dest.link,
+      slug: dest.slug,
+      tripCount: dest.trip_count || 0,
+    }));
+
+    console.log('Formatted destinations:', formattedDestinations);
+
+    // Fetch posts data with error handling
+    let posts = [];
+    let pagination = null;
+    try {
+      const postsData = await getPaginatedPosts({
+        queryIncludes: 'archive',
+      });
+      posts = postsData?.posts || [];
+      pagination = postsData?.pagination || null;
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+
+    // Get featured authors with error handling
+    let featuredAuthors = [];
+    try {
+      const { authors } = await getAllAuthors();
+      featuredAuthors = authors?.slice(0, 5) || [];
+    } catch (error) {
+      console.error('Error fetching authors:', error);
+    }
     
-    // Get featured authors
-    const { authors } = await getAllAuthors();
-    const featuredAuthors = authors.slice(0, 5);
-    
-    // Get archive years
-    const { years } = await getYearArchives();
+    // Get archive years with error handling
+    let archives = [];
+    try {
+      const { years } = await getYearArchives();
+      archives = years || [];
+    } catch (error) {
+      console.error('Error fetching archives:', error);
+    }
 
     return {
       props: {
+        destinations: formattedDestinations,
         posts,
-        destinations,
+        pagination,
         featuredAuthors,
-        archives: years || [],
-        pagination: {
-          ...pagination,
-          basePath: '/posts',
-        },
+        archives,
       },
-      // Revalidate every hour
-      revalidate: 3600,
+      revalidate: 60, // Revalidate every 60 seconds
     };
   } catch (error) {
     console.error('Error in getStaticProps:', error);
-    
-    // Return empty arrays if there's an error
     return {
       props: {
-        posts: [],
         destinations: [],
+        posts: [],
+        pagination: null,
         featuredAuthors: [],
         archives: [],
-        pagination: {
-          currentPage: 1,
-          pagesCount: 1,
-          basePath: '/posts',
-        },
+        error: error.message,
       },
-      // Reduce revalidation time if there was an error
       revalidate: 60,
     };
   }
