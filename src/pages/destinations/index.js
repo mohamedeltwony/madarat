@@ -7,27 +7,55 @@ import Section from '../../components/Section';
 import Meta from '../../components/Meta';
 import styles from '../../styles/pages/Destinations.module.scss';
 
-export default function Destinations({ destinations }) {
+export default function Destinations({ destinations = [] }) {
   const [filteredDestinations, setFilteredDestinations] = useState(destinations);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const filtered = destinations.filter(destination => {
-      const searchLower = searchQuery.toLowerCase();
-      return (
-        destination.title.toLowerCase().includes(searchLower) ||
-        destination.description.toLowerCase().includes(searchLower)
-      );
-    });
-    setFilteredDestinations(filtered);
+    if (!Array.isArray(destinations)) {
+      setError('Invalid destinations data');
+      return;
+    }
+
+    try {
+      const filtered = destinations.filter(destination => {
+        const searchLower = searchQuery.toLowerCase();
+        return (
+          destination.title.toLowerCase().includes(searchLower) ||
+          destination.description.toLowerCase().includes(searchLower)
+        );
+      });
+      setFilteredDestinations(filtered);
+      setError(null);
+    } catch (err) {
+      setError('Error filtering destinations');
+      console.error('Error filtering destinations:', err);
+    }
   }, [searchQuery, destinations]);
+
+  if (error) {
+    return (
+      <Layout>
+        <Section>
+          <Container>
+            <div className={styles.error}>
+              <h2>عذراً، حدث خطأ</h2>
+              <p>{error}</p>
+            </div>
+          </Container>
+        </Section>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
       <Head>
-        <title>الوجهات السياحية | مدارات الكن</title>
+        <title>الوجهات السياحية | مدارات الكون</title>
         <Meta
-          title="الوجهات السياحية | مدارات الكن"
+          title="الوجهات السياحية | مدارات الكون"
           description="اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل الأماكن حول العالم"
         />
       </Head>
@@ -55,7 +83,9 @@ export default function Destinations({ destinations }) {
             </div>
           </div>
 
-          {filteredDestinations.length > 0 ? (
+          {isLoading ? (
+            <div className={styles.loading}>جاري التحميل...</div>
+          ) : filteredDestinations.length > 0 ? (
             <div className={styles.destinationsGrid}>
               {filteredDestinations.map((destination) => (
                 <Link
@@ -103,17 +133,22 @@ export default function Destinations({ destinations }) {
 
 export async function getStaticProps() {
   try {
-    const destinationsRes = await fetch(
+    const response = await fetch(
       'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100'
     );
-    const destinations = await destinationsRes.json();
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const destinations = await response.json();
 
     // Format destinations data
     const formattedDestinations = destinations.map((dest) => ({
       id: dest.id,
-      title: dest.title.rendered,
-      slug: dest.slug,
-      description: dest.excerpt.rendered.replace(/<[^>]*>/g, ''),
+      title: dest.name || '',
+      slug: dest.slug || '',
+      description: dest.description || '',
       image: dest.featured_media_url || null,
       tripCount: dest.trip_count || 0,
     }));
@@ -129,8 +164,9 @@ export async function getStaticProps() {
     return {
       props: {
         destinations: [],
+        error: 'Failed to fetch destinations'
       },
-      revalidate: 3600,
+      revalidate: 60, // Retry more frequently on error
     };
   }
 } 
