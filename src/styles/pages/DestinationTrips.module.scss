@@ -24,7 +24,7 @@
     transition: color 0.3s ease;
 
     &:hover {
-      color: $primary-color;
+      color: $color-primary;
     }
   }
 }
@@ -69,8 +69,8 @@
 
   &:focus {
     outline: none;
-    border-color: $primary-color;
-    box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
   }
 }
 
@@ -198,14 +198,14 @@
 .backLink {
   display: inline-block;
   padding: 0.8rem 1.5rem;
-  background: $primary-color;
+  background: $color-primary;
   color: #fff;
   text-decoration: none;
   border-radius: 8px;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background: darken($primary-color, 10%);
+    background: darken($color-primary, 10%);
   }
 }
 

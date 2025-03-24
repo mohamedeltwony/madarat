@@ -1,182 +1,150 @@
 @import "styles/settings/__settings";
 @import "styles/settings/_typography";
 
-.heroSection {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)),
-              url('/images/hero-trips.jpg') center/cover;
-  color: #fff;
+.trips {
   padding: 4rem 0;
-  text-align: center;
-}
 
-.pageTitle {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
+  .hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url('/images/trips-hero.jpg') center/cover;
+    padding: 8rem 0;
+    text-align: center;
+    color: white;
+    margin-bottom: 4rem;
 
-.pageDescription {
-  font-size: 1.2rem;
-  max-width: 800px;
-  margin: 0 auto;
-  opacity: 0.9;
-}
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
 
-.filters {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-
-.searchBox {
-  flex: 1;
-  min-width: 250px;
-}
-
-.searchInput {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: $primary-color;
-    box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+    p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
   }
-}
 
-.destinationFilter {
-  min-width: 200px;
-}
+  .filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
 
-.filterSelect {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: #fff;
-  cursor: pointer;
-  transition: all 0.3s ease;
+    .searchBox {
+      flex: 1;
+      min-width: 300px;
+    }
 
-  &:focus {
-    outline: none;
-    border-color: $primary-color;
-    box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+    .destinationFilter {
+      min-width: 200px;
+    }
   }
-}
 
-.tripsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
+  .searchInput,
+  .destinationSelect {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
 
-.tripCard {
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-decoration: none;
-  color: inherit;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
+    }
   }
-}
 
-.tripImage {
-  position: relative;
-  width: 100%;
-  padding-top: 66.67%; // 3:2 aspect ratio
-  overflow: hidden;
-}
+  .tripsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
 
-.image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
+  .tripCard {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    color: inherit;
 
-.tripCard:hover .image {
-  transform: scale(1.05);
-}
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-.placeholderImage {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #f5f5f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #999;
-  font-size: 0.9rem;
-}
+    .tripImage {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
 
-.tripContent {
-  padding: 1.5rem;
-}
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
 
-.tripTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: $text-color;
-}
+      &:hover img {
+        transform: scale(1.05);
+      }
+    }
 
-.tripDestination {
-  font-size: 0.9rem;
-  color: $primary-color;
-  margin-bottom: 0.5rem;
-}
+    .tripContent {
+      padding: 1.5rem;
 
-.tripDescription {
-  font-size: 0.95rem;
-  color: #666;
-  margin-bottom: 1rem;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: $text-color-dark;
+      }
 
-.tripMeta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  color: #666;
-}
+      p {
+        color: $text-color;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
 
-.tripDuration, .tripPrice {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+      .tripMeta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: $text-color-light;
+        font-size: 0.9rem;
+      }
+    }
+  }
 
-.noTrips {
-  text-align: center;
-  padding: 3rem;
-  background: #f9f9f9;
-  border-radius: 12px;
-  color: #666;
-  font-size: 1.1rem;
+  .noTrips {
+    text-align: center;
+    padding: 4rem 0;
+    color: $text-color-light;
+    font-size: 1.2rem;
+  }
+
+  .error {
+    text-align: center;
+    padding: 2rem;
+    background: #fff5f5;
+    border-radius: 8px;
+    color: $color-error;
+    margin: 2rem 0;
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    color: $color-primary;
+    font-size: 1.2rem;
+  }
 }
 
 @media (max-width: 768px) {

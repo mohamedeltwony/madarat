@@ -134,7 +134,7 @@ export default function Destinations({ destinations = [] }) {
 export async function getStaticProps() {
   try {
     const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100'
+      'https://madaratalkon.com/wp-json/wp/v2/destination'
     );
 
     if (!response.ok) {
