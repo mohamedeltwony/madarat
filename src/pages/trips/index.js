@@ -137,10 +137,10 @@ export default function TripsArchive({ trips = [] }) {
                     </p>
                     <div className={styles.tripMeta}>
                       <span className={styles.destination}>
-                        {trip.destination?.title}
+                        {trip.destination?.title || 'غير محدد'}
                       </span>
                       <span className={styles.duration}>
-                        {trip.duration} أيام
+                        {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}
                       </span>
                     </div>
                   </div>
@@ -182,13 +182,24 @@ export async function getStaticProps() {
         };
       }
 
+      // Safely handle duration data
+      let duration = null;
+      if (trip.duration) {
+        duration = {
+          days: trip.duration.days || 0,
+          nights: trip.duration.nights || 0,
+          duration_unit: trip.duration.duration_unit || 'يوم',
+          duration_type: trip.duration.duration_type || 'days'
+        };
+      }
+
       return {
         id: trip.id,
         title: trip.title?.rendered || '',
         slug: trip.slug || '',
         description: trip.excerpt?.rendered?.replace(/<[^>]*>/g, '') || '',
         image: trip.featured_media_url || null,
-        duration: trip.duration || 0,
+        duration,
         destination,
       };
     });
