@@ -238,7 +238,7 @@ export async function getStaticProps() {
     const formattedTrips = trips.map((trip) => {
       // Safely handle destination data
       let destination = null;
-      if (trip._embedded?.['wp:term']?.[0]) {
+      if (trip._embedded?.['wp:term']?.[0]?.taxonomy === 'destination') {
         destination = {
           id: trip._embedded['wp:term'][0].id || null,
           title: trip._embedded['wp:term'][0].name || '',
