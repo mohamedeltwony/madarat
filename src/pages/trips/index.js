@@ -175,7 +175,7 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
                           {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}
                         </span>
                         <span className={styles.price}>
-                          {trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'السعر غير متوفر'}
+                          {trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'السعر غير متوفر'} {trip.currency?.code || 'SAR'}
                         </span>
                       </div>
                     </div>
@@ -238,11 +238,11 @@ export async function getStaticProps() {
     const formattedTrips = trips.map((trip) => {
       // Safely handle destination data
       let destination = null;
-      if (trip.destination) {
+      if (trip._embedded?.['wp:term']?.[0]) {
         destination = {
-          id: trip.destination.id || null,
-          title: trip.destination.name || '',
-          slug: trip.destination.slug || '',
+          id: trip._embedded['wp:term'][0].id || null,
+          title: trip._embedded['wp:term'][0].name || '',
+          slug: trip._embedded['wp:term'][0].slug || '',
         };
       }
 
@@ -267,6 +267,7 @@ export async function getStaticProps() {
         destination,
         wp_travel_engine_setting_trip_actual_price: trip.wp_travel_engine_setting_trip_actual_price || null,
         price: trip.price || null,
+        currency: trip.currency || null,
       };
     });
 
