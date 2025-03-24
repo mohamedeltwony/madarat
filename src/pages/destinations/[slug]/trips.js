@@ -174,7 +174,7 @@ export async function getStaticProps({ params }) {
   try {
     // Fetch destination data
     const destinationResponse = await fetch(
-      `https://madaratalkon.com/wp-json/wp/v2/destination?slug=${params.slug}`,
+      `https://madaratalkon.com/wp-json/wp/v2/destination?slug=${params.slug}&_embed`,
       {
         headers: {
           'Accept': 'application/json',
@@ -202,7 +202,7 @@ export async function getStaticProps({ params }) {
 
     // Fetch trips for this destination
     const tripsResponse = await fetch(
-      `https://madaratalkon.com/wp-json/wp/v2/trip?destination_id=${destination.id}&per_page=100`,
+      `https://madaratalkon.com/wp-json/wp/v2/trip?destination_id=${destination.id}&per_page=100&_embed`,
       {
         headers: {
           'Accept': 'application/json',
@@ -220,21 +220,22 @@ export async function getStaticProps({ params }) {
     // Format destination data
     const formattedDestination = {
       id: destination.id,
-      title: destination.name,
-      slug: destination.slug,
-      description: destination.description,
-      image: destination.featured_media_url,
+      title: destination.name || '',
+      slug: destination.slug || '',
+      description: destination.description?.rendered || '',
+      image: destination._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
     };
 
     // Format trips data
     const formattedTrips = trips.map(trip => ({
       id: trip.id,
-      title: trip.title.rendered,
-      description: trip.excerpt.rendered,
-      slug: trip.slug,
-      image: trip.featured_media_url,
+      title: trip.title?.rendered || '',
+      description: trip.excerpt?.rendered || '',
+      slug: trip.slug || '',
+      image: trip._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
       duration: trip.duration || 'غير محدد',
-      price: trip.price || 'غير محدد',
+      price: trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'غير محدد',
+      currency: trip.currency?.code || 'SAR',
     }));
 
     return {
@@ -242,7 +243,7 @@ export async function getStaticProps({ params }) {
         destination: formattedDestination,
         trips: formattedTrips,
       },
-      revalidate: 60,
+      revalidate: 3600, // Revalidate every hour
     };
   } catch (error) {
     console.error('Error in getStaticProps:', error);
@@ -250,7 +251,6 @@ export async function getStaticProps({ params }) {
       props: {
         destination: null,
         trips: [],
-        error: error.message,
       },
       revalidate: 60,
     };
