@@ -168,9 +168,6 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
                         {trip.description}
                       </p>
                       <div className={styles.tripMeta}>
-                        <span className={styles.destination}>
-                          {trip.destination?.title || 'غير محدد'}
-                        </span>
                         <span className={styles.duration}>
                           {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}
                         </span>
