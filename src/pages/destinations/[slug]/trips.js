@@ -115,7 +115,7 @@ export default function DestinationTrips({ destination, trips = [] }) {
                     </p>
                     <div className={styles.tripMeta}>
                       <span className={styles.tripDuration}>
-                        {trip.duration} أيام
+                        {trip.duration}
                       </span>
                       <span className={styles.tripPrice}>
                         من {trip.price} ريال
@@ -227,16 +227,31 @@ export async function getStaticProps({ params }) {
     };
 
     // Format trips data
-    const formattedTrips = trips.map(trip => ({
-      id: trip.id,
-      title: trip.title?.rendered || '',
-      description: trip.excerpt?.rendered || '',
-      slug: trip.slug || '',
-      image: trip._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
-      duration: trip.duration || 'غير محدد',
-      price: trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'غير محدد',
-      currency: trip.currency?.code || 'SAR',
-    }));
+    const formattedTrips = trips.map(trip => {
+      // Format duration
+      let durationText = 'غير محدد';
+      if (trip.duration) {
+        const { days, nights, duration_unit, duration_type } = trip.duration;
+        if (duration_type === 'days') {
+          durationText = `${days} أيام`;
+        } else if (duration_type === 'nights') {
+          durationText = `${nights} ليالٍ`;
+        } else if (duration_type === 'both') {
+          durationText = `${days} أيام ${nights} ليالٍ`;
+        }
+      }
+
+      return {
+        id: trip.id,
+        title: trip.title?.rendered || '',
+        description: trip.excerpt?.rendered || '',
+        slug: trip.slug || '',
+        image: trip._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
+        duration: durationText,
+        price: trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'غير محدد',
+        currency: trip.currency?.code || 'SAR',
+      };
+    });
 
     return {
       props: {
