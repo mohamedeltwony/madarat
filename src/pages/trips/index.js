@@ -171,19 +171,27 @@ export async function getStaticProps() {
     const trips = await response.json();
 
     // Format trips data
-    const formattedTrips = trips.map((trip) => ({
-      id: trip.id,
-      title: trip.title?.rendered || '',
-      slug: trip.slug || '',
-      description: trip.excerpt?.rendered?.replace(/<[^>]*>/g, '') || '',
-      image: trip.featured_media_url || null,
-      duration: trip.duration || 0,
-      destination: trip.destination ? {
-        id: trip.destination.id,
-        title: trip.destination.name,
-        slug: trip.destination.slug,
-      } : null,
-    }));
+    const formattedTrips = trips.map((trip) => {
+      // Safely handle destination data
+      let destination = null;
+      if (trip.destination) {
+        destination = {
+          id: trip.destination.id || null,
+          title: trip.destination.name || '',
+          slug: trip.destination.slug || '',
+        };
+      }
+
+      return {
+        id: trip.id,
+        title: trip.title?.rendered || '',
+        slug: trip.slug || '',
+        description: trip.excerpt?.rendered?.replace(/<[^>]*>/g, '') || '',
+        image: trip.featured_media_url || null,
+        duration: trip.duration || 0,
+        destination,
+      };
+    });
 
     return {
       props: {
