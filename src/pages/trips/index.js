@@ -161,7 +161,7 @@ export default function TripsArchive({ trips = [] }) {
 export async function getStaticProps() {
   try {
     const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/trip'
+      'https://madaratalkon.com/wp-json/wp/v2/trips?per_page=100'
     );
 
     if (!response.ok) {
@@ -169,6 +169,7 @@ export async function getStaticProps() {
     }
 
     const trips = await response.json();
+    console.log('API Response:', trips); // Debug log
 
     // Format trips data
     const formattedTrips = trips.map((trip) => {
@@ -203,6 +204,8 @@ export async function getStaticProps() {
         destination,
       };
     });
+
+    console.log('Formatted Trips:', formattedTrips); // Debug log
 
     return {
       props: {
