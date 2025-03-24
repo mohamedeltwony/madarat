@@ -161,7 +161,7 @@ export default function TripsArchive({ trips = [] }) {
 export async function getStaticProps() {
   try {
     const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/trip?per_page=100'
+      'https://madaratalkon.com/wp-json/wp/v2/trip?per_page=100&_embed'
     );
 
     if (!response.ok) {
