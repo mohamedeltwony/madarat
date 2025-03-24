@@ -200,9 +200,9 @@ export async function getStaticProps({ params }) {
       };
     }
 
-    // Fetch trips for this destination
+    // Fetch trips for this destination using the correct endpoint
     const tripsResponse = await fetch(
-      `https://madaratalkon.com/wp-json/wp/v2/trip?destination_id=${destination.id}&per_page=100&_embed`,
+      `https://madaratalkon.com/wp-json/wp/v2/trip?taxonomy=destination&tag_ID=${destination.id}&per_page=100&_embed`,
       {
         headers: {
           'Accept': 'application/json',
