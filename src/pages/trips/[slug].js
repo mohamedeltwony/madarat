@@ -102,8 +102,47 @@ export default function SingleTrip({ trip }) {
                   )}
                 </ul>
               </div>
+
+              <div className={styles.costInfo}>
+                <div className={styles.costSection}>
+                  <h3>يشمل السعر</h3>
+                  <div dangerouslySetInnerHTML={{ __html: trip.cost_includes.replace(/\r\n/g, '<br>') }} />
+                </div>
+                <div className={styles.costSection}>
+                  <h3>لا يشمل السعر</h3>
+                  <div dangerouslySetInnerHTML={{ __html: trip.cost_excludes.replace(/\r\n/g, '<br>') }} />
+                </div>
+              </div>
             </div>
           </div>
+
+          {trip.itineraries && trip.itineraries.length > 0 && (
+            <div className={styles.itinerarySection}>
+              <h2>برنامج الرحلة</h2>
+              <div className={styles.itineraryList}>
+                {trip.itineraries.map((day, index) => (
+                  <div key={index} className={styles.itineraryDay}>
+                    <h3>اليوم {index + 1}: {day.title}</h3>
+                    <div dangerouslySetInnerHTML={{ __html: day.content }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {trip.faqs && trip.faqs.length > 0 && (
+            <div className={styles.faqSection}>
+              <h2>الأسئلة الشائعة</h2>
+              <div className={styles.faqList}>
+                {trip.faqs.map((faq, index) => (
+                  <div key={index} className={styles.faqItem}>
+                    <h3>{faq.title}</h3>
+                    <div dangerouslySetInnerHTML={{ __html: faq.content }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </Container>
       </Section>
     </Layout>
@@ -148,6 +187,11 @@ export async function getStaticProps({ params }) {
       wp_travel_engine_setting_trip_actual_price: trip.wp_travel_engine_setting_trip_actual_price || null,
       price: trip.price || null,
       currency: trip.currency || null,
+      _embedded: trip._embedded || null,
+      cost_includes: trip.cost_includes || '',
+      cost_excludes: trip.cost_excludes || '',
+      itineraries: trip.itineraries || [],
+      faqs: trip.faqs || []
     };
 
     return {

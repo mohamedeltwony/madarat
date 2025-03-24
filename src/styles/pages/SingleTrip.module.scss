@@ -112,6 +112,7 @@
     padding: 2rem;
     position: sticky;
     top: 2rem;
+    margin-bottom: 2rem;
 
     h3 {
       font-size: 1.4rem;
@@ -143,6 +144,104 @@
           font-weight: 500;
         }
       }
+    }
+  }
+
+  .costInfo {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+
+    .costSection {
+      margin-bottom: 2rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      h3 {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+        color: $color-primary;
+      }
+
+      p {
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+.itinerarySection {
+  margin-top: 4rem;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: $color-primary;
+  }
+
+  .itineraryList {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .itineraryDay {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+
+    h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: $color-primary;
+    }
+
+    p {
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+  }
+}
+
+.faqSection {
+  margin-top: 4rem;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: $color-primary;
+  }
+
+  .faqList {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .faqItem {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+
+    h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: $color-primary;
+    }
+
+    p {
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
     }
   }
 }
