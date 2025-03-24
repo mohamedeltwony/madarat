@@ -265,25 +265,25 @@ export async function getStaticProps() {
         wp_travel_engine_setting_trip_actual_price: trip.wp_travel_engine_setting_trip_actual_price || null,
         price: trip.price || null,
         currency: trip.currency || null,
+        _embedded: trip._embedded || null
       };
     });
 
     return {
       props: {
         trips: formattedTrips,
-        totalPages,
+        totalPages
       },
-      revalidate: 3600, // Revalidate every hour
+      revalidate: 3600 // Revalidate every hour
     };
   } catch (error) {
     console.error('Error fetching trips:', error);
     return {
       props: {
         trips: [],
-        totalPages: 1,
-        error: 'Failed to fetch trips'
+        totalPages: 1
       },
-      revalidate: 60, // Retry more frequently on error
+      revalidate: 60
     };
   }
 } 
