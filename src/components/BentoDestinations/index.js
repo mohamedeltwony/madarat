@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/legacy/image';
 import styles from './BentoDestinations.module.scss';
 
 const destinations = [
@@ -27,7 +26,7 @@ const destinations = [
   },
 ];
 
-const BentoDestinations = () => {
+export default function BentoDestinations() {
   const [hoveredId, setHoveredId] = useState(null);
 
   return (
@@ -57,6 +56,4 @@ const BentoDestinations = () => {
       ))}
     </div>
   );
-};
-
-export default BentoDestinations;
+}
