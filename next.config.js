@@ -80,8 +80,14 @@ const nextConfig = {
       },
     ];
   },
-  onError: (err) => {
-    console.error('Next.js build error:', err);
+  onError: async (err, req, res) => {
+    if (err.statusCode === 403) {
+      res.statusCode = 403;
+      res.end('API access forbidden. Please try again later.');
+    }
+  },
+  experimental: {
+    fallback: true,
   },
 };
 
