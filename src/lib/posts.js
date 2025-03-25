@@ -1,4 +1,6 @@
 import { getApolloClient } from '@/lib/apollo-client';
+import { gql } from '@apollo/client';
+import client from './apollo-client';
 
 import { updateUserAvatar } from '@/lib/users';
 import { sortObjectsByDate } from '@/lib/datetime';
@@ -35,99 +37,50 @@ export function postPathBySlug(slug) {
  */
 
 export async function getPostBySlug(slug) {
-  const apolloClient = getApolloClient();
-  const apiHost = new URL(process.env.WORDPRESS_GRAPHQL_ENDPOINT).host;
+  const { data } = await client.query({
+    query: gql`
+      query PostBySlug($slug: String!) {
+        postBy(slug: $slug) {
+          id
+          title
+          slug
+          date
+          content
+          excerpt
+          featuredImage {
+            node {
+              sourceUrl
+            }
+          }
+          author {
+            node {
+              name
+              slug
+              description
+              avatar {
+                url
+              }
+            }
+          }
+          categories {
+            nodes {
+              name
+              slug
+            }
+          }
+          tags {
+            nodes {
+              name
+              slug
+            }
+          }
+        }
+      }
+    `,
+    variables: { slug },
+  });
 
-  let postData;
-  let seoData;
-
-  try {
-    postData = await apolloClient.query({
-      query: QUERY_POST_BY_SLUG,
-      variables: {
-        slug,
-      },
-    });
-  } catch (e) {
-    console.log(
-      `[posts][getPostBySlug] Failed to query post data: ${e.message}`
-    );
-    throw e;
-  }
-
-  if (!postData?.data.post) return { post: undefined };
-
-  const post = [postData?.data.post].map(mapPostData)[0];
-
-  // If the SEO plugin is enabled, look up the data
-  // and apply it to the default settings
-
-  if (process.env.WORDPRESS_PLUGIN_SEO === true) {
-    try {
-      seoData = await apolloClient.query({
-        query: QUERY_POST_SEO_BY_SLUG,
-        variables: {
-          slug,
-        },
-      });
-    } catch (e) {
-      console.log(
-        `[posts][getPostBySlug] Failed to query SEO plugin: ${e.message}`
-      );
-      console.log(
-        'Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.'
-      );
-      throw e;
-    }
-
-    const { seo = {} } = seoData?.data?.post || {};
-
-    post.metaTitle = seo.title;
-    post.metaDescription = seo.metaDesc;
-    post.readingTime = seo.readingTime;
-
-    // The SEO plugin by default includes a canonical link, but we don't want to use that
-    // because it includes the WordPress host, not the site host. We manage the canonical
-    // link along with the other metadata, but explicitly check if there's a custom one
-    // in here by looking for the API's host in the provided canonical link
-
-    if (seo.canonical && !seo.canonical.includes(apiHost)) {
-      post.canonical = seo.canonical;
-    }
-
-    post.og = {
-      author: seo.opengraphAuthor,
-      description: seo.opengraphDescription,
-      image: seo.opengraphImage,
-      modifiedTime: seo.opengraphModifiedTime,
-      publishedTime: seo.opengraphPublishedTime,
-      publisher: seo.opengraphPublisher,
-      title: seo.opengraphTitle,
-      type: seo.opengraphType,
-    };
-
-    post.article = {
-      author: post.og.author,
-      modifiedTime: post.og.modifiedTime,
-      publishedTime: post.og.publishedTime,
-      publisher: post.og.publisher,
-    };
-
-    post.robots = {
-      nofollow: seo.metaRobotsNofollow,
-      noindex: seo.metaRobotsNoindex,
-    };
-
-    post.twitter = {
-      description: seo.twitterDescription,
-      image: seo.twitterImage,
-      title: seo.twitterTitle,
-    };
-  }
-
-  return {
-    post,
-  };
+  return data.postBy;
 }
 
 /**
@@ -140,20 +93,47 @@ const allPostsIncludesTypes = {
   index: QUERY_ALL_POSTS_INDEX,
 };
 
-export async function getAllPosts(options = {}) {
-  const { queryIncludes = 'index' } = options;
-
-  const apolloClient = getApolloClient();
-
-  const data = await apolloClient.query({
-    query: allPostsIncludesTypes[queryIncludes],
+export async function getAllPosts() {
+  const { data } = await client.query({
+    query: gql`
+      query AllPosts {
+        posts(first: 100) {
+          nodes {
+            id
+            title
+            slug
+            date
+            excerpt
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                slug
+              }
+            }
+            categories {
+              nodes {
+                name
+                slug
+              }
+            }
+            tags {
+              nodes {
+                name
+                slug
+              }
+            }
+          }
+        }
+      }
+    `,
   });
 
-  const posts = data?.data.posts.edges.map(({ node = {} }) => node);
-
-  return {
-    posts: Array.isArray(posts) && posts.map(mapPostData),
-  };
+  return data.posts.nodes;
 }
 
 /**
@@ -404,32 +384,57 @@ export async function getPagesCount(posts, postsPerPage) {
  * getPaginatedPosts
  */
 
-export async function getPaginatedPosts({ currentPage = 1, ...options } = {}) {
-  const { posts } = await getAllPosts(options);
-  const postsPerPage = await getPostsPerPage();
-  const pagesCount = await getPagesCount(posts, postsPerPage);
+export async function getPaginatedPosts(page = 1, perPage = 10) {
+  const { data } = await client.query({
+    query: gql`
+      query PaginatedPosts($page: Int!, $perPage: Int!) {
+        posts(where: { offsetPagination: { offset: $page, size: $perPage } }) {
+          nodes {
+            id
+            title
+            slug
+            date
+            excerpt
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                slug
+              }
+            }
+            categories {
+              nodes {
+                name
+                slug
+              }
+            }
+            tags {
+              nodes {
+                name
+                slug
+              }
+            }
+          }
+          pageInfo {
+            offsetPagination {
+              total
+            }
+          }
+        }
+      }
+    `,
+    variables: { page: (page - 1) * perPage, perPage },
+  });
 
-  let page = Number(currentPage);
-
-  if (typeof page === 'undefined' || isNaN(page)) {
-    page = 1;
-  } else if (page > pagesCount) {
-    return {
-      posts: [],
-      pagination: {
-        currentPage: undefined,
-        pagesCount,
-      },
-    };
-  }
-
-  const offset = postsPerPage * (page - 1);
-  const sortedPosts = sortStickyPosts(posts);
   return {
-    posts: sortedPosts.slice(offset, offset + postsPerPage),
+    posts: data.posts.nodes,
     pagination: {
       currentPage: page,
-      pagesCount,
+      totalPages: Math.ceil(data.posts.pageInfo.offsetPagination.total / perPage),
     },
   };
 }
@@ -559,4 +564,136 @@ export async function getYearArchives() {
   ].sort((a, b) => b - a); // Sort descending
 
   return years;
+}
+
+export async function getPostsByCategory(category) {
+  const { data } = await client.query({
+    query: gql`
+      query PostsByCategory($category: String!) {
+        posts(where: { categoryName: $category }) {
+          nodes {
+            id
+            title
+            slug
+            date
+            excerpt
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                slug
+              }
+            }
+            categories {
+              nodes {
+                name
+                slug
+              }
+            }
+            tags {
+              nodes {
+                name
+                slug
+              }
+            }
+          }
+        }
+      }
+    `,
+    variables: { category },
+  });
+
+  return data.posts.nodes;
+}
+
+export async function getPostsByAuthor(author) {
+  const { data } = await client.query({
+    query: gql`
+      query PostsByAuthor($author: String!) {
+        posts(where: { authorName: $author }) {
+          nodes {
+            id
+            title
+            slug
+            date
+            excerpt
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                slug
+              }
+            }
+            categories {
+              nodes {
+                name
+                slug
+              }
+            }
+            tags {
+              nodes {
+                name
+                slug
+              }
+            }
+          }
+        }
+      }
+    `,
+    variables: { author },
+  });
+
+  return data.posts.nodes;
+}
+
+export async function getPostsByTag(tag) {
+  const { data } = await client.query({
+    query: gql`
+      query PostsByTag($tag: String!) {
+        posts(where: { tag: $tag }) {
+          nodes {
+            id
+            title
+            slug
+            date
+            excerpt
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                slug
+              }
+            }
+            categories {
+              nodes {
+                name
+                slug
+              }
+            }
+            tags {
+              nodes {
+                name
+                slug
+              }
+            }
+          }
+        }
+      }
+    `,
+    variables: { tag },
+  });
+
+  return data.posts.nodes;
 }
