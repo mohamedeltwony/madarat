@@ -97,6 +97,10 @@ const nextConfig = {
   experimental: {
     fallback: true,
   },
+  // Handle 404 and other error pages
+  async redirects() {
+    return [];
+  },
 };
 
 module.exports = nextConfig;

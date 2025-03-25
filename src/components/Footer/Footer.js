@@ -205,7 +205,7 @@ const Footer = () => {
                   <Link href="/refund-policy">سياسة الاسترداد</Link>
                 </li>
                 <li>
-                  <a href="/sitemap.xml">خريطة الموقع</a>
+                  <Link href="/sitemap.xml">خريطة الموقع</Link>
                 </li>
                 <li>
                   <a href="/feed.xml">RSS</a>
