@@ -249,3 +249,43 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Environment Variables
+
+The following environment variables are required for the application to function properly:
+
+```env
+# WordPress API Configuration
+WORDPRESS_GRAPHQL_ENDPOINT="https://madaratalkon.com/graphql"
+WORDPRESS_MENU_LOCATION_NAVIGATION="PRIMARY"
+WORDPRESS_PLUGIN_SEO="true"
+WORDPRESS_API_URL=https://madaratalkon.com
+NEXT_PUBLIC_WORDPRESS_API_URL=https://madaratalkon.com/graphql
+
+# Authentication
+WORDPRESS_AUTH_REFRESH_TOKEN=your_refresh_token_here
+WORDPRESS_PREVIEW_SECRET=your_preview_secret_here
+
+# Site Configuration
+NEXT_PUBLIC_SITE_URL=https://madarat.vercel.app
+VERCEL_ENV=production
+```
+
+## Deployment
+
+This project is deployed on Vercel. To deploy:
+
+1. Connect your GitHub repository to Vercel
+2. Configure the environment variables in your Vercel project settings
+3. Deploy the project
+
+## Development
+
+To run the development server:
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the site.
