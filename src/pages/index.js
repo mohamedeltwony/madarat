@@ -10,6 +10,8 @@ import Pagination from '@/components/Pagination';
 import styles from '@/styles/pages/Home.module.scss';
 import { formatDate } from '@/lib/datetime';
 import StickyLeadForm from '@/components/StickyLeadForm';
+import BentoPosts from '@/components/BentoPosts';
+import BentoDestinations from '@/components/BentoDestinations';
 
 export default function Home({
   posts = [],
@@ -22,8 +24,8 @@ export default function Home({
   const [showForm, setShowForm] = useState(false);
 
   const metadata = {
-    title: 'مدارات - منصة للمحتوى العربي المميز',
-    description: 'موقع مدارات - منصة للمحتوى العربي المميز',
+    title: 'مدارات - رحلات سياحية مميزة',
+    description: 'اكتشف أجمل الوجهات السياحية مع مدارات. نقدم رحلات مميزة وتجارب فريدة.',
   };
 
   return (
@@ -33,340 +35,33 @@ export default function Home({
         <meta name="description" content={metadata.description} />
       </Head>
 
-      <Section>
-        <Container>
-          <div className={styles.featuredPosts}>
-            {posts.slice(0, 6).map((post) => (
-              <PostCard key={post.slug} post={post} />
-            ))}
+      <Container>
+        <Section>
+          <div className={styles.hero}>
+            <h1>اكتشف العالم مع مدارات</h1>
+            <p>رحلات مميزة وتجارب لا تنسى</p>
           </div>
-
-          {pagination && (
-            <Pagination
-              addCanonical={false}
-              currentPage={pagination?.current}
-              pagesCount={pagination?.pages}
-              basePath={pagination?.basePath}
-            />
-          )}
-        </Container>
-      </Section>
-
-      <Section className={styles.featuresSection}>
-        <Container>
-          <div className={styles.featuresGrid}>
-            <div className={styles.feature}>
-              <h2>الأرشيف</h2>
-              <p>
-                Browse our content by date. Find articles from specific months or
-                years.
-              </p>
-              <div className={styles.featureTags}>
-                {archives.map((year) => (
-                  <Link
-                    key={year}
-                    href={`/archives/${year}`}
-                    className={styles.featureTag}
-                  >
-                    {year}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.feature}>
-              <h2>الوجهات</h2>
-              <div className={styles.featureDestinations}>
-                {destinations.map((destination) => (
-                  <Link
-                    key={destination.slug}
-                    href={`/destinations/${destination.slug}`}
-                    className={styles.featureDestination}
-                  >
-                    <div className={styles.destinationImage}>
-                      {destination.thumbnail && (
-                        <img
-                          src={`https://madaratalkon.com/wp-content/uploads/${destination.thumbnail.file}`}
-                          alt={destination.title}
-                        />
-                      )}
-                    </div>
-                    <h3>{destination.title}</h3>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.feature}>
-              <h2>الكتّاب المميزون</h2>
-              <div className={styles.featureAuthors}>
-                {featuredAuthors.map((author) => (
-                  <Link
-                    key={author.slug}
-                    href={`/authors/${author.slug}`}
-                    className={styles.featureAuthor}
-                  >
-                    {author.avatar && (
-                      <img
-                        src={author.avatar}
-                        alt={author.name}
-                        className={styles.authorAvatar}
-                      />
-                    )}
-                    <h3>{author.name}</h3>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.feature}>
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    alert('شكراً لك! سنتواصل معك قريباً.');
-    setShowForm(false);
-  };
-
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>مدارات | الصفحة الرئيسية</title>
-        <meta
-          name="description"
-          content="موقع مدارات - منصة للمحتوى العربي المميز"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <Layout>
-        <WebsiteJsonLd siteTitle={title} />
-
-        <Hero
-          title="مدارات الكون"
-          description="اكتشف معنا أجمل الوجهات السياحية حول العالم. نقدم لك دليلاً شاملاً للسفر والسياحة، من التخطيط للرحلة إلى أفضل الأماكن للزيارة والإقامة."
-          backgroundImage="/images/hero-background.jpg"
-          featuredText="اكتشف المزيد"
-          featuredLink="/destinations"
-        />
-
-        <Section className={styles.destinationsSection}>
-          <Container>
-            <h2 className={styles.sectionTitle}>الوجهات السياحية</h2>
-            {!destinations || destinations.length === 0 ? (
-              <div className={styles.noDestinations}>
-                <p>جاري تحميل الوجهات السياحية...</p>
-              </div>
-            ) : (
-              <BentoDestinations destinations={destinations} />
-            )}
-          </Container>
         </Section>
 
-        {posts.length > 0 && (
-          <>
-            <Section className={styles.morphSection}>
-              <Container>
-                <h2 className={styles.sectionTitle}>Featured Stories</h2>
-                <MorphPosts posts={posts.slice(0, 3)} />
-              </Container>
-            </Section>
-
-            <Section>
-              <Container>
-                <h2 className={styles.sectionTitle}>Latest Stories</h2>
-                <BentoPosts posts={posts.slice(3, 9)} />
-              </Container>
-            </Section>
-
-            <Section className={styles.latestPosts}>
-              <Container>
-                <h2 className={styles.sectionTitle}>More Adventures</h2>
-                <ul className={styles.posts}>
-                  {posts.slice(9).map((post) => {
-                    return (
-                      <li key={post.slug}>
-                        <PostCard post={post} />
-                      </li>
-                    );
-                  })}
-                </ul>
-                {pagination && (
-                  <Pagination
-                    currentPage={pagination?.currentPage}
-                    pagesCount={pagination?.pagesCount}
-                    basePath="/posts"
-                  />
-                )}
-              </Container>
-            </Section>
-          </>
-        )}
-
-        {/* New Features Section */}
-        <Section className={styles.featuresSection}>
-          <Container>
-            <h2 className={styles.sectionTitle}>Explore Our Site</h2>
-
-            <div className={styles.featuresGrid}>
-              {/* Archives Feature */}
-              <div className={styles.featureCard}>
-                <div className={styles.featureIcon}>
-                  <Image
-                    src="/images/icons/calendar.svg"
-                    alt="Archives Icon"
-                    width={48}
-                    height={48}
-                    layout="fixed"
-                  />
-                </div>
-                <h3>Archives</h3>
-                <p>
-                  Browse our content by date. Find articles from specific months
-                  or years.
-                </p>
-
-                <div className={styles.featureTags}>
-                  {archives.slice(0, 5).map((year) => (
-                    <Link
-                      key={year}
-                      href={`/archives/${year}`}
-                      className={styles.featureTag}
-                    >
-                      {year}
-                    </Link>
-                  ))}
-                </div>
-
-                <Link href="/archives" className={styles.featureLink}>
-                  Browse All Archives
-                </Link>
-              </div>
-
-              {/* Authors Feature */}
-              <div className={styles.featureCard}>
-                <div className={styles.featureIcon}>
-                  <Image
-                    src="/images/icons/users.svg"
-                    alt="Authors Icon"
-                    width={48}
-                    height={48}
-                    layout="fixed"
-                  />
-                </div>
-                <h3>Authors</h3>
-                <p>Discover our writers and their unique perspectives.</p>
-
-                <div className={styles.featureAuthors}>
-                  {featuredAuthors.slice(0, 3).map((author) => (
-                    <Link
-                      key={author.slug}
-                      href={`/authors/${author.slug}`}
-                      className={styles.featureAuthor}
-                    >
-                      {author.avatar && (
-                        <Image
-                          src={author.avatar.url}
-                          alt={author.name}
-                          width={40}
-                          height={40}
-                          layout="fixed"
-                          className={styles.featureAuthorAvatar}
-                        />
-                      )}
-                      <span>{author.name}</span>
-                    </Link>
-                  ))}
-                </div>
-
-                <Link href="/authors" className={styles.featureLink}>
-                  View All Authors
-                </Link>
-              </div>
-
-              {/* Advanced Search Feature */}
-              <div className={styles.featureCard}>
-                <div className={styles.featureIcon}>
-                  <Image
-                    src="/images/icons/search.svg"
-                    alt="Search Icon"
-                    width={48}
-                    height={48}
-                    layout="fixed"
-                  />
-                </div>
-                <h3>Advanced Search</h3>
-                <p>
-                  Find exactly what you're looking for with our powerful search
-                  tools.
-                </p>
-                <p>Filter content by date, category, author and more.</p>
-
-                <Link href="/advanced-search" className={styles.featureLink}>
-                  Try Advanced Search
-                </Link>
-              </div>
-            </div>
-          </Container>
+        <Section>
+          <h2>وجهات مميزة</h2>
+          <BentoDestinations />
         </Section>
-      </Layout>
 
-      {/* Lead Form Popup */}
-      {showForm && (
-        <div className={styles.formOverlay}>
-          <div className={`${UIStyles.glassCard} ${styles.formContainer}`}>
-            <button
-              className={styles.closeButton}
-              onClick={() => setShowForm(false)}
-            >
-              ×
-            </button>
-            <h3>انضم إلينا الآن</h3>
-            <p>اترك بياناتك ليصلك كل جديد</p>
+        <Section>
+          <h2>آخر المقالات</h2>
+          <BentoPosts />
+        </Section>
 
-            <form onSubmit={handleSubmit}>
-              <div className={styles.formGroup}>
-                <label htmlFor="name">الاسم الكامل</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  placeholder="أدخل اسمك الكامل"
-                  required
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="phone">رقم الهاتف</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder="أدخل رقم هاتفك"
-                  required
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="email">البريد الإلكتروني</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="أدخل بريدك الإلكتروني"
-                  required
-                />
-              </div>
-
-              <div className={styles.formActions}>
-                <SparkleButton type="submit" fullWidth>
-                  إرسال
-                </SparkleButton>
-              </div>
-            </form>
+        <Section>
+          <div className={styles.cta}>
+            <h2>ابدأ رحلتك معنا</h2>
+            <p>اشترك في نشرتنا البريدية للحصول على أحدث العروض والوجهات</p>
+            <button onClick={() => setShowForm(true)}>اشترك الآن</button>
           </div>
-        </div>
-      )}
-    </div>
+        </Section>
+      </Container>
+    </Layout>
   );
 }
 
