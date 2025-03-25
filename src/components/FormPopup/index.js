@@ -1,20 +1,13 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './FormPopup.module.scss';
 
-const FormPopup = ({ isOpen, onClose }) => {
+const FormPopup = ({ onClose }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
+    message: '',
   });
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log('Form submitted:', formData);
-    setIsSubmitted(true);
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +17,12 @@ const FormPopup = ({ isOpen, onClose }) => {
     }));
   };
 
-  if (!isOpen) return null;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    console.log('Form submitted:', formData);
+    onClose();
+  };
 
   return (
     <div className={styles.overlay}>
@@ -32,59 +30,61 @@ const FormPopup = ({ isOpen, onClose }) => {
         <button className={styles.closeButton} onClick={onClose}>
           ×
         </button>
-
-        {!isSubmitted ? (
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <h2>Get More Information</h2>
-            <div className={styles.formGroup}>
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="phone">Phone Number</label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <button type="submit" className={styles.submitButton}>
-              Submit
-            </button>
-          </form>
-        ) : (
-          <div className={styles.thankYou}>
-            <h2>Thank You!</h2>
-            <p>We've received your information and will be in touch soon.</p>
-            <button className={styles.closeButton} onClick={onClose}>
-              Close
-            </button>
+        <h2>احصل على عروضنا الحصرية</h2>
+        <p>اشترك الآن للحصول على أحدث العروض والوجهات السياحية</p>
+        
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label htmlFor="name">الاسم</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
           </div>
-        )}
+          
+          <div className={styles.formGroup}>
+            <label htmlFor="email">البريد الإلكتروني</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div className={styles.formGroup}>
+            <label htmlFor="phone">رقم الهاتف</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div className={styles.formGroup}>
+            <label htmlFor="message">رسالتك</label>
+            <textarea
+              id="message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              rows="4"
+            />
+          </div>
+          
+          <button type="submit" className={styles.submitButton}>
+            اشترك الآن
+          </button>
+        </form>
       </div>
     </div>
   );

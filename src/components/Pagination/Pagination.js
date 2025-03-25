@@ -1,57 +1,42 @@
+import React from 'react';
 import Link from 'next/link';
-import { FiChevronRight } from 'react-icons/fi';
 import styles from './Pagination.module.scss';
 
-const Pagination = ({ currentPage = 1, pagesCount, basePath }) => {
-  const prevPage = currentPage - 1;
-  const nextPage = currentPage + 1;
+const Pagination = ({ currentPage, totalPages, basePath = '' }) => {
+  if (totalPages <= 1) return null;
+
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <nav
-      className={styles.nav}
-      role="navigation"
-      aria-label="Pagination Navigation"
-    >
-      <ul className={styles.pages}>
-        {Array.from({ length: pagesCount }).map((_, i) => {
-          const pageNumber = i + 1;
-          const isCurrentPage = currentPage === pageNumber;
+    <nav className={styles.pagination}>
+      <ul>
+        {currentPage > 1 && (
+          <li>
+            <Link href={`${basePath}/${currentPage - 1}`}>
+              السابق
+            </Link>
+          </li>
+        )}
 
-          if (isCurrentPage) {
-            return (
-              <li key={pageNumber}>
-                <span
-                  className={styles.active}
-                  aria-label={`Current Page, Page ${pageNumber}`}
-                  aria-current="true"
-                >
-                  {pageNumber}
-                </span>
-              </li>
-            );
-          }
+        {pages.map((page) => (
+          <li key={page}>
+            <Link
+              href={`${basePath}/${page}`}
+              className={page === currentPage ? styles.active : ''}
+            >
+              {page}
+            </Link>
+          </li>
+        ))}
 
-          return (
-            <li key={pageNumber}>
-              <Link
-                href={`${basePath}/page/${pageNumber}/`}
-                aria-label={`Goto Page ${pageNumber}`}
-              >
-                <span>{pageNumber}</span>
-              </Link>
-            </li>
-          );
-        })}
+        {currentPage < totalPages && (
+          <li>
+            <Link href={`${basePath}/${currentPage + 1}`}>
+              التالي
+            </Link>
+          </li>
+        )}
       </ul>
-
-      {nextPage <= pagesCount && (
-        <Link
-          href={`${basePath}/page/${nextPage}/`}
-          aria-label="Goto Next Page"
-        >
-          Next <FiChevronRight />
-        </Link>
-      )}
     </nav>
   );
 };
