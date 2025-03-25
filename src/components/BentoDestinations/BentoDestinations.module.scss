@@ -1,12 +1,16 @@
-@import "styles/settings/__settings";
-@import "styles/settings/_typography";
+@import 'styles/settings/__settings';
+@import 'styles/settings/_typography';
 
 .destinationsContainer {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
   padding: 2rem 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -190,4 +194,4 @@
   .description {
     font-size: 0.85rem;
   }
-} 
+}

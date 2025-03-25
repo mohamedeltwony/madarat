@@ -60,128 +60,68 @@ export function useSearchState() {
   };
 }
 
-export default function useSearch({ 
-  defaultQuery = null, 
-  maxResults,
-  filters = {} 
-} = {}) {
-  const search = useContext(SearchContext);
-  const { client, data } = search;
+export default function useSearch(initialPosts = [], initialFilters = {}) {
+  const [posts, setPosts] = useState(initialPosts);
+  const [filteredPosts, setFilteredPosts] = useState(initialPosts);
+  const [activeFilters, setActiveFilters] = useState(initialFilters);
 
-  const [query, setQuery] = useState(defaultQuery);
-  const [activeFilters, setActiveFilters] = useState(filters);
+  useEffect(() => {
+    setPosts(initialPosts);
+    setFilteredPosts(initialPosts);
+  }, [initialPosts]);
 
-  let results = [];
+  useEffect(() => {
+    let filtered = [...posts];
 
-  // If we have a client and data, process search and filters
-  if (client && data) {
-    // First, get all the posts or search results
-    let postsToFilter = data.posts;
-    
-    if (query) {
-      postsToFilter = client.search(query).map(({ item }) => item);
+    if (activeFilters.search) {
+      const searchQuery = activeFilters.search.toLowerCase();
+      filtered = filtered.filter((post) => {
+        const searchString = `${post.title} ${post.excerpt || ''} ${
+          post.content || ''
+        }`.toLowerCase();
+        return searchString.includes(searchQuery);
+      });
     }
-    
-    // Then apply filters if any
-    if (activeFilters && Object.keys(activeFilters).length > 0) {
-      // Filter by date (year, month)
-      if (activeFilters.year) {
-        postsToFilter = postsToFilter.filter(post => {
-          const postDate = new Date(post.date);
-          return postDate.getFullYear() === parseInt(activeFilters.year);
-        });
-        
-        if (activeFilters.month) {
-          postsToFilter = postsToFilter.filter(post => {
-            const postDate = new Date(post.date);
-            return postDate.getMonth() + 1 === parseInt(activeFilters.month);
-          });
-        }
-      }
-      
-      // Filter by category
-      if (activeFilters.category) {
-        postsToFilter = postsToFilter.filter(post => {
-          if (!post.categories) return false;
-          return post.categories.some(category => 
-            category.slug === activeFilters.category || 
+
+    if (activeFilters.category) {
+      filtered = filtered.filter((post) =>
+        post.categories?.some(
+          (category) =>
+            category.slug === activeFilters.category ||
             category.id === activeFilters.category
-          );
-        });
-      }
-      
-      // Filter by author
-      if (activeFilters.author) {
-        postsToFilter = postsToFilter.filter(post => {
-          if (!post.author) return false;
-          return post.author.slug === activeFilters.author || 
-                 post.author.id === activeFilters.author;
-        });
-      }
-      
-      // Filter by tag (if available in your data structure)
-      if (activeFilters.tag && post.tags) {
-        postsToFilter = postsToFilter.filter(post => {
-          if (!post.tags) return false;
-          return post.tags.some(tag => 
-            tag.slug === activeFilters.tag || 
-            tag.id === activeFilters.tag
-          );
-        });
-      }
+        )
+      );
     }
-    
-    results = postsToFilter;
-  }
 
-  if (maxResults && results.length > maxResults) {
-    results = results.slice(0, maxResults);
-  }
-
-  // If the defaultQuery argument changes, the hook should reflect
-  // that update and set that as the new state
-  useEffect(() => setQuery(defaultQuery), [defaultQuery]);
-  
-  // Same for filters
-  useEffect(() => setActiveFilters(filters), [filters]);
-
-  /**
-   * handleSearch
-   */
-  function handleSearch({ query, filters = {} }) {
-    setQuery(query);
-    
-    // If filters are provided, update them
-    if (Object.keys(filters).length > 0) {
-      setActiveFilters(currentFilters => ({
-        ...currentFilters,
-        ...filters
-      }));
+    if (activeFilters.author) {
+      filtered = filtered.filter(
+        (post) =>
+          post.author?.slug === activeFilters.author ||
+          post.author?.id === activeFilters.author
+      );
     }
-  }
 
-  /**
-   * handleClearSearch
-   */
-  function handleClearSearch() {
-    setQuery(null);
-    setActiveFilters({});
-  }
-  
-  /**
-   * handleFilterChange
-   */
-  function handleFilterChange(filters) {
-    setActiveFilters(filters);
-  }
+    if (activeFilters.tag) {
+      filtered = filtered.filter((post) =>
+        post.tags?.some(
+          (tag) => tag.slug === activeFilters.tag || tag.id === activeFilters.tag
+        )
+      );
+    }
+
+    setFilteredPosts(filtered);
+  }, [posts, activeFilters]);
+
+  const updateFilter = (filterName, value) => {
+    setActiveFilters((currentFilters) => ({
+      ...currentFilters,
+      [filterName]: value,
+    }));
+  };
 
   return {
-    ...search,
-    query,
-    filters: activeFilters,
-    results,
-    search: handleSearch,
-    clearSearch: handleClearSearch,
-    setFilters: handleFilterChange
+    posts: filteredPosts,
+    activeFilters,
+    updateFilter,
   };
 }

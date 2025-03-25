@@ -29,7 +29,12 @@ export default function Search() {
       <Helmet>
         <meta name="robots" content="noindex" />
       </Helmet>
-      <ArchiveTemplate title={title} posts={results} slug={slug} metadata={metadata} />
+      <ArchiveTemplate
+        title={title}
+        posts={results}
+        slug={slug}
+        metadata={metadata}
+      />
     </>
   );
 }

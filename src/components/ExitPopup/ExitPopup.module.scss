@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .exitPopupOverlay {
   position: fixed;
@@ -29,7 +29,7 @@
   animation: slideUp 0.4s ease-out;
   display: flex;
   flex-direction: column;
-  
+
   @media (min-width: 768px) {
     flex-direction: row;
   }
@@ -52,7 +52,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   z-index: 2;
-  
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.2);
   }
@@ -60,19 +60,23 @@
 
 .exitPopupImage {
   flex: 0 0 40%;
-  background: linear-gradient(45deg, $color-primary, adjust-hue($color-primary, 30deg));
+  background: linear-gradient(
+    45deg,
+    $color-primary,
+    adjust-hue($color-primary, 30deg)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  
+
   img {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
-  
+
   @media (max-width: 767px) {
     padding: 1.5rem 1.5rem 0;
   }
@@ -83,14 +87,14 @@
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  
+
   h2 {
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 1rem;
     color: $text-color-dark;
   }
-  
+
   p {
     font-size: 1.1rem;
     margin-bottom: 1.5rem;
@@ -107,7 +111,7 @@
 
 .formGroup {
   margin-bottom: 1rem;
-  
+
   input {
     width: 100%;
     padding: 0.8rem 1rem;
@@ -115,14 +119,16 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
     font-size: 1rem;
     background: rgba(255, 255, 255, 0.8);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+
     &:focus {
       outline: none;
       border-color: $color-primary;
       box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
     }
-    
+
     &::placeholder {
       color: #999;
     }
@@ -147,11 +153,11 @@
   justify-content: center;
   text-align: center;
   padding: 3rem 2rem;
-  
+
   .successIcon {
     width: 80px;
     height: 80px;
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: white;
     border-radius: 50%;
     display: flex;
@@ -161,14 +167,14 @@
     margin-bottom: 1.5rem;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
-  
+
   h2 {
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 1rem;
     color: $text-color-dark;
   }
-  
+
   p {
     font-size: 1.1rem;
     color: $text-color;
@@ -208,4 +214,4 @@
   100% {
     transform: scale(1);
   }
-} 
+}

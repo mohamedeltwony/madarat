@@ -4,7 +4,8 @@ import Image from 'next/image';
 import styles from './PostCard.module.scss';
 
 const PostCard = memo(({ post }) => {
-  const { title, slug, excerpt, date, author, featuredImage, categories } = post;
+  const { title, slug, excerpt, date, author, featuredImage, categories } =
+    post;
 
   // Create a consistent date formatter with specific options
   const dateFormatter = new Intl.DateTimeFormat('ar-EG', {
@@ -12,11 +13,13 @@ const PostCard = memo(({ post }) => {
     month: 'long',
     day: 'numeric',
     calendar: 'gregory',
-    numberingSystem: 'arab'
+    numberingSystem: 'arab',
   });
 
   // Format the date string consistently
-  const formattedDate = date ? dateFormatter.format(new Date(date)).replace('،', '') : '';
+  const formattedDate = date
+    ? dateFormatter.format(new Date(date)).replace('،', '')
+    : '';
 
   return (
     <div className={styles.postCard}>

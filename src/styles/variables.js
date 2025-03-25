@@ -4,7 +4,7 @@
  */
 
 const variables = {
-  progressbarColor: '#1a365d' // Same as $color-primary in _variables.module.scss
+  progressbarColor: '#1a365d', // Same as $color-primary in _variables.module.scss
 };
 
-export default variables; 
+export default variables;

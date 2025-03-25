@@ -11,54 +11,56 @@ const StickyLeadForm = () => {
     name: '',
     phone: '',
   });
-  
+
   // Show the form after 5 seconds on the page
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsOpen(true);
     }, 5000);
-    
+
     return () => clearTimeout(timer);
   }, []);
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const toggleForm = () => {
-    setIsMinimized(prev => !prev);
+    setIsMinimized((prev) => !prev);
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
     // ...
-    
+
     // Show success state
     setFormSubmitted(true);
-    
+
     // After 3 seconds, minimize the form
     setTimeout(() => {
       setIsMinimized(true);
     }, 3000);
   };
-  
+
   if (!isOpen) {
     return null;
   }
-  
+
   return (
-    <div className={`${styles.stickyFormContainer} ${isMinimized ? styles.minimized : ''}`}>
+    <div
+      className={`${styles.stickyFormContainer} ${isMinimized ? styles.minimized : ''}`}
+    >
       {/* Toggle button */}
-      <button 
+      <button
         className={styles.toggleButton}
         onClick={toggleForm}
-        aria-label={isMinimized ? "فتح نموذج التواصل" : "تصغير نموذج التواصل"}
+        aria-label={isMinimized ? 'فتح نموذج التواصل' : 'تصغير نموذج التواصل'}
       >
         {isMinimized ? <FaChevronLeft /> : <FaChevronRight />}
       </button>
-      
+
       <div className={styles.formContent}>
         {!formSubmitted ? (
           <>
@@ -66,7 +68,7 @@ const StickyLeadForm = () => {
               <h3>تواصل معنا</h3>
               <p>دعنا نساعدك في بدء رحلتك مع مدارات</p>
             </div>
-            
+
             <form onSubmit={handleSubmit} className={styles.leadForm}>
               <div className={styles.formGroup}>
                 <label htmlFor="sticky-name">الاسم</label>
@@ -80,7 +82,7 @@ const StickyLeadForm = () => {
                   required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="sticky-phone">رقم الهاتف</label>
                 <input
@@ -93,7 +95,7 @@ const StickyLeadForm = () => {
                   required
                 />
               </div>
-              
+
               <div className={styles.formActions}>
                 <SparkleButton type="submit" fullWidth>
                   تواصل معنا
@@ -113,4 +115,4 @@ const StickyLeadForm = () => {
   );
 };
 
-export default StickyLeadForm; 
+export default StickyLeadForm;

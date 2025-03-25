@@ -1,12 +1,13 @@
-@use "sass:color";
-@use "../../styles/settings/__settings" as *;
-@import "styles/settings/_typography";
+@use 'sass:color';
+@use '../../styles/settings/__settings' as *;
+@import 'styles/settings/_typography';
 
 .trips {
   padding: 4rem 0;
 
   .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
       url('/images/trips-hero.jpg') center/cover;
     padding: 8rem 0;
     text-align: center;
@@ -26,8 +27,9 @@
   }
 
   .heroSection {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-                url('/images/hero-bg.jpg') center/cover;
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url('/images/hero-bg.jpg') center/cover;
     padding: 4rem 0;
     text-align: center;
     color: white;
@@ -118,7 +120,9 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 16px;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-decoration: none;
     color: inherit;
@@ -173,7 +177,7 @@
       opacity: 0.8;
 
       .price {
-        color: #4CAF50;
+        color: #4caf50;
         font-weight: 600;
         background: rgba(76, 175, 80, 0.1);
         padding: 0.25rem 0.75rem;
@@ -278,11 +282,12 @@
     flex-direction: column;
   }
 
-  .searchBox, .destinationFilter {
+  .searchBox,
+  .destinationFilter {
     width: 100%;
   }
 
   .tripsGrid {
     grid-template-columns: 1fr;
   }
-} 
+}

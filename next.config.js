@@ -7,7 +7,7 @@ const sitemap = require('./plugins/sitemap');
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['madaratalkon.com'],
+    domains: ['madaratalkon.com', 'secure.gravatar.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -63,6 +63,14 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
+          { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
+        ],
+      },
     ];
   },
   env: {
@@ -75,8 +83,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'https://madaratalkon.com/wp-json/:path*',
+        source: '/graphql',
+        destination: 'https://madaratalkon.com/graphql',
       },
     ];
   },

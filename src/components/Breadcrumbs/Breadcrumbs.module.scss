@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .breadcrumbs {
   display: flex;
@@ -10,7 +10,7 @@
     margin-right: 0.5em;
 
     &:after {
-      content: "/";
+      content: '/';
       margin-left: 0.5em;
     }
 

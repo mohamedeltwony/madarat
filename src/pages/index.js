@@ -1,35 +1,125 @@
-import { getPaginatedPosts } from '@/lib/posts';
-import { WebsiteJsonLd } from '@/lib/json-ld';
-import useSite from '@/hooks/use-site';
-import { getAllAuthors } from '@/lib/users';
-import { getYearArchives } from '@/lib/posts';
-
-import Layout from '@/components/Layout';
-import Hero from '@/components/Hero';
-import Section from '@/components/Section';
-import Container from '@/components/Container';
-import PostCard from '@/components/PostCard';
-import BentoPosts from '@/components/BentoPosts';
-import BentoDestinations from '@/components/BentoDestinations';
-import MorphPosts from '@/components/MorphPosts';
-import Pagination from '@/components/Pagination';
-import Link from 'next/link';
-import Image from 'next/legacy/image';
-import SparkleButton from '@/components/UI/SparkleButton';
-import styles from '@/styles/pages/Home.module.scss';
-import UIStyles from '@/components/UI/UI.module.scss';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import Layout from '@/components/Layout';
+import Container from '@/components/Container';
+import Section from '@/components/Section';
+import PostCard from '@/components/PostCard';
+import Pagination from '@/components/Pagination';
+import styles from '@/styles/pages/Home.module.scss';
+import { formatDate } from '@/lib/datetime';
+import StickyLeadForm from '@/components/StickyLeadForm';
 
-export default function Home({ posts = [], pagination, destinations = [], featuredAuthors = [], archives = [] }) {
-  const { metadata = {} } = useSite();
-  const { title } = metadata;
+export default function Home({
+  posts = [],
+  pagination,
+  destinations = [],
+  featuredAuthors = [],
+  archives = [],
+}) {
+  const router = useRouter();
   const [showForm, setShowForm] = useState(false);
-  
-  const handleShowForm = () => {
-    setShowForm(true);
+
+  const metadata = {
+    title: 'مدارات - منصة للمحتوى العربي المميز',
+    description: 'موقع مدارات - منصة للمحتوى العربي المميز',
   };
-  
+
+  return (
+    <Layout>
+      <Head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+      </Head>
+
+      <Section>
+        <Container>
+          <div className={styles.featuredPosts}>
+            {posts.slice(0, 6).map((post) => (
+              <PostCard key={post.slug} post={post} />
+            ))}
+          </div>
+
+          {pagination && (
+            <Pagination
+              addCanonical={false}
+              currentPage={pagination?.current}
+              pagesCount={pagination?.pages}
+              basePath={pagination?.basePath}
+            />
+          )}
+        </Container>
+      </Section>
+
+      <Section className={styles.featuresSection}>
+        <Container>
+          <div className={styles.featuresGrid}>
+            <div className={styles.feature}>
+              <h2>الأرشيف</h2>
+              <p>
+                Browse our content by date. Find articles from specific months or
+                years.
+              </p>
+              <div className={styles.featureTags}>
+                {archives.map((year) => (
+                  <Link
+                    key={year}
+                    href={`/archives/${year}`}
+                    className={styles.featureTag}
+                  >
+                    {year}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.feature}>
+              <h2>الوجهات</h2>
+              <div className={styles.featureDestinations}>
+                {destinations.map((destination) => (
+                  <Link
+                    key={destination.slug}
+                    href={`/destinations/${destination.slug}`}
+                    className={styles.featureDestination}
+                  >
+                    <div className={styles.destinationImage}>
+                      {destination.thumbnail && (
+                        <img
+                          src={`https://madaratalkon.com/wp-content/uploads/${destination.thumbnail.file}`}
+                          alt={destination.title}
+                        />
+                      )}
+                    </div>
+                    <h3>{destination.title}</h3>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.feature}>
+              <h2>الكتّاب المميزون</h2>
+              <div className={styles.featureAuthors}>
+                {featuredAuthors.map((author) => (
+                  <Link
+                    key={author.slug}
+                    href={`/authors/${author.slug}`}
+                    className={styles.featureAuthor}
+                  >
+                    {author.avatar && (
+                      <img
+                        src={author.avatar}
+                        alt={author.name}
+                        className={styles.authorAvatar}
+                      />
+                    )}
+                    <h3>{author.name}</h3>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.feature}>
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
@@ -41,13 +131,16 @@ export default function Home({ posts = [], pagination, destinations = [], featur
     <div className={styles.container}>
       <Head>
         <title>مدارات | الصفحة الرئيسية</title>
-        <meta name="description" content="موقع مدارات - منصة للمحتوى العربي المميز" />
+        <meta
+          name="description"
+          content="موقع مدارات - منصة للمحتوى العربي المميز"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Layout>
         <WebsiteJsonLd siteTitle={title} />
-        
+
         <Hero
           title="مدارات الكون"
           description="اكتشف معنا أجمل الوجهات السياحية حول العالم. نقدم لك دليلاً شاملاً للسفر والسياحة، من التخطيط للرحلة إلى أفضل الأماكن للزيارة والإقامة."
@@ -113,7 +206,7 @@ export default function Home({ posts = [], pagination, destinations = [], featur
         <Section className={styles.featuresSection}>
           <Container>
             <h2 className={styles.sectionTitle}>Explore Our Site</h2>
-            
+
             <div className={styles.featuresGrid}>
               {/* Archives Feature */}
               <div className={styles.featureCard}>
@@ -127,21 +220,28 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                   />
                 </div>
                 <h3>Archives</h3>
-                <p>Browse our content by date. Find articles from specific months or years.</p>
-                
+                <p>
+                  Browse our content by date. Find articles from specific months
+                  or years.
+                </p>
+
                 <div className={styles.featureTags}>
                   {archives.slice(0, 5).map((year) => (
-                    <Link key={year} href={`/archives/${year}`} className={styles.featureTag}>
+                    <Link
+                      key={year}
+                      href={`/archives/${year}`}
+                      className={styles.featureTag}
+                    >
                       {year}
                     </Link>
                   ))}
                 </div>
-                
+
                 <Link href="/archives" className={styles.featureLink}>
                   Browse All Archives
                 </Link>
               </div>
-              
+
               {/* Authors Feature */}
               <div className={styles.featureCard}>
                 <div className={styles.featureIcon}>
@@ -155,10 +255,14 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                 </div>
                 <h3>Authors</h3>
                 <p>Discover our writers and their unique perspectives.</p>
-                
+
                 <div className={styles.featureAuthors}>
                   {featuredAuthors.slice(0, 3).map((author) => (
-                    <Link key={author.slug} href={`/authors/${author.slug}`} className={styles.featureAuthor}>
+                    <Link
+                      key={author.slug}
+                      href={`/authors/${author.slug}`}
+                      className={styles.featureAuthor}
+                    >
                       {author.avatar && (
                         <Image
                           src={author.avatar.url}
@@ -173,12 +277,12 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                     </Link>
                   ))}
                 </div>
-                
+
                 <Link href="/authors" className={styles.featureLink}>
                   View All Authors
                 </Link>
               </div>
-              
+
               {/* Advanced Search Feature */}
               <div className={styles.featureCard}>
                 <div className={styles.featureIcon}>
@@ -191,9 +295,12 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                   />
                 </div>
                 <h3>Advanced Search</h3>
-                <p>Find exactly what you're looking for with our powerful search tools.</p>
+                <p>
+                  Find exactly what you're looking for with our powerful search
+                  tools.
+                </p>
                 <p>Filter content by date, category, author and more.</p>
-                
+
                 <Link href="/advanced-search" className={styles.featureLink}>
                   Try Advanced Search
                 </Link>
@@ -202,17 +309,20 @@ export default function Home({ posts = [], pagination, destinations = [], featur
           </Container>
         </Section>
       </Layout>
-      
+
       {/* Lead Form Popup */}
       {showForm && (
         <div className={styles.formOverlay}>
           <div className={`${UIStyles.glassCard} ${styles.formContainer}`}>
-            <button className={styles.closeButton} onClick={() => setShowForm(false)}>
+            <button
+              className={styles.closeButton}
+              onClick={() => setShowForm(false)}
+            >
               ×
             </button>
             <h3>انضم إلينا الآن</h3>
             <p>اترك بياناتك ليصلك كل جديد</p>
-            
+
             <form onSubmit={handleSubmit}>
               <div className={styles.formGroup}>
                 <label htmlFor="name">الاسم الكامل</label>
@@ -224,7 +334,7 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                   required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="phone">رقم الهاتف</label>
                 <input
@@ -235,7 +345,7 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                   required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="email">البريد الإلكتروني</label>
                 <input
@@ -246,7 +356,7 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                   required
                 />
               </div>
-              
+
               <div className={styles.formActions}>
                 <SparkleButton type="submit" fullWidth>
                   إرسال
@@ -263,14 +373,17 @@ export default function Home({ posts = [], pagination, destinations = [], featur
 export async function getStaticProps() {
   try {
     console.log('Starting to fetch destinations...');
-    
-    const response = await fetch('https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100', {
-      headers: {
-        'Accept': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      next: { revalidate: 60 }, // Revalidate every 60 seconds
-    });
+
+    const response = await fetch(
+      'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
+      {
+        headers: {
+          Accept: 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+        next: { revalidate: 60 }, // Revalidate every 60 seconds
+      }
+    );
 
     if (!response.ok) {
       console.error('Failed to fetch destinations:', {
@@ -289,11 +402,13 @@ export async function getStaticProps() {
       throw new Error('Invalid destinations data format');
     }
 
-    const formattedDestinations = destinations.map(dest => ({
+    const formattedDestinations = destinations.map((dest) => ({
       id: dest.id,
       title: dest.name,
       description: dest.description || '',
-      image: dest.thumbnail?.file ? `https://madaratalkon.com/wp-content/uploads/${dest.thumbnail.file}` : null,
+      image: dest.thumbnail?.file
+        ? `https://madaratalkon.com/wp-content/uploads/${dest.thumbnail.file}`
+        : null,
       link: dest.link,
       slug: dest.slug,
       tripCount: dest.trip_count || 0,
@@ -322,7 +437,7 @@ export async function getStaticProps() {
     } catch (error) {
       console.error('Error fetching authors:', error);
     }
-    
+
     // Get archive years with error handling
     let archives = [];
     try {

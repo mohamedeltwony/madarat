@@ -4,7 +4,9 @@
 
 export function decodeHtmlEntities(text) {
   if (typeof text !== 'string') {
-    throw new Error(`Failed to decode HTML entity: invalid type ${typeof text}`);
+    throw new Error(
+      `Failed to decode HTML entity: invalid type ${typeof text}`
+    );
   }
 
   let decoded = text;

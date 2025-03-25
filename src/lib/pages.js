@@ -35,7 +35,9 @@ export async function getPageByUri(uri) {
       },
     });
   } catch (e) {
-    console.log(`[pages][getPageByUri] Failed to query page data for URI ${uri}: ${e.message}`);
+    console.log(
+      `[pages][getPageByUri] Failed to query page data for URI ${uri}: ${e.message}`
+    );
     return { page: undefined };
   }
 
@@ -58,8 +60,12 @@ export async function getPageByUri(uri) {
         },
       });
     } catch (e) {
-      console.log(`[pages][getPageByUri] Failed to query SEO plugin for URI ${uri}: ${e.message}`);
-      console.log('Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.');
+      console.log(
+        `[pages][getPageByUri] Failed to query SEO plugin for URI ${uri}: ${e.message}`
+      );
+      console.log(
+        'Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.'
+      );
       // Continue without SEO data instead of throwing
     }
 
@@ -122,7 +128,9 @@ export async function getAllPages(options = {}) {
     query: allPagesIncludesTypes[queryIncludes],
   });
 
-  const pages = data?.data.pages.edges.map(({ node = {} }) => node).map(mapPageData);
+  const pages = data?.data.pages.edges
+    .map(({ node = {} }) => node)
+    .map(mapPageData);
 
   return {
     pages,
@@ -183,7 +191,9 @@ export function getBreadcrumbsByUri(uri, pages) {
   // page to gather the metadata for the breadcrumbs
 
   do {
-    const breadcrumb = pages.find((page) => page.uri === `/${uriSegments.join('/')}/`);
+    const breadcrumb = pages.find(
+      (page) => page.uri === `/${uriSegments.join('/')}/`
+    );
 
     // If the breadcrumb is the active page, we want to pass udefined for the uri to
     // avoid the breadcrumbs being rendered as a link, given it's the current page

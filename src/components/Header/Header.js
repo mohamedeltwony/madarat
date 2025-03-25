@@ -34,7 +34,7 @@ const Header = () => {
           <ul className={styles.mainMenu}>
             {/* Destinations Dropdown */}
             <li className={styles.menuItem}>
-              <div 
+              <div
                 className={`${styles.menuLink} ${activeDropdown === 'destinations' ? styles.active : ''}`}
                 onClick={() => toggleDropdown('destinations')}
               >
@@ -86,10 +86,10 @@ const Header = () => {
                 </ul>
               )}
             </li>
-            
+
             {/* Packages Dropdown */}
             <li className={styles.menuItem}>
-              <div 
+              <div
                 className={`${styles.menuLink} ${activeDropdown === 'packages' ? styles.active : ''}`}
                 onClick={() => toggleDropdown('packages')}
               >
@@ -136,10 +136,10 @@ const Header = () => {
                 </ul>
               )}
             </li>
-            
+
             {/* Services Dropdown */}
             <li className={styles.menuItem}>
-              <div 
+              <div
                 className={`${styles.menuLink} ${activeDropdown === 'services' ? styles.active : ''}`}
                 onClick={() => toggleDropdown('services')}
               >
@@ -181,17 +181,17 @@ const Header = () => {
                 </ul>
               )}
             </li>
-            
+
             {/* Blog Link */}
             <li className={styles.menuItem}>
               <Link href="/blog" legacyBehavior>
                 <a className={styles.menuLink}>المدونة</a>
               </Link>
             </li>
-            
+
             {/* Explore Dropdown */}
             <li className={styles.menuItem}>
-              <div 
+              <div
                 className={`${styles.menuLink} ${activeDropdown === 'explore' ? styles.active : ''}`}
                 onClick={() => toggleDropdown('explore')}
               >
@@ -218,14 +218,14 @@ const Header = () => {
                 </ul>
               )}
             </li>
-            
+
             {/* About Link */}
             <li className={styles.menuItem}>
               <Link href="/about" legacyBehavior>
                 <a className={styles.menuLink}>عن الموقع</a>
               </Link>
             </li>
-            
+
             {/* Contact Link */}
             <li className={styles.menuItem}>
               <Link href="/contact" legacyBehavior>
@@ -234,18 +234,18 @@ const Header = () => {
             </li>
           </ul>
         </nav>
-        
+
         <div className={styles.headerActions}>
-          <button 
-            className={styles.searchButton} 
+          <button
+            className={styles.searchButton}
             onClick={handleSearchToggle}
             aria-label="بحث"
           >
             <FaSearch />
             <span className="sr-only">Toggle Search</span>
           </button>
-  
-          <button 
+
+          <button
             className={`${styles.menuButton} ${isMenuOpen ? styles.active : ''}`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="القائمة"
@@ -256,16 +256,20 @@ const Header = () => {
           </button>
         </div>
       </div>
-      
+
       {/* Search Overlay */}
       {isSearchOpen && (
         <div className={styles.searchOverlay}>
           <div className={styles.searchContainer}>
-            <form action="/advanced-search" method="get" className={styles.searchForm}>
-              <input 
-                type="text" 
-                name="q" 
-                placeholder="ابحث عن وجهات، رحلات، مقالات..." 
+            <form
+              action="/advanced-search"
+              method="get"
+              className={styles.searchForm}
+            >
+              <input
+                type="text"
+                name="q"
+                placeholder="ابحث عن وجهات، رحلات، مقالات..."
                 className={styles.searchInput}
                 autoFocus
               />
@@ -273,10 +277,7 @@ const Header = () => {
                 <FaSearch />
               </button>
             </form>
-            <button 
-              className={styles.closeSearch}
-              onClick={handleSearchToggle}
-            >
+            <button className={styles.closeSearch} onClick={handleSearchToggle}>
               &times;
             </button>
           </div>

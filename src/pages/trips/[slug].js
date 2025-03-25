@@ -1,151 +1,133 @@
-import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import Layout from '../../components/Layout';
-import Container from '../../components/Container';
-import Section from '../../components/Section';
-import Meta from '../../components/Meta';
-import styles from '../../styles/pages/SingleTrip.module.scss';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import styles from '@/styles/pages/SingleTrip.module.scss';
 
 export default function SingleTrip({ trip }) {
-  if (!trip) {
-    return (
-      <Layout>
-        <Section>
-          <Container>
-            <div className={styles.error}>
-              <h2>عذراً، لم نجد الرحلة</h2>
-              <p>الرحلة التي تبحث عنها غير موجودة</p>
-            </div>
-          </Container>
-        </Section>
-      </Layout>
-    );
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <div>Loading...</div>;
   }
 
+  const metadata = {
+    title: trip.title,
+    description: trip.description,
+  };
+
   return (
-    <Layout>
+    <>
       <Head>
-        <title>{trip.title} | مدارات الكون</title>
-        <Meta
-          title={trip.title}
-          description={trip.description}
-        />
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
       </Head>
 
-      <Section className={styles.heroSection}>
-        <Container>
-          <div className={styles.heroContent}>
-            <h1 className={styles.tripTitle}>{trip.title}</h1>
-            <div className={styles.tripMeta}>
-              <span className={styles.duration}>
-                {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}
-              </span>
-              <span className={styles.price}>
-                {trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'السعر غير متوفر'} {trip.currency?.code || 'SAR'}
-              </span>
-            </div>
+      <div className={styles.tripContainer}>
+        <div className={styles.tripHeader}>
+          <h1 className={styles.tripTitle}>{trip.title}</h1>
+          <div className={styles.tripMeta}>
+            <span className={styles.price}>
+              {trip.wp_travel_engine_setting_trip_actual_price ||
+                trip.price ||
+                'السعر غير متوفر'}{' '}
+              {trip.currency?.code || 'SAR'}
+            </span>
           </div>
-        </Container>
-      </Section>
+        </div>
 
-      <Section className={styles.tripContent}>
-        <Container>
-          <div className={styles.tripImage}>
-            {trip.featured_image?.sizes?.large?.source_url ? (
-              <img
-                src={trip.featured_image.sizes.large.source_url}
-                alt={trip.title}
-                className={styles.image}
-              />
-            ) : trip._embedded?.['wp:featuredmedia']?.[0]?.source_url ? (
-              <img
-                src={trip._embedded['wp:featuredmedia'][0].source_url}
-                alt={trip.title}
-                className={styles.image}
-              />
-            ) : trip.featured_media_url ? (
-              <img
-                src={trip.featured_media_url}
-                alt={trip.title}
-                className={styles.image}
-              />
+        <div className={styles.tripContent}>
+          <div className={styles.mainContent}>
+            {trip.featured_media ? (
+              <div className={styles.featuredImage}>
+                <Image
+                  src={trip.featured_media}
+                  alt={trip.title}
+                  width={800}
+                  height={500}
+                  layout="responsive"
+                />
+              </div>
             ) : (
-              <div className={styles.placeholderImage}>
-                لا توجد صورة
+              <div className={styles.noImage}>لا توجد صورة</div>
+            )}
+
+            <div className={styles.tripDetails}>
+              <div className={styles.detailsGrid}>
+                <div className={styles.detailItem}>
+                  <h3>المدة</h3>
+                  <p>
+                    {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}
+                  </p>
+                </div>
+                <div className={styles.detailItem}>
+                  <h3>السعر</h3>
+                  <p>
+                    {trip.wp_travel_engine_setting_trip_actual_price ||
+                      trip.price ||
+                      'غير متوفر'}{' '}
+                    {trip.currency?.code || 'SAR'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {trip.description && (
+              <div className={styles.description}>
+                <h2>وصف الرحلة</h2>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: trip.description.replace(/\r\n/g, '<br>'),
+                  }}
+                />
+              </div>
+            )}
+
+            {trip.cost_includes && (
+              <div className={styles.includes}>
+                <h2>السعر يشمل</h2>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: trip.cost_includes.replace(/\r\n/g, '<br>'),
+                  }}
+                />
+              </div>
+            )}
+
+            {trip.cost_excludes && (
+              <div className={styles.excludes}>
+                <h2>السعر لا يشمل</h2>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: trip.cost_excludes.replace(/\r\n/g, '<br>'),
+                  }}
+                />
+              </div>
+            )}
+
+            {trip.itinerary && trip.itinerary.length > 0 && (
+              <div className={styles.itinerary}>
+                <h2>البرنامج اليومي</h2>
+                <div className={styles.itineraryDays}>
+                  {trip.itinerary.map((day, index) => (
+                    <div key={index} className={styles.itineraryDay}>
+                      <h3>
+                        اليوم {index + 1}: {day.title}
+                      </h3>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: day.description.replace(/\r\n/g, '<br>'),
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
-
-          <div className={styles.tripDetails}>
-            <div className={styles.description}>
-              <h2>وصف الرحلة</h2>
-              <div dangerouslySetInnerHTML={{ __html: trip.description }} />
-            </div>
-
-            <div className={styles.tripInfo}>
-              <div className={styles.infoCard}>
-                <h3>معلومات الرحلة</h3>
-                <ul>
-                  <li>
-                    <strong>المدة:</strong>
-                    <span>{trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</span>
-                  </li>
-                  <li>
-                    <strong>السعر:</strong>
-                    <span>{trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'غير متوفر'} {trip.currency?.code || 'SAR'}</span>
-                  </li>
-                  {trip.destination && (
-                    <li>
-                      <strong>الوجهة:</strong>
-                      <span>{trip.destination.title}</span>
-                    </li>
-                  )}
-                </ul>
-              </div>
-
-              <div className={styles.costInfo}>
-                <div className={styles.costSection}>
-                  <h3>يشمل السعر</h3>
-                  <div dangerouslySetInnerHTML={{ __html: trip.cost_includes.replace(/\r\n/g, '<br>') }} />
-                </div>
-                <div className={styles.costSection}>
-                  <h3>لا يشمل السعر</h3>
-                  <div dangerouslySetInnerHTML={{ __html: trip.cost_excludes.replace(/\r\n/g, '<br>') }} />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {trip.itineraries && trip.itineraries.length > 0 && (
-            <div className={styles.itinerarySection}>
-              <h2>برنامج الرحلة</h2>
-              <div className={styles.itineraryList}>
-                {trip.itineraries.map((day, index) => (
-                  <div key={index} className={styles.itineraryDay}>
-                    <h3>اليوم {index + 1}: {day.title}</h3>
-                    <div dangerouslySetInnerHTML={{ __html: day.content }} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {trip.faqs && trip.faqs.length > 0 && (
-            <div className={styles.faqSection}>
-              <h2>الأسئلة الشائعة</h2>
-              <div className={styles.faqList}>
-                {trip.faqs.map((faq, index) => (
-                  <div key={index} className={styles.faqItem}>
-                    <h3>{faq.title}</h3>
-                    <div dangerouslySetInnerHTML={{ __html: faq.content }} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </Container>
-      </Section>
-    </Layout>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -165,9 +147,9 @@ export async function getStaticProps({ params }) {
     if (!trip) {
       return {
         props: {
-          trip: null
+          trip: null,
         },
-        revalidate: 60
+        revalidate: 60,
       };
     }
 
@@ -179,34 +161,38 @@ export async function getStaticProps({ params }) {
       description: trip.content?.rendered || '',
       featured_image: trip.featured_image || null,
       duration: trip.duration || null,
-      destination: trip._embedded?.['wp:term']?.[0]?.taxonomy === 'destination' ? {
-        id: trip._embedded['wp:term'][0].id || null,
-        title: trip._embedded['wp:term'][0].name || '',
-        slug: trip._embedded['wp:term'][0].slug || '',
-      } : null,
-      wp_travel_engine_setting_trip_actual_price: trip.wp_travel_engine_setting_trip_actual_price || null,
+      destination:
+        trip._embedded?.['wp:term']?.[0]?.taxonomy === 'destination'
+          ? {
+              id: trip._embedded['wp:term'][0].id || null,
+              title: trip._embedded['wp:term'][0].name || '',
+              slug: trip._embedded['wp:term'][0].slug || '',
+            }
+          : null,
+      wp_travel_engine_setting_trip_actual_price:
+        trip.wp_travel_engine_setting_trip_actual_price || null,
       price: trip.price || null,
       currency: trip.currency || null,
       _embedded: trip._embedded || null,
       cost_includes: trip.cost_includes || '',
       cost_excludes: trip.cost_excludes || '',
       itineraries: trip.itineraries || [],
-      faqs: trip.faqs || []
+      faqs: trip.faqs || [],
     };
 
     return {
       props: {
-        trip: formattedTrip
+        trip: formattedTrip,
       },
-      revalidate: 3600 // Revalidate every hour
+      revalidate: 3600, // Revalidate every hour
     };
   } catch (error) {
     console.error('Error fetching trip:', error);
     return {
       props: {
-        trip: null
+        trip: null,
       },
-      revalidate: 60
+      revalidate: 60,
     };
   }
 }
@@ -215,6 +201,6 @@ export async function getStaticPaths() {
   // We'll generate paths on-demand
   return {
     paths: [],
-    fallback: 'blocking'
+    fallback: 'blocking',
   };
-} 
+}

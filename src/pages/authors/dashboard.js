@@ -21,10 +21,10 @@ export default function AuthorDashboard() {
   const [recentPosts, setRecentPosts] = useState([]);
   const [draftPosts, setDraftPosts] = useState([]);
   const [error, setError] = useState(null);
-  
+
   // Mock authentication - in a real app, this would check if the user is logged in
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+
   useEffect(() => {
     // Simulate checking authentication
     const checkAuth = () => {
@@ -33,29 +33,51 @@ export default function AuthorDashboard() {
         // For demo purposes, we'll just set it to true after a delay
         setTimeout(() => {
           setIsAuthenticated(true);
-          
+
           // Mock loading author data
           setAuthor({
             name: 'محمد أحمد',
             slug: 'mohamed-ahmed',
             description: 'كاتب ومحرر محتوى متخصص في السفر والسياحة',
             avatar: 'https://via.placeholder.com/150',
-            postCount: 24
+            postCount: 24,
           });
-          
+
           // Mock recent posts
           setRecentPosts([
-            { id: 1, title: 'أفضل الوجهات السياحية في مصر', date: '2023-03-15', views: 2340, comments: 15 },
-            { id: 2, title: 'دليل السفر إلى تركيا', date: '2023-02-28', views: 1890, comments: 8 },
-            { id: 3, title: 'نصائح للسفر بميزانية محدودة', date: '2023-02-10', views: 1560, comments: 12 },
+            {
+              id: 1,
+              title: 'أفضل الوجهات السياحية في مصر',
+              date: '2023-03-15',
+              views: 2340,
+              comments: 15,
+            },
+            {
+              id: 2,
+              title: 'دليل السفر إلى تركيا',
+              date: '2023-02-28',
+              views: 1890,
+              comments: 8,
+            },
+            {
+              id: 3,
+              title: 'نصائح للسفر بميزانية محدودة',
+              date: '2023-02-10',
+              views: 1560,
+              comments: 12,
+            },
           ]);
-          
+
           // Mock draft posts
           setDraftPosts([
             { id: 4, title: 'أفضل الفنادق في دبي', lastEdited: '2023-03-20' },
-            { id: 5, title: 'تجربتي في السفر إلى المغرب', lastEdited: '2023-03-18' },
+            {
+              id: 5,
+              title: 'تجربتي في السفر إلى المغرب',
+              lastEdited: '2023-03-18',
+            },
           ]);
-          
+
           setIsLoading(false);
         }, 1000);
       } catch (err) {
@@ -64,17 +86,17 @@ export default function AuthorDashboard() {
         setIsLoading(false);
       }
     };
-    
+
     checkAuth();
   }, []);
-  
+
   const { metadata } = usePageMetadata({
     metadata: {
       title: 'لوحة تحكم المؤلف',
       description: 'إدارة المقالات والإحصائيات الخاصة بك',
     },
   });
-  
+
   if (error) {
     return (
       <Layout metadata={metadata}>
@@ -87,8 +109,8 @@ export default function AuthorDashboard() {
           <Container>
             <div className={styles.errorContainer}>
               <p className={styles.errorMessage}>{error}</p>
-              <button 
-                onClick={() => window.location.reload()} 
+              <button
+                onClick={() => window.location.reload()}
                 className={styles.actionButton}
               >
                 إعادة المحاولة
@@ -99,7 +121,7 @@ export default function AuthorDashboard() {
       </Layout>
     );
   }
-  
+
   if (!isAuthenticated || isLoading) {
     return (
       <Layout metadata={metadata}>
@@ -119,7 +141,7 @@ export default function AuthorDashboard() {
       </Layout>
     );
   }
-  
+
   return (
     <Layout metadata={metadata}>
       <Header>
@@ -146,7 +168,7 @@ export default function AuthorDashboard() {
           </div>
         </Container>
       </Header>
-      
+
       <Section>
         <Container>
           <div className={styles.dashboardGrid}>
@@ -156,27 +178,33 @@ export default function AuthorDashboard() {
                   <span className={styles.actionIcon}>+</span>
                   إنشاء مقالة جديدة
                 </Link>
-                <Link href="/authors/edit-profile" className={styles.actionButton}>
+                <Link
+                  href="/authors/edit-profile"
+                  className={styles.actionButton}
+                >
                   <span className={styles.actionIcon}>✎</span>
                   تعديل الملف الشخصي
                 </Link>
               </div>
-              
+
               {author && <NotificationsList authorSlug={author.slug} />}
-              
+
               <div className={styles.postsSection}>
                 <div className={styles.sectionHeader}>
                   <h3 className={styles.sectionTitle}>المقالات الأخيرة</h3>
                   {author && (
-                    <Link href={`/authors/${author.slug}`} className={styles.viewAllLink}>
+                    <Link
+                      href={`/authors/${author.slug}`}
+                      className={styles.viewAllLink}
+                    >
                       عرض الكل
                     </Link>
                   )}
                 </div>
-                
+
                 <PostsTable posts={recentPosts} type="published" />
               </div>
-              
+
               <div className={styles.postsSection}>
                 <div className={styles.sectionHeader}>
                   <h3 className={styles.sectionTitle}>المسودات</h3>
@@ -184,11 +212,11 @@ export default function AuthorDashboard() {
                     عرض الكل
                   </Link>
                 </div>
-                
+
                 <PostsTable posts={draftPosts} type="drafts" />
               </div>
             </div>
-            
+
             <div className={styles.sidebar}>
               {author && <AuthorStats authorSlug={author.slug} />}
               {author && <AuthorContributions authorSlug={author.slug} />}
@@ -198,4 +226,4 @@ export default function AuthorDashboard() {
       </Section>
     </Layout>
   );
-} 
+}

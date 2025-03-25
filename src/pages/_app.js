@@ -15,7 +15,14 @@ import '../styles/globals.scss';
 import '../styles/wordpress.scss';
 import variables from '../styles/variables';
 
-function App({ Component, pageProps = {}, metadata, recentPosts, categories, menus }) {
+function App({
+  Component,
+  pageProps = {},
+  metadata,
+  recentPosts,
+  categories,
+  menus,
+}) {
   const site = useSiteContext({
     metadata,
     recentPosts,

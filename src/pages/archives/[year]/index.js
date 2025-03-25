@@ -11,7 +11,7 @@ import Meta from '@/components/Meta';
 
 export default function YearArchive({ posts, years, year }) {
   const archiveTitle = getArchiveTitle({ year });
-  
+
   const { metadata } = usePageMetadata({
     metadata: {
       title: `Archive: ${archiveTitle}`,
@@ -21,23 +21,17 @@ export default function YearArchive({ posts, years, year }) {
 
   return (
     <Layout>
-      <Meta
-        title={metadata.title}
-        description={metadata.description}
-      />
+      <Meta title={metadata.title} description={metadata.description} />
 
       <Section>
         <Container>
           <h1 className="text-3xl font-bold mb-8">Archive: {archiveTitle}</h1>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="col-span-1">
-              <ArchiveNavigation 
-                years={years} 
-                activeYear={year}
-              />
+              <ArchiveNavigation years={years} activeYear={year} />
             </div>
-            
+
             <div className="col-span-1 md:col-span-2">
               {posts && posts.length > 0 ? (
                 <div className="grid grid-cols-1 gap-8">
@@ -60,11 +54,11 @@ export default function YearArchive({ posts, years, year }) {
 
 export async function getStaticProps({ params = {} }) {
   const { year } = params;
-  
+
   const { posts } = await getPostsByYear({
     year,
   });
-  
+
   const years = await getYearArchives();
 
   return {
@@ -78,7 +72,7 @@ export async function getStaticProps({ params = {} }) {
 
 export async function getStaticPaths() {
   const years = await getYearArchives();
-  
+
   const paths = years.map((year) => {
     return {
       params: {
@@ -91,4 +85,4 @@ export async function getStaticPaths() {
     paths,
     fallback: 'blocking',
   };
-} 
+}

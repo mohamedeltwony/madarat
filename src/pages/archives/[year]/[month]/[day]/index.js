@@ -11,7 +11,7 @@ import Meta from '@/components/Meta';
 
 export default function DayArchive({ posts, years, year, month, day }) {
   const archiveTitle = getArchiveTitle({ year, month, day });
-  
+
   const { metadata } = usePageMetadata({
     metadata: {
       title: `Archive: ${archiveTitle}`,
@@ -21,27 +21,24 @@ export default function DayArchive({ posts, years, year, month, day }) {
 
   return (
     <Layout>
-      <Meta
-        title={metadata.title}
-        description={metadata.description}
-      />
+      <Meta title={metadata.title} description={metadata.description} />
 
       <Section>
         <Container>
           <h1 className="text-3xl font-bold mb-8">Archive: {archiveTitle}</h1>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="col-span-1">
-              <ArchiveNavigation 
-                years={years} 
+              <ArchiveNavigation
+                years={years}
                 activeYear={year}
                 activeMonth={month}
               />
-              
+
               <div className="mt-8 bg-gray-100 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold mb-3">Daily Archive</h3>
                 <p>Viewing posts from {archiveTitle}</p>
-                <a 
+                <a
                   href={`/archives/${year}/${month}`}
                   className="inline-block mt-4 text-blue-600 hover:underline"
                 >
@@ -49,7 +46,7 @@ export default function DayArchive({ posts, years, year, month, day }) {
                 </a>
               </div>
             </div>
-            
+
             <div className="col-span-1 md:col-span-2">
               {posts && posts.length > 0 ? (
                 <div className="grid grid-cols-1 gap-8">
@@ -72,13 +69,13 @@ export default function DayArchive({ posts, years, year, month, day }) {
 
 export async function getServerSideProps({ params = {} }) {
   const { year, month, day } = params;
-  
+
   const { posts } = await getPostsByDay({
     year,
     month,
     day,
   });
-  
+
   const years = await getYearArchives();
 
   // Using server-side rendering for daily archives
@@ -93,4 +90,4 @@ export async function getServerSideProps({ params = {} }) {
       day,
     },
   };
-} 
+}

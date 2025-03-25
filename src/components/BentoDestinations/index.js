@@ -24,13 +24,15 @@ const BentoDestinations = ({ destinations = [] }) => {
           }
 
           return (
-            <Link 
-              key={destination.id} 
+            <Link
+              key={destination.id}
               href={`/destinations/${destination.slug}/trips`}
               className={styles.destinationCard}
             >
               <div className={styles.tripCount}>
-                <span className={styles.countNumber}>{destination.tripCount || 0}</span>
+                <span className={styles.countNumber}>
+                  {destination.tripCount || 0}
+                </span>
                 <span className={styles.countLabel}>رحلات</span>
               </div>
               <div className={styles.imageWrapper}>
@@ -47,7 +49,10 @@ const BentoDestinations = ({ destinations = [] }) => {
                       e.target.src = '/images/placeholder.jpg';
                     }}
                     onLoad={(e) => {
-                      console.log('Image loaded successfully:', destination.title);
+                      console.log(
+                        'Image loaded successfully:',
+                        destination.title
+                      );
                     }}
                   />
                 ) : (
@@ -59,7 +64,9 @@ const BentoDestinations = ({ destinations = [] }) => {
               <div className={styles.content}>
                 <h3 className={styles.title}>{destination.title}</h3>
                 {destination.description && (
-                  <p className={styles.description}>{destination.description}</p>
+                  <p className={styles.description}>
+                    {destination.description}
+                  </p>
                 )}
               </div>
             </Link>
@@ -70,4 +77,4 @@ const BentoDestinations = ({ destinations = [] }) => {
   );
 };
 
-export default BentoDestinations; 
+export default BentoDestinations;

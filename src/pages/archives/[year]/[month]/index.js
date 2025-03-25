@@ -11,7 +11,7 @@ import Meta from '@/components/Meta';
 
 export default function MonthArchive({ posts, years, year, month }) {
   const archiveTitle = getArchiveTitle({ year, month });
-  
+
   const { metadata } = usePageMetadata({
     metadata: {
       title: `Archive: ${archiveTitle}`,
@@ -21,24 +21,21 @@ export default function MonthArchive({ posts, years, year, month }) {
 
   return (
     <Layout>
-      <Meta
-        title={metadata.title}
-        description={metadata.description}
-      />
+      <Meta title={metadata.title} description={metadata.description} />
 
       <Section>
         <Container>
           <h1 className="text-3xl font-bold mb-8">Archive: {archiveTitle}</h1>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="col-span-1">
-              <ArchiveNavigation 
-                years={years} 
+              <ArchiveNavigation
+                years={years}
                 activeYear={year}
                 activeMonth={month}
               />
             </div>
-            
+
             <div className="col-span-1 md:col-span-2">
               {posts && posts.length > 0 ? (
                 <div className="grid grid-cols-1 gap-8">
@@ -61,12 +58,12 @@ export default function MonthArchive({ posts, years, year, month }) {
 
 export async function getStaticProps({ params = {} }) {
   const { year, month } = params;
-  
+
   const { posts } = await getPostsByMonth({
     year,
     month,
   });
-  
+
   const years = await getYearArchives();
 
   return {
@@ -81,11 +78,11 @@ export async function getStaticProps({ params = {} }) {
 
 export async function getStaticPaths() {
   const years = await getYearArchives();
-  
+
   // This is just a sample of paths - we generate all possible year/month combinations
   // In production, you might want to only generate paths for months that actually have posts
   const paths = [];
-  
+
   years.forEach((year) => {
     // Generate paths for each month (1-12)
     for (let month = 1; month <= 12; month++) {
@@ -102,4 +99,4 @@ export async function getStaticPaths() {
     paths,
     fallback: 'blocking',
   };
-} 
+}

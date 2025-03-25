@@ -5,16 +5,16 @@ export default function AuthorContributions({ authorSlug }) {
   const [contributions, setContributions] = useState({
     isLoading: true,
     error: null,
-    data: []
+    data: [],
   });
-  
+
   useEffect(() => {
     // In a real application, this would fetch data from an API
     const fetchContributions = async () => {
       try {
         // Simulate API call with a delay
-        await new Promise(resolve => setTimeout(resolve, 1200));
-        
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+
         // Mock data for demonstration
         const mockData = [
           { month: 'يناير', count: 5 },
@@ -30,24 +30,24 @@ export default function AuthorContributions({ authorSlug }) {
           { month: 'نوفمبر', count: 2 },
           { month: 'ديسمبر', count: 1 },
         ];
-        
+
         setContributions({
           isLoading: false,
           error: null,
-          data: mockData
+          data: mockData,
         });
       } catch (error) {
         setContributions({
           isLoading: false,
           error: 'حدث خطأ أثناء تحميل البيانات',
-          data: []
+          data: [],
         });
       }
     };
-    
+
     fetchContributions();
   }, [authorSlug]);
-  
+
   if (contributions.isLoading) {
     return (
       <div className={styles.contributionsLoading}>
@@ -56,7 +56,7 @@ export default function AuthorContributions({ authorSlug }) {
       </div>
     );
   }
-  
+
   if (contributions.error) {
     return (
       <div className={styles.contributionsError}>
@@ -64,23 +64,23 @@ export default function AuthorContributions({ authorSlug }) {
       </div>
     );
   }
-  
+
   // Find the maximum contribution count to calculate relative heights
-  const maxCount = Math.max(...contributions.data.map(item => item.count));
-  
+  const maxCount = Math.max(...contributions.data.map((item) => item.count));
+
   return (
     <div className={styles.contributionsContainer}>
       <h3 className={styles.contributionsTitle}>مساهمات المؤلف</h3>
-      
+
       <div className={styles.contributionsChart}>
         {contributions.data.map((item, index) => {
           // Calculate the height percentage based on the count relative to max
           const heightPercentage = (item.count / maxCount) * 100;
-          
+
           return (
             <div key={index} className={styles.chartColumn}>
-              <div 
-                className={styles.chartBar} 
+              <div
+                className={styles.chartBar}
                 style={{ height: `${heightPercentage}%` }}
                 title={`${item.count} مقالات`}
               ></div>
@@ -89,10 +89,15 @@ export default function AuthorContributions({ authorSlug }) {
           );
         })}
       </div>
-      
+
       <div className={styles.contributionsSummary}>
-        <p>إجمالي المقالات هذا العام: <strong>{contributions.data.reduce((sum, item) => sum + item.count, 0)}</strong></p>
+        <p>
+          إجمالي المقالات هذا العام:{' '}
+          <strong>
+            {contributions.data.reduce((sum, item) => sum + item.count, 0)}
+          </strong>
+        </p>
       </div>
     </div>
   );
-} 
+}

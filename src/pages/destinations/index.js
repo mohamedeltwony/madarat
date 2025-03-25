@@ -8,7 +8,8 @@ import Meta from '../../components/Meta';
 import styles from '../../styles/pages/Destinations.module.scss';
 
 export default function Destinations({ destinations = [] }) {
-  const [filteredDestinations, setFilteredDestinations] = useState(destinations);
+  const [filteredDestinations, setFilteredDestinations] =
+    useState(destinations);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,7 +21,7 @@ export default function Destinations({ destinations = [] }) {
     }
 
     try {
-      const filtered = destinations.filter(destination => {
+      const filtered = destinations.filter((destination) => {
         const searchLower = searchQuery.toLowerCase();
         return (
           destination.title.toLowerCase().includes(searchLower) ||
@@ -64,7 +65,8 @@ export default function Destinations({ destinations = [] }) {
         <Container>
           <h1 className={styles.pageTitle}>الوجهات السياحية</h1>
           <p className={styles.pageDescription}>
-            اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل الأماكن حول العالم
+            اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل
+            الأماكن حول العالم
           </p>
         </Container>
       </Section>
@@ -107,7 +109,9 @@ export default function Destinations({ destinations = [] }) {
                     )}
                   </div>
                   <div className={styles.destinationContent}>
-                    <h2 className={styles.destinationTitle}>{destination.title}</h2>
+                    <h2 className={styles.destinationTitle}>
+                      {destination.title}
+                    </h2>
                     <p className={styles.destinationDescription}>
                       {destination.description}
                     </p>
@@ -121,9 +125,7 @@ export default function Destinations({ destinations = [] }) {
               ))}
             </div>
           ) : (
-            <div className={styles.noDestinations}>
-              لم نجد وجهات تطابق بحثك
-            </div>
+            <div className={styles.noDestinations}>لم نجد وجهات تطابق بحثك</div>
           )}
         </Container>
       </Section>
@@ -164,9 +166,9 @@ export async function getStaticProps() {
     return {
       props: {
         destinations: [],
-        error: 'Failed to fetch destinations'
+        error: 'Failed to fetch destinations',
       },
       revalidate: 60, // Retry more frequently on error
     };
   }
-} 
+}

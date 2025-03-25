@@ -17,7 +17,9 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
   const [selectedDestination, setSelectedDestination] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(parseInt(router.query.page) || 1);
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(router.query.page) || 1
+  );
 
   useEffect(() => {
     if (!Array.isArray(trips)) {
@@ -26,13 +28,14 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
     }
 
     try {
-      const filtered = trips.filter(trip => {
+      const filtered = trips.filter((trip) => {
         const searchLower = searchQuery.toLowerCase();
-        const matchesSearch = 
+        const matchesSearch =
           trip.title.toLowerCase().includes(searchLower) ||
           trip.description.toLowerCase().includes(searchLower);
-        
-        const matchesDestination = !selectedDestination || 
+
+        const matchesDestination =
+          !selectedDestination ||
           trip.destination?.slug === selectedDestination;
 
         return matchesSearch && matchesDestination;
@@ -47,10 +50,14 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    router.push({
-      pathname: '/trips',
-      query: { page }
-    }, undefined, { shallow: true });
+    router.push(
+      {
+        pathname: '/trips',
+        query: { page },
+      },
+      undefined,
+      { shallow: true }
+    );
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -88,7 +95,8 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
         <Container>
           <h1 className={styles.pageTitle}>الرحلات السياحية</h1>
           <p className={styles.pageDescription}>
-            اكتشف رحلاتنا السياحية المميزة واستمتع بتجربة لا تُنسى في أجمل الأماكن حول العالم
+            اكتشف رحلاتنا السياحية المميزة واستمتع بتجربة لا تُنسى في أجمل
+            الأماكن حول العالم
           </p>
         </Container>
       </Section>
@@ -113,12 +121,19 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
               >
                 <option value="">جميع الوجهات</option>
                 {trips
-                  .filter((trip, index, self) => 
-                    trip.destination && 
-                    index === self.findIndex(t => t.destination?.slug === trip.destination?.slug)
+                  .filter(
+                    (trip, index, self) =>
+                      trip.destination &&
+                      index ===
+                        self.findIndex(
+                          (t) => t.destination?.slug === trip.destination?.slug
+                        )
                   )
-                  .map(trip => (
-                    <option key={trip.destination?.slug} value={trip.destination?.slug}>
+                  .map((trip) => (
+                    <option
+                      key={trip.destination?.slug}
+                      value={trip.destination?.slug}
+                    >
                       {trip.destination?.title}
                     </option>
                   ))}
@@ -144,7 +159,8 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
                           alt={trip.title}
                           className={styles.image}
                         />
-                      ) : trip._embedded?.['wp:featuredmedia']?.[0]?.source_url ? (
+                      ) : trip._embedded?.['wp:featuredmedia']?.[0]
+                          ?.source_url ? (
                         <img
                           src={trip._embedded['wp:featuredmedia'][0].source_url}
                           alt={trip.title}
@@ -169,10 +185,14 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
                       </p>
                       <div className={styles.tripMeta}>
                         <span className={styles.duration}>
-                          {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}
+                          {trip.duration?.days || 0}{' '}
+                          {trip.duration?.duration_unit || 'يوم'}
                         </span>
                         <span className={styles.price}>
-                          {trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'السعر غير متوفر'} {trip.currency?.code || 'SAR'}
+                          {trip.wp_travel_engine_setting_trip_actual_price ||
+                            trip.price ||
+                            'السعر غير متوفر'}{' '}
+                          {trip.currency?.code || 'SAR'}
                         </span>
                       </div>
                     </div>
@@ -188,7 +208,9 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
                   >
                     السابق
                   </button>
-                  {[...Array(Math.ceil(filteredTrips.length / TRIPS_PER_PAGE))].map((_, index) => (
+                  {[
+                    ...Array(Math.ceil(filteredTrips.length / TRIPS_PER_PAGE)),
+                  ].map((_, index) => (
                     <button
                       key={index + 1}
                       className={`${styles.pageButton} ${currentPage === index + 1 ? styles.active : ''}`}
@@ -200,7 +222,10 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
                   <button
                     className={styles.pageButton}
                     onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === Math.ceil(filteredTrips.length / TRIPS_PER_PAGE)}
+                    disabled={
+                      currentPage ===
+                      Math.ceil(filteredTrips.length / TRIPS_PER_PAGE)
+                    }
                   >
                     التالي
                   </button>
@@ -208,9 +233,7 @@ export default function TripsArchive({ trips = [], totalPages = 1 }) {
               )}
             </>
           ) : (
-            <div className={styles.noTrips}>
-              لم نجد رحلات تطابق بحثك
-            </div>
+            <div className={styles.noTrips}>لم نجد رحلات تطابق بحثك</div>
           )}
         </Container>
       </Section>
@@ -250,7 +273,7 @@ export async function getStaticProps() {
           days: trip.duration.days || 0,
           nights: trip.duration.nights || 0,
           duration_unit: trip.duration.duration_unit || 'يوم',
-          duration_type: trip.duration.duration_type || 'days'
+          duration_type: trip.duration.duration_type || 'days',
         };
       }
 
@@ -262,28 +285,29 @@ export async function getStaticProps() {
         featured_image: trip.featured_image || null,
         duration,
         destination,
-        wp_travel_engine_setting_trip_actual_price: trip.wp_travel_engine_setting_trip_actual_price || null,
+        wp_travel_engine_setting_trip_actual_price:
+          trip.wp_travel_engine_setting_trip_actual_price || null,
         price: trip.price || null,
         currency: trip.currency || null,
-        _embedded: trip._embedded || null
+        _embedded: trip._embedded || null,
       };
     });
 
     return {
       props: {
         trips: formattedTrips,
-        totalPages
+        totalPages,
       },
-      revalidate: 3600 // Revalidate every hour
+      revalidate: 3600, // Revalidate every hour
     };
   } catch (error) {
     console.error('Error fetching trips:', error);
     return {
       props: {
         trips: [],
-        totalPages: 1
+        totalPages: 1,
       },
-      revalidate: 60
+      revalidate: 60,
     };
   }
-} 
+}
