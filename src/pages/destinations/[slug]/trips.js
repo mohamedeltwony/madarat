@@ -56,82 +56,84 @@ export default function DestinationTrips({ destination, trips = [] }) {
         description={`اكتشف رحلات مدارات في ${destination.title}. مجموعة مميزة من الرحلات السياحية في ${destination.title}.`}
       />
 
-      <Section className={styles.heroSection}>
-        <Container>
-          <div className={styles.breadcrumbs}>
-            <Link href="/destinations">الوجهات</Link>
-            <span className={styles.separator}>/</span>
-            <Link href={`/destinations/${destination.slug}`}>{destination.title}</Link>
-            <span className={styles.separator}>/</span>
-            <span>الرحلات</span>
-          </div>
-          <h1 className={styles.pageTitle}>رحلات {destination.title}</h1>
-          <p className={styles.pageDescription}>
-            اكتشف مجموعتنا المميزة من الرحلات السياحية في {destination.title}. 
-            من رحلات شهر العسل إلى الرحلات العائلية والمغامرات.
-          </p>
-        </Container>
-      </Section>
-
-      <Section>
-        <Container>
-          <div className={styles.filters}>
-            <div className={styles.searchBox}>
-              <input
-                type="text"
-                placeholder="ابحث عن رحلة..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={styles.searchInput}
-              />
+      <div className={styles.destinationTrips}>
+        <Section className={styles.heroSection}>
+          <Container>
+            <div className={styles.breadcrumbs}>
+              <Link href="/destinations">الوجهات</Link>
+              <span className={styles.separator}>/</span>
+              <Link href={`/destinations/${destination.slug}`}>{destination.title}</Link>
+              <span className={styles.separator}>/</span>
+              <span>الرحلات</span>
             </div>
-          </div>
+            <h1 className={styles.pageTitle}>رحلات {destination.title}</h1>
+            <p className={styles.pageDescription}>
+              اكتشف مجموعتنا المميزة من الرحلات السياحية في {destination.title}. 
+              من رحلات شهر العسل إلى الرحلات العائلية والمغامرات.
+            </p>
+          </Container>
+        </Section>
 
-          {filteredTrips.length > 0 ? (
-            <div className={styles.tripsGrid}>
-              {filteredTrips.map(trip => (
-                <Link 
-                  key={trip.id} 
-                  href={`/trips/${trip.slug}`}
-                  className={styles.tripCard}
-                >
-                  <div className={styles.tripImage}>
-                    {trip.image ? (
-                      <img 
-                        src={trip.image} 
-                        alt={trip.title}
-                        className={styles.image}
-                      />
-                    ) : (
-                      <div className={styles.placeholderImage}>
-                        <span>No image available</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className={styles.tripContent}>
-                    <h2 className={styles.tripTitle}>{trip.title}</h2>
-                    <p className={styles.tripDescription}>
-                      {trip.description}
-                    </p>
-                    <div className={styles.tripMeta}>
-                      <span className={styles.tripDuration}>
-                        {trip.duration}
-                      </span>
-                      <span className={styles.tripPrice}>
-                        من {trip.price} ريال
-                      </span>
+        <Section>
+          <Container>
+            <div className={styles.filters}>
+              <div className={styles.searchBox}>
+                <input
+                  type="text"
+                  placeholder="ابحث عن رحلة..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={styles.searchInput}
+                />
+              </div>
+            </div>
+
+            {filteredTrips.length > 0 ? (
+              <div className={styles.tripsGrid}>
+                {filteredTrips.map(trip => (
+                  <Link 
+                    key={trip.id} 
+                    href={`/trips/${trip.slug}`}
+                    className={styles.tripCard}
+                  >
+                    <div className={styles.tripImage}>
+                      {trip.image ? (
+                        <img 
+                          src={trip.image} 
+                          alt={trip.title}
+                          className={styles.image}
+                        />
+                      ) : (
+                        <div className={styles.placeholderImage}>
+                          <span>No image available</span>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className={styles.noTrips}>
-              <p>لم يتم العثور على رحلات تطابق معايير البحث</p>
-            </div>
-          )}
-        </Container>
-      </Section>
+                    <div className={styles.tripContent}>
+                      <h2 className={styles.tripTitle}>{trip.title}</h2>
+                      <p className={styles.tripDescription}>
+                        {trip.description}
+                      </p>
+                      <div className={styles.tripMeta}>
+                        <span className={styles.tripDuration}>
+                          {trip.duration}
+                        </span>
+                        <span className={styles.tripPrice}>
+                          من {trip.price} ريال
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.noTrips}>
+                <p>لم يتم العثور على رحلات تطابق معايير البحث</p>
+              </div>
+            )}
+          </Container>
+        </Section>
+      </div>
     </Layout>
   );
 }
@@ -202,7 +204,7 @@ export async function getStaticProps({ params }) {
 
     // Fetch trips for this destination using the correct endpoint
     const tripsResponse = await fetch(
-      `https://madaratalkon.com/wp-json/wp/v2/trip?wp_travel_engine_destination=${destination.id}&per_page=100&_embed`,
+      `https://madaratalkon.com/wp-json/wp/v2/trip?destination=${destination.id}&per_page=100&_embed`,
       {
         headers: {
           'Accept': 'application/json',
