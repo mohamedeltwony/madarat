@@ -1,7 +1,7 @@
-@import "colors";
-@import "display";
-@import "typography";
-@import "breakpoints";
+@forward "colors";
+@forward "display";
+@forward "typography";
+@forward "breakpoints";
 
 // Color variables
 $color-primary: #1976d2;

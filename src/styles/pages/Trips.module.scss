@@ -1,4 +1,5 @@
-@import "styles/settings/__settings";
+@use "sass:color";
+@use "../../styles/settings/__settings" as *;
 @import "styles/settings/_typography";
 
 .trips {
@@ -24,35 +25,82 @@
     }
   }
 
+  .heroSection {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('/images/hero-bg.jpg') center/cover;
+    padding: 4rem 0;
+    text-align: center;
+    color: white;
+  }
+
+  .pageTitle {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .pageDescription {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    opacity: 0.9;
+  }
+
   .filters {
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
-    flex-wrap: wrap;
-
-    .searchBox {
-      flex: 1;
-      min-width: 300px;
-    }
-
-    .destinationFilter {
-      min-width: 200px;
-    }
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
   }
 
-  .searchInput,
-  .destinationSelect {
+  .searchBox {
+    flex: 1;
+  }
+
+  .searchInput {
     width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: inherit;
     font-size: 1rem;
     transition: all 0.3s ease;
 
     &:focus {
       outline: none;
-      border-color: $color-primary;
-      box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .destinationFilter {
+    min-width: 200px;
+  }
+
+  .destinationSelect {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
     }
   }
 
@@ -60,90 +108,156 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
-    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
 
   .tripCard {
-    background: white;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-decoration: none;
     color: inherit;
 
     &:hover {
       transform: translateY(-5px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     }
 
     .tripImage {
       position: relative;
       height: 200px;
       overflow: hidden;
+    }
 
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-      }
+    .image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
 
-      &:hover img {
+      &:hover {
         transform: scale(1.05);
       }
     }
 
     .tripContent {
       padding: 1.5rem;
+    }
 
-      h2 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-        color: $text-color-dark;
-      }
+    .tripTitle {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      color: inherit;
+    }
 
-      p {
-        color: $text-color;
-        margin-bottom: 1rem;
-        line-height: 1.6;
-      }
+    .tripDescription {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
 
-      .tripMeta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: $text-color-light;
-        font-size: 0.9rem;
+    .tripMeta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      opacity: 0.8;
+
+      .price {
+        color: #4CAF50;
+        font-weight: 600;
+        background: rgba(76, 175, 80, 0.1);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
       }
+    }
+  }
+
+  .placeholderImage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1rem;
+  }
+
+  .pageButton {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.active {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.4);
     }
   }
 
   .noTrips {
     text-align: center;
-    padding: 4rem 0;
-    color: $text-color-light;
+    padding: 2rem;
     font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
   }
 
   .error {
     text-align: center;
     padding: 2rem;
-    background: #fff5f5;
-    border-radius: 8px;
-    color: $color-error;
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 16px;
     margin: 2rem 0;
-
-    h2 {
-      margin-bottom: 1rem;
-    }
   }
 
   .loading {
     text-align: center;
     padding: 2rem;
-    color: $color-primary;
     font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
   }
 }
 
