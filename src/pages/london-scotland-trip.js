@@ -4,7 +4,6 @@ import Image from 'next/image';
 import SparkleButton from '@/components/UI/SparkleButton';
 import Chatbot from '@/components/Chatbot';
 import ExitPopup from '@/components/ExitPopup';
-import StickyLeadForm from '@/components/StickyLeadForm';
 import styles from '@/styles/pages/LondonScotland.module.scss';
 import UIStyles from '@/components/UI/UI.module.scss';
 
@@ -116,6 +115,7 @@ export default function LondonScotlandTrip() {
                 width={240} 
                 height={75} 
                 priority
+                unoptimized
               />
             </div>
             <h1 className={styles.title}>
@@ -238,9 +238,6 @@ export default function LondonScotlandTrip() {
       
       {/* Exit Intent Popup */}
       <ExitPopup />
-      
-      {/* Sticky Lead Form */}
-      <StickyLeadForm />
     </div>
   );
 } 
