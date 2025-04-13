@@ -1,0 +1,355 @@
+@import "styles/settings/__settings";
+
+// Variables for our brand colors
+$color-gold: #cc9c64;
+$color-teal: #0c4c44;
+$color-dark-teal: #0c4444;
+
+// Main container
+.container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+  // RTL default for Arabic content
+  direction: rtl;
+  text-align: right;
+}
+
+// Main content
+.main {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+// Hero section
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  
+  // Fallback background if image isn't available
+  background: linear-gradient(135deg, $color-teal 0%, $color-dark-teal 100%);
+  
+  // Background image with overlay
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/images/destinations/london-edinburgh.jpg') center center/cover no-repeat;
+    z-index: -2;
+    
+    // Fallback if image isn't available
+    @media (max-width: 768px) {
+      background-position: center 20%;
+    }
+  }
+}
+
+// Overlay for better text contrast
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba($color-teal, 0.7),
+    rgba($color-dark-teal, 0.6)
+  );
+  z-index: -1;
+}
+
+// Hero content container
+.heroContent {
+  width: 100%;
+  max-width: 90%;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  z-index: 1;
+  
+  @media (min-width: 768px) {
+    max-width: 800px;
+    padding: 3rem;
+  }
+}
+
+// Logo container
+.logoContainer {
+  margin-bottom: 2rem;
+  
+  img {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+  }
+}
+
+// Main headline
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  line-height: 1.2;
+  
+  @media (min-width: 768px) {
+    font-size: 3.5rem;
+  }
+}
+
+// Highlight for spans in title
+.highlight {
+  position: relative;
+  color: $color-gold;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background-color: rgba($color-gold, 0.3);
+    z-index: -1;
+    border-radius: 4px;
+  }
+}
+
+// Description text
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  @media (min-width: 768px) {
+    font-size: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+// CTA buttons container
+.ctaButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+// Secondary CTA
+.secondaryCTA {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  border-radius: 0.375rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+// Main CTA
+.mainCTA {
+  background-color: $color-gold !important;
+  
+  &:hover {
+    box-shadow: 0 5px 15px rgba($color-gold, 0.4) !important;
+  }
+}
+
+// Mobile scroll indicator
+.scrollIndicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  animation: bounce 2s infinite;
+  
+  span {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    opacity: 0.8;
+  }
+  
+  svg {
+    animation: arrowBounce 2s infinite;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) translateX(-50%);
+  }
+  40% {
+    transform: translateY(-10px) translateX(-50%);
+  }
+  60% {
+    transform: translateY(-5px) translateX(-50%);
+  }
+}
+
+@keyframes arrowBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(5px);
+  }
+  60% {
+    transform: translateY(3px);
+  }
+}
+
+// Trip details section
+.tripDetails {
+  min-height: 100vh;
+  padding: 4rem 1rem;
+  background-color: white;
+}
+
+// Form popup styles
+.formOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  position: relative;
+  background: white;
+  
+  h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: $color-teal;
+  }
+  
+  p {
+    margin-bottom: 1.5rem;
+    color: $color-dark-teal;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: $color-dark-teal;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $color-dark-teal;
+  }
+  
+  input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: $color-gold;
+      box-shadow: 0 0 0 3px rgba($color-gold, 0.2);
+    }
+  }
+}
+
+.formActions {
+  margin-top: 2rem;
+}
+
+// Responsive improvements for mobile
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+  
+  .description {
+    font-size: 1rem;
+  }
+  
+  .heroContent {
+    padding: 1.5rem;
+  }
+  
+  .formContainer {
+    padding: 1.5rem;
+    
+    h3 {
+      font-size: 1.5rem;
+    }
+  }
+} 
