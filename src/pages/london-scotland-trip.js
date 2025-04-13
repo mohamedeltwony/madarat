@@ -12,8 +12,14 @@ import UIStyles from '@/components/UI/UI.module.scss';
 // public/images/destinations/london-edinburgh.jpg
 
 export default function LondonScotlandTrip() {
-  const [showForm, setShowForm] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    city: '',
+    destination: 'لندن واسكتلندا'
+  });
   
   // Detect mobile devices
   useEffect(() => {
@@ -31,16 +37,63 @@ export default function LondonScotlandTrip() {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
   
-  const handleShowForm = () => {
-    setShowForm(true);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   };
   
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
     alert('شكراً لك! سنتواصل معك قريباً.');
-    setShowForm(false);
+    
+    // Reset form
+    setFormData({
+      name: '',
+      phone: '',
+      email: '',
+      city: '',
+      destination: 'لندن واسكتلندا'
+    });
   };
+  
+  // Saudi cities
+  const cities = [
+    "الرياض",
+    "جدة",
+    "القصيم – حائل",
+    "مكة - الطائف",
+    "المدينة المنورة",
+    "المنطقة الشرقية",
+    "المنطقة الشمالية",
+    "المنطقة الجنوبية",
+    "أخرى"
+  ];
+  
+  // Travel destinations
+  const destinations = [
+    "لندن واسكتلندا",
+    "جورجيا",
+    "أذربيجان",
+    "البوسنة",
+    "ألبانيا",
+    "تركيا",
+    "المالديف",
+    "ماليزيا",
+    "اندونيسيا",
+    "تايلاند",
+    "سريلانكا",
+    "موريشيوس",
+    "صلالة",
+    "اوزباكستان",
+    "جنوب افريقيا",
+    "سنغافورة",
+    "روسيا",
+    "الفلبين"
+  ];
   
   return (
     <div className={styles.container} dir="rtl">
@@ -71,16 +124,95 @@ export default function LondonScotlandTrip() {
             <p className={styles.description}>
               تجربة سفر فريدة لاستكشاف جمال الطبيعة والتاريخ والثقافة في المملكة المتحدة. رحلة استثنائية تجمع بين سحر المدن العريقة وروعة الطبيعة الخلابة.
             </p>
-            <div className={styles.ctaButtons}>
-              <SparkleButton onClick={handleShowForm} className={styles.mainCTA}>
-                احجز مقعدك الآن
-              </SparkleButton>
-              
-              {!isMobile && (
-                <a href="#trip-details" className={styles.secondaryCTA}>
-                  اكتشف التفاصيل
-                </a>
-              )}
+            
+            {/* Contact Form */}
+            <div className={styles.formContainer}>
+              <form onSubmit={handleSubmit} className={styles.tripForm}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="name">الاسم الكامل</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="أدخل اسمك الكامل"
+                    required
+                  />
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="phone">الجوال</label>
+                  <div className={styles.phoneInput}>
+                    <span className={styles.countryCode}>+966</span>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="51 234 5678"
+                      pattern="[0-9]{9}"
+                      title="يرجى إدخال رقم سعودي مكون من 9 أرقام"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="email">البريد الإلكتروني</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="أدخل بريدك الإلكتروني"
+                    required
+                  />
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="city">اختر المدينة</label>
+                  <select
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">— الرجاء تحديد اختيار —</option>
+                    {cities.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="destination">اختر الوجهة</label>
+                  <select
+                    id="destination"
+                    name="destination"
+                    value={formData.destination}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    {destinations.map((destination) => (
+                      <option key={destination} value={destination}>
+                        {destination}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className={styles.formActions}>
+                  <SparkleButton type="submit" className={styles.mainCTA} fullWidth>
+                    طلب تواصل
+                  </SparkleButton>
+                </div>
+              </form>
             </div>
           </div>
           
@@ -109,60 +241,6 @@ export default function LondonScotlandTrip() {
       
       {/* Sticky Lead Form */}
       <StickyLeadForm />
-      
-      {/* Lead Form Popup */}
-      {showForm && (
-        <div className={styles.formOverlay}>
-          <div className={`${UIStyles.glassCard} ${styles.formContainer}`}>
-            <button className={styles.closeButton} onClick={() => setShowForm(false)}>
-              ×
-            </button>
-            <h3>احجز رحلتك إلى لندن واسكتلندا</h3>
-            <p>اترك بياناتك وسنتواصل معك قريباً بخصوص التفاصيل</p>
-            
-            <form onSubmit={handleSubmit}>
-              <div className={styles.formGroup}>
-                <label htmlFor="name">الاسم الكامل</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  placeholder="أدخل اسمك الكامل"
-                  required
-                />
-              </div>
-              
-              <div className={styles.formGroup}>
-                <label htmlFor="phone">رقم الهاتف</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder="أدخل رقم هاتفك"
-                  required
-                />
-              </div>
-              
-              <div className={styles.formGroup}>
-                <label htmlFor="email">البريد الإلكتروني</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="أدخل بريدك الإلكتروني"
-                  required
-                />
-              </div>
-              
-              <div className={styles.formActions}>
-                <SparkleButton type="submit" fullWidth>
-                  إرسال
-                </SparkleButton>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 } 
