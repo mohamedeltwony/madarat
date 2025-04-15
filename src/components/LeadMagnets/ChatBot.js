@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'; // Added useMemo
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import styles from './LeadMagnets.module.scss';
 import SparkleButton from '@/components/UI/SparkleButton';
 
@@ -126,7 +126,9 @@ export default function ChatBot({ isOpen, onToggle }) {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`${styles.message} ${message.sender === 'bot' ? styles.botMessage : styles.userMessage}`}
+            className={`${styles.message} ${
+              message.sender === 'bot' ? styles.botMessage : styles.userMessage
+            }`}
           >
             {message.text}
           </div>
