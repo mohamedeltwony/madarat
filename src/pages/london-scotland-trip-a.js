@@ -4,8 +4,8 @@ import Image from 'next/image';
 import SparkleButton from '@/components/UI/SparkleButton';
 import Chatbot from '@/components/Chatbot';
 import ExitPopup from '@/components/ExitPopup';
-import styles from '@/styles/pages/LondonScotland.module.scss';
-// import UIStyles from '@/components/UI/UI.module.scss'; // Commented out - unused
+import styles from '@/styles/pages/LondonScotland.module.scss'; // Reusing original styles
+import UIStyles from '@/components/UI/UI.module.scss';
 
 // NOTE: Please add a high-quality image of London and Edinburgh to:
 // public/images/destinations/london-edinburgh.jpg
@@ -19,31 +19,31 @@ const PlaceholderIcon = ({ color = 'currentColor', size = 24 }) => (
 );
 
 
-export default function LondonScotlandTrip() {
-  // const [isMobile, setIsMobile] = useState(false); // Commented out - unused
+export default function LondonScotlandTripA() { // Renamed function
+  const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
     city: '',
-    destination: 'لندن واسكتلندا'
+    destination: 'لندن واسكتلندا - A' // Added variant indicator
   });
   
-  // // Detect mobile devices - Commented out as isMobile state is unused
-  // useEffect(() => {
-  //   const checkIfMobile = () => {
-  //     setIsMobile(window.innerWidth < 768);
-  //   };
+  // Detect mobile devices
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
     
-  //   // Check on initial load
-  //   checkIfMobile();
+    // Check on initial load
+    checkIfMobile();
     
-  //   // Add listener for window resize
-  //   window.addEventListener('resize', checkIfMobile);
+    // Add listener for window resize
+    window.addEventListener('resize', checkIfMobile);
     
-  //   // Cleanup
-  //   return () => window.removeEventListener('resize', checkIfMobile);
-  // }, []);
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -56,7 +56,7 @@ export default function LondonScotlandTrip() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
-    alert('شكراً لك! سنتواصل معك قريباً.');
+    alert('شكراً لك! سنتواصل معك قريباً. (Variant A)'); // Added variant indicator
     
     // Reset form
     setFormData({
@@ -64,7 +64,7 @@ export default function LondonScotlandTrip() {
       phone: '',
       email: '',
       city: '',
-      destination: 'لندن واسكتلندا'
+      destination: 'لندن واسكتلندا - A'
     });
   };
   
@@ -98,7 +98,7 @@ export default function LondonScotlandTrip() {
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>استكشف لندن واسكتلندا مع مدارات الكون | رحلة ساحرة</title>
+        <title>استكشف لندن واسكتلندا مع مدارات الكون | رحلة ساحرة - A</title> {/* Added variant indicator */}
         <meta name="description" content="رحلة سياحية استثنائية إلى لندن واسكتلندا مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة في بريطانيا" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="icon" href="/favicon.ico" />
@@ -123,21 +123,21 @@ export default function LondonScotlandTrip() {
               />
             </div>
             <h1 className={styles.title}>
-              رحلة <span className={styles.highlight}>لندن</span> و <span className={styles.highlight}>اسكتلندا</span> الساحرة
+              رحلة <span className={styles.highlight}>لندن</span> و <span className={styles.highlight}>اسكتلندا</span> الساحرة (A) {/* Added variant indicator */}
             </h1>
             <p className={styles.description}>
               تجربة سفر فريدة لاستكشاف جمال الطبيعة والتاريخ والثقافة في المملكة المتحدة. رحلة استثنائية تجمع بين سحر المدن العريقة وروعة الطبيعة الخلابة.
             </p>
 
-            {/* Features Section - Moved Inside Hero & Made Marquee */}
-            <div className={styles.featuresSection}> 
+            {/* Features Section - Moved Inside Hero */}
+            <div className={styles.featuresSection}> {/* Changed from section to div */}
+              {/* Removed featuresContainer and featuresTitle as they might not be needed here */}
               <div className={styles.featuresGrid}>
-                {/* Render features twice for infinite scroll effect */}
-                {[...features, ...features].map((feature, index) => (
-                  <div key={`${feature.icon}-${index}`} className={styles.featureItem}> {/* Added index to key for uniqueness */}
+                {features.map((feature) => (
+                  <div key={feature.icon} className={styles.featureItem}>
                     <div className={styles.featureIcon}>
                       {/* Replace PlaceholderIcon with your actual SVG component/path */}
-                      <PlaceholderIcon color="#cc9c64" size={28} /> 
+                      <PlaceholderIcon color="#cc9c64" size={28} /> {/* Adjusted size */}
                     </div>
                     <p className={styles.featureText}>{feature.text}</p>
                   </div>

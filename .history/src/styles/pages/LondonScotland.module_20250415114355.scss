@@ -306,44 +306,33 @@ $font-family: 'Cairo', sans-serif;
   }
 }
 
-// --- Features Section Marquee Styles ---
-
-// Keyframes for the scrolling animation (Right-to-Left for Arabic)
-@keyframes scrollRTL {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    // Scroll one full set of items (50% of the doubled content)
-    transform: translateX(50%); 
-  }
-}
-
+// Features Section Styles (Adapted for Hero Context)
 .featuresSection {
+  // Removed padding, background, outer color
   margin-bottom: 2.5rem; // Space before the form container
   width: 100%;
   max-width: 700px; // Align with description width
   margin-left: auto;
   margin-right: auto;
   font-family: $font-family;
-  overflow: hidden; // Hide the overflowing content
-  position: relative; 
-  // Removed fading edges (::before, ::after)
 }
 
-.featuresGrid {
-  display: flex; // Use flexbox for horizontal layout
-  flex-wrap: nowrap; // Prevent wrapping
-  width: fit-content; // Let the container size itself based on content
-  // Apply the animation
-  // Duration needs adjustment based on number of items and desired speed
-  // Assuming 10 items initially, duplicated to 20. 
-  // Let's try 40s for a moderate speed.
-  animation: scrollRTL 40s linear infinite; 
+// Removed .featuresContainer and .featuresTitle rules
 
-  // Pause animation on hover (optional)
-  &:hover {
-    animation-play-state: paused;
+.featuresGrid {
+  display: grid;
+  // Adjust columns and gap for better fit within hero
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+  gap: 1rem; // Reduced gap
+
+  @media (min-width: 768px) {
+     grid-template-columns: repeat(5, 1fr); // 5 columns on desktop
+     gap: 1.5rem; // Slightly larger gap on desktop
+  }
+   
+  @media (max-width: 480px) {
+     grid-template-columns: repeat(3, 1fr); // 3 columns on small mobile
+     gap: 0.75rem; // Smaller gap on mobile
   }
 }
 
@@ -352,9 +341,7 @@ $font-family: 'Cairo', sans-serif;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  flex-shrink: 0; // Prevent items from shrinking
-  width: 120px; // Give items a fixed width
-  margin: 0 1rem; // Add horizontal margin between items
+  // Removed padding, background, border-radius, transition, hover
 }
 
 .featureIcon {

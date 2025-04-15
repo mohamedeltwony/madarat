@@ -116,4 +116,11 @@ export default function TripsPage() {
   );
 }
 
-// Removed getStaticProps to avoid conflict with client-side useQuery
+// This ensures we have a static page at build time
+export async function getStaticProps() {
+  return {
+    props: {},
+    // Revalidate every hour
+    revalidate: 3600
+  };
+} 

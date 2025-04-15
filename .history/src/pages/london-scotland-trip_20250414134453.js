@@ -5,22 +5,13 @@ import SparkleButton from '@/components/UI/SparkleButton';
 import Chatbot from '@/components/Chatbot';
 import ExitPopup from '@/components/ExitPopup';
 import styles from '@/styles/pages/LondonScotland.module.scss';
-// import UIStyles from '@/components/UI/UI.module.scss'; // Commented out - unused
+import UIStyles from '@/components/UI/UI.module.scss';
 
 // NOTE: Please add a high-quality image of London and Edinburgh to:
 // public/images/destinations/london-edinburgh.jpg
 
-// Placeholder SVG Icon Component (Replace with actual SVGs later)
-const PlaceholderIcon = ({ color = 'currentColor', size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="24" height="24" rx="4" fill={color} fillOpacity="0.2"/>
-    <path d="M12 6V18M6 12H18" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-
 export default function LondonScotlandTrip() {
-  // const [isMobile, setIsMobile] = useState(false); // Commented out - unused
+  const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -29,21 +20,21 @@ export default function LondonScotlandTrip() {
     destination: 'لندن واسكتلندا'
   });
   
-  // // Detect mobile devices - Commented out as isMobile state is unused
-  // useEffect(() => {
-  //   const checkIfMobile = () => {
-  //     setIsMobile(window.innerWidth < 768);
-  //   };
+  // Detect mobile devices
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
     
-  //   // Check on initial load
-  //   checkIfMobile();
+    // Check on initial load
+    checkIfMobile();
     
-  //   // Add listener for window resize
-  //   window.addEventListener('resize', checkIfMobile);
+    // Add listener for window resize
+    window.addEventListener('resize', checkIfMobile);
     
-  //   // Cleanup
-  //   return () => window.removeEventListener('resize', checkIfMobile);
-  // }, []);
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -80,20 +71,6 @@ export default function LondonScotlandTrip() {
     "المنطقة الجنوبية",
     "أخرى"
   ];
-
-  // Features data
-  const features = [
-    { text: 'تأشيرة سريعة', icon: 'visa' },
-    { text: 'راحة تامة', icon: 'comfort' },
-    { text: 'مواعيد مرنة', icon: 'flexible' },
-    { text: 'إقامة فاخرة', icon: 'luxury' },
-    { text: 'فعاليات ممتعة', icon: 'events' },
-    { text: 'إطلالة نهرية', icon: 'river' },
-    { text: 'أسعار تنافسية', icon: 'price' },
-    { text: 'تقييمات عالية', icon: 'rating' },
-    { text: 'مرشد خبير', icon: 'guide' },
-    { text: 'جولات مخصصة', icon: 'custom' },
-  ];
   
   return (
     <div className={styles.container} dir="rtl">
@@ -128,23 +105,6 @@ export default function LondonScotlandTrip() {
             <p className={styles.description}>
               تجربة سفر فريدة لاستكشاف جمال الطبيعة والتاريخ والثقافة في المملكة المتحدة. رحلة استثنائية تجمع بين سحر المدن العريقة وروعة الطبيعة الخلابة.
             </p>
-
-            {/* Features Section - Moved Inside Hero & Made Marquee */}
-            <div className={styles.featuresSection}> 
-              <div className={styles.featuresGrid}>
-                {/* Render features twice for infinite scroll effect */}
-                {[...features, ...features].map((feature, index) => (
-                  <div key={`${feature.icon}-${index}`} className={styles.featureItem}> {/* Added index to key for uniqueness */}
-                    <div className={styles.featureIcon}>
-                      {/* Replace PlaceholderIcon with your actual SVG component/path */}
-                      <PlaceholderIcon color="#cc9c64" size={28} /> 
-                    </div>
-                    <p className={styles.featureText}>{feature.text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* End Features Section */}
             
             {/* Contact Form */}
             <div className={styles.formContainer}>
@@ -194,7 +154,7 @@ export default function LondonScotlandTrip() {
                 </div>
                 
                 <div className={styles.formGroup}>
-                  <label htmlFor="city">اختر مدينة الانطلاق</label>
+                  <label htmlFor="city">اختر المدينة</label>
                   <select
                     id="city"
                     name="city"
@@ -220,9 +180,6 @@ export default function LondonScotlandTrip() {
             </div>
           </div>
         </section>
-
-        {/* Features section moved inside hero content */}
-
       </main>
       
       {/* Chatbot */}
@@ -232,4 +189,4 @@ export default function LondonScotlandTrip() {
       <ExitPopup />
     </div>
   );
-}
+} 

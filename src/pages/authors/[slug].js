@@ -142,7 +142,7 @@ export async function getStaticPaths() {
   // For better performance in production, we'll pre-render the most active authors
   // but allow other author pages to be generated on-demand
   
-  const { authors } = await getAllAuthors();
+  const { authors } = await getAllAuthors() || { authors: [] };
 
   // Get the top 10 authors (or all if less than 10)
   const topAuthors = authors.slice(0, 10);

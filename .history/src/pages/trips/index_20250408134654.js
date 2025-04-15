@@ -22,10 +22,10 @@ export default function TripsPage() {
   const [trips, setTrips] = useState([]);
   const [currentPage, setCurrentPage] = useState(parseInt(router.query.page) || 1);
 
-  const { loading, error: queryError, data, refetch } = useQuery(GET_TRIPS, {
-    notifyOnNetworkStatusChange: true,
-    errorPolicy: 'all',
-  });
+  // const { loading, error: queryError, data, refetch } = useQuery(GET_TRIPS, {
+  //   notifyOnNetworkStatusChange: true,
+  //   errorPolicy: 'all',
+  // });
 
   useEffect(() => {
     if (data?.trips?.nodes) {
@@ -116,4 +116,11 @@ export default function TripsPage() {
   );
 }
 
-// Removed getStaticProps to avoid conflict with client-side useQuery
+// This ensures we have a static page at build time
+export async function getStaticProps() {
+  return {
+    props: {},
+    // Revalidate every hour
+    revalidate: 3600
+  };
+} 

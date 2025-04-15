@@ -327,8 +327,27 @@ $font-family: 'Cairo', sans-serif;
   margin-right: auto;
   font-family: $font-family;
   overflow: hidden; // Hide the overflowing content
-  position: relative; 
-  // Removed fading edges (::before, ::after)
+  position: relative; // Needed for potential fade overlays
+
+  // Optional: Add fading edges for a smoother look
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50px; // Adjust width of fade
+    z-index: 2;
+    pointer-events: none;
+  }
+  &::before { // Right fade (start)
+    right: 0;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); // Match hero content background
+  }
+  &::after { // Left fade (end)
+    left: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); // Match hero content background
+  }
 }
 
 .featuresGrid {

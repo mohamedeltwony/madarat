@@ -5,7 +5,7 @@ import SparkleButton from '@/components/UI/SparkleButton';
 import Chatbot from '@/components/Chatbot';
 import ExitPopup from '@/components/ExitPopup';
 import styles from '@/styles/pages/LondonScotland.module.scss';
-// import UIStyles from '@/components/UI/UI.module.scss'; // Commented out - unused
+import UIStyles from '@/components/UI/UI.module.scss';
 
 // NOTE: Please add a high-quality image of London and Edinburgh to:
 // public/images/destinations/london-edinburgh.jpg
@@ -20,7 +20,7 @@ const PlaceholderIcon = ({ color = 'currentColor', size = 24 }) => (
 
 
 export default function LondonScotlandTrip() {
-  // const [isMobile, setIsMobile] = useState(false); // Commented out - unused
+  const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -29,21 +29,21 @@ export default function LondonScotlandTrip() {
     destination: 'لندن واسكتلندا'
   });
   
-  // // Detect mobile devices - Commented out as isMobile state is unused
-  // useEffect(() => {
-  //   const checkIfMobile = () => {
-  //     setIsMobile(window.innerWidth < 768);
-  //   };
+  // Detect mobile devices
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
     
-  //   // Check on initial load
-  //   checkIfMobile();
+    // Check on initial load
+    checkIfMobile();
     
-  //   // Add listener for window resize
-  //   window.addEventListener('resize', checkIfMobile);
+    // Add listener for window resize
+    window.addEventListener('resize', checkIfMobile);
     
-  //   // Cleanup
-  //   return () => window.removeEventListener('resize', checkIfMobile);
-  // }, []);
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;

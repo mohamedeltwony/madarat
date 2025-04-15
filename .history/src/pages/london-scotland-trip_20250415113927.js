@@ -5,7 +5,7 @@ import SparkleButton from '@/components/UI/SparkleButton';
 import Chatbot from '@/components/Chatbot';
 import ExitPopup from '@/components/ExitPopup';
 import styles from '@/styles/pages/LondonScotland.module.scss';
-// import UIStyles from '@/components/UI/UI.module.scss'; // Commented out - unused
+import UIStyles from '@/components/UI/UI.module.scss';
 
 // NOTE: Please add a high-quality image of London and Edinburgh to:
 // public/images/destinations/london-edinburgh.jpg
@@ -20,7 +20,7 @@ const PlaceholderIcon = ({ color = 'currentColor', size = 24 }) => (
 
 
 export default function LondonScotlandTrip() {
-  // const [isMobile, setIsMobile] = useState(false); // Commented out - unused
+  const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -29,21 +29,21 @@ export default function LondonScotlandTrip() {
     destination: 'لندن واسكتلندا'
   });
   
-  // // Detect mobile devices - Commented out as isMobile state is unused
-  // useEffect(() => {
-  //   const checkIfMobile = () => {
-  //     setIsMobile(window.innerWidth < 768);
-  //   };
+  // Detect mobile devices
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
     
-  //   // Check on initial load
-  //   checkIfMobile();
+    // Check on initial load
+    checkIfMobile();
     
-  //   // Add listener for window resize
-  //   window.addEventListener('resize', checkIfMobile);
+    // Add listener for window resize
+    window.addEventListener('resize', checkIfMobile);
     
-  //   // Cleanup
-  //   return () => window.removeEventListener('resize', checkIfMobile);
-  // }, []);
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -128,23 +128,6 @@ export default function LondonScotlandTrip() {
             <p className={styles.description}>
               تجربة سفر فريدة لاستكشاف جمال الطبيعة والتاريخ والثقافة في المملكة المتحدة. رحلة استثنائية تجمع بين سحر المدن العريقة وروعة الطبيعة الخلابة.
             </p>
-
-            {/* Features Section - Moved Inside Hero & Made Marquee */}
-            <div className={styles.featuresSection}> 
-              <div className={styles.featuresGrid}>
-                {/* Render features twice for infinite scroll effect */}
-                {[...features, ...features].map((feature, index) => (
-                  <div key={`${feature.icon}-${index}`} className={styles.featureItem}> {/* Added index to key for uniqueness */}
-                    <div className={styles.featureIcon}>
-                      {/* Replace PlaceholderIcon with your actual SVG component/path */}
-                      <PlaceholderIcon color="#cc9c64" size={28} /> 
-                    </div>
-                    <p className={styles.featureText}>{feature.text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* End Features Section */}
             
             {/* Contact Form */}
             <div className={styles.formContainer}>
@@ -221,7 +204,24 @@ export default function LondonScotlandTrip() {
           </div>
         </section>
 
-        {/* Features section moved inside hero content */}
+        {/* Features Section - Added */}
+        <section className={styles.featuresSection}>
+          <div className={styles.featuresContainer}>
+            <h2 className={styles.featuresTitle}>مميزات رحلتنا</h2>
+            <div className={styles.featuresGrid}>
+              {features.map((feature) => (
+                <div key={feature.icon} className={styles.featureItem}>
+                  <div className={styles.featureIcon}>
+                    {/* Replace PlaceholderIcon with your actual SVG component/path */}
+                    <PlaceholderIcon color="#cc9c64" size={32} /> 
+                  </div>
+                  <p className={styles.featureText}>{feature.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        {/* End Features Section */}
 
       </main>
       

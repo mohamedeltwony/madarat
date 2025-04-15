@@ -31,6 +31,5 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     '@next/next/no-img-element': 'off',
     'prettier/prettier': 'off', // Temporarily disable Prettier errors
-    'no-unused-vars': 'off', // Temporarily disable unused var errors
   },
 };

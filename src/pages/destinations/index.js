@@ -69,7 +69,7 @@ export default function Destinations({ destinations = [] }) {
         </Container>
       </Section>
 
-      <Section>
+      <Section className={styles.destinationsSection}>
         <Container>
           <div className={styles.filters}>
             <div className={styles.searchBox}>
@@ -132,41 +132,61 @@ export default function Destinations({ destinations = [] }) {
 }
 
 export async function getStaticProps() {
-  try {
-    const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/destination'
-    );
+  const maxRetries = 3;
+  let currentTry = 0;
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+  while (currentTry < maxRetries) {
+    try {
+      const response = await fetch(
+        'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100&_embed',
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+          timeout: 30000, // 30 second timeout
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const destinations = await response.json();
+
+      // Format destinations data
+      const formattedDestinations = destinations.map((dest) => ({
+        id: dest.id,
+        title: dest.name || '',
+        slug: dest.slug || '',
+        description: dest.description?.rendered || '',
+        image: dest._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
+        tripCount: dest.trip_count || 0,
+      }));
+
+      return {
+        props: {
+          destinations: formattedDestinations,
+          error: null
+        },
+        revalidate: 3600, // Revalidate every hour
+      };
+    } catch (error) {
+      console.error(`Error fetching destinations (attempt ${currentTry + 1}/${maxRetries}):`, error);
+      currentTry++;
+
+      if (currentTry === maxRetries) {
+        return {
+          props: {
+            destinations: [],
+            error: 'عذراً، حدث خطأ أثناء تحميل الوجهات. يرجى المحاولة مرة أخرى لاحقاً.'
+          },
+          revalidate: 60 // Retry more frequently on error
+        };
+      }
+
+      // Wait before retrying
+      await new Promise(resolve => setTimeout(resolve, 1000 * currentTry));
     }
-
-    const destinations = await response.json();
-
-    // Format destinations data
-    const formattedDestinations = destinations.map((dest) => ({
-      id: dest.id,
-      title: dest.name || '',
-      slug: dest.slug || '',
-      description: dest.description || '',
-      image: dest.featured_media_url || null,
-      tripCount: dest.trip_count || 0,
-    }));
-
-    return {
-      props: {
-        destinations: formattedDestinations,
-      },
-      revalidate: 3600, // Revalidate every hour
-    };
-  } catch (error) {
-    console.error('Error fetching destinations:', error);
-    return {
-      props: {
-        destinations: [],
-        error: 'Failed to fetch destinations'
-      },
-      revalidate: 60, // Retry more frequently on error
-    };
   }
 } 
