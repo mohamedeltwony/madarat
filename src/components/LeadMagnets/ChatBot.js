@@ -16,11 +16,14 @@ export default function ChatBot({ isOpen, onToggle }) {
   const messagesEndRef = useRef(null);
 
   // Wrap botMessages in useMemo to prevent it from causing useEffect re-runs
-  const botMessages = useMemo(() => [
-    'مرحباً! أنا المساعد الآلي لشركة مدارات. كيف يمكنني مساعدتك اليوم؟',
-    'أنا هنا للإجابة على استفساراتك حول خدماتنا. هل ترغب في معرفة المزيد؟',
-    'ممتاز! يمكننا تقديم عرض مخصص لاحتياجاتك. هل يمكنني الحصول على بعض المعلومات منك؟',
-  ], []); // Empty dependency array means this runs only once
+  const botMessages = useMemo(
+    () => [
+      'مرحباً! أنا المساعد الآلي لشركة مدارات. كيف يمكنني مساعدتك اليوم؟',
+      'أنا هنا للإجابة على استفساراتك حول خدماتنا. هل ترغب في معرفة المزيد؟',
+      'ممتاز! يمكننا تقديم عرض مخصص لاحتياجاتك. هل يمكنني الحصول على بعض المعلومات منك؟',
+    ],
+    [] // Empty dependency array means this runs only once
+  );
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
