@@ -31,7 +31,7 @@ const nextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, must-revalidate',
-          }
+          },
         ],
       },
       {
@@ -39,19 +39,19 @@ const nextConfig = {
         headers: [
           {
             key: 'X-DNS-Prefetch-Control',
-            value: 'on'
+            value: 'on',
           },
           {
             key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains'
+            value: 'max-age=31536000; includeSubDomains',
           },
           {
             key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
+            value: 'SAMEORIGIN',
           },
           {
             key: 'X-Content-Type-Options',
-            value: 'nosniff'
+            value: 'nosniff',
           },
           {
             key: 'Access-Control-Allow-Origin',
@@ -69,7 +69,8 @@ const nextConfig = {
     OG_IMAGE_DIRECTORY: '/images/og',
     POSTS_PRERENDER_COUNT: '5',
     WORDPRESS_GRAPHQL_ENDPOINT: process.env.WORDPRESS_GRAPHQL_ENDPOINT,
-    WORDPRESS_MENU_LOCATION_NAVIGATION: process.env.WORDPRESS_MENU_LOCATION_NAVIGATION || 'PRIMARY',
+    WORDPRESS_MENU_LOCATION_NAVIGATION:
+      process.env.WORDPRESS_MENU_LOCATION_NAVIGATION || 'PRIMARY',
     WORDPRESS_PLUGIN_SEO: 'false',
   },
   async rewrites() {
@@ -79,7 +80,7 @@ const nextConfig = {
         destination: 'https://madaratalkon.com/wp-json/:path*',
       },
     ];
-  }
+  },
 };
 
 module.exports = nextConfig;

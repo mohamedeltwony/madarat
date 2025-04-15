@@ -60,10 +60,10 @@ export function useSearchState() {
   };
 }
 
-export default function useSearch({ 
-  defaultQuery = null, 
+export default function useSearch({
+  defaultQuery = null,
   maxResults,
-  filters = {} 
+  filters = {},
 } = {}) {
   const search = useContext(SearchContext);
   const { client, data } = search;
@@ -77,60 +77,64 @@ export default function useSearch({
   if (client && data) {
     // First, get all the posts or search results
     let postsToFilter = data.posts;
-    
+
     if (query) {
       postsToFilter = client.search(query).map(({ item }) => item);
     }
-    
+
     // Then apply filters if any
     if (activeFilters && Object.keys(activeFilters).length > 0) {
       // Filter by date (year, month)
       if (activeFilters.year) {
-        postsToFilter = postsToFilter.filter(post => {
+        postsToFilter = postsToFilter.filter((post) => {
           const postDate = new Date(post.date);
           return postDate.getFullYear() === parseInt(activeFilters.year);
         });
-        
+
         if (activeFilters.month) {
-          postsToFilter = postsToFilter.filter(post => {
+          postsToFilter = postsToFilter.filter((post) => {
             const postDate = new Date(post.date);
             return postDate.getMonth() + 1 === parseInt(activeFilters.month);
           });
         }
       }
-      
+
       // Filter by category
       if (activeFilters.category) {
-        postsToFilter = postsToFilter.filter(post => {
+        postsToFilter = postsToFilter.filter((post) => {
           if (!post.categories) return false;
-          return post.categories.some(category => 
-            category.slug === activeFilters.category || 
-            category.id === activeFilters.category
+          return post.categories.some(
+            (category) =>
+              category.slug === activeFilters.category ||
+              category.id === activeFilters.category
           );
         });
       }
-      
+
       // Filter by author
       if (activeFilters.author) {
-        postsToFilter = postsToFilter.filter(post => {
+        postsToFilter = postsToFilter.filter((post) => {
           if (!post.author) return false;
-          return post.author.slug === activeFilters.author || 
-                 post.author.id === activeFilters.author;
+          return (
+            post.author.slug === activeFilters.author ||
+            post.author.id === activeFilters.author
+          );
         });
       }
-      
+
       // Filter by tag (if available in your data structure)
-      if (activeFilters.tag) { // Removed check for post.tags here, it's checked inside filter
-        postsToFilter = postsToFilter.filter(post => {
+      if (activeFilters.tag) {
+        // Removed check for post.tags here, it's checked inside filter
+        postsToFilter = postsToFilter.filter((post) => {
           if (!post.tags) return false;
-          return post.tags.some(tag => 
-            tag.slug === activeFilters.tag || 
-            tag.id === activeFilters.tag
+          return post.tags.some(
+            (tag) =>
+              tag.slug === activeFilters.tag || tag.id === activeFilters.tag
           );
         });
       }
     }
-    
+
     results = postsToFilter;
   }
 
@@ -141,7 +145,7 @@ export default function useSearch({
   // If the defaultQuery argument changes, the hook should reflect
   // that update and set that as the new state
   useEffect(() => setQuery(defaultQuery), [defaultQuery]);
-  
+
   // Same for filters
   useEffect(() => setActiveFilters(filters), [filters]);
 
@@ -150,12 +154,12 @@ export default function useSearch({
    */
   function handleSearch({ query, filters = {} }) {
     setQuery(query);
-    
+
     // If filters are provided, update them
     if (Object.keys(filters).length > 0) {
-      setActiveFilters(currentFilters => ({
+      setActiveFilters((currentFilters) => ({
         ...currentFilters,
-        ...filters
+        ...filters,
       }));
     }
   }
@@ -167,7 +171,7 @@ export default function useSearch({
     setQuery(null);
     setActiveFilters({});
   }
-  
+
   /**
    * handleFilterChange
    */
@@ -182,6 +186,6 @@ export default function useSearch({
     results,
     search: handleSearch,
     clearSearch: handleClearSearch,
-    setFilters: handleFilterChange
+    setFilters: handleFilterChange,
   };
 }

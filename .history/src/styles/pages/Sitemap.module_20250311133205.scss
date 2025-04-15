@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .sitemapGrid {
   display: grid;
@@ -19,7 +19,7 @@
   color: $color-gray-900;
   position: relative;
   padding-bottom: 0.5rem;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -36,10 +36,10 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  
+
   li {
     margin-bottom: 0.75rem;
-    
+
     a {
       color: $color-gray-800;
       text-decoration: none;
@@ -47,7 +47,7 @@
       display: inline-block;
       position: relative;
       padding-right: 1rem;
-      
+
       &::before {
         content: '→';
         position: absolute;
@@ -56,25 +56,25 @@
         transform: translateY(-50%);
         font-size: 0.85rem;
       }
-      
+
       &:hover {
         color: $color-primary;
       }
     }
-    
+
     ul {
       list-style: none;
       padding-right: 1.5rem;
       margin: 0.75rem 0;
       border-right: 1px dashed $color-gray-300;
-      
+
       li {
         margin-bottom: 0.5rem;
-        
+
         &:last-child {
           margin-bottom: 0;
         }
-        
+
         a {
           font-size: 0.95rem;
           color: $color-gray-700;
@@ -91,7 +91,7 @@
   color: $color-gray-800;
   position: relative;
   padding-right: 1rem;
-  
+
   &::before {
     content: '→';
     position: absolute;
@@ -100,4 +100,4 @@
     transform: translateY(-50%);
     font-size: 0.85rem;
   }
-} 
+}

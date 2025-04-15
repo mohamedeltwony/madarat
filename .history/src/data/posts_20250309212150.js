@@ -379,11 +379,8 @@ export const QUERY_POSTS_BY_YEAR = gql`
   ${POST_FIELDS}
   query PostsByYear($year: Int!) {
     posts(
-      first: 10000, 
-      where: { 
-        dateQuery: { year: $year },
-        hasPassword: false 
-      }
+      first: 10000
+      where: { dateQuery: { year: $year }, hasPassword: false }
     ) {
       edges {
         node {
@@ -423,11 +420,8 @@ export const QUERY_POSTS_BY_MONTH = gql`
   ${POST_FIELDS}
   query PostsByMonth($year: Int!, $month: Int!) {
     posts(
-      first: 10000, 
-      where: { 
-        dateQuery: { year: $year, month: $month },
-        hasPassword: false 
-      }
+      first: 10000
+      where: { dateQuery: { year: $year, month: $month }, hasPassword: false }
     ) {
       edges {
         node {
@@ -467,10 +461,10 @@ export const QUERY_POSTS_BY_DAY = gql`
   ${POST_FIELDS}
   query PostsByDay($year: Int!, $month: Int!, $day: Int!) {
     posts(
-      first: 10000, 
-      where: { 
-        dateQuery: { year: $year, month: $month, day: $day },
-        hasPassword: false 
+      first: 10000
+      where: {
+        dateQuery: { year: $year, month: $month, day: $day }
+        hasPassword: false
       }
     ) {
       edges {

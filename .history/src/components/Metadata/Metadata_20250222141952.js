@@ -12,7 +12,14 @@ const DEFAULT_METADATA_OPTIONS = {
   compactCategories: true,
 };
 
-const Metadata = ({ className, author, date, categories, options = DEFAULT_METADATA_OPTIONS, isSticky = false }) => {
+const Metadata = ({
+  className,
+  author,
+  date,
+  categories,
+  options = DEFAULT_METADATA_OPTIONS,
+  isSticky = false,
+}) => {
   const metadataClassName = new ClassName(styles.metadata);
 
   metadataClassName.addIf(className, className);
@@ -50,7 +57,9 @@ const Metadata = ({ className, author, date, categories, options = DEFAULT_METAD
         <li className={styles.metadataCategories}>
           {compactCategories && (
             <p title={categories.map(({ name }) => name).join(', ')}>
-              <Link href={categoryPathBySlug(categories[0].slug)}>{categories[0].name}</Link>
+              <Link href={categoryPathBySlug(categories[0].slug)}>
+                {categories[0].name}
+              </Link>
               {categories.length > 1 && ' and more'}
             </p>
           )}
@@ -59,7 +68,9 @@ const Metadata = ({ className, author, date, categories, options = DEFAULT_METAD
               {categories.map((category) => {
                 return (
                   <li key={category.slug}>
-                    <Link href={categoryPathBySlug(category.slug)}>{category.name}</Link>
+                    <Link href={categoryPathBySlug(category.slug)}>
+                      {category.name}
+                    </Link>
                   </li>
                 );
               })}

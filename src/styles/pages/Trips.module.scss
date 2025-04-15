@@ -1,11 +1,12 @@
-@import "styles/settings/__settings";
-@import "styles/settings/_typography";
+@import 'styles/settings/__settings';
+@import 'styles/settings/_typography';
 
 .trips {
   padding: 4rem 0;
 
   .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
       url('/images/trips-hero.jpg') center/cover;
     padding: 8rem 0;
     text-align: center;
@@ -68,7 +69,9 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
     text-decoration: none;
     color: inherit;
 
@@ -164,11 +167,12 @@
     flex-direction: column;
   }
 
-  .searchBox, .destinationFilter {
+  .searchBox,
+  .destinationFilter {
     width: 100%;
   }
 
   .tripsGrid {
     grid-template-columns: 1fr;
   }
-} 
+}

@@ -23,7 +23,10 @@ const Layout = ({ children }) => {
 
   const helmetSettings = {
     defaultTitle: metadata.title,
-    titleTemplate: process.env.WORDPRESS_PLUGIN_SEO === true ? '%s' : `%s - ${metadata.title}`,
+    titleTemplate:
+      process.env.WORDPRESS_PLUGIN_SEO === true
+        ? '%s'
+        : `%s - ${metadata.title}`,
     ...helmetSettingsFromMetadata(metadata, {
       setTitle: false,
       link: [
@@ -64,14 +67,14 @@ const Layout = ({ children }) => {
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="ar_SA" />
         <link rel="canonical" href={metadata.og.url} />
-        
+
         {/* Preload Fonts */}
-        <link 
-          rel="preload" 
+        <link
+          rel="preload"
           href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
           as="style"
         />
-        
+
         {/* Performance Optimization */}
         <meta httpEquiv="Accept-CH" content="DPR, Width, Viewport-Width" />
         <meta httpEquiv="Content-Language" content="ar" />

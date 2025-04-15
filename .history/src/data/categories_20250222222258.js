@@ -24,8 +24,8 @@ export const QUERY_ALL_CATEGORIES = gql`
                 name
                 slug
               }
-              }
             }
+          }
           posts(where: { status: PUBLISH }) {
             edges {
               node {

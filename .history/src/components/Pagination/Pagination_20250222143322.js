@@ -7,7 +7,11 @@ const Pagination = ({ currentPage = 1, pagesCount, basePath }) => {
   const nextPage = currentPage + 1;
 
   return (
-    <nav className={styles.nav} role="navigation" aria-label="Pagination Navigation">
+    <nav
+      className={styles.nav}
+      role="navigation"
+      aria-label="Pagination Navigation"
+    >
       <ul className={styles.pages}>
         {Array.from({ length: pagesCount }).map((_, i) => {
           const pageNumber = i + 1;
@@ -16,7 +20,11 @@ const Pagination = ({ currentPage = 1, pagesCount, basePath }) => {
           if (isCurrentPage) {
             return (
               <li key={pageNumber}>
-                <span className={styles.active} aria-label={`Current Page, Page ${pageNumber}`} aria-current="true">
+                <span
+                  className={styles.active}
+                  aria-label={`Current Page, Page ${pageNumber}`}
+                  aria-current="true"
+                >
                   {pageNumber}
                 </span>
               </li>
@@ -25,7 +33,10 @@ const Pagination = ({ currentPage = 1, pagesCount, basePath }) => {
 
           return (
             <li key={pageNumber}>
-              <Link href={`${basePath}/page/${pageNumber}/`} aria-label={`Goto Page ${pageNumber}`}>
+              <Link
+                href={`${basePath}/page/${pageNumber}/`}
+                aria-label={`Goto Page ${pageNumber}`}
+              >
                 <span>{pageNumber}</span>
               </Link>
             </li>
@@ -34,7 +45,10 @@ const Pagination = ({ currentPage = 1, pagesCount, basePath }) => {
       </ul>
 
       {nextPage <= pagesCount && (
-        <Link href={`${basePath}/page/${nextPage}/`} aria-label="Goto Next Page">
+        <Link
+          href={`${basePath}/page/${nextPage}/`}
+          aria-label="Goto Next Page"
+        >
           Next <FiChevronRight />
         </Link>
       )}

@@ -10,11 +10,11 @@ const MorphPosts = ({ posts }) => {
   return (
     <div className={styles.morphGrid}>
       {/* Glassmorphism Post */}
-      <Link 
+      <Link
         href={postPathBySlug(displayPosts[0]?.slug)}
         className={`${styles.morphItem} ${styles.glassItem}`}
         style={{
-          backgroundImage: `url(${displayPosts[0]?.featuredImage?.sourceUrl})`
+          backgroundImage: `url(${displayPosts[0]?.featuredImage?.sourceUrl})`,
         }}
       >
         <div className={styles.glassContent}>
@@ -26,7 +26,7 @@ const MorphPosts = ({ posts }) => {
       </Link>
 
       {/* Skeuomorphism Post */}
-      <Link 
+      <Link
         href={postPathBySlug(displayPosts[1]?.slug)}
         className={`${styles.morphItem} ${styles.skeuItem}`}
       >
@@ -40,15 +40,15 @@ const MorphPosts = ({ posts }) => {
             <span className={styles.date}>
               {new Date(displayPosts[1]?.date).toLocaleDateString('en-US', {
                 month: 'short',
-                day: 'numeric'
+                day: 'numeric',
               })}
             </span>
             <h3>{displayPosts[1]?.title}</h3>
             {displayPosts[1]?.featuredImage?.sourceUrl && (
-              <div 
+              <div
                 className={styles.polaroid}
                 style={{
-                  backgroundImage: `url(${displayPosts[1].featuredImage.sourceUrl})`
+                  backgroundImage: `url(${displayPosts[1].featuredImage.sourceUrl})`,
                 }}
               />
             )}
@@ -57,16 +57,16 @@ const MorphPosts = ({ posts }) => {
       </Link>
 
       {/* Claymorphism Post */}
-      <Link 
+      <Link
         href={postPathBySlug(displayPosts[2]?.slug)}
         className={`${styles.morphItem} ${styles.clayItem}`}
       >
         <div className={styles.clayContent}>
           {displayPosts[2]?.featuredImage?.sourceUrl && (
-            <div 
+            <div
               className={styles.clayImage}
               style={{
-                backgroundImage: `url(${displayPosts[2].featuredImage.sourceUrl})`
+                backgroundImage: `url(${displayPosts[2].featuredImage.sourceUrl})`,
               }}
             />
           )}
@@ -82,4 +82,4 @@ const MorphPosts = ({ posts }) => {
   );
 };
 
-export default MorphPosts; 
+export default MorphPosts;

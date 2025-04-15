@@ -1,5 +1,5 @@
-@import "styles/settings/__settings";
-@import "style.css";
+@import 'styles/settings/__settings';
+@import 'style.css';
 
 * {
   box-sizing: border-box;
@@ -9,7 +9,12 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Helvetica Neue,
+    sans-serif;
 }
 
 p {
@@ -31,9 +36,9 @@ img {
 }
 
 input {
-  &[type="text"],
-  &[type="search"],
-  &[type="email"] {
+  &[type='text'],
+  &[type='search'],
+  &[type='email'] {
     outline-offset: 0;
     padding: 0.5em 0.8em;
   }

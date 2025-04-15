@@ -30,13 +30,15 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
           }
 
           return (
-            <Link 
-              key={destination.id} 
+            <Link
+              key={destination.id}
               href={`/destinations/${destination.slug}/trips`}
               className={styles.destinationCard}
             >
               <div className={styles.tripCount}>
-                <span className={styles.countNumber}>{destination.tripCount || 0}</span>
+                <span className={styles.countNumber}>
+                  {destination.tripCount || 0}
+                </span>
                 <span className={styles.countLabel}>رحلات</span>
               </div>
               <div className={styles.imageWrapper}>
@@ -60,9 +62,13 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
                 )}
               </div>
               <div className={styles.content}>
-                <h3 className={styles.title}>{destination.title || 'وجهة غير معروفة'}</h3>
+                <h3 className={styles.title}>
+                  {destination.title || 'وجهة غير معروفة'}
+                </h3>
                 {destination.description && (
-                  <p className={styles.description}>{destination.description}</p>
+                  <p className={styles.description}>
+                    {destination.description}
+                  </p>
                 )}
               </div>
             </Link>
@@ -73,4 +79,4 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
   );
 };
 
-export default BentoDestinations; 
+export default BentoDestinations;

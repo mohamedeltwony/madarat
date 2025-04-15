@@ -58,7 +58,7 @@ const ComponentName = () => {
 
 ```scss
 // ComponentName.module.scss
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .container {
   padding: 1rem;
@@ -106,7 +106,7 @@ For variables that need to be accessed in JavaScript, we use a separate JS file:
 ```javascript
 // src/styles/variables.js
 const variables = {
-  progressbarColor: '#1a365d'
+  progressbarColor: '#1a365d',
 };
 
 export default variables;
@@ -118,7 +118,7 @@ Usage in JavaScript:
 import variables from '../styles/variables';
 
 // ...
-<NextNProgress height={4} color={variables.progressbarColor} />
+<NextNProgress height={4} color={variables.progressbarColor} />;
 ```
 
 ## Responsive Design
@@ -153,11 +153,11 @@ Usage:
 ```scss
 .container {
   width: 100%;
-  
+
   @include breakpoint-medium-up {
     width: 80%;
   }
-  
+
   @include breakpoint-large-up {
     width: 70%;
   }
@@ -175,13 +175,15 @@ Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0
 These should eventually be updated to use the modern `@use` and `@forward` syntax:
 
 Current (deprecated):
+
 ```scss
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 ```
 
 Modern:
+
 ```scss
-@use "styles/settings/__settings" as settings;
+@use 'styles/settings/__settings' as settings;
 ```
 
 ## RTL Support
@@ -222,8 +224,8 @@ $font-size-large: 1.25rem;
 1. **Use CSS Modules**: Keep styles scoped to components
 2. **Import SCSS Settings**: Import common settings at the top of each SCSS file
 3. **Mobile-First**: Start with mobile styling and use breakpoints for larger screens
-4. **Consistent Naming**: Use BEM-like naming for CSS classes 
+4. **Consistent Naming**: Use BEM-like naming for CSS classes
 5. **Avoid !important**: Only use as a last resort
 6. **Use Variables**: For colors, spacing, breakpoints, etc.
 7. **Organize by Component**: Each component should have its own SCSS module file
-8. **Consider Migration**: Update to modern `@use` syntax when possible 
+8. **Consider Migration**: Update to modern `@use` syntax when possible

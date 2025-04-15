@@ -13,16 +13,16 @@ const BentoPosts = ({ posts }) => {
     <div className={styles.bentoGrid}>
       {displayPosts.map((post, index) => {
         const featuredImage = post.featuredImage?.sourceUrl;
-        
+
         return (
-          <Link 
-            key={post.slug} 
+          <Link
+            key={post.slug}
             href={postPathBySlug(post.slug)}
             className={`${styles.bentoItem} ${styles[`item${index + 1}`]}`}
           >
             <div className={styles.bentoContent}>
               {featuredImage && (
-                <div 
+                <div
                   className={styles.imageWrapper}
                   style={{ backgroundImage: `url(${featuredImage})` }}
                 />
@@ -36,13 +36,9 @@ const BentoPosts = ({ posts }) => {
                 <h3 className={styles.title}>{post.title}</h3>
                 <div className={styles.meta}>
                   {post.author && (
-                    <span className={styles.author}>
-                      By {post.author.name}
-                    </span>
+                    <span className={styles.author}>By {post.author.name}</span>
                   )}
-                  <time className={styles.date}>
-                    {formatDate(post.date)}
-                  </time>
+                  <time className={styles.date}>{formatDate(post.date)}</time>
                 </div>
                 {index === 0 && post.excerpt && (
                   <p className={styles.excerpt}>
@@ -58,4 +54,4 @@ const BentoPosts = ({ posts }) => {
   );
 };
 
-export default BentoPosts; 
+export default BentoPosts;

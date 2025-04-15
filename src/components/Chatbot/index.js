@@ -19,23 +19,26 @@ export default function Chatbot() {
   const [email, setEmail] = useState('');
   const [step, setStep] = useState('greeting'); // greeting, name, phone, email, done
   const messagesEndRef = useRef(null);
-  
+
   // Scroll to bottom of messages when messages update
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
-  
+
   // Show bot typing indicator, then add message
   const addBotMessage = (text) => {
-    setMessages(prev => [...prev, { id: Date.now(), isBot: true, isTyping: true }]);
-    
+    setMessages((prev) => [
+      ...prev,
+      { id: Date.now(), isBot: true, isTyping: true },
+    ]);
+
     setTimeout(() => {
-      setMessages(prev => {
+      setMessages((prev) => {
         const newMessages = [...prev];
-        const typingMsgIndex = newMessages.findIndex(msg => msg.isTyping);
-        
+        const typingMsgIndex = newMessages.findIndex((msg) => msg.isTyping);
+
         if (typingMsgIndex !== -1) {
           newMessages[typingMsgIndex] = {
             ...newMessages[typingMsgIndex],
@@ -43,67 +46,74 @@ export default function Chatbot() {
             isTyping: false,
           };
         }
-        
+
         return newMessages;
       });
     }, 1000); // simulate typing time
   };
-  
+
   // Add user message and trigger next step
   const handleSendMessage = () => {
     if (!input.trim() && step !== 'greeting') return;
-    
+
     // Add user message
     if (input.trim()) {
-      setMessages(prev => [...prev, { id: Date.now(), text: input, isBot: false }]);
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now(), text: input, isBot: false },
+      ]);
     }
-    
+
     // Handle different conversation steps
     switch (step) {
       case 'greeting':
         setStep('name');
         addBotMessage('يسعدني التحدث معك! ما هو اسمك الكريم؟');
         break;
-        
+
       case 'name':
         setName(input);
         setStep('phone');
         addBotMessage(`شكراً ${input}! هل يمكنك مشاركة رقم هاتفك للتواصل؟`);
         break;
-        
+
       case 'phone':
         setPhone(input);
         setStep('email');
         addBotMessage('ممتاز! وماهو بريدك الإلكتروني؟');
         break;
-        
+
       case 'email':
         setEmail(input);
         setStep('done');
-        addBotMessage(`شكراً جزيلاً! سيقوم فريقنا بالتواصل معك قريباً على الرقم ${phone}. هل لديك أي استفسارات أخرى؟`);
+        addBotMessage(
+          `شكراً جزيلاً! سيقوم فريقنا بالتواصل معك قريباً على الرقم ${phone}. هل لديك أي استفسارات أخرى؟`
+        );
         break;
-        
+
       case 'done':
-        addBotMessage('سعدت بالتحدث معك! إذا كان لديك أي استفسارات أخرى، فلا تتردد في السؤال.');
+        addBotMessage(
+          'سعدت بالتحدث معك! إذا كان لديك أي استفسارات أخرى، فلا تتردد في السؤال.'
+        );
         break;
-        
+
       default:
         break;
     }
-    
+
     setInput('');
   };
-  
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSendMessage();
     }
   };
-  
+
   const toggleChat = () => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   };
-  
+
   // Render bot typing indicator
   const renderTypingIndicator = () => (
     <div className={styles.typingIndicator}>
@@ -112,18 +122,18 @@ export default function Chatbot() {
       <span></span>
     </div>
   );
-  
+
   return (
     <div className={styles.chatbotContainer}>
       {/* Chat toggle button */}
-      <button 
-        className={styles.chatToggle} 
+      <button
+        className={styles.chatToggle}
         onClick={toggleChat}
-        aria-label={isOpen ? "إغلاق المحادثة" : "فتح المحادثة"}
+        aria-label={isOpen ? 'إغلاق المحادثة' : 'فتح المحادثة'}
       >
         {isOpen ? <FaTimes /> : <FaComment />}
       </button>
-      
+
       {/* Chat window */}
       <div className={`${styles.chatWindow} ${isOpen ? styles.open : ''}`}>
         <div className={styles.chatHeader}>
@@ -132,11 +142,11 @@ export default function Chatbot() {
             <FaTimes />
           </button>
         </div>
-        
+
         <div className={styles.chatMessages}>
           {messages.map((message) => (
-            <div 
-              key={message.id} 
+            <div
+              key={message.id}
               className={`${styles.message} ${message.isBot ? styles.botMessage : styles.userMessage}`}
             >
               {message.isTyping ? renderTypingIndicator() : message.text}
@@ -144,7 +154,7 @@ export default function Chatbot() {
           ))}
           <div ref={messagesEndRef} />
         </div>
-        
+
         <div className={styles.chatInput}>
           <input
             type="text"
@@ -152,21 +162,21 @@ export default function Chatbot() {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={
-              step === 'name' ? 'أدخل اسمك...' :
-              step === 'phone' ? 'أدخل رقم هاتفك...' :
-              step === 'email' ? 'أدخل بريدك الإلكتروني...' :
-              'اكتب رسالتك هنا...'
+              step === 'name'
+                ? 'أدخل اسمك...'
+                : step === 'phone'
+                  ? 'أدخل رقم هاتفك...'
+                  : step === 'email'
+                    ? 'أدخل بريدك الإلكتروني...'
+                    : 'اكتب رسالتك هنا...'
             }
             disabled={step === 'greeting'}
           />
-          <button 
-            onClick={handleSendMessage} 
-            aria-label="إرسال"
-          >
+          <button onClick={handleSendMessage} aria-label="إرسال">
             <FaPaperPlane />
           </button>
         </div>
       </div>
     </div>
   );
-} 
+}

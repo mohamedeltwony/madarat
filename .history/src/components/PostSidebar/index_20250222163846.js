@@ -10,28 +10,25 @@ const PostSidebar = ({ post }) => {
       <div className={styles.stickyContent}>
         {post.featuredImage && (
           <div className={styles.thumbnailWrapper}>
-            <img 
-              src={post.featuredImage.sourceUrl} 
+            <img
+              src={post.featuredImage.sourceUrl}
               alt={post.title}
               className={styles.thumbnail}
             />
           </div>
         )}
         <h2 className={styles.title}>{post.title}</h2>
-        <button 
+        <button
           className={styles.ctaButton}
           onClick={() => setIsPopupOpen(true)}
         >
           Get More Information
         </button>
       </div>
-      
-      <FormPopup 
-        isOpen={isPopupOpen} 
-        onClose={() => setIsPopupOpen(false)} 
-      />
+
+      <FormPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
     </div>
   );
 };
 
-export default PostSidebar; 
+export default PostSidebar;

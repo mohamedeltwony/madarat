@@ -1,7 +1,12 @@
 import Link from 'next/link';
 import { Helmet } from 'react-helmet';
 
-import { getPostBySlug, getRecentPosts, getRelatedPosts, postPathBySlug } from 'lib/posts';
+import {
+  getPostBySlug,
+  getRecentPosts,
+  getRelatedPosts,
+  postPathBySlug,
+} from 'lib/posts';
 import { categoryPathBySlug } from 'lib/categories';
 import { formatDate } from 'lib/datetime';
 import { ArticleJsonLd } from 'lib/json-ld';
@@ -48,7 +53,8 @@ export default function Post({ post, socialImage, related }) {
     metadata: {
       ...post,
       title: metaTitle,
-      description: description || post.og?.description || `Read more about ${title}`,
+      description:
+        description || post.og?.description || `Read more about ${title}`,
     },
   });
 
@@ -111,12 +117,17 @@ export default function Post({ post, socialImage, related }) {
 
       <Section className={styles.postFooter}>
         <Container>
-          <p className={styles.postModified}>Last updated on {formatDate(modified)}.</p>
+          <p className={styles.postModified}>
+            Last updated on {formatDate(modified)}.
+          </p>
           {Array.isArray(relatedPostsList) && relatedPostsList.length > 0 && (
             <div className={styles.relatedPosts}>
               {relatedPostsTitle.name ? (
                 <span>
-                  More from <Link href={relatedPostsTitle.link}>{relatedPostsTitle.name}</Link>
+                  More from{' '}
+                  <Link href={relatedPostsTitle.link}>
+                    {relatedPostsTitle.name}
+                  </Link>
                 </span>
               ) : (
                 <span>More Posts</span>
@@ -153,8 +164,10 @@ export async function getStaticProps({ params = {} } = {}) {
     socialImage: `${process.env.OG_IMAGE_DIRECTORY}/${params?.slug}.png`,
   };
 
-  const { category: relatedCategory, posts: relatedPosts } = (await getRelatedPosts(categories, postId)) || {};
-  const hasRelated = relatedCategory && Array.isArray(relatedPosts) && relatedPosts.length;
+  const { category: relatedCategory, posts: relatedPosts } =
+    (await getRelatedPosts(categories, postId)) || {};
+  const hasRelated =
+    relatedCategory && Array.isArray(relatedPosts) && relatedPosts.length;
 
   if (hasRelated) {
     props.related = {

@@ -1,6 +1,6 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
-@import "styles/components/_container";
+@import 'styles/components/_container';
 
 .header {
   background-color: white;
@@ -37,7 +37,7 @@
     transition: right 0.3s ease;
     overflow-y: auto;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-    
+
     &.active {
       right: 0;
     }
@@ -75,7 +75,8 @@
   transition: color 0.2s ease;
   cursor: pointer;
 
-  &:hover, &.active {
+  &:hover,
+  &.active {
     color: $color-primary;
   }
 
@@ -104,7 +105,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 0.5rem 0;
   z-index: 5;
-  
+
   @media (max-width: $breakpoint-medium) {
     position: static;
     width: 100%;
@@ -112,10 +113,10 @@
     padding: 0 0 0 1rem;
     margin: 0.5rem 0;
   }
-  
+
   li {
     display: block;
-    
+
     a {
       display: block;
       padding: 0.5rem 1rem;
@@ -123,7 +124,7 @@
       text-decoration: none;
       font-size: 0.9rem;
       transition: background-color 0.2s ease;
-      
+
       &:hover {
         background-color: $color-gray-100;
         color: $color-primary;
@@ -146,7 +147,7 @@
   padding: 0.5rem;
   margin-right: 1rem;
   transition: color 0.2s ease;
-  
+
   &:hover {
     color: $color-primary;
   }
@@ -162,7 +163,7 @@
   border: none;
   cursor: pointer;
   z-index: 11;
-  
+
   span {
     display: block;
     width: 100%;
@@ -170,21 +171,21 @@
     background-color: $color-gray-900;
     transition: all 0.3s ease;
   }
-  
+
   &.active {
     span:first-child {
       transform: translateY(8px) rotate(45deg);
     }
-    
+
     span:nth-child(2) {
       opacity: 0;
     }
-    
+
     span:last-child {
       transform: translateY(-8px) rotate(-45deg);
     }
   }
-  
+
   @media (max-width: $breakpoint-medium) {
     display: flex;
   }
@@ -232,7 +233,7 @@
   border-radius: 0 4px 4px 0;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  
+
   &:hover {
     background-color: darken($color-primary, 10%);
   }

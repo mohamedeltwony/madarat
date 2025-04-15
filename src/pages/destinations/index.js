@@ -8,7 +8,8 @@ import Meta from '../../components/Meta';
 import styles from '../../styles/pages/Destinations.module.scss';
 
 export default function Destinations({ destinations = [] }) {
-  const [filteredDestinations, setFilteredDestinations] = useState(destinations);
+  const [filteredDestinations, setFilteredDestinations] =
+    useState(destinations);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,7 +21,7 @@ export default function Destinations({ destinations = [] }) {
     }
 
     try {
-      const filtered = destinations.filter(destination => {
+      const filtered = destinations.filter((destination) => {
         const searchLower = searchQuery.toLowerCase();
         return (
           destination.title.toLowerCase().includes(searchLower) ||
@@ -64,7 +65,8 @@ export default function Destinations({ destinations = [] }) {
         <Container>
           <h1 className={styles.pageTitle}>الوجهات السياحية</h1>
           <p className={styles.pageDescription}>
-            اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل الأماكن حول العالم
+            اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل
+            الأماكن حول العالم
           </p>
         </Container>
       </Section>
@@ -107,7 +109,9 @@ export default function Destinations({ destinations = [] }) {
                     )}
                   </div>
                   <div className={styles.destinationContent}>
-                    <h2 className={styles.destinationTitle}>{destination.title}</h2>
+                    <h2 className={styles.destinationTitle}>
+                      {destination.title}
+                    </h2>
                     <p className={styles.destinationDescription}>
                       {destination.description}
                     </p>
@@ -121,9 +125,7 @@ export default function Destinations({ destinations = [] }) {
               ))}
             </div>
           ) : (
-            <div className={styles.noDestinations}>
-              لم نجد وجهات تطابق بحثك
-            </div>
+            <div className={styles.noDestinations}>لم نجد وجهات تطابق بحثك</div>
           )}
         </Container>
       </Section>
@@ -141,7 +143,7 @@ export async function getStaticProps() {
         'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100&_embed',
         {
           headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Access-Control-Allow-Origin': '*',
           },
           timeout: 30000, // 30 second timeout
@@ -167,26 +169,30 @@ export async function getStaticProps() {
       return {
         props: {
           destinations: formattedDestinations,
-          error: null
+          error: null,
         },
         revalidate: 3600, // Revalidate every hour
       };
     } catch (error) {
-      console.error(`Error fetching destinations (attempt ${currentTry + 1}/${maxRetries}):`, error);
+      console.error(
+        `Error fetching destinations (attempt ${currentTry + 1}/${maxRetries}):`,
+        error
+      );
       currentTry++;
 
       if (currentTry === maxRetries) {
         return {
           props: {
             destinations: [],
-            error: 'عذراً، حدث خطأ أثناء تحميل الوجهات. يرجى المحاولة مرة أخرى لاحقاً.'
+            error:
+              'عذراً، حدث خطأ أثناء تحميل الوجهات. يرجى المحاولة مرة أخرى لاحقاً.',
           },
-          revalidate: 60 // Retry more frequently on error
+          revalidate: 60, // Retry more frequently on error
         };
       }
 
       // Wait before retrying
-      await new Promise(resolve => setTimeout(resolve, 1000 * currentTry));
+      await new Promise((resolve) => setTimeout(resolve, 1000 * currentTry));
     }
   }
-} 
+}

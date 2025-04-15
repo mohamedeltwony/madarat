@@ -24,7 +24,10 @@ const Layout = ({ children }) => {
   const metaSettings = {
     title: metadata.title,
     defaultTitle: metadata.title,
-    titleTemplate: process.env.WORDPRESS_PLUGIN_SEO === true ? '%s' : `%s - ${metadata.title}`,
+    titleTemplate:
+      process.env.WORDPRESS_PLUGIN_SEO === true
+        ? '%s'
+        : `%s - ${metadata.title}`,
     ...helmetSettingsFromMetadata(metadata, {
       setTitle: false,
       link: [

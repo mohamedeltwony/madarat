@@ -1,6 +1,6 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
-@import "styles/components/_container";
+@import 'styles/components/_container';
 
 .header {
   background: rgba(255, 255, 255, 0.95);
@@ -64,7 +64,7 @@
   display: block;
   text-decoration: none;
   margin-left: 2rem;
-  
+
   a {
     display: block;
     text-decoration: none;

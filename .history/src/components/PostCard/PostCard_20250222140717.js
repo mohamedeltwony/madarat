@@ -14,7 +14,10 @@ const PostCard = memo(({ post }) => {
   return (
     <div className={styles.postCard}>
       <Link href={`/posts/${slug}`}>
-        <h3 className={styles.postCardTitle} dangerouslySetInnerHTML={{ __html: title }} />
+        <h3
+          className={styles.postCardTitle}
+          dangerouslySetInnerHTML={{ __html: title }}
+        />
       </Link>
       <Metadata className={styles.postCardMetadata} {...metadata} />
       {excerpt && (

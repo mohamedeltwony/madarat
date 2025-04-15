@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .postHeader {
   width: 100%;
@@ -9,7 +9,7 @@
 .postImage {
   position: relative;
   width: 100%;
-  
+
   .featuredImageWrapper {
     width: 100%;
     background-size: cover;
@@ -27,7 +27,7 @@
 
 .categories {
   margin-bottom: 1rem;
-  
+
   .category {
     display: inline-block;
     color: var(--color-primary);
@@ -36,13 +36,13 @@
     font-weight: 600;
     text-transform: uppercase;
     margin: 0 0.5rem;
-    
+
     &:hover {
       text-decoration: underline;
     }
-    
+
     &:not(:last-child):after {
-      content: "•";
+      content: '•';
       margin-left: 0.5rem;
       color: var(--color-text);
     }
@@ -59,25 +59,25 @@
 .meta {
   font-size: 0.9rem;
   color: var(--color-text-secondary);
-  
+
   .author {
     margin-right: 1rem;
-    
+
     a {
       color: var(--color-primary);
       text-decoration: none;
       font-weight: 600;
-      
+
       &:hover {
         text-decoration: underline;
       }
     }
   }
-  
+
   .date {
     &:before {
-      content: "•";
+      content: '•';
       margin-right: 0.5rem;
     }
   }
-} 
+}

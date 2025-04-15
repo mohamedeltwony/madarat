@@ -8,7 +8,16 @@ import config from '../../package.json';
 
 export function ArticleJsonLd({ post = {}, siteTitle = '' }) {
   const { homepage = '', faviconPath = '/favicon.ico' } = config;
-  const { title, slug, excerpt, date, author, categories, modified, featuredImage } = post;
+  const {
+    title,
+    slug,
+    excerpt,
+    date,
+    author,
+    categories,
+    modified,
+    featuredImage,
+  } = post;
   const path = postPathBySlug(slug);
   const datePublished = !!date && new Date(date);
   const dateModified = !!modified && new Date(modified);
@@ -28,7 +37,9 @@ export function ArticleJsonLd({ post = {}, siteTitle = '' }) {
     headline: title,
     image: [featuredImage?.sourceUrl],
     datePublished: datePublished ? datePublished.toISOString() : '',
-    dateModified: dateModified ? dateModified.toISOString() : datePublished.toISOString(),
+    dateModified: dateModified
+      ? dateModified.toISOString()
+      : datePublished.toISOString(),
     description: excerpt,
     keywords: [categories.map(({ name }) => `${name}`).join(', ')],
     copyrightYear: datePublished ? datePublished.getFullYear() : '',
@@ -76,7 +87,12 @@ export function WebsiteJsonLd({ siteTitle = '' }) {
   );
 }
 
-export function WebpageJsonLd({ title = '', description = '', siteTitle = '', slug = '' }) {
+export function WebpageJsonLd({
+  title = '',
+  description = '',
+  siteTitle = '',
+  slug = '',
+}) {
   const { homepage = '' } = config;
   const path = pagePathBySlug(slug);
 

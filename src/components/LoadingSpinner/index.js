@@ -5,4 +5,4 @@ export default function LoadingSpinner() {
       <span className="sr-only">جاري التحميل...</span>
     </div>
   );
-} 
+}

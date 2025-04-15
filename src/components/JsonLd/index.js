@@ -15,4 +15,4 @@ const JsonLd = ({ data }) => {
   );
 };
 
-export default JsonLd; 
+export default JsonLd;

@@ -21,8 +21,18 @@ export function sortObjectsByDate(array, { key = 'date' } = {}) {
  */
 export function getMonthName(monthNumber) {
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
   return months[parseInt(monthNumber) - 1] || '';
 }

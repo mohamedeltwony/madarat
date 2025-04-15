@@ -5,7 +5,7 @@ const FormPopup = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: ''
+    phone: '',
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -18,9 +18,9 @@ const FormPopup = ({ isOpen, onClose }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -29,8 +29,10 @@ const FormPopup = ({ isOpen, onClose }) => {
   return (
     <div className={styles.overlay}>
       <div className={styles.popup}>
-        <button className={styles.closeButton} onClick={onClose}>×</button>
-        
+        <button className={styles.closeButton} onClick={onClose}>
+          ×
+        </button>
+
         {!isSubmitted ? (
           <form onSubmit={handleSubmit} className={styles.form}>
             <h2>Get More Information</h2>
@@ -45,7 +47,7 @@ const FormPopup = ({ isOpen, onClose }) => {
                 required
               />
             </div>
-            
+
             <div className={styles.formGroup}>
               <label htmlFor="email">Email</label>
               <input
@@ -57,7 +59,7 @@ const FormPopup = ({ isOpen, onClose }) => {
                 required
               />
             </div>
-            
+
             <div className={styles.formGroup}>
               <label htmlFor="phone">Phone Number</label>
               <input
@@ -69,7 +71,7 @@ const FormPopup = ({ isOpen, onClose }) => {
                 required
               />
             </div>
-            
+
             <button type="submit" className={styles.submitButton}>
               Submit
             </button>
@@ -78,11 +80,10 @@ const FormPopup = ({ isOpen, onClose }) => {
           <div className={styles.thankYou}>
             <h2>Thank You!</h2>
             {/* Replaced ' with &apos; */}
-            <p>We&apos;ve received your information and will be in touch soon.</p> 
-            <button 
-              className={styles.closeButton} 
-              onClick={onClose}
-            >
+            <p>
+              We&apos;ve received your information and will be in touch soon.
+            </p>
+            <button className={styles.closeButton} onClick={onClose}>
               Close
             </button>
           </div>

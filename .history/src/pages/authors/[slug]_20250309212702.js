@@ -20,7 +20,10 @@ export default function Author({ user, posts }) {
     metadata: {
       ...user,
       title,
-      description: description || user.og?.description || `Read ${posts.length} posts from ${name}`,
+      description:
+        description ||
+        user.og?.description ||
+        `Read ${posts.length} posts from ${name}`,
     },
   });
 
@@ -31,14 +34,14 @@ export default function Author({ user, posts }) {
   return (
     <Layout metadata={metadata}>
       <AuthorJsonLd author={user} />
-      
+
       <Header>
         <Container>
           <div className={styles.authorHeader}>
             <Link href="/authors" className={styles.backLink}>
               ← All Authors
             </Link>
-            
+
             <div className={styles.authorInfo}>
               {avatar && (
                 <div className={styles.avatarContainer}>
@@ -52,21 +55,25 @@ export default function Author({ user, posts }) {
                   />
                 </div>
               )}
-              
+
               <div className={styles.authorMeta}>
                 <h1 className={styles.authorName}>{name}</h1>
-                {description && <p className={styles.authorDescription}>{description}</p>}
-                <p className={styles.postCount}>{posts.length} {posts.length === 1 ? 'article' : 'articles'}</p>
+                {description && (
+                  <p className={styles.authorDescription}>{description}</p>
+                )}
+                <p className={styles.postCount}>
+                  {posts.length} {posts.length === 1 ? 'article' : 'articles'}
+                </p>
               </div>
             </div>
           </div>
         </Container>
       </Header>
-      
+
       <Section>
         <Container>
           <h2 className={styles.sectionTitle}>Articles by {name}</h2>
-          
+
           {posts.length > 0 ? (
             <>
               <div className={styles.postsGrid}>
@@ -110,7 +117,7 @@ export async function getStaticProps({ params = {} } = {}) {
 export async function getStaticPaths() {
   // For better performance in production, we'll pre-render the most active authors
   // but allow other author pages to be generated on-demand
-  
+
   const { authors } = await getAllAuthors();
 
   // Get the top 10 authors (or all if less than 10)

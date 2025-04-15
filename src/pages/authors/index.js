@@ -33,10 +33,13 @@ export default function AuthorIndex({ authors }) {
             {authors.map((author) => {
               const { name, description, slug, avatar } = author;
               const { postCount } = author;
-              
+
               return (
                 <div key={slug} className={styles.authorCard}>
-                  <Link href={authorPathByName(name)} className={styles.authorLink}>
+                  <Link
+                    href={authorPathByName(name)}
+                    className={styles.authorLink}
+                  >
                     <div className={styles.authorAvatar}>
                       {avatar && (
                         <Image
@@ -51,7 +54,9 @@ export default function AuthorIndex({ authors }) {
                     </div>
                     <h2 className={styles.authorName}>{name}</h2>
                   </Link>
-                  {description && <p className={styles.authorDescription}>{description}</p>}
+                  {description && (
+                    <p className={styles.authorDescription}>{description}</p>
+                  )}
                   <p className={styles.authorPostCount}>
                     {postCount} {postCount === 1 ? 'article' : 'articles'}
                   </p>
@@ -67,7 +72,7 @@ export default function AuthorIndex({ authors }) {
 
 export async function getStaticProps() {
   const { authors } = await getAllAuthors();
-  
+
   // Get post count for each author
   const authorsWithPostCount = await Promise.all(
     authors.map(async (author) => {
@@ -75,20 +80,22 @@ export async function getStaticProps() {
         slug: author.slug,
         queryIncludes: 'index',
       });
-      
+
       return {
         ...author,
         postCount: posts.length,
       };
     })
   );
-  
+
   // Sort authors by post count (desc)
-  const sortedAuthors = authorsWithPostCount.sort((a, b) => b.postCount - a.postCount);
-  
+  const sortedAuthors = authorsWithPostCount.sort(
+    (a, b) => b.postCount - a.postCount
+  );
+
   return {
     props: {
       authors: sortedAuthors,
     },
   };
-} 
+}

@@ -1,6 +1,11 @@
 import { Helmet } from 'react-helmet';
 
-import { getPostBySlug, getRecentPosts, getRelatedPosts, postPathBySlug } from 'lib/posts';
+import {
+  getPostBySlug,
+  getRecentPosts,
+  getRelatedPosts,
+  postPathBySlug,
+} from 'lib/posts';
 import { categoryPathBySlug } from 'lib/categories';
 import { formatDate } from 'lib/datetime';
 import { ArticleJsonLd } from 'lib/json-ld';
@@ -47,7 +52,8 @@ export default function Post({ post, socialImage, related }) {
     metadata: {
       ...post,
       title: metaTitle,
-      description: description || post.og?.description || `Read more about ${title}`,
+      description:
+        description || post.og?.description || `Read more about ${title}`,
     },
   });
 
@@ -85,12 +91,17 @@ export default function Post({ post, socialImage, related }) {
             </Content>
 
             <Section className={styles.postFooter}>
-              <p className={styles.postModified}>Last updated on {formatDate(modified)}.</p>
+              <p className={styles.postModified}>
+                Last updated on {formatDate(modified)}.
+              </p>
               {Array.isArray(related?.posts) && related.posts.length > 0 && (
                 <div className={styles.relatedPosts}>
                   {related.title?.name ? (
                     <span>
-                      More from <Link href={related.title.link}>{related.title.name}</Link>
+                      More from{' '}
+                      <Link href={related.title.link}>
+                        {related.title.name}
+                      </Link>
                     </span>
                   ) : (
                     <span>More Posts</span>
@@ -98,7 +109,9 @@ export default function Post({ post, socialImage, related }) {
                   <ul>
                     {related.posts.map((post) => (
                       <li key={post.title}>
-                        <Link href={postPathBySlug(post.slug)}>{post.title}</Link>
+                        <Link href={postPathBySlug(post.slug)}>
+                          {post.title}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -106,7 +119,7 @@ export default function Post({ post, socialImage, related }) {
               )}
             </Section>
           </div>
-          
+
           <PostSidebar post={post} />
         </div>
       </Container>
@@ -131,8 +144,10 @@ export async function getStaticProps({ params = {} } = {}) {
     socialImage: `${process.env.OG_IMAGE_DIRECTORY}/${params?.slug}.png`,
   };
 
-  const { category: relatedCategory, posts: relatedPosts } = (await getRelatedPosts(categories, postId)) || {};
-  const hasRelated = relatedCategory && Array.isArray(relatedPosts) && relatedPosts.length;
+  const { category: relatedCategory, posts: relatedPosts } =
+    (await getRelatedPosts(categories, postId)) || {};
+  const hasRelated =
+    relatedCategory && Array.isArray(relatedPosts) && relatedPosts.length;
 
   if (hasRelated) {
     props.related = {

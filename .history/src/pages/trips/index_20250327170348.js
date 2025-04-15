@@ -20,9 +20,16 @@ export default function TripsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [trips, setTrips] = useState([]);
-  const [currentPage, setCurrentPage] = useState(parseInt(router.query.page) || 1);
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(router.query.page) || 1
+  );
 
-  const { loading, error: queryError, data, refetch } = useQuery(GET_TRIPS, {
+  const {
+    loading,
+    error: queryError,
+    data,
+    refetch,
+  } = useQuery(GET_TRIPS, {
     notifyOnNetworkStatusChange: true,
     errorPolicy: 'all',
   });
@@ -52,10 +59,14 @@ export default function TripsPage() {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    router.push({
-      pathname: '/trips',
-      query: { page }
-    }, undefined, { shallow: true });
+    router.push(
+      {
+        pathname: '/trips',
+        query: { page },
+      },
+      undefined,
+      { shallow: true }
+    );
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -76,7 +87,7 @@ export default function TripsPage() {
 
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 text-center">الرحلات المتاحة</h1>
-        
+
         {isLoading && (
           <div className="flex justify-center items-center min-h-[400px]">
             <LoadingSpinner />
@@ -85,7 +96,7 @@ export default function TripsPage() {
 
         {error && (
           <div className="flex flex-col items-center justify-center min-h-[400px]">
-            <ErrorMessage 
+            <ErrorMessage
               message="عذراً، حدث خطأ أثناء تحميل الرحلات. يرجى المحاولة مرة أخرى."
               error={error}
             />
@@ -121,6 +132,6 @@ export async function getStaticProps() {
   return {
     props: {},
     // Revalidate every hour
-    revalidate: 3600
+    revalidate: 3600,
   };
-} 
+}

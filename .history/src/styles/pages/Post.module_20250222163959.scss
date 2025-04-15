@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .postLayout {
   display: flex;
@@ -16,37 +16,37 @@
 .content {
   font-size: 1.1rem;
   line-height: 1.8;
-  
+
   > * + * {
     margin-top: 1.5rem;
   }
-  
+
   h2 {
     font-size: 1.8rem;
     margin-top: 2.5rem;
     margin-bottom: 1rem;
   }
-  
+
   h3 {
     font-size: 1.4rem;
     margin-top: 2rem;
     margin-bottom: 1rem;
   }
-  
+
   p {
     margin-bottom: 1.5rem;
   }
-  
+
   img {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
   }
-  
+
   a {
     color: var(--color-primary);
     text-decoration: none;
-    
+
     &:hover {
       text-decoration: underline;
     }
@@ -67,34 +67,34 @@
 
 .relatedPosts {
   margin-top: 2rem;
-  
+
   span {
     font-size: 1.2rem;
     font-weight: 600;
     color: var(--color-text);
-    
+
     a {
       color: var(--color-primary);
       text-decoration: none;
-      
+
       &:hover {
         text-decoration: underline;
       }
     }
   }
-  
+
   ul {
     list-style: none;
     padding: 0;
     margin: 1rem 0 0;
-    
+
     li {
       margin: 0.5rem 0;
-      
+
       a {
         color: var(--color-text);
         text-decoration: none;
-        
+
         &:hover {
           color: var(--color-primary);
         }
@@ -108,7 +108,7 @@
   .postLayout {
     flex-direction: column;
   }
-  
+
   .content {
     font-size: 1rem;
   }

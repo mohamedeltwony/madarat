@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 // Local breakpoint definitions
 $breakpoint-small: 768px;
@@ -32,7 +32,7 @@ $breakpoint-large: 1200px;
   font-weight: 600;
   margin-bottom: 1.5rem;
   position: relative;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -66,7 +66,7 @@ $breakpoint-large: 1200px;
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background-color: $color-primary;
     transform: translateY(-3px);
@@ -77,11 +77,11 @@ $breakpoint-large: 1200px;
   list-style: none;
   padding: 0;
   margin: 0;
-  
+
   li {
     margin-bottom: 0.75rem;
   }
-  
+
   a {
     color: $color-gray-300;
     text-decoration: none;
@@ -89,7 +89,7 @@ $breakpoint-large: 1200px;
     display: inline-block;
     position: relative;
     padding-right: 1rem;
-    
+
     &::before {
       content: '→';
       position: absolute;
@@ -97,13 +97,15 @@ $breakpoint-large: 1200px;
       top: 50%;
       transform: translateY(-50%);
       opacity: 0;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
     }
-    
+
     &:hover {
       color: white;
       padding-right: 1.25rem;
-      
+
       &::before {
         opacity: 1;
       }
@@ -115,7 +117,7 @@ $breakpoint-large: 1200px;
   color: $color-primary !important;
   font-weight: 500;
   margin-top: 0.5rem;
-  
+
   &:hover {
     color: lighten($color-primary, 10%) !important;
   }
@@ -133,7 +135,7 @@ $breakpoint-large: 1200px;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
-  
+
   @media (max-width: $breakpoint-small) {
     flex-direction: column;
     text-align: center;
@@ -148,12 +150,12 @@ $breakpoint-large: 1200px;
 .designCredit {
   margin: 0;
   color: $color-gray-400;
-  
+
   a {
     color: $color-primary;
     text-decoration: none;
     transition: color 0.2s ease;
-    
+
     &:hover {
       color: lighten($color-primary, 10%);
     }

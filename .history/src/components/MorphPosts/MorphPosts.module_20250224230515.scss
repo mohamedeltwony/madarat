@@ -93,7 +93,9 @@
 }
 
 /* Glass Variations */
-.glassItem1, .glassItem2, .glassItem3 {
+.glassItem1,
+.glassItem2,
+.glassItem3 {
   .glassContent {
     backdrop-filter: blur(10px);
     border-top: 1px solid rgba(255, 255, 255, 0.3);
@@ -151,7 +153,7 @@
 
   &:hover {
     transform: translateY(-10px);
-    
+
     .notepad {
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
     }
@@ -219,7 +221,7 @@
 
   &:hover {
     transform: translateY(-10px);
-    
+
     .clayContent {
       transform: scale(1.02);
     }
@@ -231,7 +233,7 @@
   height: 100%;
   border-radius: 20px;
   padding: 1rem;
-  box-shadow: 
+  box-shadow:
     8px 8px 16px rgba(0, 0, 0, 0.1),
     -8px -8px 16px rgba(255, 255, 255, 0.8);
   transition: transform 0.3s ease;
@@ -264,7 +266,7 @@
   border-radius: 12px;
   font-size: 0.9rem;
   color: #666;
-  box-shadow: 
+  box-shadow:
     2px 2px 4px rgba(0, 0, 0, 0.1),
     -2px -2px 4px rgba(255, 255, 255, 0.8);
 }
@@ -305,4 +307,4 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   z-index: 3;
   position: relative;
-} 
+}

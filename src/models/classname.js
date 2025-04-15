@@ -45,7 +45,9 @@ export default class ClassName {
     if (!classes) return this;
 
     const removeClasses = Array.isArray(classes) ? classes : [classes];
-    this.classes = this.classes.filter((className) => !removeClasses.includes(className));
+    this.classes = this.classes.filter(
+      (className) => !removeClasses.includes(className)
+    );
 
     return this;
   }

@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 // Variables for our brand colors
 $color-gold: #cc9c64;
@@ -34,10 +34,10 @@ $font-family: 'Cairo', sans-serif;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  
+
   // Fallback background if image isn't available
   background: linear-gradient(135deg, $color-teal 0%, $color-dark-teal 100%);
-  
+
   // Background image with overlay
   &::before {
     content: '';
@@ -51,7 +51,7 @@ $font-family: 'Cairo', sans-serif;
     background-size: cover;
     background-repeat: no-repeat;
     z-index: 0;
-    
+
     // Fallback if image isn't available
     @media (max-width: 768px) {
       background-position: center 20%;
@@ -88,7 +88,7 @@ $font-family: 'Cairo', sans-serif;
   color: white;
   z-index: 2;
   position: relative;
-  
+
   @media (min-width: 768px) {
     max-width: 800px;
     padding: 3rem;
@@ -98,7 +98,7 @@ $font-family: 'Cairo', sans-serif;
 // Logo container
 .logoContainer {
   margin-bottom: 2rem;
-  
+
   img {
     max-width: 100%;
     height: auto;
@@ -115,7 +115,7 @@ $font-family: 'Cairo', sans-serif;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   line-height: 1.2;
   font-family: $font-family;
-  
+
   @media (min-width: 768px) {
     font-size: 3.5rem;
   }
@@ -125,7 +125,7 @@ $font-family: 'Cairo', sans-serif;
 .highlight {
   position: relative;
   color: $color-gold;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -148,7 +148,7 @@ $font-family: 'Cairo', sans-serif;
   margin-left: auto;
   margin-right: auto;
   font-family: $font-family;
-  
+
   @media (min-width: 768px) {
     font-size: 1.25rem;
     margin-bottom: 2.5rem;
@@ -167,7 +167,7 @@ $font-family: 'Cairo', sans-serif;
   border: 1px solid rgba(255, 255, 255, 0.5);
   padding: 2rem;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  
+
   @media (max-width: 768px) {
     padding: 1.5rem;
   }
@@ -179,7 +179,7 @@ $font-family: 'Cairo', sans-serif;
   grid-template-columns: 1fr;
   gap: 1.25rem;
   font-family: $font-family;
-  
+
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -193,7 +193,7 @@ $font-family: 'Cairo', sans-serif;
   font-size: 0.9rem !important;
   line-height: 1.5 !important;
   padding: 0.75rem 1rem !important;
-  
+
   &:hover {
     box-shadow: 0 5px 15px rgba($color-gold, 0.4) !important;
   }
@@ -202,11 +202,11 @@ $font-family: 'Cairo', sans-serif;
 // Form elements styling
 .formGroup {
   position: relative;
-  
+
   @media (min-width: 768px) {
     // Removed rule that made city dropdown span 2 columns
   }
-  
+
   label {
     display: block;
     margin-bottom: 0.5rem;
@@ -216,24 +216,27 @@ $font-family: 'Cairo', sans-serif;
     text-shadow: none;
     font-family: $font-family;
   }
-  
-  input, select {
+
+  input,
+  select {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 1px solid rgba($color-teal, 0.3);
     border-radius: 0.375rem;
     font-size: 1rem;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
     background-color: rgba(255, 255, 255, 0.9);
     color: $color-dark-teal;
     font-weight: 500;
     font-family: $font-family;
-    
+
     &::placeholder {
       color: rgba($color-dark-teal, 0.5);
       font-family: $font-family;
     }
-    
+
     &:focus {
       outline: none;
       border-color: $color-gold;
@@ -241,14 +244,14 @@ $font-family: 'Cairo', sans-serif;
       background-color: white;
     }
   }
-  
+
   select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%230c4c44' viewBox='0 0 16 16'%3E%3Cpath d='M8 10.5l4-4H4l4 4z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: left 0.75rem center;
     padding-left: 2.5rem;
-    
+
     option {
       background-color: white;
       color: $color-dark-teal;
@@ -262,7 +265,7 @@ $font-family: 'Cairo', sans-serif;
 .phoneInput {
   display: flex;
   align-items: stretch;
-  
+
   .countryCode {
     display: flex;
     align-items: center;
@@ -278,7 +281,7 @@ $font-family: 'Cairo', sans-serif;
     min-width: 70px;
     font-family: $font-family;
   }
-  
+
   input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -296,11 +299,11 @@ $font-family: 'Cairo', sans-serif;
   .title {
     font-size: 2rem;
   }
-  
+
   .description {
     font-size: 1rem;
   }
-  
+
   .heroContent {
     padding: 1.5rem;
   }
@@ -354,7 +357,7 @@ $font-family: 'Cairo', sans-serif;
     grid-template-columns: repeat(5, 1fr); // Aim for 5 columns on desktop
     gap: 2.5rem;
   }
-  
+
   @media (max-width: 480px) {
     grid-template-columns: repeat(2, 1fr); // 2 columns on small mobile
     gap: 1.5rem;
@@ -369,7 +372,9 @@ $font-family: 'Cairo', sans-serif;
   padding: 1rem;
   background-color: #f8f9fa;
   border-radius: 8px;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 
   &:hover {
     transform: translateY(-5px);
@@ -380,8 +385,9 @@ $font-family: 'Cairo', sans-serif;
 .featureIcon {
   margin-bottom: 1rem;
   color: $color-gold; // Use gold for the icon color
-  
-  svg { // Target the SVG within the icon div
+
+  svg {
+    // Target the SVG within the icon div
     display: block; // Ensure SVG behaves like a block element
   }
 }

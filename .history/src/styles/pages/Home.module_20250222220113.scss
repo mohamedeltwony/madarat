@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .description {
   text-align: center;
@@ -20,7 +20,12 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 0, 0, 0.05),
+      transparent
+    );
   }
 
   &::after {
@@ -30,7 +35,12 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 0, 0, 0.05),
+      transparent
+    );
   }
 }
 
@@ -41,7 +51,7 @@
   text-align: center;
   color: var(--color-text);
   position: relative;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -53,7 +63,7 @@
     background: var(--color-primary);
     border-radius: 2px;
   }
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
     margin-bottom: 2rem;
@@ -74,7 +84,11 @@
     left: 0;
     right: 0;
     height: 50px;
-    background: linear-gradient(to bottom right, transparent 49.5%, #f8f9fa 50%);
+    background: linear-gradient(
+      to bottom right,
+      transparent 49.5%,
+      #f8f9fa 50%
+    );
   }
 }
 
@@ -85,7 +99,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 1.5rem;

@@ -15,7 +15,7 @@ const BentoDestinations = ({ destinations }) => {
   const boxSizes = {
     large: 'large',
     medium: 'medium',
-    small: 'small'
+    small: 'small',
   };
 
   // Assign box sizes based on trip count
@@ -32,11 +32,12 @@ const BentoDestinations = ({ destinations }) => {
         const boxSize = getBoxSize(tripCount);
         const cleanDescription = stripHtml(destination.description);
         const cleanName = stripHtml(destination.name);
-        const imageUrl = destination.image || '/images/destinations/default.jpg';
-        
+        const imageUrl =
+          destination.image || '/images/destinations/default.jpg';
+
         return (
-          <Link 
-            key={destination.id} 
+          <Link
+            key={destination.id}
             href={`/destination/${destination.slug}`}
             className={`${styles.bentoItem} ${styles[boxSize]} ${styles[`item${index + 1}`]}`}
           >
@@ -55,13 +56,13 @@ const BentoDestinations = ({ destinations }) => {
               />
               <div className={styles.overlay} />
             </div>
-            
+
             <div className={styles.content}>
               <div className={styles.header}>
                 <FaMapMarkerAlt className={styles.icon} />
                 <h3 className={styles.title}>{cleanName}</h3>
               </div>
-              
+
               {tripCount > 0 && (
                 <div className={styles.tripCount}>
                   <span className={styles.count}>{tripCount}</span>
@@ -70,15 +71,15 @@ const BentoDestinations = ({ destinations }) => {
                   </span>
                 </div>
               )}
-              
+
               {cleanDescription && (
                 <p className={styles.description}>
-                  {cleanDescription.length > 120 
-                    ? `${cleanDescription.slice(0, 120)}...` 
+                  {cleanDescription.length > 120
+                    ? `${cleanDescription.slice(0, 120)}...`
                     : cleanDescription}
                 </p>
               )}
-              
+
               <div className={styles.footer}>
                 <span className={styles.explore}>استكشف الوجهة</span>
                 <FaArrowLeft className={styles.arrow} />
@@ -91,4 +92,4 @@ const BentoDestinations = ({ destinations }) => {
   );
 };
 
-export default BentoDestinations; 
+export default BentoDestinations;

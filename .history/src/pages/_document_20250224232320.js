@@ -35,39 +35,55 @@ export default class MyDocument extends Document {
         <Head>
           {/* DNS Prefetch and Preconnect */}
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
           <link rel="dns-prefetch" href="https://madaratalkon.com" />
-          
+
           {/* Performance & Security Headers */}
-          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta name="referrer" content="strict-origin-when-cross-origin" />
-          <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-          
+          <meta
+            httpEquiv="Content-Security-Policy"
+            content="upgrade-insecure-requests"
+          />
+
           {/* PWA Support */}
           <meta name="theme-color" content="#ffffff" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="default"
+          />
           <meta name="format-detection" content="telephone=no" />
           <meta name="mobile-web-app-capable" content="yes" />
-          
+
           {/* SEO Meta Tags */}
-          <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+          <meta
+            name="robots"
+            content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+          />
           <meta name="googlebot" content="index, follow" />
           <meta name="google" content="notranslate" />
           <meta name="rating" content="general" />
-          
+
           {/* Font Optimization */}
-          <link 
-            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" 
+          <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
             rel="stylesheet"
             media="print"
             onLoad="this.media='all'"
           />
-          
+
           {/* Preload Critical Assets */}
           <link rel="preload" as="image" href="/images/hero-background.jpg" />
-          
+
           {this.helmetHeadComponents}
         </Head>
         <body {...this.helmetBodyAttrComponents}>

@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .notificationsContainer {
   background-color: white;
@@ -31,7 +31,7 @@
   cursor: pointer;
   padding: 0;
   transition: color 0.2s ease;
-  
+
   &:hover {
     color: darken($color-primary, 10%);
     text-decoration: underline;
@@ -52,15 +52,15 @@
   cursor: pointer;
   position: relative;
   transition: background-color 0.2s ease;
-  
+
   &.unread {
     background-color: rgba($color-primary, 0.05);
   }
-  
+
   &.read {
     background-color: white;
   }
-  
+
   &:hover {
     background-color: $color-gray-100;
   }
@@ -76,7 +76,7 @@
   align-items: center;
   justify-content: center;
   margin-right: 1rem;
-  
+
   span {
     font-size: 1.25rem;
   }
@@ -116,7 +116,8 @@
   font-style: italic;
 }
 
-.notificationsLoading, .notificationsError {
+.notificationsLoading,
+.notificationsError {
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -139,4 +140,4 @@
   to {
     transform: rotate(360deg);
   }
-} 
+}

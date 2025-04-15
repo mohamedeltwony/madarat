@@ -26,10 +26,7 @@ export default function SingleTrip({ trip }) {
     <Layout>
       <Head>
         <title>{trip.title} | مدارات الكون</title>
-        <Meta
-          title={trip.title}
-          description={trip.description}
-        />
+        <Meta title={trip.title} description={trip.description} />
       </Head>
 
       <Section className={styles.heroSection}>
@@ -38,10 +35,14 @@ export default function SingleTrip({ trip }) {
             <h1 className={styles.tripTitle}>{trip.title}</h1>
             <div className={styles.tripMeta}>
               <span className={styles.duration}>
-                {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}
+                {trip.duration?.days || 0}{' '}
+                {trip.duration?.duration_unit || 'يوم'}
               </span>
               <span className={styles.price}>
-                {trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'السعر غير متوفر'} {trip.currency?.code || 'SAR'}
+                {trip.wp_travel_engine_setting_trip_actual_price ||
+                  trip.price ||
+                  'السعر غير متوفر'}{' '}
+                {trip.currency?.code || 'SAR'}
               </span>
             </div>
           </div>
@@ -70,9 +71,7 @@ export default function SingleTrip({ trip }) {
                 className={styles.image}
               />
             ) : (
-              <div className={styles.placeholderImage}>
-                لا توجد صورة
-              </div>
+              <div className={styles.placeholderImage}>لا توجد صورة</div>
             )}
           </div>
 
@@ -88,11 +87,19 @@ export default function SingleTrip({ trip }) {
                 <ul>
                   <li>
                     <strong>المدة:</strong>
-                    <span>{trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</span>
+                    <span>
+                      {trip.duration?.days || 0}{' '}
+                      {trip.duration?.duration_unit || 'يوم'}
+                    </span>
                   </li>
                   <li>
                     <strong>السعر:</strong>
-                    <span>{trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'غير متوفر'} {trip.currency?.code || 'SAR'}</span>
+                    <span>
+                      {trip.wp_travel_engine_setting_trip_actual_price ||
+                        trip.price ||
+                        'غير متوفر'}{' '}
+                      {trip.currency?.code || 'SAR'}
+                    </span>
                   </li>
                   {trip.destination && (
                     <li>
@@ -106,11 +113,19 @@ export default function SingleTrip({ trip }) {
               <div className={styles.costInfo}>
                 <div className={styles.costSection}>
                   <h3>يشمل السعر</h3>
-                  <div dangerouslySetInnerHTML={{ __html: trip.cost_includes.replace(/\r\n/g, '<br>') }} />
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: trip.cost_includes.replace(/\r\n/g, '<br>'),
+                    }}
+                  />
                 </div>
                 <div className={styles.costSection}>
                   <h3>لا يشمل السعر</h3>
-                  <div dangerouslySetInnerHTML={{ __html: trip.cost_excludes.replace(/\r\n/g, '<br>') }} />
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: trip.cost_excludes.replace(/\r\n/g, '<br>'),
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -122,7 +137,9 @@ export default function SingleTrip({ trip }) {
               <div className={styles.itineraryList}>
                 {trip.itineraries.map((day, index) => (
                   <div key={index} className={styles.itineraryDay}>
-                    <h3>اليوم {index + 1}: {day.title}</h3>
+                    <h3>
+                      اليوم {index + 1}: {day.title}
+                    </h3>
                     <div dangerouslySetInnerHTML={{ __html: day.content }} />
                   </div>
                 ))}
@@ -165,9 +182,9 @@ export async function getStaticProps({ params }) {
     if (!trip) {
       return {
         props: {
-          trip: null
+          trip: null,
         },
-        revalidate: 60
+        revalidate: 60,
       };
     }
 
@@ -179,34 +196,38 @@ export async function getStaticProps({ params }) {
       description: trip.content?.rendered || '',
       featured_image: trip.featured_image || null,
       duration: trip.duration || null,
-      destination: trip._embedded?.['wp:term']?.[0]?.taxonomy === 'destination' ? {
-        id: trip._embedded['wp:term'][0].id || null,
-        title: trip._embedded['wp:term'][0].name || '',
-        slug: trip._embedded['wp:term'][0].slug || '',
-      } : null,
-      wp_travel_engine_setting_trip_actual_price: trip.wp_travel_engine_setting_trip_actual_price || null,
+      destination:
+        trip._embedded?.['wp:term']?.[0]?.taxonomy === 'destination'
+          ? {
+              id: trip._embedded['wp:term'][0].id || null,
+              title: trip._embedded['wp:term'][0].name || '',
+              slug: trip._embedded['wp:term'][0].slug || '',
+            }
+          : null,
+      wp_travel_engine_setting_trip_actual_price:
+        trip.wp_travel_engine_setting_trip_actual_price || null,
       price: trip.price || null,
       currency: trip.currency || null,
       _embedded: trip._embedded || null,
       cost_includes: trip.cost_includes || '',
       cost_excludes: trip.cost_excludes || '',
       itineraries: trip.itineraries || [],
-      faqs: trip.faqs || []
+      faqs: trip.faqs || [],
     };
 
     return {
       props: {
-        trip: formattedTrip
+        trip: formattedTrip,
       },
-      revalidate: 3600 // Revalidate every hour
+      revalidate: 3600, // Revalidate every hour
     };
   } catch (error) {
     console.error('Error fetching trip:', error);
     return {
       props: {
-        trip: null
+        trip: null,
       },
-      revalidate: 60
+      revalidate: 60,
     };
   }
 }
@@ -215,6 +236,6 @@ export async function getStaticPaths() {
   // We'll generate paths on-demand
   return {
     paths: [],
-    fallback: 'blocking'
+    fallback: 'blocking',
   };
-} 
+}

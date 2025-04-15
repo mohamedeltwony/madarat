@@ -7,7 +7,7 @@ This document outlines the various deployment options and configurations for the
 The Next.js WordPress Starter project can be deployed to various platforms with different strategies:
 
 1. **Vercel** (Recommended)
-2. **Netlify** 
+2. **Netlify**
 3. **Self-Hosted Node.js** (e.g., AWS, DigitalOcean, etc.)
 4. **Static Export** (any static hosting)
 
@@ -15,7 +15,7 @@ The Next.js WordPress Starter project can be deployed to various platforms with 
 
 Before deploying, make sure to:
 
-1. Update your environment variables 
+1. Update your environment variables
 2. Run a production build locally to test
 3. Configure the `next.config.js` as needed
 
@@ -113,16 +113,18 @@ For simple deployments to static hosts (GitHub Pages, Amazon S3, etc.), you can 
 ### Configuration
 
 1. Make sure the `next.config.js` file includes:
+
 ```javascript
 module.exports = {
   images: {
     unoptimized: true,
   },
   output: 'export',
-}
+};
 ```
 
 2. Update your `package.json` to include:
+
 ```json
 "scripts": {
   "export": "next build && next export"
@@ -130,6 +132,7 @@ module.exports = {
 ```
 
 3. Run the export:
+
 ```bash
 npm run export
 ```
@@ -141,11 +144,13 @@ This will create an `out` directory with static HTML files that can be deployed 
 For self-hosted deployments on your own server:
 
 1. Build your application:
+
 ```bash
 npm run build
 ```
 
 2. Start the production server:
+
 ```bash
 npm run start
 ```
@@ -156,11 +161,11 @@ This will start a Node.js server that serves your Next.js application.
 
 Regardless of deployment platform, you'll need to configure environment variables:
 
-| Name                               | Required | Default | Description                                       |
-| ---------------------------------- | -------- | -       | ------------------------------------------------- |
-| WORDPRESS_GRAPHQL_ENDPOINT         | Yes      | -       | WordPress WPGraphQL endpoint (ex: host.com/graphl)|
-| WORDPRESS_MENU_LOCATION_NAVIGATION | No       | PRIMARY | Configures header navigation Menu Location        |
-| WORDPRESS_PLUGIN_SEO               | No       | false   | Enables SEO plugin support (true, false)          |
+| Name                               | Required | Default | Description                                        |
+| ---------------------------------- | -------- | ------- | -------------------------------------------------- |
+| WORDPRESS_GRAPHQL_ENDPOINT         | Yes      | -       | WordPress WPGraphQL endpoint (ex: host.com/graphl) |
+| WORDPRESS_MENU_LOCATION_NAVIGATION | No       | PRIMARY | Configures header navigation Menu Location         |
+| WORDPRESS_PLUGIN_SEO               | No       | false   | Enables SEO plugin support (true, false)           |
 
 ## Continuous Deployment
 
@@ -184,7 +189,7 @@ For dynamic content that changes frequently, consider using Next.js's Incrementa
 ```javascript
 export async function getStaticProps() {
   const { posts } = await getPosts();
-  
+
   return {
     props: {
       posts,
@@ -224,4 +229,4 @@ After deployment, monitor your site's performance using:
 1. [Vercel Analytics](https://vercel.com/analytics)
 2. [Netlify Analytics](https://www.netlify.com/products/analytics/)
 3. [Google PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights/)
-4. [Web Vitals](https://web.dev/vitals/) 
+4. [Web Vitals](https://web.dev/vitals/)

@@ -54,4 +54,4 @@ This starter is ideal for:
 - Content-heavy websites with multiple authors
 - Marketing websites that need WordPress's content management but better frontend
 - Multi-language websites requiring RTL support
-- Projects that need to separate content management from presentation 
+- Projects that need to separate content management from presentation

@@ -2,13 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default function TripCard({ trip }) {
-  const {
-    title,
-    slug,
-    excerpt,
-    featuredImage,
-    tripSettings,
-  } = trip;
+  const { title, slug, excerpt, featuredImage, tripSettings } = trip;
 
   const imageUrl = featuredImage?.node?.sourceUrl || '/images/placeholder.jpg';
   const duration = tripSettings?.duration?.days || 0;
@@ -45,4 +39,4 @@ export default function TripCard({ trip }) {
       </div>
     </Link>
   );
-} 
+}

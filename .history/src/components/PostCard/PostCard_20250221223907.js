@@ -8,7 +8,15 @@ import { FaMapPin } from 'react-icons/fa';
 import styles from './PostCard.module.scss';
 
 const PostCard = ({ post, options = {} }) => {
-  const { title, excerpt, slug, date, author, categories, isSticky = false } = post;
+  const {
+    title,
+    excerpt,
+    slug,
+    date,
+    author,
+    categories,
+    isSticky = false,
+  } = post;
   const { excludeMetadata = [] } = options;
 
   const metadata = {};

@@ -1,6 +1,7 @@
 /* Font variables */
 :root {
-  --font-primary: 'Noto Sans Arabic', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-primary:
+    'Noto Sans Arabic', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-secondary: 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -20,4 +21,4 @@
 
 .font-bold {
   font-weight: 700;
-} 
+}

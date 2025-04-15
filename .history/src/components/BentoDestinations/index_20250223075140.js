@@ -10,7 +10,7 @@ const BentoDestinations = ({ destinations }) => {
   const boxSizes = {
     large: 'large',
     medium: 'medium',
-    small: 'small'
+    small: 'small',
   };
 
   // Assign box sizes based on trip count
@@ -25,10 +25,10 @@ const BentoDestinations = ({ destinations }) => {
       {destinations.map((destination, index) => {
         const tripCount = destination.tripCount || 0;
         const boxSize = getBoxSize(tripCount);
-        
+
         return (
-          <Link 
-            key={destination.id} 
+          <Link
+            key={destination.id}
             href={`/destination/${destination.slug}`}
             className={`${styles.bentoItem} ${styles[boxSize]} ${styles[`item${index + 1}`]}`}
           >
@@ -45,13 +45,13 @@ const BentoDestinations = ({ destinations }) => {
               )}
               <div className={styles.overlay} />
             </div>
-            
+
             <div className={styles.content}>
               <div className={styles.header}>
                 <FaMapMarkerAlt className={styles.icon} />
                 <h3 className={styles.title}>{destination.name}</h3>
               </div>
-              
+
               {tripCount > 0 && (
                 <div className={styles.tripCount}>
                   <span className={styles.count}>{tripCount}</span>
@@ -60,13 +60,13 @@ const BentoDestinations = ({ destinations }) => {
                   </span>
                 </div>
               )}
-              
+
               {destination.description && (
                 <p className={styles.description}>
                   {destination.description.slice(0, 120)}...
                 </p>
               )}
-              
+
               <div className={styles.footer}>
                 <span className={styles.explore}>استكشف الوجهة</span>
                 <FaArrowLeft className={styles.arrow} />
@@ -79,4 +79,4 @@ const BentoDestinations = ({ destinations }) => {
   );
 };
 
-export default BentoDestinations; 
+export default BentoDestinations;

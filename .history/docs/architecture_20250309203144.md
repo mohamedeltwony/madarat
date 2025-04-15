@@ -65,6 +65,7 @@ The Next.js WordPress Starter follows a headless CMS architecture:
 The project uses Next.js's [Pages Router](https://nextjs.org/docs/pages/building-your-application/routing) for routing.
 
 Key routing files:
+
 - `src/pages/index.js` - Homepage
 - `src/pages/posts/[slug].js` - Individual post pages
 - `src/pages/categories/[slug].js` - Category pages
@@ -80,7 +81,7 @@ export async function getStaticProps({ params = {} } = {}) {
   const { posts, pagination } = await getPosts({
     queryIncludes: 'archive',
   });
-  
+
   return {
     props: {
       posts,
@@ -129,7 +130,7 @@ Custom hooks encapsulate reusable logic:
 - **UI Library**: React 19.0.0
 - **Styling**: SCSS Modules
 - **Data Fetching**: Apollo Client (GraphQL)
-- **Development Tools**: 
+- **Development Tools**:
   - ESLint
   - Prettier
   - Husky (Git hooks)
@@ -141,4 +142,4 @@ Custom hooks encapsulate reusable logic:
 2. **Image Optimization**: Uses Next.js Image component
 3. **Code Splitting**: Automatic code splitting by routes
 4. **CSS Modules**: Avoids global CSS conflicts
-5. **Turbopack**: Faster development experience with incremental compilation 
+5. **Turbopack**: Faster development experience with incremental compilation

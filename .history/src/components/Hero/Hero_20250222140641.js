@@ -2,7 +2,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Hero.module.scss';
 
-const Hero = ({ title, description, backgroundImage, featuredText, featuredLink, children }) => {
+const Hero = ({
+  title,
+  description,
+  backgroundImage,
+  featuredText,
+  featuredLink,
+  children,
+}) => {
   return (
     <div className={styles.hero}>
       <div className={styles.backgroundImage}>
@@ -35,4 +42,4 @@ const Hero = ({ title, description, backgroundImage, featuredText, featuredLink,
   );
 };
 
-export default Hero; 
+export default Hero;

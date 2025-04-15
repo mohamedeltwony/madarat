@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .metadata {
   display: flex;
@@ -58,7 +58,7 @@
     display: inline-block;
 
     &:after {
-      content: ", ";
+      content: ', ';
       margin-right: 0.4em;
     }
 

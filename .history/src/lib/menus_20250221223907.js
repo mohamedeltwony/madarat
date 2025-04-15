@@ -86,7 +86,9 @@ export const parseHierarchicalMenu = (
     const { [idKey]: id, [parentKey]: parentId = 0 } = newItem;
     childrenOf[id] = childrenOf[id] || [];
     newItem[childrenKey] = childrenOf[id];
-    parentId ? (childrenOf[parentId] = childrenOf[parentId] || []).push(newItem) : tree.push(newItem);
+    parentId
+      ? (childrenOf[parentId] = childrenOf[parentId] || []).push(newItem)
+      : tree.push(newItem);
   });
   return tree;
 };
@@ -97,11 +99,15 @@ export const parseHierarchicalMenu = (
 
 export function findMenuByLocation(menus, location) {
   if (typeof location !== 'string') {
-    throw new Error('Failed to find menu by location - location is not a string.');
+    throw new Error(
+      'Failed to find menu by location - location is not a string.'
+    );
   }
 
   const menu = menus.find(({ locations }) => {
-    return locations.map((loc) => loc.toUpperCase()).includes(location.toUpperCase());
+    return locations
+      .map((loc) => loc.toUpperCase())
+      .includes(location.toUpperCase());
   });
 
   return menu && parseHierarchicalMenu(menu.menuItems);

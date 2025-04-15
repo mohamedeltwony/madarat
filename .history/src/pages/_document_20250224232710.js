@@ -34,16 +34,20 @@ export default class MyDocument extends Document {
       <Html lang="ar" dir="rtl" {...this.helmetHtmlAttrComponents}>
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-          
-          <link 
-            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" 
+
+          <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
             rel="stylesheet"
           />
-          
+
           {this.helmetHeadComponents}
         </Head>
         <body {...this.helmetBodyAttrComponents}>

@@ -7,7 +7,7 @@ This document outlines the process of upgrading the Next.js WordPress Starter fr
 The project was successfully updated from:
 
 | Component | Old Version | New Version |
-|-----------|-------------|-------------|
+| --------- | ----------- | ----------- |
 | Next.js   | 13.4.0      | 15.2.1      |
 | React     | 18.2.0      | 19.0.0      |
 | React DOM | 18.2.0      | 19.0.0      |
@@ -32,17 +32,25 @@ One of the main breaking changes was compatibility issues with `react-helmet`. T
 // src/components/Meta/index.js
 import Head from 'next/head';
 
-const Meta = ({ title, description, link = [], meta = [], script = [], htmlAttributes = {}, bodyAttributes = {} }) => {
+const Meta = ({
+  title,
+  description,
+  link = [],
+  meta = [],
+  script = [],
+  htmlAttributes = {},
+  bodyAttributes = {},
+}) => {
   // Apply HTML attributes
   if (typeof window !== 'undefined' && htmlAttributes) {
-    Object.keys(htmlAttributes).forEach(key => {
+    Object.keys(htmlAttributes).forEach((key) => {
       document.documentElement.setAttribute(key, htmlAttributes[key]);
     });
   }
-  
+
   // Apply body attributes
   if (typeof window !== 'undefined' && bodyAttributes) {
-    Object.keys(bodyAttributes).forEach(key => {
+    Object.keys(bodyAttributes).forEach((key) => {
       document.body.setAttribute(key, bodyAttributes[key]);
     });
   }
@@ -50,30 +58,40 @@ const Meta = ({ title, description, link = [], meta = [], script = [], htmlAttri
   return (
     <Head>
       {title && <title key="title">{title}</title>}
-      {description && <meta name="description" content={description} key="description" />}
-      
+      {description && (
+        <meta name="description" content={description} key="description" />
+      )}
+
       {/* Render all meta tags */}
       {meta.map((metaItem, i) => {
         const key = `meta-${i}`;
         if (metaItem.property) {
-          return <meta property={metaItem.property} content={metaItem.content} key={key} />;
+          return (
+            <meta
+              property={metaItem.property}
+              content={metaItem.content}
+              key={key}
+            />
+          );
         }
-        return <meta name={metaItem.name} content={metaItem.content} key={key} />;
+        return (
+          <meta name={metaItem.name} content={metaItem.content} key={key} />
+        );
       })}
-      
+
       {/* Render all link tags */}
       {link.map((linkItem, i) => {
         const key = `link-${i}`;
         return <link {...linkItem} key={key} />;
       })}
-      
+
       {/* Render all script tags */}
       {script.map((scriptItem, i) => {
         const key = `script-${i}`;
         if (scriptItem.innerHTML) {
           return (
-            <script 
-              type={scriptItem.type} 
+            <script
+              type={scriptItem.type}
               key={key}
               dangerouslySetInnerHTML={{ __html: scriptItem.innerHTML }}
             />
@@ -120,10 +138,14 @@ export default class MyDocument extends Document {
       <Html lang="ar" dir="rtl">
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-          <link 
-            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" 
+          <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
             rel="stylesheet"
           />
         </Head>
@@ -150,7 +172,7 @@ Fixed CSS module issues, particularly with `:export` syntax:
 ```js
 // src/styles/variables.js
 const variables = {
-  progressbarColor: '#1a365d' // Same as $color-primary in _variables.module.scss
+  progressbarColor: '#1a365d', // Same as $color-primary in _variables.module.scss
 };
 
 export default variables;
@@ -160,7 +182,7 @@ export default variables;
 
 ```scss
 // src/styles/_variables.module.scss
-@use "sass:color";
+@use 'sass:color';
 
 // Colors
 $color-primary: #1a365d;
@@ -175,7 +197,7 @@ $color-primary-dark: color.adjust($color-primary, $lightness: -10%);
 import variables from '../styles/variables';
 
 // ...
-<NextNProgress height={4} color={variables.progressbarColor} />
+<NextNProgress height={4} color={variables.progressbarColor} />;
 ```
 
 ### 4. Turbopack Integration
@@ -186,7 +208,7 @@ Enabled Turbopack for faster development:
 // package.json
 {
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack"
     // ...
   }
 }
@@ -201,6 +223,7 @@ React 19 has stricter handling of legacy lifecycle methods. The project was alre
 ### 2. Strict Mode Compatibility
 
 React 19 runs in strict mode by default, which can expose issues with:
+
 - Multiple state updates
 - Improper useEffect cleanup
 - Legacy context API usage
@@ -219,18 +242,21 @@ React 19 uses concurrent rendering by default. The project's components were alr
 
 Besides React 19 compatibility, the upgrade to Next.js 15 brought changes to:
 
-1. **Caching Behavior**: 
+1. **Caching Behavior**:
+
    - `fetch` requests are no longer cached by default
    - `GET` Route Handlers are no longer cached by default
    - Client navigations are no longer cached by default
 
-2. **TypeScript Support**: 
+2. **TypeScript Support**:
+
    - Added support for `next.config.ts`
 
-3. **Image Component**: 
+3. **Image Component**:
+
    - Improved image loading and optimizations
 
-4. **Self-hosting Control**: 
+4. **Self-hosting Control**:
    - More control over `Cache-Control` headers
 
 ## SASS Deprecation Warnings
@@ -265,4 +291,4 @@ The project still uses deprecated SASS `@import` syntax. Future updates should r
 - [React 19 Documentation](https://react.dev/)
 - [Next.js 15 Release Notes](https://nextjs.org/blog/next-15)
 - [Next.js Upgrade Guide](https://nextjs.org/docs/pages/building-your-application/upgrading)
-- [SASS Modern Syntax Guide](https://sass-lang.com/guide) 
+- [SASS Modern Syntax Guide](https://sass-lang.com/guide)

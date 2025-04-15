@@ -17,7 +17,14 @@ import '../styles/globals.scss';
 import '../styles/wordpress.scss';
 import variables from '../styles/variables';
 
-function App({ Component, pageProps = {}, metadata, recentPosts, categories, menus }) {
+function App({
+  Component,
+  pageProps = {},
+  metadata,
+  recentPosts,
+  categories,
+  menus,
+}) {
   const site = useSiteContext({
     metadata,
     recentPosts,
@@ -36,7 +43,7 @@ function App({ Component, pageProps = {}, metadata, recentPosts, categories, men
 
   return (
     // Wrap everything with ApolloProvider
-    <ApolloProvider client={apolloClient}> 
+    <ApolloProvider client={apolloClient}>
       <SiteContext.Provider value={site}>
         <SearchProvider>
           <NextNProgress height={4} color={variables.progressbarColor} />

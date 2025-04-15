@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .stickyFormContainer {
   position: fixed;
@@ -17,7 +17,7 @@
   width: 100%;
   overflow: hidden;
   direction: rtl;
-  
+
   &.minimized {
     transform: translateY(-50%) translateX(calc(100% - 40px));
   }
@@ -41,11 +41,11 @@
   font-size: 1.2rem;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15);
   transition: background-color 0.2s ease;
-  
+
   &:hover {
     background-color: darken($color-primary, 5%);
   }
-  
+
   &:focus {
     outline: none;
   }
@@ -58,14 +58,14 @@
 
 .formHeader {
   margin-bottom: 1.5rem;
-  
+
   h3 {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
     color: $text-color-dark;
   }
-  
+
   p {
     font-size: 0.95rem;
     color: $text-color;
@@ -83,13 +83,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  
+
   label {
     font-size: 0.9rem;
     font-weight: 500;
     color: $text-color-dark;
   }
-  
+
   input {
     padding: 0.8rem;
     border-radius: 6px;
@@ -97,13 +97,13 @@
     font-size: 0.95rem;
     transition: border-color 0.2s ease;
     background: rgba(255, 255, 255, 0.8);
-    
+
     &:focus {
       outline: none;
       border-color: $color-primary;
       box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
     }
-    
+
     &::placeholder {
       color: #999;
     }
@@ -120,11 +120,11 @@
   align-items: center;
   text-align: center;
   padding: 1rem 0;
-  
+
   .successIcon {
     width: 60px;
     height: 60px;
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: white;
     border-radius: 50%;
     display: flex;
@@ -134,14 +134,14 @@
     margin-bottom: 1rem;
     animation: popInScale 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
-  
+
   h3 {
     font-size: 1.3rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
     color: $text-color-dark;
   }
-  
+
   p {
     font-size: 0.95rem;
     color: $text-color;
@@ -159,4 +159,4 @@
   100% {
     transform: scale(1);
   }
-} 
+}

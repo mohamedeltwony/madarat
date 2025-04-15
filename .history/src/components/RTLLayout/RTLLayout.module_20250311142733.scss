@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 // Local breakpoint definitions
 $breakpoint-small: 768px;
@@ -33,18 +33,18 @@ $breakpoint-large: 1200px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   transition: all 0.3s ease;
-  
+
   &:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   }
-  
+
   span {
     font-size: 1.5rem;
     color: white;
   }
-  
+
   .close {
     font-size: 1.25rem;
   }
-} 
+}

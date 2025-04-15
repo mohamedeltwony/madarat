@@ -35,19 +35,26 @@ export default class MyDocument extends Document {
         <Head>
           {/* Preconnect to Google Fonts */}
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+
           {/* Load Cairo font */}
-          <link 
-            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" 
+          <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
             rel="stylesheet"
           />
-          
+
           {/* Meta tags for better SEO and performance */}
           <meta name="theme-color" content="#ffffff" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-          
+          <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="default"
+          />
+
           {this.helmetHeadComponents}
         </Head>
         <body {...this.helmetBodyAttrComponents}>

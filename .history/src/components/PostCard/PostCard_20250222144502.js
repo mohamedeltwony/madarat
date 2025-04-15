@@ -5,14 +5,15 @@ import { FaMusic } from 'react-icons/fa';
 import styles from './PostCard.module.scss';
 
 const PostCard = memo(({ post }) => {
-  const { title, slug, excerpt, date, author, featuredImage, categories } = post;
+  const { title, slug, excerpt, date, author, featuredImage, categories } =
+    post;
 
   // Create a consistent date formatter
   const dateFormatter = new Intl.DateTimeFormat('ar-EG', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    calendar: 'gregory'
+    calendar: 'gregory',
   });
 
   return (

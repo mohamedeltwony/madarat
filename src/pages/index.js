@@ -21,15 +21,21 @@ import UIStyles from '@/components/UI/UI.module.scss';
 import React, { useState } from 'react';
 import Head from 'next/head';
 
-export default function Home({ posts = [], pagination, destinations = [], featuredAuthors = [], archives = [] }) {
+export default function Home({
+  posts = [],
+  pagination,
+  destinations = [],
+  featuredAuthors = [],
+  archives = [],
+}) {
   const { metadata = {} } = useSite();
   const { title } = metadata;
   const [showForm, setShowForm] = useState(false);
-  
+
   const handleShowForm = () => {
     setShowForm(true);
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
@@ -41,13 +47,16 @@ export default function Home({ posts = [], pagination, destinations = [], featur
     <div className={styles.container}>
       <Head>
         <title>مدارات | الصفحة الرئيسية</title>
-        <meta name="description" content="موقع مدارات - منصة للمحتوى العربي المميز" />
+        <meta
+          name="description"
+          content="موقع مدارات - منصة للمحتوى العربي المميز"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Layout>
         <WebsiteJsonLd siteTitle={title} />
-        
+
         <Hero
           title="مدارات الكون"
           description="اكتشف معنا أجمل الوجهات السياحية حول العالم. نقدم لك دليلاً شاملاً للسفر والسياحة، من التخطيط للرحلة إلى أفضل الأماكن للزيارة والإقامة."
@@ -113,7 +122,7 @@ export default function Home({ posts = [], pagination, destinations = [], featur
         <Section className={styles.featuresSection}>
           <Container>
             <h2 className={styles.sectionTitle}>Explore Our Site</h2>
-            
+
             <div className={styles.featuresGrid}>
               {/* Archives Feature */}
               <div className={styles.featureCard}>
@@ -127,21 +136,28 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                   />
                 </div>
                 <h3>Archives</h3>
-                <p>Browse our content by date. Find articles from specific months or years.</p>
-                
+                <p>
+                  Browse our content by date. Find articles from specific months
+                  or years.
+                </p>
+
                 <div className={styles.featureTags}>
                   {archives.slice(0, 5).map((year) => (
-                    <Link key={year} href={`/archives/${year}`} className={styles.featureTag}>
+                    <Link
+                      key={year}
+                      href={`/archives/${year}`}
+                      className={styles.featureTag}
+                    >
                       {year}
                     </Link>
                   ))}
                 </div>
-                
+
                 <Link href="/archives" className={styles.featureLink}>
                   Browse All Archives
                 </Link>
               </div>
-              
+
               {/* Authors Feature */}
               <div className={styles.featureCard}>
                 <div className={styles.featureIcon}>
@@ -155,10 +171,14 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                 </div>
                 <h3>Authors</h3>
                 <p>Discover our writers and their unique perspectives.</p>
-                
+
                 <div className={styles.featureAuthors}>
                   {featuredAuthors.slice(0, 3).map((author) => (
-                    <Link key={author.slug} href={`/authors/${author.slug}`} className={styles.featureAuthor}>
+                    <Link
+                      key={author.slug}
+                      href={`/authors/${author.slug}`}
+                      className={styles.featureAuthor}
+                    >
                       {author.avatar && (
                         <Image
                           src={author.avatar.url}
@@ -173,12 +193,12 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                     </Link>
                   ))}
                 </div>
-                
+
                 <Link href="/authors" className={styles.featureLink}>
                   View All Authors
                 </Link>
               </div>
-              
+
               {/* Advanced Search Feature */}
               <div className={styles.featureCard}>
                 <div className={styles.featureIcon}>
@@ -192,9 +212,12 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                 </div>
                 <h3>Advanced Search</h3>
                 {/* Replaced ' with &apos; */}
-                <p>Find exactly what you&apos;re looking for with our powerful search tools.</p> 
+                <p>
+                  Find exactly what you&apos;re looking for with our powerful
+                  search tools.
+                </p>
                 <p>Filter content by date, category, author and more.</p>
-                
+
                 <Link href="/advanced-search" className={styles.featureLink}>
                   Try Advanced Search
                 </Link>
@@ -203,17 +226,20 @@ export default function Home({ posts = [], pagination, destinations = [], featur
           </Container>
         </Section>
       </Layout>
-      
+
       {/* Lead Form Popup */}
       {showForm && (
         <div className={styles.formOverlay}>
           <div className={`${UIStyles.glassCard} ${styles.formContainer}`}>
-            <button className={styles.closeButton} onClick={() => setShowForm(false)}>
+            <button
+              className={styles.closeButton}
+              onClick={() => setShowForm(false)}
+            >
               ×
             </button>
             <h3>انضم إلينا الآن</h3>
             <p>اترك بياناتك ليصلك كل جديد</p>
-            
+
             <form onSubmit={handleSubmit}>
               <div className={styles.formGroup}>
                 <label htmlFor="name">الاسم الكامل</label>
@@ -225,7 +251,7 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                   required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="phone">رقم الهاتف</label>
                 <input
@@ -236,7 +262,7 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                   required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="email">البريد الإلكتروني</label>
                 <input
@@ -247,7 +273,7 @@ export default function Home({ posts = [], pagination, destinations = [], featur
                   required
                 />
               </div>
-              
+
               <div className={styles.formActions}>
                 <SparkleButton type="submit" fullWidth>
                   إرسال
@@ -264,14 +290,17 @@ export default function Home({ posts = [], pagination, destinations = [], featur
 export async function getStaticProps() {
   try {
     console.log('Starting to fetch destinations...');
-    
-    const response = await fetch('https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100', {
-      headers: {
-        'Accept': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      next: { revalidate: 60 }, // Revalidate every 60 seconds
-    });
+
+    const response = await fetch(
+      'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
+      {
+        headers: {
+          Accept: 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+        next: { revalidate: 60 }, // Revalidate every 60 seconds
+      }
+    );
 
     if (!response.ok) {
       console.error('Failed to fetch destinations:', {
@@ -290,11 +319,13 @@ export async function getStaticProps() {
       throw new Error('Invalid destinations data format');
     }
 
-    const formattedDestinations = destinations.map(dest => ({
+    const formattedDestinations = destinations.map((dest) => ({
       id: dest.id,
       title: dest.name,
       description: dest.description || '',
-      image: dest.thumbnail?.file ? `https://madaratalkon.com/wp-content/uploads/${dest.thumbnail.file}` : null,
+      image: dest.thumbnail?.file
+        ? `https://madaratalkon.com/wp-content/uploads/${dest.thumbnail.file}`
+        : null,
       link: dest.link,
       slug: dest.slug,
       tripCount: dest.trip_count || 0,
@@ -323,7 +354,7 @@ export async function getStaticProps() {
     } catch (error) {
       console.error('Error fetching authors:', error);
     }
-    
+
     // Get archive years with error handling
     let archives = [];
     try {

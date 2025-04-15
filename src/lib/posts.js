@@ -49,7 +49,9 @@ export async function getPostBySlug(slug) {
       },
     });
   } catch (e) {
-    console.log(`[posts][getPostBySlug] Failed to query post data: ${e.message}`);
+    console.log(
+      `[posts][getPostBySlug] Failed to query post data: ${e.message}`
+    );
     throw e;
   }
 
@@ -69,8 +71,12 @@ export async function getPostBySlug(slug) {
         },
       });
     } catch (e) {
-      console.log(`[posts][getPostBySlug] Failed to query SEO plugin: ${e.message}`);
-      console.log('Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.');
+      console.log(
+        `[posts][getPostBySlug] Failed to query SEO plugin: ${e.message}`
+      );
+      console.log(
+        'Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.'
+      );
       throw e;
     }
 
@@ -175,7 +181,9 @@ export async function getPostsByAuthorSlug({ slug, ...options }) {
       },
     });
   } catch (e) {
-    console.log(`[posts][getPostsByAuthorSlug] Failed to query post data: ${e.message}`);
+    console.log(
+      `[posts][getPostsByAuthorSlug] Failed to query post data: ${e.message}`
+    );
     throw e;
   }
 
@@ -211,7 +219,9 @@ export async function getPostsByCategoryId({ categoryId, ...options }) {
       },
     });
   } catch (e) {
-    console.log(`[posts][getPostsByCategoryId] Failed to query post data: ${e.message}`);
+    console.log(
+      `[posts][getPostsByCategoryId] Failed to query post data: ${e.message}`
+    );
     throw e;
   }
 
@@ -240,7 +250,9 @@ export async function getRecentPosts({ count, ...options }) {
 
 export function sanitizeExcerpt(excerpt) {
   if (typeof excerpt !== 'string') {
-    throw new Error(`Failed to sanitize excerpt: invalid type ${typeof excerpt}`);
+    throw new Error(
+      `Failed to sanitize excerpt: invalid type ${typeof excerpt}`
+    );
   }
 
   let sanitized = excerpt;
@@ -326,7 +338,10 @@ export async function getRelatedPosts(categories, postId, count = 5) {
     const filtered = posts.filter(({ postId: id }) => id !== postId);
     const sorted = sortObjectsByDate(filtered);
 
-    related.posts = sorted.map((post) => ({ title: post.title, slug: post.slug }));
+    related.posts = sorted.map((post) => ({
+      title: post.title,
+      slug: post.slug,
+    }));
   }
 
   if (!Array.isArray(related.posts) || related.posts.length === 0) {
@@ -438,7 +453,9 @@ export async function getDraftPosts(options = {}) {
       posts: Array.isArray(posts) && posts.map(mapPostData),
     };
   } catch (e) {
-    console.log(`[posts][getDraftPosts] Failed to query draft posts data: ${e.message}`);
+    console.log(
+      `[posts][getDraftPosts] Failed to query draft posts data: ${e.message}`
+    );
     throw e;
   }
 }
@@ -463,7 +480,9 @@ export async function getPostsByYear({ year }) {
       posts: Array.isArray(posts) && posts.map(mapPostData),
     };
   } catch (e) {
-    console.log(`[posts][getPostsByYear] Failed to query posts by year: ${e.message}`);
+    console.log(
+      `[posts][getPostsByYear] Failed to query posts by year: ${e.message}`
+    );
     throw e;
   }
 }
@@ -489,7 +508,9 @@ export async function getPostsByMonth({ year, month }) {
       posts: Array.isArray(posts) && posts.map(mapPostData),
     };
   } catch (e) {
-    console.log(`[posts][getPostsByMonth] Failed to query posts by month: ${e.message}`);
+    console.log(
+      `[posts][getPostsByMonth] Failed to query posts by month: ${e.message}`
+    );
     throw e;
   }
 }
@@ -516,7 +537,9 @@ export async function getPostsByDay({ year, month, day }) {
       posts: Array.isArray(posts) && posts.map(mapPostData),
     };
   } catch (e) {
-    console.log(`[posts][getPostsByDay] Failed to query posts by day: ${e.message}`);
+    console.log(
+      `[posts][getPostsByDay] Failed to query posts by day: ${e.message}`
+    );
     throw e;
   }
 }
@@ -529,11 +552,11 @@ export async function getYearArchives() {
   const { posts } = await getAllPosts({
     queryIncludes: 'index',
   });
-  
+
   // Get unique years from post dates
-  const years = [...new Set(
-    posts.map(post => new Date(post.date).getFullYear())
-  )].sort((a, b) => b - a); // Sort descending
-  
+  const years = [
+    ...new Set(posts.map((post) => new Date(post.date).getFullYear())),
+  ].sort((a, b) => b - a); // Sort descending
+
   return years;
 }

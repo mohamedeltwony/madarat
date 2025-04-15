@@ -9,4 +9,4 @@ export default function RedirectPage() {
   }, [router]);
 
   return null;
-} 
+}

@@ -18,7 +18,15 @@ import Breadcrumbs from 'components/Breadcrumbs';
 import styles from 'styles/pages/Page.module.scss';
 
 export default function Page({ page, breadcrumbs }) {
-  const { title, metaTitle, description, slug, content, featuredImage, children } = page;
+  const {
+    title,
+    metaTitle,
+    description,
+    slug,
+    content,
+    featuredImage,
+    children,
+  } = page;
 
   const { metadata: siteMetadata = {} } = useSite();
 
@@ -26,7 +34,8 @@ export default function Page({ page, breadcrumbs }) {
     metadata: {
       ...page,
       title: metaTitle,
-      description: description || page.og?.description || `Read more about ${title}`,
+      description:
+        description || page.og?.description || `Read more about ${title}`,
     },
   });
 

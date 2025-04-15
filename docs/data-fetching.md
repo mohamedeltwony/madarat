@@ -70,16 +70,16 @@ The `getPosts` function in `src/lib/posts.js` fetches posts from WordPress:
 ```javascript
 export async function getPosts({ queryIncludes, ...options } = {}) {
   const apolloClient = getApolloClient();
-  
+
   const data = await apolloClient.query({
     query: QUERY_POSTS,
     variables: {
       ...options,
     },
   });
-  
+
   const posts = data?.data.posts.edges.map(({ node }) => node);
-  
+
   return {
     posts,
   };
@@ -100,7 +100,7 @@ export async function getStaticProps() {
   const { posts } = await getPosts({
     queryIncludes: 'archive',
   });
-  
+
   return {
     props: {
       posts,
@@ -119,7 +119,7 @@ export async function getStaticPaths() {
   const { posts } = await getPosts({
     queryIncludes: 'archive',
   });
-  
+
   const paths = posts.map((post) => {
     return {
       params: {
@@ -127,7 +127,7 @@ export async function getStaticPaths() {
       },
     };
   });
-  
+
   return {
     paths,
     fallback: 'blocking',
@@ -141,7 +141,11 @@ GraphQL queries are defined in the data fetching modules. For example, here's th
 
 ```javascript
 const QUERY_POSTS = gql`
-  query Posts($first: Int, $after: String, $where: PostObjectsConnectionWhereArgs) {
+  query Posts(
+    $first: Int
+    $after: String
+    $where: PostObjectsConnectionWhereArgs
+  ) {
     posts(first: $first, after: $after, where: $where) {
       edges {
         node {
@@ -241,10 +245,10 @@ function Posts() {
       first: 10,
     },
   });
-  
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-  
+
   return data.posts.edges.map(({ node }) => (
     <div key={node.id}>
       <h3>{node.title}</h3>
@@ -287,4 +291,4 @@ function search(query) {
   const results = fuse.search(query);
   return results.map(({ item }) => item);
 }
-``` 
+```

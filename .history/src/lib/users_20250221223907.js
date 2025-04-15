@@ -73,11 +73,15 @@ export async function getAllUsers() {
       query: QUERY_ALL_USERS,
     });
   } catch (e) {
-    console.log(`[users][getAllUsers] Failed to query users data: ${e.message}`);
+    console.log(
+      `[users][getAllUsers] Failed to query users data: ${e.message}`
+    );
     throw e;
   }
 
-  let users = usersData?.data.users.edges.map(({ node = {} }) => node).map(mapUserData);
+  let users = usersData?.data.users.edges
+    .map(({ node = {} }) => node)
+    .map(mapUserData);
 
   // If the SEO plugin is enabled, look up the data
   // and apply it to the default settings
@@ -88,8 +92,12 @@ export async function getAllUsers() {
         query: QUERY_ALL_USERS_SEO,
       });
     } catch (e) {
-      console.log(`[users][getAllUsers] Failed to query SEO plugin: ${e.message}`);
-      console.log('Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.');
+      console.log(
+        `[users][getAllUsers] Failed to query SEO plugin: ${e.message}`
+      );
+      console.log(
+        'Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.'
+      );
       throw e;
     }
 
@@ -97,7 +105,9 @@ export async function getAllUsers() {
       const data = { ...user };
       const { id } = data;
 
-      const seo = seoData?.data?.users.edges.map(({ node = {} }) => node).find((node) => node.id === id)?.seo;
+      const seo = seoData?.data?.users.edges
+        .map(({ node = {} }) => node)
+        .find((node) => node.id === id)?.seo;
 
       return {
         ...data,

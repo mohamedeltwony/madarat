@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 // Local breakpoint definitions
 $breakpoint-small: 768px;
@@ -10,11 +10,11 @@ $breakpoint-large: 1200px;
   grid-template-columns: repeat(1, 1fr);
   gap: 2rem;
   margin: 2rem 0;
-  
+
   @media (min-width: $breakpoint-small) {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   @media (min-width: $breakpoint-medium) {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -25,8 +25,10 @@ $breakpoint-large: 1200px;
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -47,7 +49,7 @@ $breakpoint-large: 1200px;
   width: 80px;
   height: 80px;
   margin-bottom: 1rem;
-  
+
   img {
     border-radius: 50%;
     object-fit: cover;
@@ -66,7 +68,7 @@ $breakpoint-large: 1200px;
   color: $color-gray-600;
   margin-bottom: 1rem;
   line-height: 1.5;
-  
+
   // Limit to 3 lines
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -79,4 +81,4 @@ $breakpoint-large: 1200px;
   font-weight: 500;
   color: $color-primary;
   text-align: center;
-} 
+}

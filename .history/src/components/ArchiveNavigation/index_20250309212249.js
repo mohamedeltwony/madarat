@@ -1,1 +1,1 @@
-export { default } from './ArchiveNavigation'; 
+export { default } from './ArchiveNavigation';

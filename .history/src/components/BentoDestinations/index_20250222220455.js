@@ -11,14 +11,16 @@ const BentoDestinations = ({ destinations }) => {
     <div className={styles.bentoGrid}>
       {displayDestinations.map((destination, index) => {
         const featuredImage = destination.featuredImage?.sourceUrl;
-        
+
         return (
-          <Link 
-            key={destination.slug} 
+          <Link
+            key={destination.slug}
             href={`/destinations/${destination.slug}`}
             className={`${styles.bentoItem} ${styles[`item${index + 1}`]}`}
-            style={{ 
-              backgroundImage: featuredImage ? `url(${featuredImage})` : 'linear-gradient(45deg, #1a1a1a, #4a4a4a)'
+            style={{
+              backgroundImage: featuredImage
+                ? `url(${featuredImage})`
+                : 'linear-gradient(45deg, #1a1a1a, #4a4a4a)',
             }}
           >
             <div className={styles.glassContent}>
@@ -30,7 +32,10 @@ const BentoDestinations = ({ destinations }) => {
               <h3>{destination.name}</h3>
               {index === 0 && destination.description && (
                 <p className={styles.excerpt}>
-                  {destination.description.replace(/(<([^>]+)>)/gi, '').slice(0, 120)}...
+                  {destination.description
+                    .replace(/(<([^>]+)>)/gi, '')
+                    .slice(0, 120)}
+                  ...
                 </p>
               )}
             </div>
@@ -41,4 +46,4 @@ const BentoDestinations = ({ destinations }) => {
   );
 };
 
-export default BentoDestinations; 
+export default BentoDestinations;

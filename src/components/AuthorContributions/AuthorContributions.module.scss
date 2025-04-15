@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .contributionsContainer {
   background-color: white;
@@ -36,7 +36,7 @@
   background-color: $color-primary;
   border-radius: 2px 2px 0 0;
   transition: height 0.3s ease;
-  
+
   &:hover {
     background-color: darken($color-primary, 10%);
   }
@@ -55,14 +55,15 @@
   margin-top: 1rem;
   font-size: 0.9rem;
   color: $color-gray-700;
-  
+
   strong {
     color: $color-primary;
     font-weight: 600;
   }
 }
 
-.contributionsLoading, .contributionsError {
+.contributionsLoading,
+.contributionsError {
   background-color: white;
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -89,4 +90,4 @@
   to {
     transform: rotate(360deg);
   }
-} 
+}

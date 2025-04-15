@@ -61,8 +61,8 @@ const Header = () => {
           </ul>
         </nav>
 
-        <button 
-          className={styles.searchButton} 
+        <button
+          className={styles.searchButton}
           onClick={handleSearchToggle}
           aria-label="بحث"
         >
@@ -70,7 +70,7 @@ const Header = () => {
           <span className="sr-only">Toggle Search</span>
         </button>
 
-        <button 
+        <button
           className={`${styles.menuButton} ${isMenuOpen ? styles.active : ''}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="القائمة"

@@ -9,6 +9,7 @@ This document provides an overview of the main components in the Next.js WordPre
 #### Layout (`src/components/Layout/Layout.js`)
 
 The main layout component that wraps all pages. It includes:
+
 - Header
 - Main content area
 - Footer
@@ -28,6 +29,7 @@ The main layout component that wraps all pages. It includes:
 #### Header (`src/components/Header/Header.js`)
 
 The site header component that includes:
+
 - Logo
 - Navigation menu
 - Search functionality
@@ -35,6 +37,7 @@ The site header component that includes:
 #### Footer (`src/components/Footer/Footer.js`)
 
 The site footer component that includes:
+
 - Copyright information
 - Social links
 - Additional navigation
@@ -135,12 +138,7 @@ Styled button component:
 Enhanced image component:
 
 ```jsx
-<Image 
-  src="/path/to/image.jpg" 
-  alt="Description" 
-  width={800} 
-  height={600} 
-/>
+<Image src="/path/to/image.jpg" alt="Description" width={800} height={600} />
 ```
 
 #### Pagination (`src/components/Pagination/Pagination.js`)
@@ -148,10 +146,10 @@ Enhanced image component:
 Handles paginated content:
 
 ```jsx
-<Pagination 
-  currentPage={currentPage} 
-  pagesCount={pagesCount} 
-  basePath="/posts" 
+<Pagination
+  currentPage={currentPage}
+  pagesCount={pagesCount}
+  basePath="/posts"
 />
 ```
 
@@ -168,11 +166,7 @@ Popup form for capturing user information:
 Displays metadata about posts:
 
 ```jsx
-<Metadata 
-  author={post.author} 
-  date={post.date} 
-  categories={post.categories} 
-/>
+<Metadata author={post.author} date={post.date} categories={post.categories} />
 ```
 
 ### Navigation Components
@@ -200,10 +194,10 @@ Displays breadcrumb navigation:
 Manages metadata and SEO information (replaces react-helmet):
 
 ```jsx
-<Meta 
-  title="Page Title" 
-  description="Page description" 
-  meta={[{ name: 'keywords', content: 'key, words' }]} 
+<Meta
+  title="Page Title"
+  description="Page description"
+  meta={[{ name: 'keywords', content: 'key, words' }]}
   link={[{ rel: 'canonical', href: 'https://example.com' }]}
 />
 ```
@@ -213,12 +207,14 @@ Manages metadata and SEO information (replaces react-helmet):
 Manages structured data:
 
 ```jsx
-<JsonLd data={{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "Page Title",
-  "description": "Page description"
-}} />
+<JsonLd
+  data={{
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Page Title',
+    description: 'Page description',
+  }}
+/>
 ```
 
 ## Component Relationships
@@ -258,4 +254,4 @@ Components use CSS Modules with SCSS for styling:
 - Each component has its own `.module.scss` file
 - Styles are scoped to the component
 - Global variables are imported from `src/styles/_variables.module.scss`
-- Common styles are shared via SCSS mixins and functions 
+- Common styles are shared via SCSS mixins and functions

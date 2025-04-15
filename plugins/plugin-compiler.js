@@ -1,6 +1,11 @@
 const path = require('path');
 
-const { createApolloClient, createFile, terminalColor, removeLastTrailingSlash } = require('./util');
+const {
+  createApolloClient,
+  createFile,
+  terminalColor,
+  removeLastTrailingSlash,
+} = require('./util');
 
 class WebpackPlugin {
   constructor(options = {}) {
@@ -11,9 +16,13 @@ class WebpackPlugin {
     const { url, plugin, verbose = false, nextConfig } = options;
 
     try {
-      plugin.outputLocation = path.join(plugin.outputDirectory, plugin.outputName);
+      plugin.outputLocation = path.join(
+        plugin.outputDirectory,
+        plugin.outputName
+      );
 
-      verbose && console.log(`[${plugin.name}] Compiling file ${plugin.outputLocation}`);
+      verbose &&
+        console.log(`[${plugin.name}] Compiling file ${plugin.outputLocation}`);
 
       const hasUrl = typeof url === 'string';
 
@@ -30,7 +39,13 @@ class WebpackPlugin {
       const file = await plugin.generate(data, nextConfig);
 
       if (file !== false) {
-        await createFile(file, plugin.name, plugin.outputDirectory, plugin.outputLocation, verbose);
+        await createFile(
+          file,
+          plugin.name,
+          plugin.outputDirectory,
+          plugin.outputLocation,
+          verbose
+        );
       }
 
       //If there is an additional action to perform
@@ -38,7 +53,10 @@ class WebpackPlugin {
         plugin.postcreate(plugin);
       }
 
-      !verbose && console.log(`Successfully created: ${terminalColor(plugin.outputName, 'info')}`);
+      !verbose &&
+        console.log(
+          `Successfully created: ${terminalColor(plugin.outputName, 'info')}`
+        );
     } catch (e) {
       console.error(`${terminalColor(e.message, 'error')}`);
     }

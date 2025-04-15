@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 // Local breakpoint definitions
 $breakpoint-small: 768px;
@@ -14,15 +14,15 @@ $breakpoint-large: 1200px;
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
-  
+
   @media (min-width: $breakpoint-small) {
     flex-direction: row;
     justify-content: space-between;
   }
-  
+
   h1 {
     margin-bottom: 1.5rem;
-    
+
     @media (min-width: $breakpoint-small) {
       margin-bottom: 0;
     }
@@ -36,7 +36,7 @@ $breakpoint-large: 1200px;
 
 .avatarContainer {
   margin-right: 1rem;
-  
+
   img {
     border-radius: 50%;
     object-fit: cover;
@@ -64,7 +64,7 @@ $breakpoint-large: 1200px;
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
-  
+
   @media (min-width: $breakpoint-medium) {
     grid-template-columns: 2fr 1fr;
   }
@@ -100,7 +100,7 @@ $breakpoint-large: 1200px;
   font-size: 1rem;
   font-weight: 500;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background-color: darken($color-primary, 10%);
     transform: translateY(-2px);
@@ -141,20 +141,21 @@ $breakpoint-large: 1200px;
   font-size: 0.9rem;
   font-weight: 500;
   transition: color 0.2s ease;
-  
+
   &:hover {
     color: darken($color-primary, 10%);
     text-decoration: underline;
   }
 }
 
-.loadingContainer, .errorContainer {
+.loadingContainer,
+.errorContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 4rem 0;
-  
+
   p {
     margin-top: 1rem;
     color: $color-gray-600;
@@ -180,4 +181,4 @@ $breakpoint-large: 1200px;
   to {
     transform: rotate(360deg);
   }
-} 
+}

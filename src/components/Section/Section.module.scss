@@ -1,14 +1,14 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 .section {
   width: 100%;
   padding: 4rem 0;
   margin: 3rem 0;
-  
+
   &:first-child {
     padding-top: 2rem;
   }
-  
+
   &:last-child {
     padding-bottom: 4rem;
   }
@@ -17,11 +17,11 @@
 @media (max-width: 768px) {
   .section {
     padding: 3rem 0;
-    
+
     &:first-child {
       padding-top: 1.5rem;
     }
-    
+
     &:last-child {
       padding-bottom: 3rem;
     }

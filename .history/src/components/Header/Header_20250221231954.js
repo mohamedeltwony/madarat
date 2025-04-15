@@ -45,7 +45,7 @@ const Header = () => {
           <FaSearch />
         </button>
 
-        <button 
+        <button
           className={`${styles.menuButton} ${isMenuOpen ? styles.active : ''}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="القائمة"

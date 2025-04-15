@@ -12,73 +12,85 @@ import UIStyles from '@/components/UI/UI.module.scss';
 
 // Placeholder SVG Icon Component (Replace with actual SVGs later)
 const PlaceholderIcon = ({ color = 'currentColor', size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="24" height="24" rx="4" fill={color} fillOpacity="0.2"/>
-    <path d="M12 6V18M6 12H18" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect width="24" height="24" rx="4" fill={color} fillOpacity="0.2" />
+    <path
+      d="M12 6V18M6 12H18"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
-
-export default function LondonScotlandTripC() { // Renamed function
+export default function LondonScotlandTripC() {
+  // Renamed function
   const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
     city: '',
-    destination: 'لندن واسكتلندا - C' // Added variant indicator
+    destination: 'لندن واسكتلندا - C', // Added variant indicator
   });
-  
+
   // Detect mobile devices
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     // Check on initial load
     checkIfMobile();
-    
+
     // Add listener for window resize
     window.addEventListener('resize', checkIfMobile);
-    
+
     // Cleanup
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
     alert('شكراً لك! سنتواصل معك قريباً. (Variant C)'); // Added variant indicator
-    
+
     // Reset form
     setFormData({
       name: '',
       phone: '',
       email: '',
       city: '',
-      destination: 'لندن واسكتلندا - C'
+      destination: 'لندن واسكتلندا - C',
     });
   };
-  
+
   // Saudi cities
   const cities = [
-    "الرياض",
-    "جدة",
-    "القصيم – حائل",
-    "مكة - الطائف",
-    "المدينة المنورة",
-    "المنطقة الشرقية",
-    "المنطقة الشمالية",
-    "المنطقة الجنوبية",
-    "أخرى"
+    'الرياض',
+    'جدة',
+    'القصيم – حائل',
+    'مكة - الطائف',
+    'المدينة المنورة',
+    'المنطقة الشرقية',
+    'المنطقة الشمالية',
+    'المنطقة الجنوبية',
+    'أخرى',
   ];
 
   // Features data
@@ -94,17 +106,31 @@ export default function LondonScotlandTripC() { // Renamed function
     { text: 'مرشد خبير', icon: 'guide' },
     { text: 'جولات مخصصة', icon: 'custom' },
   ];
-  
+
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>استكشف لندن واسكتلندا مع مدارات الكون | رحلة ساحرة - C</title> {/* Added variant indicator */}
-        <meta name="description" content="رحلة سياحية استثنائية إلى لندن واسكتلندا مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة في بريطانيا" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>استكشف لندن واسكتلندا مع مدارات الكون | رحلة ساحرة - C</title>{' '}
+        {/* Added variant indicator */}
+        <meta
+          name="description"
+          content="رحلة سياحية استثنائية إلى لندن واسكتلندا مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة في بريطانيا"
+        />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
       </Head>
 
       <main className={styles.main}>
@@ -113,31 +139,38 @@ export default function LondonScotlandTripC() { // Renamed function
           <div className={styles.heroOverlay}></div>
           <div className={styles.heroContent}>
             <div className={styles.logoContainer}>
-              <Image 
-                src="/logo.png" 
-                alt="مدارات الكون للسياحة والسفر" 
-                width={240} 
-                height={75} 
+              <Image
+                src="/logo.png"
+                alt="مدارات الكون للسياحة والسفر"
+                width={240}
+                height={75}
                 priority
                 unoptimized
               />
             </div>
             <h1 className={styles.title}>
-              رحلة <span className={styles.highlight}>لندن</span> و <span className={styles.highlight}>اسكتلندا</span> الساحرة (C) {/* Added variant indicator */}
+              رحلة <span className={styles.highlight}>لندن</span> و{' '}
+              <span className={styles.highlight}>اسكتلندا</span> الساحرة (C){' '}
+              {/* Added variant indicator */}
             </h1>
             <p className={styles.description}>
-              تجربة سفر فريدة لاستكشاف جمال الطبيعة والتاريخ والثقافة في المملكة المتحدة. رحلة استثنائية تجمع بين سحر المدن العريقة وروعة الطبيعة الخلابة.
+              تجربة سفر فريدة لاستكشاف جمال الطبيعة والتاريخ والثقافة في المملكة
+              المتحدة. رحلة استثنائية تجمع بين سحر المدن العريقة وروعة الطبيعة
+              الخلابة.
             </p>
 
             {/* Features Section - Moved Inside Hero */}
-            <div className={styles.featuresSection}> {/* Changed from section to div */}
+            <div className={styles.featuresSection}>
+              {' '}
+              {/* Changed from section to div */}
               {/* Removed featuresContainer and featuresTitle as they might not be needed here */}
               <div className={styles.featuresGrid}>
                 {features.map((feature) => (
                   <div key={feature.icon} className={styles.featureItem}>
                     <div className={styles.featureIcon}>
                       {/* Replace PlaceholderIcon with your actual SVG component/path */}
-                      <PlaceholderIcon color="#cc9c64" size={28} /> {/* Adjusted size */}
+                      <PlaceholderIcon color="#cc9c64" size={28} />{' '}
+                      {/* Adjusted size */}
                     </div>
                     <p className={styles.featureText}>{feature.text}</p>
                   </div>
@@ -145,7 +178,7 @@ export default function LondonScotlandTripC() { // Renamed function
               </div>
             </div>
             {/* End Features Section */}
-            
+
             {/* Contact Form */}
             <div className={styles.formContainer}>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
@@ -161,7 +194,7 @@ export default function LondonScotlandTripC() { // Renamed function
                     required
                   />
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="phone">الجوال</label>
                   <div className={styles.phoneInput}>
@@ -179,7 +212,7 @@ export default function LondonScotlandTripC() { // Renamed function
                     />
                   </div>
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="email">البريد الإلكتروني</label>
                   <input
@@ -192,7 +225,7 @@ export default function LondonScotlandTripC() { // Renamed function
                     required
                   />
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="city">اختر مدينة الانطلاق</label>
                   <select
@@ -210,10 +243,15 @@ export default function LondonScotlandTripC() { // Renamed function
                     ))}
                   </select>
                 </div>
-                
+
                 <div className={styles.formActions}>
-                  <SparkleButton type="submit" className={styles.mainCTA} fullWidth>
-                    اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا
+                  <SparkleButton
+                    type="submit"
+                    className={styles.mainCTA}
+                    fullWidth
+                  >
+                    اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة
+                    عندنا
                   </SparkleButton>
                 </div>
               </form>
@@ -222,12 +260,11 @@ export default function LondonScotlandTripC() { // Renamed function
         </section>
 
         {/* Features section moved inside hero content */}
-
       </main>
-      
+
       {/* Chatbot */}
       <Chatbot />
-      
+
       {/* Exit Intent Popup */}
       <ExitPopup />
     </div>

@@ -15,16 +15,17 @@ export default function DestinationTrips({ destination, trips = [] }) {
 
   useEffect(() => {
     let filtered = [...trips];
-    
+
     // Filter by search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(trip => 
-        trip.title.toLowerCase().includes(query) ||
-        trip.description.toLowerCase().includes(query)
+      filtered = filtered.filter(
+        (trip) =>
+          trip.title.toLowerCase().includes(query) ||
+          trip.description.toLowerCase().includes(query)
       );
     }
-    
+
     setFilteredTrips(filtered);
   }, [trips, searchQuery]);
 
@@ -48,7 +49,10 @@ export default function DestinationTrips({ destination, trips = [] }) {
     <Layout>
       <Head>
         <title>{destination.title} | رحلات مدارات</title>
-        <meta name="description" content={`اكتشف رحلات مدارات في ${destination.title}. مجموعة مميزة من الرحلات السياحية في ${destination.title}.`} />
+        <meta
+          name="description"
+          content={`اكتشف رحلات مدارات في ${destination.title}. مجموعة مميزة من الرحلات السياحية في ${destination.title}.`}
+        />
       </Head>
 
       <Meta
@@ -62,13 +66,15 @@ export default function DestinationTrips({ destination, trips = [] }) {
             <div className={styles.breadcrumbs}>
               <Link href="/destinations">الوجهات</Link>
               <span className={styles.separator}>/</span>
-              <Link href={`/destinations/${destination.slug}`}>{destination.title}</Link>
+              <Link href={`/destinations/${destination.slug}`}>
+                {destination.title}
+              </Link>
               <span className={styles.separator}>/</span>
               <span>الرحلات</span>
             </div>
             <h1 className={styles.pageTitle}>رحلات {destination.title}</h1>
             <p className={styles.pageDescription}>
-              اكتشف مجموعتنا المميزة من الرحلات السياحية في {destination.title}. 
+              اكتشف مجموعتنا المميزة من الرحلات السياحية في {destination.title}.
               من رحلات شهر العسل إلى الرحلات العائلية والمغامرات.
             </p>
           </Container>
@@ -90,16 +96,16 @@ export default function DestinationTrips({ destination, trips = [] }) {
 
             {filteredTrips.length > 0 ? (
               <div className={styles.tripsGrid}>
-                {filteredTrips.map(trip => (
-                  <Link 
-                    key={trip.id} 
+                {filteredTrips.map((trip) => (
+                  <Link
+                    key={trip.id}
                     href={`/trips/${trip.slug}`}
                     className={styles.tripCard}
                   >
                     <div className={styles.tripImage}>
                       {trip.image ? (
-                        <img 
-                          src={trip.image} 
+                        <img
+                          src={trip.image}
                           alt={trip.title}
                           className={styles.image}
                         />
@@ -141,12 +147,15 @@ export default function DestinationTrips({ destination, trips = [] }) {
 export async function getStaticPaths() {
   try {
     // Fetch all destinations to generate paths
-    const response = await fetch('https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100', {
-      headers: {
-        'Accept': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    });
+    const response = await fetch(
+      'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
+      {
+        headers: {
+          Accept: 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -155,19 +164,19 @@ export async function getStaticPaths() {
     const destinations = await response.json();
 
     // Generate paths for each destination
-    const paths = destinations.map(destination => ({
-      params: { slug: destination.slug }
+    const paths = destinations.map((destination) => ({
+      params: { slug: destination.slug },
     }));
 
     return {
       paths,
-      fallback: 'blocking'
+      fallback: 'blocking',
     };
   } catch (error) {
     console.error('Error in getStaticPaths:', error);
     return {
       paths: [],
-      fallback: 'blocking'
+      fallback: 'blocking',
     };
   }
 }
@@ -179,7 +188,7 @@ export async function getStaticProps({ params }) {
       `https://madaratalkon.com/wp-json/wp/v2/destination?slug=${params.slug}&_embed`,
       {
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Access-Control-Allow-Origin': '*',
         },
       }
@@ -196,9 +205,9 @@ export async function getStaticProps({ params }) {
       return {
         props: {
           destination: null,
-          trips: []
+          trips: [],
         },
-        revalidate: 60
+        revalidate: 60,
       };
     }
 
@@ -207,7 +216,7 @@ export async function getStaticProps({ params }) {
       `https://madaratalkon.com/wp-json/wp/v2/trip?destination=${destination.id}&per_page=100&_embed`,
       {
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Access-Control-Allow-Origin': '*',
         },
       }
@@ -225,11 +234,12 @@ export async function getStaticProps({ params }) {
       title: destination.name || '',
       slug: destination.slug || '',
       description: destination.description?.rendered || '',
-      image: destination._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
+      image:
+        destination._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
     };
 
     // Format trips data
-    const formattedTrips = trips.map(trip => {
+    const formattedTrips = trips.map((trip) => {
       // Format duration
       let durationText = 'غير محدد';
       if (trip.duration) {
@@ -250,7 +260,10 @@ export async function getStaticProps({ params }) {
         slug: trip.slug || '',
         image: trip._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
         duration: durationText,
-        price: trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'غير محدد',
+        price:
+          trip.wp_travel_engine_setting_trip_actual_price ||
+          trip.price ||
+          'غير محدد',
         currency: trip.currency?.code || 'SAR',
       };
     });
@@ -272,4 +285,4 @@ export async function getStaticProps({ params }) {
       revalidate: 60,
     };
   }
-} 
+}

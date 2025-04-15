@@ -24,14 +24,17 @@ export default function Author({ user, posts }) {
     instagram: 'https://instagram.com/username',
     linkedin: 'https://linkedin.com/in/username',
   };
-  
+
   const mockWebsite = 'https://example.com';
 
   const { metadata } = usePageMetadata({
     metadata: {
       ...user,
       title,
-      description: description || user.og?.description || `Read ${posts.length} posts from ${name}`,
+      description:
+        description ||
+        user.og?.description ||
+        `Read ${posts.length} posts from ${name}`,
     },
   });
 
@@ -42,14 +45,14 @@ export default function Author({ user, posts }) {
   return (
     <Layout metadata={metadata}>
       <AuthorJsonLd author={user} />
-      
+
       <Header>
         <Container>
           <div className={styles.authorHeader}>
             <Link href="/authors" className={styles.backLink}>
               ← All Authors
             </Link>
-            
+
             <div className={styles.authorInfo}>
               {avatar && (
                 <div className={styles.avatarContainer}>
@@ -63,14 +66,21 @@ export default function Author({ user, posts }) {
                   />
                 </div>
               )}
-              
+
               <div className={styles.authorMeta}>
                 <h1 className={styles.authorName}>{name}</h1>
-                {description && <p className={styles.authorDescription}>{description}</p>}
-                <p className={styles.postCount}>{posts.length} {posts.length === 1 ? 'article' : 'articles'}</p>
-                
+                {description && (
+                  <p className={styles.authorDescription}>{description}</p>
+                )}
+                <p className={styles.postCount}>
+                  {posts.length} {posts.length === 1 ? 'article' : 'articles'}
+                </p>
+
                 <div className={styles.authorActions}>
-                  <Link href="/authors/edit-profile" className={styles.editButton}>
+                  <Link
+                    href="/authors/edit-profile"
+                    className={styles.editButton}
+                  >
                     تعديل الملف الشخصي
                   </Link>
                 </div>
@@ -79,18 +89,22 @@ export default function Author({ user, posts }) {
           </div>
         </Container>
       </Header>
-      
+
       <Section>
         <Container>
           <div className={styles.contentGrid}>
             <div className={styles.mainContent}>
               <h2 className={styles.sectionTitle}>Articles by {name}</h2>
-              
+
               {posts.length > 0 ? (
                 <>
                   <div className={styles.postsGrid}>
                     {posts.map((post) => (
-                      <PostCard key={post.slug} post={post} options={postOptions} />
+                      <PostCard
+                        key={post.slug}
+                        post={post}
+                        options={postOptions}
+                      />
                     ))}
                   </div>
                 </>
@@ -98,7 +112,7 @@ export default function Author({ user, posts }) {
                 <p className={styles.noPosts}>No posts found by this author.</p>
               )}
             </div>
-            
+
             <div className={styles.sidebar}>
               <AuthorStats authorSlug={slug} />
               <AuthorSocial social={mockSocial} website={mockWebsite} />
@@ -136,7 +150,7 @@ export async function getStaticProps({ params = {} } = {}) {
 export async function getStaticPaths() {
   // For better performance in production, we'll pre-render the most active authors
   // but allow other author pages to be generated on-demand
-  
+
   const { authors } = await getAllAuthors();
 
   // Get the top 10 authors (or all if less than 10)

@@ -74,6 +74,7 @@ Your site will be available at http://localhost:3000.
 ### Optional WordPress Plugins
 
 1. **Yoast SEO + WPGraphQL Yoast SEO Integration** - For enhanced SEO features
+
    - Set `WORDPRESS_PLUGIN_SEO=true` in your `.env.local` after installing
 
 2. **Advanced Custom Fields (ACF) + WPGraphQL for ACF** - For custom fields
@@ -103,4 +104,4 @@ Here's a brief overview of the project structure:
 
 - Review the [Architecture](./architecture.md) documentation to understand the project structure
 - Explore [Key Components](./components.md) to understand how the UI is built
-- Check [Data Fetching](./data-fetching.md) to learn how to work with WordPress data 
+- Check [Data Fetching](./data-fetching.md) to learn how to work with WordPress data

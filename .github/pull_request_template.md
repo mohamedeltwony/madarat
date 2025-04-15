@@ -7,7 +7,7 @@
 <!-- Specifiy which issue this fixes by referencing the issue number (`#11`) or issue URL. -->
 <!-- Example: Fixes https://github.com/colbyfayock/next-wordpress-starter/issues/1 -->
 
-Fixes 
+Fixes
 
 ## Type of change
 
@@ -18,7 +18,6 @@ Fixes
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] Fix or improve the documentation
 - [ ] This change requires a documentation update
-
 
 # Checklist
 

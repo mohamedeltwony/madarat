@@ -1,6 +1,6 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
-@import "styles/components/_container";
+@import 'styles/components/_container';
 
 .header {
   background: rgba(255, 255, 255, 0.95);
@@ -62,7 +62,7 @@
 .logo {
   display: block;
   text-decoration: none;
-  
+
   a {
     display: block;
     text-decoration: none;

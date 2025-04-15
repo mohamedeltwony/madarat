@@ -14,7 +14,7 @@ export default function AuthorProfileEdit() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
-  
+
   // Form state
   const [formData, setFormData] = useState({
     name: '',
@@ -28,12 +28,12 @@ export default function AuthorProfileEdit() {
       facebook: '',
       instagram: '',
       linkedin: '',
-    }
+    },
   });
-  
+
   // Mock authentication - in a real app, this would check if the user is logged in
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+
   useEffect(() => {
     // Simulate checking authentication
     const checkAuth = () => {
@@ -41,7 +41,7 @@ export default function AuthorProfileEdit() {
       // For demo purposes, we'll just set it to true after a delay
       setTimeout(() => {
         setIsAuthenticated(true);
-        
+
         // Mock loading user data
         setFormData({
           name: 'محمد أحمد',
@@ -55,24 +55,24 @@ export default function AuthorProfileEdit() {
             facebook: 'https://facebook.com/mohamed',
             instagram: 'https://instagram.com/mohamed',
             linkedin: 'https://linkedin.com/in/mohamed',
-          }
+          },
         });
       }, 1000);
     };
-    
+
     checkAuth();
   }, []);
-  
+
   const { metadata } = usePageMetadata({
     metadata: {
       title: 'تعديل الملف الشخصي',
       description: 'قم بتحديث معلومات ملفك الشخصي',
     },
   });
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     if (name.includes('.')) {
       // Handle nested objects (social media)
       const [parent, child] = name.split('.');
@@ -80,17 +80,17 @@ export default function AuthorProfileEdit() {
         ...formData,
         [parent]: {
           ...formData[parent],
-          [child]: value
-        }
+          [child]: value,
+        },
       });
     } else {
       setFormData({
         ...formData,
-        [name]: value
+        [name]: value,
       });
     }
   };
-  
+
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -99,38 +99,38 @@ export default function AuthorProfileEdit() {
         setFormData({
           ...formData,
           avatar: file,
-          avatarPreview: reader.result
+          avatarPreview: reader.result,
         });
       };
       reader.readAsDataURL(file);
     }
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setMessage({ type: '', text: '' });
-    
+
     try {
       // Simulate API call to update profile
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       // Success message
       setMessage({
         type: 'success',
-        text: 'تم تحديث الملف الشخصي بنجاح!'
+        text: 'تم تحديث الملف الشخصي بنجاح!',
       });
     } catch (error) {
       // Error message
       setMessage({
         type: 'error',
-        text: 'حدث خطأ أثناء تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.'
+        text: 'حدث خطأ أثناء تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.',
       });
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   if (!isAuthenticated) {
     return (
       <Layout metadata={metadata}>
@@ -150,7 +150,7 @@ export default function AuthorProfileEdit() {
       </Layout>
     );
   }
-  
+
   return (
     <Layout metadata={metadata}>
       <Header>
@@ -163,7 +163,7 @@ export default function AuthorProfileEdit() {
           </div>
         </Container>
       </Header>
-      
+
       <Section>
         <Container>
           <form className={styles.profileForm} onSubmit={handleSubmit}>
@@ -172,7 +172,7 @@ export default function AuthorProfileEdit() {
                 {message.text}
               </div>
             )}
-            
+
             <div className={styles.formGrid}>
               <div className={styles.avatarSection}>
                 <div className={styles.avatarContainer}>
@@ -204,7 +204,7 @@ export default function AuthorProfileEdit() {
                   </p>
                 </div>
               </div>
-              
+
               <div className={styles.formFields}>
                 <div className={styles.formGroup}>
                   <label htmlFor="name">الاسم</label>
@@ -217,7 +217,7 @@ export default function AuthorProfileEdit() {
                     required
                   />
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="email">البريد الإلكتروني</label>
                   <input
@@ -229,7 +229,7 @@ export default function AuthorProfileEdit() {
                     required
                   />
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="website">الموقع الإلكتروني</label>
                   <input
@@ -240,7 +240,7 @@ export default function AuthorProfileEdit() {
                     onChange={handleChange}
                   />
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="description">نبذة تعريفية</label>
                   <textarea
@@ -251,9 +251,11 @@ export default function AuthorProfileEdit() {
                     rows={4}
                   />
                 </div>
-                
-                <h3 className={styles.socialHeading}>حسابات التواصل الاجتماعي</h3>
-                
+
+                <h3 className={styles.socialHeading}>
+                  حسابات التواصل الاجتماعي
+                </h3>
+
                 <div className={styles.formGroup}>
                   <label htmlFor="social.twitter">تويتر</label>
                   <input
@@ -264,7 +266,7 @@ export default function AuthorProfileEdit() {
                     onChange={handleChange}
                   />
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="social.facebook">فيسبوك</label>
                   <input
@@ -275,7 +277,7 @@ export default function AuthorProfileEdit() {
                     onChange={handleChange}
                   />
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="social.instagram">انستغرام</label>
                   <input
@@ -286,7 +288,7 @@ export default function AuthorProfileEdit() {
                     onChange={handleChange}
                   />
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="social.linkedin">لينكد إن</label>
                   <input
@@ -299,7 +301,7 @@ export default function AuthorProfileEdit() {
                 </div>
               </div>
             </div>
-            
+
             <div className={styles.formActions}>
               <button
                 type="submit"
@@ -317,4 +319,4 @@ export default function AuthorProfileEdit() {
       </Section>
     </Layout>
   );
-} 
+}

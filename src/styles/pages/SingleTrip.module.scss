@@ -1,10 +1,11 @@
-@use "sass:color";
-@use "../../styles/settings/__settings" as *;
-@import "styles/settings/_typography";
+@use 'sass:color';
+@use '../../styles/settings/__settings' as *;
+@import 'styles/settings/_typography';
 
 .heroSection {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-              url('/images/hero-bg.jpg') center/cover;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('/images/hero-bg.jpg') center/cover;
   padding: 4rem 0;
   color: white;
   text-align: center;
@@ -28,7 +29,8 @@
   font-size: 1.2rem;
   opacity: 0.9;
 
-  .duration, .price {
+  .duration,
+  .price {
     background: rgba(255, 255, 255, 0.1);
     padding: 0.5rem 1rem;
     border-radius: 20px;
@@ -37,7 +39,7 @@
   }
 
   .price {
-    color: #4CAF50;
+    color: #4caf50;
     font-weight: 600;
   }
 }
@@ -258,4 +260,4 @@
     font-size: 1.8rem;
     margin-bottom: 1rem;
   }
-} 
+}

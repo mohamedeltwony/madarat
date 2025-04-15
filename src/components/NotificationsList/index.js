@@ -5,14 +5,14 @@ export default function NotificationsList({ authorSlug }) {
   const [notifications, setNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         setIsLoading(true);
         // This is a mock API call - in a real app, you would fetch from your API
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
+        await new Promise((resolve) => setTimeout(resolve, 800));
+
         // Mock notifications data
         const mockNotifications = [
           {
@@ -44,7 +44,7 @@ export default function NotificationsList({ authorSlug }) {
             isRead: true,
           },
         ];
-        
+
         setNotifications(mockNotifications);
         setIsLoading(false);
       } catch (err) {
@@ -53,24 +53,29 @@ export default function NotificationsList({ authorSlug }) {
         setIsLoading(false);
       }
     };
-    
+
     fetchNotifications();
   }, [authorSlug]);
-  
+
   const markAsRead = (id) => {
-    setNotifications(prevNotifications =>
-      prevNotifications.map(notification =>
-        notification.id === id ? { ...notification, isRead: true } : notification
+    setNotifications((prevNotifications) =>
+      prevNotifications.map((notification) =>
+        notification.id === id
+          ? { ...notification, isRead: true }
+          : notification
       )
     );
   };
-  
+
   const markAllAsRead = () => {
-    setNotifications(prevNotifications =>
-      prevNotifications.map(notification => ({ ...notification, isRead: true }))
+    setNotifications((prevNotifications) =>
+      prevNotifications.map((notification) => ({
+        ...notification,
+        isRead: true,
+      }))
     );
   };
-  
+
   if (isLoading) {
     return (
       <div className={styles.notificationsLoading}>
@@ -79,7 +84,7 @@ export default function NotificationsList({ authorSlug }) {
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className={styles.notificationsError}>
@@ -87,30 +92,34 @@ export default function NotificationsList({ authorSlug }) {
       </div>
     );
   }
-  
-  const unreadCount = notifications.filter(notification => !notification.isRead).length;
-  
+
+  const unreadCount = notifications.filter(
+    (notification) => !notification.isRead
+  ).length;
+
   const formatDate = (date) => {
     try {
       const now = new Date();
       const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-      
+
       if (diffInHours < 1) return 'منذ أقل من ساعة';
-      if (diffInHours < 24) return `منذ ${diffInHours} ${diffInHours === 1 ? 'ساعة' : 'ساعات'}`;
-      
+      if (diffInHours < 24)
+        return `منذ ${diffInHours} ${diffInHours === 1 ? 'ساعة' : 'ساعات'}`;
+
       const diffInDays = Math.floor(diffInHours / 24);
-      if (diffInDays < 7) return `منذ ${diffInDays} ${diffInDays === 1 ? 'يوم' : 'أيام'}`;
-      
+      if (diffInDays < 7)
+        return `منذ ${diffInDays} ${diffInDays === 1 ? 'يوم' : 'أيام'}`;
+
       return date.toLocaleDateString('ar', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
       });
     } catch (e) {
       return '';
     }
   };
-  
+
   return (
     <div className={styles.notificationsContainer}>
       <div className={styles.notificationsHeader}>
@@ -121,14 +130,14 @@ export default function NotificationsList({ authorSlug }) {
           </button>
         )}
       </div>
-      
+
       {notifications.length === 0 ? (
         <p className={styles.emptyMessage}>لا توجد إشعارات جديدة</p>
       ) : (
         <div className={styles.notificationsList}>
-          {notifications.map(notification => (
-            <div 
-              key={notification.id} 
+          {notifications.map((notification) => (
+            <div
+              key={notification.id}
               className={`${styles.notificationItem} ${notification.isRead ? styles.read : styles.unread}`}
               onClick={() => markAsRead(notification.id)}
             >
@@ -138,8 +147,12 @@ export default function NotificationsList({ authorSlug }) {
                 {notification.type === 'system' && <span>🔔</span>}
               </div>
               <div className={styles.notificationContent}>
-                <p className={styles.notificationText}>{notification.content}</p>
-                <span className={styles.notificationDate}>{formatDate(notification.date)}</span>
+                <p className={styles.notificationText}>
+                  {notification.content}
+                </p>
+                <span className={styles.notificationDate}>
+                  {formatDate(notification.date)}
+                </span>
               </div>
               {!notification.isRead && <div className={styles.unreadDot}></div>}
             </div>
@@ -148,4 +161,4 @@ export default function NotificationsList({ authorSlug }) {
       )}
     </div>
   );
-} 
+}

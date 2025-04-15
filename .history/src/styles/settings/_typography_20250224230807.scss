@@ -1,19 +1,26 @@
-$font-family-default: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono,
-  Courier New, monospace;
+$font-family-default:
+  Menlo,
+  Monaco,
+  Lucida Console,
+  Liberation Mono,
+  DejaVu Sans Mono,
+  Bitstream Vera Sans Mono,
+  Courier New,
+  monospace;
 
 // Typography Scale
 // Using a modular scale with ratio 1.25 (major third)
 
 :root {
   // Font Sizes
-  --font-size-xs: 0.75rem;     // 12px
-  --font-size-sm: 0.875rem;    // 14px
-  --font-size-base: 1rem;      // 16px
-  --font-size-md: 1.25rem;     // 20px
-  --font-size-lg: 1.563rem;    // 25px
-  --font-size-xl: 1.953rem;    // 31px
-  --font-size-2xl: 2.441rem;   // 39px
-  --font-size-3xl: 3.052rem;   // 49px
+  --font-size-xs: 0.75rem; // 12px
+  --font-size-sm: 0.875rem; // 14px
+  --font-size-base: 1rem; // 16px
+  --font-size-md: 1.25rem; // 20px
+  --font-size-lg: 1.563rem; // 25px
+  --font-size-xl: 1.953rem; // 31px
+  --font-size-2xl: 2.441rem; // 39px
+  --font-size-3xl: 3.052rem; // 49px
 
   // Line Heights
   --line-height-tight: 1.1;
@@ -34,19 +41,36 @@ $font-family-default: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu San
   --letter-spacing-wide: 0.025em;
 
   // Font Families
-  --font-family-primary: 'Noto Kufi Arabic', system-ui, -apple-system, sans-serif;
+  --font-family-primary:
+    'Noto Kufi Arabic', system-ui, -apple-system, sans-serif;
   --font-family-secondary: 'Noto Naskh Arabic', Georgia, serif;
 }
 
 // Utility Classes
-.text-xs { font-size: var(--font-size-xs); }
-.text-sm { font-size: var(--font-size-sm); }
-.text-base { font-size: var(--font-size-base); }
-.text-md { font-size: var(--font-size-md); }
-.text-lg { font-size: var(--font-size-lg); }
-.text-xl { font-size: var(--font-size-xl); }
-.text-2xl { font-size: var(--font-size-2xl); }
-.text-3xl { font-size: var(--font-size-3xl); }
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+.text-sm {
+  font-size: var(--font-size-sm);
+}
+.text-base {
+  font-size: var(--font-size-base);
+}
+.text-md {
+  font-size: var(--font-size-md);
+}
+.text-lg {
+  font-size: var(--font-size-lg);
+}
+.text-xl {
+  font-size: var(--font-size-xl);
+}
+.text-2xl {
+  font-size: var(--font-size-2xl);
+}
+.text-3xl {
+  font-size: var(--font-size-3xl);
+}
 
 // Heading Mixins
 @mixin heading-1 {

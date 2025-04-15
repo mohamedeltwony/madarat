@@ -1,4 +1,4 @@
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 // Main container
 .container {
@@ -27,7 +27,7 @@
   margin-bottom: 3rem;
   position: relative;
   overflow: hidden;
-  
+
   &:before {
     content: '';
     position: absolute;
@@ -35,7 +35,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('https://placehold.co/1200x800/00a1f8/ffffff?text=مدارات') center/cover no-repeat;
+    background: url('https://placehold.co/1200x800/00a1f8/ffffff?text=مدارات')
+      center/cover no-repeat;
     opacity: 0.15;
     z-index: -1;
   }
@@ -56,10 +57,14 @@
   font-size: 3.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
-  background: linear-gradient(45deg, $color-primary, adjust-hue($color-primary, 40deg));
+  background: linear-gradient(
+    45deg,
+    $color-primary,
+    adjust-hue($color-primary, 40deg)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  
+
   @media (max-width: 768px) {
     font-size: 2.5rem;
   }
@@ -67,7 +72,7 @@
 
 .highlight {
   position: relative;
-  
+
   &:after {
     content: '';
     position: absolute;
@@ -103,7 +108,7 @@
   text-align: center;
   color: $text-color-dark;
   position: relative;
-  
+
   &:after {
     content: '';
     position: absolute;
@@ -123,14 +128,14 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  
+
   h3 {
     font-size: 1.4rem;
     font-weight: 600;
     margin: 1rem 0;
     color: $text-color-dark;
   }
-  
+
   p {
     flex-grow: 1;
     margin-bottom: 1.5rem;
@@ -165,14 +170,14 @@
   max-width: 500px;
   padding: 2rem;
   position: relative;
-  
+
   h3 {
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
     color: $text-color-dark;
   }
-  
+
   p {
     margin-bottom: 1.5rem;
     color: $text-color;
@@ -196,22 +201,22 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  
+
   &:hover {
-    background-color: rgba(0, 0, 0,.2);
+    background-color: rgba(0, 0, 0, 0.2);
   }
 }
 
 .formGroup {
   margin-bottom: 1.5rem;
-  
+
   label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: $text-color-dark;
   }
-  
+
   input {
     width: 100%;
     padding: 0.8rem 1rem;
@@ -220,7 +225,7 @@
     font-size: 1rem;
     transition: border-color 0.2s ease;
     background-color: rgba(255, 255, 255, 0.8);
-    
+
     &:focus {
       outline: none;
       border-color: $color-primary;
@@ -263,7 +268,12 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 0, 0, 0.05),
+      transparent
+    );
   }
 
   &::after {
@@ -273,7 +283,12 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 0, 0, 0.05),
+      transparent
+    );
   }
 }
 
@@ -283,7 +298,7 @@
   background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
   position: relative;
   overflow: hidden;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -291,7 +306,12 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 0, 0, 0.05),
+      transparent
+    );
   }
 }
 
@@ -299,11 +319,11 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  
+
   @media (max-width: 992px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
@@ -314,22 +334,24 @@
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   }
-  
+
   h3 {
     font-size: 1.5rem;
     font-weight: 600;
     margin: 1rem 0;
     color: var(--color-text);
   }
-  
+
   p {
     color: var(--color-text-light);
     line-height: 1.6;
@@ -360,7 +382,7 @@
   font-size: 0.85rem;
   font-weight: 500;
   transition: background 0.2s ease;
-  
+
   &:hover {
     background: var(--color-primary);
     color: white;
@@ -380,7 +402,7 @@
   gap: 0.5rem;
   color: var(--color-text);
   font-weight: 500;
-  
+
   .featureAuthorAvatar {
     border-radius: 50%;
     overflow: hidden;
@@ -397,7 +419,7 @@
   font-weight: 500;
   text-align: center;
   transition: background 0.2s ease;
-  
+
   &:hover {
     background: var(--color-primary-dark);
   }
@@ -417,7 +439,11 @@
     left: 0;
     right: 0;
     height: 50px;
-    background: linear-gradient(to bottom right, transparent 49.5%, #f8f9fa 50%);
+    background: linear-gradient(
+      to bottom right,
+      transparent 49.5%,
+      #f8f9fa 50%
+    );
   }
 }
 
@@ -428,7 +454,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 1.5rem;

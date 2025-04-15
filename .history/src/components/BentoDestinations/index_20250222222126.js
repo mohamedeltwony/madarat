@@ -5,11 +5,10 @@ const BentoDestinations = ({ categories }) => {
   if (!categories || !Array.isArray(categories)) return null;
 
   // Get root categories (destinations without parents) that have trip posts
-  const rootCategories = categories.filter(category => 
-    !category.parent && 
-    category.posts?.edges?.length > 0
+  const rootCategories = categories.filter(
+    (category) => !category.parent && category.posts?.edges?.length > 0
   );
-  
+
   // Ensure we have at least 6 categories for the layout
   const displayCategories = rootCategories.slice(0, 6);
 
@@ -20,21 +19,21 @@ const BentoDestinations = ({ categories }) => {
     'linear-gradient(45deg, #FF8C42, #29323C)',
     'linear-gradient(45deg, #6C5B7B, #355C7D)',
     'linear-gradient(45deg, #56AB2F, #A8E063)',
-    'linear-gradient(45deg, #614385, #516395)'
+    'linear-gradient(45deg, #614385, #516395)',
   ];
 
   return (
     <div className={styles.bentoGrid}>
       {displayCategories.map((category, index) => {
         const tripCount = category.posts?.edges?.length || 0;
-        
+
         return (
-          <Link 
-            key={category.id} 
+          <Link
+            key={category.id}
             href={`/categories/${category.slug}`}
             className={`${styles.bentoItem} ${styles[`item${index + 1}`]}`}
-            style={{ 
-              backgroundImage: gradients[index % gradients.length]
+            style={{
+              backgroundImage: gradients[index % gradients.length],
             }}
           >
             <div className={styles.glassContent}>
@@ -44,7 +43,10 @@ const BentoDestinations = ({ categories }) => {
               <h3>{category.name}</h3>
               {index === 0 && category.description && (
                 <p className={styles.excerpt}>
-                  {category.description.replace(/(<([^>]+)>)/gi, '').slice(0, 120)}...
+                  {category.description
+                    .replace(/(<([^>]+)>)/gi, '')
+                    .slice(0, 120)}
+                  ...
                 </p>
               )}
             </div>
@@ -55,4 +57,4 @@ const BentoDestinations = ({ categories }) => {
   );
 };
 
-export default BentoDestinations; 
+export default BentoDestinations;

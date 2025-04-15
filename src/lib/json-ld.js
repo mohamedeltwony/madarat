@@ -34,11 +34,11 @@ export function ArticleJsonLd({ post = {}, siteTitle = '' }) {
     },
     headline: title,
     datePublished: datePublished ? datePublished.toISOString() : '',
-    dateModified: dateModified ? dateModified.toISOString() : datePublished?.toISOString() ?? '',
+    dateModified: dateModified
+      ? dateModified.toISOString()
+      : (datePublished?.toISOString() ?? ''),
     description: excerpt,
-    image: featuredImage?.sourceUrl
-      ? [featuredImage.sourceUrl]
-      : [],
+    image: featuredImage?.sourceUrl ? [featuredImage.sourceUrl] : [],
     publisher: {
       '@type': 'Organization',
       name: siteTitle,
@@ -78,7 +78,12 @@ export function WebsiteJsonLd({ siteTitle = '' }) {
   return <JsonLd data={jsonLd} />;
 }
 
-export function WebpageJsonLd({ title = '', description = '', siteTitle = '', slug = '' }) {
+export function WebpageJsonLd({
+  title = '',
+  description = '',
+  siteTitle = '',
+  slug = '',
+}) {
   const { homepage = '' } = config;
   const path = pagePathBySlug(slug);
 

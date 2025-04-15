@@ -48,15 +48,18 @@ export default class MyDocument extends Document {
             type="font/woff2"
             crossOrigin="anonymous"
           />
-          
+
           {/* Add preconnect for external resources */}
           <link rel="preconnect" href="https://madaratalkon.com" />
           <link rel="dns-prefetch" href="https://madaratalkon.com" />
-          
+
           {/* Meta tags for better SEO and performance */}
           <meta name="theme-color" content="#ffffff" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="default"
+          />
         </Head>
         <body {...this.helmetBodyAttrComponents}>
           <Main />

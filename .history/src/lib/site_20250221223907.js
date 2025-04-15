@@ -19,7 +19,9 @@ export async function getSiteMetadata() {
       query: QUERY_SITE_DATA,
     });
   } catch (e) {
-    console.log(`[site][getSiteMetadata] Failed to query site data: ${e.message}`);
+    console.log(
+      `[site][getSiteMetadata] Failed to query site data: ${e.message}`
+    );
     throw e;
   }
 
@@ -53,8 +55,12 @@ export async function getSiteMetadata() {
         query: QUERY_SEO_DATA,
       });
     } catch (e) {
-      console.log(`[site][getSiteMetadata] Failed to query SEO plugin: ${e.message}`);
-      console.log('Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.');
+      console.log(
+        `[site][getSiteMetadata] Failed to query SEO plugin: ${e.message}`
+      );
+      console.log(
+        'Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.'
+      );
       throw e;
     }
 
@@ -100,7 +106,11 @@ export async function getSiteMetadata() {
  * constructHelmetData
  */
 
-export function constructPageMetadata(defaultMetadata = {}, pageMetadata = {}, options = {}) {
+export function constructPageMetadata(
+  defaultMetadata = {},
+  pageMetadata = {},
+  options = {}
+) {
   const { router = {}, homepage = '' } = options;
   const { asPath } = router;
 
@@ -122,7 +132,10 @@ export function constructPageMetadata(defaultMetadata = {}, pageMetadata = {}, o
   const staticProperties = ['description', 'language', 'title'];
 
   staticProperties.forEach((property) => {
-    const value = typeof pageMetadata[property] !== 'undefined' ? pageMetadata[property] : defaultMetadata[property];
+    const value =
+      typeof pageMetadata[property] !== 'undefined'
+        ? pageMetadata[property]
+        : defaultMetadata[property];
 
     if (typeof value === 'undefined') return;
 
@@ -133,7 +146,15 @@ export function constructPageMetadata(defaultMetadata = {}, pageMetadata = {}, o
   // Loop through Open Graph properties that rely on a non-object value
 
   if (pageMetadata.og) {
-    const ogProperties = ['description', 'imageUrl', 'imageHeight', 'imageSecureUrl', 'imageWidth', 'title', 'type'];
+    const ogProperties = [
+      'description',
+      'imageUrl',
+      'imageHeight',
+      'imageSecureUrl',
+      'imageWidth',
+      'title',
+      'type',
+    ];
 
     ogProperties.forEach((property) => {
       const pageOg = pageMetadata.og?.[property];
@@ -152,7 +173,13 @@ export function constructPageMetadata(defaultMetadata = {}, pageMetadata = {}, o
   // Loop through Twitter properties that rely on a non-object value
 
   if (pageMetadata.twitter) {
-    const twitterProperties = ['cardType', 'description', 'imageUrl', 'title', 'username'];
+    const twitterProperties = [
+      'cardType',
+      'description',
+      'imageUrl',
+      'title',
+      'username',
+    ];
 
     twitterProperties.forEach((property) => {
       const pageTwitter = pageMetadata.twitter?.[property];
@@ -171,7 +198,12 @@ export function constructPageMetadata(defaultMetadata = {}, pageMetadata = {}, o
   if (metadata.og.type === 'article' && pageMetadata.article) {
     metadata.article = {};
 
-    const articleProperties = ['author', 'modifiedTime', 'publishedTime', 'publisher'];
+    const articleProperties = [
+      'author',
+      'modifiedTime',
+      'publishedTime',
+      'publisher',
+    ];
 
     articleProperties.forEach((property) => {
       const value = pageMetadata.article[property];
@@ -260,7 +292,10 @@ export function helmetSettingsFromMetadata(metadata = {}, options = {}) {
     },
     {
       property: 'twitter:description',
-      content: metadata.twitter?.description || metadata.og?.description || sanitizedDescription,
+      content:
+        metadata.twitter?.description ||
+        metadata.og?.description ||
+        sanitizedDescription,
     },
     {
       property: 'twitter:image',

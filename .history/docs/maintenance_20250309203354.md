@@ -86,10 +86,10 @@ Example of modern SCSS syntax:
 
 ```scss
 // Old
-@import "styles/settings/__settings";
+@import 'styles/settings/__settings';
 
 // New
-@use "styles/settings/__settings" as settings;
+@use 'styles/settings/__settings' as settings;
 
 .container {
   background-color: settings.$color-primary;
@@ -214,4 +214,4 @@ As the project grows, consider:
 2. Adding TypeScript for better type safety
 3. Enhancing the CI/CD pipeline with automated testing
 4. Setting up monitoring and error tracking (like Sentry)
-5. Implementing internationalization for multiple languages 
+5. Implementing internationalization for multiple languages

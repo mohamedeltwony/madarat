@@ -1,5 +1,5 @@
-@import "styles/settings/__settings";
-@import "styles/settings/_typography";
+@import 'styles/settings/__settings';
+@import 'styles/settings/_typography';
 
 .bentoGrid {
   display: grid;
@@ -206,11 +206,11 @@
 
   .tripCount {
     padding: 0.4rem 0.8rem;
-    
+
     .count {
       font-size: var(--font-size-xs);
     }
-    
+
     .label {
       font-size: var(--font-size-xxs);
     }
@@ -219,4 +219,4 @@
   .footer {
     padding-top: 0.75rem;
   }
-} 
+}

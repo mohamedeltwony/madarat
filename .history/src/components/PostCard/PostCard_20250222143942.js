@@ -5,7 +5,8 @@ import { FaMusic } from 'react-icons/fa';
 import styles from './PostCard.module.scss';
 
 const PostCard = memo(({ post }) => {
-  const { title, slug, excerpt, date, author, featuredImage, categories } = post;
+  const { title, slug, excerpt, date, author, featuredImage, categories } =
+    post;
 
   return (
     <div className={styles.postCard}>
@@ -68,7 +69,13 @@ const PostCard = memo(({ post }) => {
             </Link>
           )}
           <span className={styles.separator}>·</span>
-          <time className={styles.date}>{new Date(date).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' })}</time>
+          <time className={styles.date}>
+            {new Date(date).toLocaleDateString('ar-EG', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })}
+          </time>
         </div>
       </div>
     </div>

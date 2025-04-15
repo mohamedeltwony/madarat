@@ -14,7 +14,7 @@ export default function Drafts({ posts }) {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
-  
+
   const { metadata } = usePageMetadata({
     metadata: {
       title: 'Draft Posts',
@@ -31,7 +31,7 @@ export default function Drafts({ posts }) {
         setIsAuthenticated(true);
       }
     };
-    
+
     checkAuth();
   }, []);
 
@@ -58,11 +58,15 @@ export default function Drafts({ posts }) {
       <Section>
         <Container>
           <h1 className="text-3xl font-bold mb-8">Draft Posts</h1>
-          
+
           {!isAuthenticated ? (
             <div className="max-w-md mx-auto p-6 bg-gray-100 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4">Authentication Required</h2>
-              <p className="mb-4">Please enter the password to view draft posts.</p>
+              <h2 className="text-xl font-semibold mb-4">
+                Authentication Required
+              </h2>
+              <p className="mb-4">
+                Please enter the password to view draft posts.
+              </p>
               <form onSubmit={handleLogin}>
                 <input
                   type="password"
@@ -105,4 +109,4 @@ export async function getServerSideProps() {
       posts,
     },
   };
-} 
+}

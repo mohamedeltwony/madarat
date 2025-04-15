@@ -32,7 +32,9 @@ export default class ClassName {
     if (!classes) return this;
 
     const removeClasses = Array.isArray(classes) ? classes : [classes];
-    this.classes = this.classes.filter((className) => !removeClasses.includes(className));
+    this.classes = this.classes.filter(
+      (className) => !removeClasses.includes(className)
+    );
 
     return this;
   }
@@ -51,7 +53,11 @@ export default class ClassName {
    * @returns {ClassName} New ClassName instance
    */
   static create(classes) {
-    const initialClasses = Array.isArray(classes) ? classes : classes ? [classes] : [];
+    const initialClasses = Array.isArray(classes)
+      ? classes
+      : classes
+        ? [classes]
+        : [];
     return new ClassName(initialClasses);
   }
 }

@@ -7,12 +7,16 @@ export default class MyDocument extends Document {
       <Html lang="ar" dir="rtl">
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-          
-          <link 
-            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" 
+
+          <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
             rel="stylesheet"
           />
         </Head>

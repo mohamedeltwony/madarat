@@ -26,8 +26,12 @@ module.exports = function socialImages(nextConfig = {}) {
     generate: async ({ posts = [] }) => {
       mkdirp(outputDirectory);
 
-      const homepage = pkg.homepage && pkg.homepage.replace(/http(s)?:\/\//, '');
-      const template = await fs.readFile('./plugins/socialImages.template.html', 'utf8');
+      const homepage =
+        pkg.homepage && pkg.homepage.replace(/http(s)?:\/\//, '');
+      const template = await fs.readFile(
+        './plugins/socialImages.template.html',
+        'utf8'
+      );
 
       const browser = await chromium.launch();
 
@@ -58,7 +62,9 @@ module.exports = function socialImages(nextConfig = {}) {
   return Object.assign({}, nextConfig, {
     webpack(config, options) {
       if (config.watchOptions) {
-        config.watchOptions.ignored.push(path.join('**', plugin.outputDirectory, plugin.outputName));
+        config.watchOptions.ignored.push(
+          path.join('**', plugin.outputDirectory, plugin.outputName)
+        );
       }
 
       config.plugins.push(
