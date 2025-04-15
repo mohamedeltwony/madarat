@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "license": "MIT",
   "author": "Colby Fayock <hello@colbyfayock.com>",
+  "packageManager": "pnpm@10.6.1",
   "scripts": {
     "build": "SKIP_LINT=1 next build",
     "dev": "next dev",

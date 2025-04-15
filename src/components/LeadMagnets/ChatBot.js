@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react'; // Added useMemo
 import styles from './LeadMagnets.module.scss';
 import SparkleButton from '@/components/UI/SparkleButton';
 
@@ -15,18 +15,19 @@ export default function ChatBot({ isOpen, onToggle }) {
 
   const messagesEndRef = useRef(null);
 
-  const botMessages = [
+  // Wrap botMessages in useMemo to prevent it from causing useEffect re-runs
+  const botMessages = useMemo(() => [
     'مرحباً! أنا المساعد الآلي لشركة مدارات. كيف يمكنني مساعدتك اليوم؟',
     'أنا هنا للإجابة على استفساراتك حول خدماتنا. هل ترغب في معرفة المزيد؟',
     'ممتاز! يمكننا تقديم عرض مخصص لاحتياجاتك. هل يمكنني الحصول على بعض المعلومات منك؟',
-  ];
+  ], []); // Empty dependency array means this runs only once
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       addBotMessage(botMessages[0]);
     }
     // Added missing dependencies to satisfy exhaustive-deps rule
-  }, [isOpen, botMessages, messages.length]); 
+  }, [isOpen, botMessages, messages.length]); // Keep dependencies here as effect relies on them
 
   useEffect(() => {
     scrollToBottom();
