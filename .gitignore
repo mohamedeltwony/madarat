@@ -45,3 +45,6 @@ public/images/og
 .vscode/
 # Local Netlify folder
 .netlify
+
+# Editor history
+.history/
