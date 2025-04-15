@@ -22,7 +22,6 @@
   "dependencies": {
     "@apollo/client": "^3.13.5",
     "@apollo/link-retry": "^2.0.0-beta.3",
-    "@next/swc-darwin-arm64": "^14.1.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.0.3",
     "fuse.js": "^6.6.2",
