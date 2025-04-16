@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Helmet } from 'react-helmet';
 
-import { getPageByUri, getAllPages, getBreadcrumbsByUri } from 'lib/pages';
+import { getPageByUri, getAllPages } from 'lib/pages'; // Added getAllPages back
 import { WebpageJsonLd } from 'lib/json-ld';
 import { helmetSettingsFromMetadata } from 'lib/site';
 import useSite from 'hooks/use-site';
@@ -26,6 +26,7 @@ export default function Page({ page, breadcrumbs }) {
     content,
     featuredImage,
     children,
+    // Note: page.ancestors is available but not directly used in the component render
   } = page;
 
   const { metadata: siteMetadata = {} } = useSite();
@@ -46,6 +47,7 @@ export default function Page({ page, breadcrumbs }) {
   }
 
   const hasChildren = Array.isArray(children) && children.length > 0;
+  // Use the passed breadcrumbs prop which is derived from page.ancestors in getStaticProps
   const hasBreadcrumbs = Array.isArray(breadcrumbs) && breadcrumbs.length > 0;
 
   const helmetSettings = helmetSettingsFromMetadata(metadata);
@@ -134,28 +136,23 @@ export async function getStaticProps({ params = {} } = {}) {
     };
   }
 
-  // In order to show the proper breadcrumbs, we need to find the entire
-  // tree of pages. Rather than querying every segment, the query should
-  // be cached for all pages, so we can grab that and use it to create
-  // our trail
-
-  const { pages } = await getAllPages({
-    queryIncludes: 'index',
-  });
-
-  const breadcrumbs = getBreadcrumbsByUri(pageUri, pages);
+  // Breadcrumbs are now fetched within getPageByUri via the 'ancestors' field in the GraphQL query
+  // and processed in mapPageData in lib/pages.js
+  const breadcrumbs = page.ancestors || []; // Use ancestors directly, default to empty array
 
   return {
     props: {
-      page,
+      page, // page object now includes the processed 'ancestors' array
       breadcrumbs,
     },
   };
 }
 
 export async function getStaticPaths() {
+  // We still need getAllPages here to know which paths to generate.
+  // This call remains, but it's only run once at build time for path generation.
   const { pages } = await getAllPages({
-    queryIncludes: 'index',
+    queryIncludes: 'index', // Use the minimal query for paths
   });
 
   // Filter out problematic pages and the homepage

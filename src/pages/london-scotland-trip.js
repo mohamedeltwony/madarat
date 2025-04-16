@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRouter } from 'next/router'; // Import useRouter
 import SparkleButton from '@/components/UI/SparkleButton';
 import Chatbot from '@/components/Chatbot';
 import ExitPopup from '@/components/ExitPopup';
@@ -101,14 +102,73 @@ const VisaIcon = ({ size = 28 }) => (
 // --- End SVG Icons ---
 
 export default function LondonScotlandTrip() {
-  // const [isMobile, setIsMobile] = useState(false); // Commented out - unused
+  const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
-    city: '',
+    nationality: '', // Added nationality field
+    // city: '', // Removed city field
     destination: 'لندن واسكتلندا',
   });
+  const [formStarted, setFormStarted] = useState(false); // Track if form interaction started
+  const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
+  const [isPhoneValid, setIsPhoneValid] = useState(true); // Track phone validity, assume valid initially
+
+  // Helper function to send events to the backend API
+  const sendFbEvent = async (eventName, data) => {
+    // Ensure phone number doesn't include country code if API expects only digits
+    // Basic check assuming phone is just digits after potential country code removal client-side
+    const phoneDigits = data.phone?.replace(/[^0-9]/g, '');
+
+    try {
+      const response = await fetch('/api/fb-events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventName: eventName,
+          // Send standard user data fields expected by Facebook CAPI
+          userData: {
+            em: data.email || null, // Send email if available
+            ph: phoneDigits || null, // Send phone if available
+            fn: data.name ? data.name.split(' ')[0] : null, // Attempt to get first name
+            ln:
+              data.name && data.name.includes(' ')
+                ? data.name.substring(data.name.indexOf(' ') + 1)
+                : null, // Attempt to get last name
+            // Add other standard fields like ct (city), st (state), zp (zip) if you collect them
+          },
+          // Send other form fields as custom data
+          custom_data: {
+            nationality: data.nationality,
+            destination: data.destination,
+            full_name: data.name, // Send full name here if needed separately
+          },
+          eventSourceUrl: window.location.href,
+          // Include fbc/fbp if available (requires separate logic to capture these)
+          // fbc: getCookie('_fbc'),
+          // fbp: getCookie('_fbp'),
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error(
+          `Failed to send ${eventName} event to CAPI:`,
+          errorData.message
+        );
+      } else {
+        const successData = await response.json();
+        console.log(
+          `${eventName} event sent successfully via CAPI:`,
+          successData
+        );
+      }
+    } catch (error) {
+      console.error(`Error sending ${eventName} event via CAPI:`, error);
+    }
+  };
 
   // // Detect mobile devices - Commented out as isMobile state is unused
   // useEffect(() => {
@@ -128,25 +188,124 @@ export default function LondonScotlandTrip() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    let currentPhoneValid = isPhoneValid; // Keep track of validity for this change
+
+    // Update form data state
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
+
+    // Real-time phone validation
+    if (name === 'phone') {
+      setPhoneTouched(true); // Mark as touched on any change
+      const phoneRegex = /^[0-9]{9}$/; // Regex for exactly 9 digits
+      currentPhoneValid = phoneRegex.test(value);
+      setIsPhoneValid(currentPhoneValid);
+    }
+
+    // Trigger InitiateCheckout on first interaction with PII fields
+    // Only trigger if the field is valid (especially for phone)
+    if (
+      !formStarted &&
+      ['name', 'email'].includes(name) &&
+      value.trim() !== ''
+    ) {
+      setFormStarted(true);
+      console.log('Form started (name/email), triggering InitiateCheckout');
+      // Client-side Pixel event
+      if (typeof window !== 'undefined' && window.fbq) {
+        console.log('Firing Pixel InitiateCheckout');
+        window.fbq('track', 'InitiateCheckout');
+      } else {
+        console.log('fbq not available for InitiateCheckout');
+      }
+      // Server-side CAPI event (send current state + new value)
+      sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
+    } else if (!formStarted && name === 'phone' && currentPhoneValid) {
+      // Trigger for phone only if it becomes valid on first interaction
+      setFormStarted(true);
+      console.log('Form started (valid phone), triggering InitiateCheckout');
+      // Client-side Pixel event
+      if (typeof window !== 'undefined' && window.fbq) {
+        console.log('Firing Pixel InitiateCheckout');
+        window.fbq('track', 'InitiateCheckout');
+      } else {
+        console.log('fbq not available for InitiateCheckout');
+      }
+      // Server-side CAPI event (send current state + new value)
+      sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
+    } else if (
+      !formStarted &&
+      ['name', 'phone', 'email'].includes(name) &&
+      value.trim() !== ''
+    ) {
+      // Fallback original logic just in case - might be redundant now
+      setFormStarted(true);
+      console.log('Form started, triggering InitiateCheckout');
+
+      // Client-side Pixel event
+      if (typeof window !== 'undefined' && window.fbq) {
+        console.log('Firing Pixel InitiateCheckout');
+        window.fbq('track', 'InitiateCheckout');
+      } else {
+        console.log('fbq not available for InitiateCheckout');
+      }
+
+      // Server-side CAPI event (send current state + new value)
+      // We send minimal data here as not all fields might be filled yet
+      sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    // Make handleSubmit async
     e.preventDefault();
-    // Handle form submission logic here
-    alert('شكراً لك! سنتواصل معك قريباً.');
 
-    // Reset form
+    // --- Facebook Event Tracking ---
+    const eventData = {
+      content_name: 'London Scotland Trip Form',
+      content_category: 'Travel Lead',
+      value: 0, // Optional: Assign a value to the lead
+      currency: 'SAR', // Optional: Specify currency
+    };
+
+    // 1. Client-side Pixel Event
+    if (typeof window !== 'undefined' && window.fbq) {
+      console.log('Firing Pixel Lead event');
+      window.fbq('track', 'Lead', eventData);
+    } else {
+      console.log('fbq not available for Lead event');
+    }
+
+    // 2. Server-side CAPI Event
+    console.log('Sending Lead event via CAPI');
+    await sendFbEvent('Lead', formData);
+    // --- End Facebook Event Tracking ---
+
+    // Original form submission logic (REMOVED ALERT)
+    // alert('شكراً لك! سنتواصل معك قريباً.');
+
+    // --- Redirect based on nationality ---
+    const thankYouPage =
+      formData.nationality === 'مواطن'
+        ? '/thank-you-citizen'
+        : '/thank-you-resident';
+
+    console.log(`Redirecting to: ${thankYouPage}`);
+    router.push(thankYouPage);
+    // --- End Redirect ---
+
+    // Reset form (Might happen after redirect, which is usually fine)
     setFormData({
       name: '',
       phone: '',
       email: '',
-      city: '',
+      nationality: '', // Reset nationality
+      // city: '', // Removed city field
       destination: 'لندن واسكتلندا',
     });
+    setFormStarted(false); // Reset form started state
   };
 
   // Saudi cities
@@ -204,6 +363,16 @@ export default function LondonScotlandTrip() {
       <main className={styles.main}>
         {/* Hero Section */}
         <section className={styles.hero}>
+          {/* Background Image using next/image */}
+          <Image
+            src="/london-edinburgh.jpg" // Ensure this path is correct relative to public folder
+            alt="Scenic view of London and Edinburgh"
+            layout="fill"
+            objectFit="cover"
+            quality={75} // Adjust quality as needed
+            priority // Prioritize loading for LCP
+            className={styles.heroBackgroundImage} // Add a class for z-index
+          />
           <div className={styles.heroOverlay}></div>
           <div className={styles.heroContent}>
             <div className={styles.logoContainer}>
@@ -213,7 +382,7 @@ export default function LondonScotlandTrip() {
                 width={240}
                 height={75}
                 priority
-                unoptimized
+                // Removed unoptimized prop
               />
             </div>
             <h1 className={styles.title}>
@@ -255,67 +424,104 @@ export default function LondonScotlandTrip() {
             {/* Contact Form */}
             <div className={styles.formContainer}>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
-                <div className={styles.formGroup}>
-                  <label htmlFor="name">الاسم الكامل</label>
+                <div
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
+                >
                   <input
                     type="text"
                     id="name"
+                    className={styles.formInput} // Add class for styling
                     name="name"
                     value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="أدخل اسمك الكامل"
-                    required
+                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
+                    placeholder=" " // Use space for placeholder trick
+                    autoComplete="name" // Added autocomplete
+                    // required // Made optional
                   />
+                  <label htmlFor="name" className={styles.formLabel}>
+                    الاسم الكامل (اختياري)
+                  </label>
                 </div>
 
-                <div className={styles.formGroup}>
-                  <label htmlFor="phone">الجوال</label>
+                {/* Phone field needs special handling due to country code */}
+                {/* Add hasValue and inputError classes conditionally */}
+                <div
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid ? styles.inputError : ''}`}
+                >
+                  <label htmlFor="phone" className={styles.formLabel}>
+                    الجوال
+                  </label>
                   <div className={styles.phoneInput}>
-                    <span className={styles.countryCode}>+966</span>
+                    {/* Moved country code to the left */}
                     <input
                       type="tel"
                       id="phone"
+                      className={styles.formInput} // Add class for styling
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="51 234 5678"
+                      placeholder=" " // Use space for placeholder trick
                       pattern="[0-9]{9}"
                       title="يرجى إدخال رقم سعودي مكون من 9 أرقام"
                       required
+                      autoComplete="tel" // Added autocomplete
                     />
+                    <span className={styles.countryCode}>+966</span>
                   </div>
                 </div>
 
-                <div className={styles.formGroup}>
-                  <label htmlFor="email">البريد الإلكتروني</label>
+                <div
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
+                >
                   <input
                     type="email"
                     id="email"
+                    className={styles.formInput} // Add class for styling
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="أدخل بريدك الإلكتروني"
-                    required
+                    placeholder=" " // Use space for placeholder trick
+                    autoComplete="email" // Added autocomplete
+                    // required // Made optional
                   />
+                  <label htmlFor="email" className={styles.formLabel}>
+                    البريد الإلكتروني (اختياري)
+                  </label>
                 </div>
 
-                <div className={styles.formGroup}>
-                  <label htmlFor="city">اختر مدينة الانطلاق</label>
-                  <select
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <option value="">— الرجاء تحديد اختيار —</option>
-                    {cities.map((city) => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))}
-                  </select>
+                {/* Nationality Field */}
+                <div
+                  className={`${styles.formGroup} ${styles.nationalityGroup}`}
+                >
+                  {/* <label>الجنسية</label> Removed this label */}
+                  <div className={styles.radioGroup}>
+                    <label className={styles.radioLabel}>
+                      <input
+                        type="radio"
+                        name="nationality"
+                        value="مواطن"
+                        checked={formData.nationality === 'مواطن'}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <span>مواطن</span>
+                    </label>
+                    <label className={styles.radioLabel}>
+                      <input
+                        type="radio"
+                        name="nationality"
+                        value="مقيم"
+                        checked={formData.nationality === 'مقيم'}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <span>مقيم</span>
+                    </label>
+                  </div>
                 </div>
+
+                {/* Removed City Field */}
+                {/* <div className={styles.formGroup}> ... </div> */}
 
                 <div className={styles.formActions}>
                   <SparkleButton

@@ -41,11 +41,31 @@ export async function getPageByUri(uri) {
     return { page: undefined };
   }
 
-  if (!pageData?.data.page) {
-    console.log(`[pages][getPageByUri] No page data found for URI ${uri}`);
+  // Add more robust checking: Check for data object first, then log errors if present
+  if (!pageData?.data) {
+    console.error(
+      `[pages][getPageByUri] No data object returned for URI ${uri}. Response:`,
+      JSON.stringify(pageData, null, 2)
+    );
     return { page: undefined };
   }
 
+  if (!pageData.data.page) {
+    console.log(
+      `[pages][getPageByUri] No page data found for URI ${uri}. Data received:`,
+      JSON.stringify(pageData.data, null, 2)
+    );
+    // Check if there were GraphQL errors returned instead of page data
+    if (pageData.errors) {
+      console.error(
+        `[pages][getPageByUri] GraphQL errors for URI ${uri}:`,
+        JSON.stringify(pageData.errors, null, 2)
+      );
+    }
+    return { page: undefined };
+  }
+
+  // Use mapPageData to shape the data
   const page = [pageData?.data.page].map(mapPageData)[0];
 
   // If the SEO plugin is enabled, look up the data
@@ -105,7 +125,7 @@ export async function getPageByUri(uri) {
   }
 
   return {
-    page,
+    page, // This now includes the mapped ancestors
   };
 }
 
@@ -171,6 +191,20 @@ export function mapPageData(page = {}) {
     data.children = data.children.edges.map(({ node }) => node);
   }
 
+  // Map ancestors to a simpler format for breadcrumbs
+  if (data.ancestors) {
+    // The ancestors query returns nodes, so we map them directly
+    // It also returns them in the correct order (top-level parent first)
+    data.ancestors = data.ancestors.nodes.map((node) => ({
+      id: node.id,
+      title: node.title,
+      uri: node.uri,
+    }));
+  } else {
+    // Ensure ancestors is always an array, even if null/undefined from GraphQL
+    data.ancestors = [];
+  }
+
   return data;
 }
 
@@ -178,6 +212,8 @@ export function mapPageData(page = {}) {
  * getBreadcrumbsByUri
  */
 
+// This function is no longer needed if we use page.ancestors directly
+// Keeping it here for now, but it should be removed later if the refactor works.
 export function getBreadcrumbsByUri(uri, pages) {
   const breadcrumbs = [];
   const uriSegments = uri.split('/').filter((segment) => segment !== '');

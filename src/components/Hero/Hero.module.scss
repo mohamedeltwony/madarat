@@ -12,13 +12,27 @@
   overflow: hidden;
 }
 
-.backgroundImage {
+.backgroundMedia {
+  /* Renamed from backgroundImage */
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 0;
+}
+
+// Styles for the video element
+.heroVideo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: 0; // Keep same z-index as image was
+  filter: brightness(0.6); // Adjust brightness if needed
 }
 
 .overlay {

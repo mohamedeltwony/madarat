@@ -122,6 +122,20 @@ export const QUERY_PAGE_BY_URI = gql`
           }
         }
       }
+      ancestors {
+        nodes {
+          id
+          uri
+          ... on Page {
+            # Specify the type that has the title
+            title
+          }
+          # Add other types if ancestors can be Posts, etc.
+          # ... on Post {
+          #   title
+          # }
+        }
+      }
       slug
       title
       uri

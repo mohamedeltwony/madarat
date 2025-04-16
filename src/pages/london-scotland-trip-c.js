@@ -136,6 +136,16 @@ export default function LondonScotlandTripC() {
       <main className={styles.main}>
         {/* Hero Section */}
         <section className={styles.hero}>
+          {/* Background Image using next/image - REVERTED */}
+          {/* <Image
+            src="/london-edinburgh.jpg" // Ensure this path is correct relative to public folder
+            alt="Scenic view of London and Edinburgh"
+            layout="fill"
+            objectFit="cover"
+            quality={75} // Adjust quality as needed
+            priority // Prioritize loading for LCP
+            className={styles.heroBackgroundImage} // Add a class for z-index
+          /> */}
           <div className={styles.heroOverlay}></div>
           <div className={styles.heroContent}>
             <div className={styles.logoContainer}>
@@ -145,7 +155,7 @@ export default function LondonScotlandTripC() {
                 width={240}
                 height={75}
                 priority
-                unoptimized
+                unoptimized // Re-added unoptimized prop
               />
             </div>
             <h1 className={styles.title}>
