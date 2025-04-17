@@ -29,7 +29,8 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/:all*(svg|jpg|png)',
+        // Apply cache headers to more static assets
+        source: '/:all*(svg|jpg|png|webp|woff2)',
         locale: false,
         headers: [
           {

@@ -8,6 +8,7 @@ import Header from '@/components/Header';
 import Main from '@/components/Main';
 import Footer from '@/components/Footer';
 import Meta from '@/components/Meta';
+import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton'; // Import the new component
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -98,6 +99,7 @@ const Layout = ({ children }) => {
       <Header />
       <Main>{children}</Main>
       <Footer />
+      <WhatsAppButton /> {/* Add the WhatsApp button here */}
     </div>
   );
 };

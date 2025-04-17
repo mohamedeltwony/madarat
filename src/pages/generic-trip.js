@@ -2,38 +2,23 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router'; // Import useRouter
-import dynamic from 'next/dynamic'; // Import dynamic
 import SparkleButton from '@/components/UI/SparkleButton';
-// import Chatbot from '@/components/Chatbot'; // Import dynamically
-// import ExitPopup from '@/components/ExitPopup'; // Import dynamically
+import Chatbot from '@/components/Chatbot';
+import ExitPopup from '@/components/ExitPopup';
+// Reusing LondonScotland styles for now
 import styles from '@/styles/pages/LondonScotland.module.scss';
 
-// Removed SVG Icon imports
+// NOTE: Add a generic placeholder background image to:
+// public/images/placeholder-trip.jpg
 
-// import UIStyles from '@/components/UI/UI.module.scss'; // Commented out - unused
-
-// NOTE: Please add a high-quality image of London and Edinburgh to:
-// public/images/destinations/london-edinburgh.jpg
-
-// --- SVG Icons ---
-
-// Removed PlaceholderIcon and inline VisaIcon component definition
-// --- End SVG Icons ---
-
-// Dynamically import components
-const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false });
-const ExitPopup = dynamic(() => import('@/components/ExitPopup'), { ssr: false });
-
-
-export default function LondonScotlandTrip() {
+export default function GenericTrip() { // Renamed function
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
     nationality: '', // Added nationality field
-    // city: '', // Removed city field
-    destination: 'لندن واسكتلندا',
+    destination: 'وجهة مختارة', // Generic destination
   });
   const [formStarted, setFormStarted] = useState(false); // Track if form interaction started
   const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
@@ -41,8 +26,6 @@ export default function LondonScotlandTrip() {
 
   // Helper function to send events to the backend API
   const sendFbEvent = async (eventName, data) => {
-    // Ensure phone number doesn't include country code if API expects only digits
-    // Basic check assuming phone is just digits after potential country code removal client-side
     const phoneDigits = data.phone?.replace(/[^0-9]/g, '');
 
     try {
@@ -53,27 +36,21 @@ export default function LondonScotlandTrip() {
         },
         body: JSON.stringify({
           eventName: eventName,
-          // Send standard user data fields expected by Facebook CAPI
           userData: {
-            em: data.email || null, // Send email if available
-            ph: phoneDigits || null, // Send phone if available
-            fn: data.name ? data.name.split(' ')[0] : null, // Attempt to get first name
+            em: data.email || null,
+            ph: phoneDigits || null,
+            fn: data.name ? data.name.split(' ')[0] : null,
             ln:
               data.name && data.name.includes(' ')
                 ? data.name.substring(data.name.indexOf(' ') + 1)
-                : null, // Attempt to get last name
-            // Add other standard fields like ct (city), st (state), zp (zip) if you collect them
+                : null,
           },
-          // Send other form fields as custom data
           custom_data: {
             nationality: data.nationality,
             destination: data.destination,
-            full_name: data.name, // Send full name here if needed separately
+            full_name: data.name,
           },
           eventSourceUrl: window.location.href,
-          // Include fbc/fbp if available (requires separate logic to capture these)
-          // fbc: getCookie('_fbc'),
-          // fbp: getCookie('_fbp'),
         }),
       });
       if (!response.ok) {
@@ -94,43 +71,23 @@ export default function LondonScotlandTrip() {
     }
   };
 
-  // // Detect mobile devices - Commented out as isMobile state is unused
-  // useEffect(() => {
-  //   const checkIfMobile = () => {
-  //     setIsMobile(window.innerWidth < 768);
-  //   };
-
-  //   // Check on initial load
-  //   checkIfMobile();
-
-  //   // Add listener for window resize
-  //   window.addEventListener('resize', checkIfMobile);
-
-  //   // Cleanup
-  //   return () => window.removeEventListener('resize', checkIfMobile);
-  // }, []);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    let currentPhoneValid = isPhoneValid; // Keep track of validity for this change
+    let currentPhoneValid = isPhoneValid;
 
-    // Update form data state
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
 
-    // Real-time phone validation
     if (name === 'phone') {
-      setPhoneTouched(true); // Mark as touched on any change
-      // Saudi Phone Validation: Starts with 5, exactly 9 digits total
+      setPhoneTouched(true);
       const phoneRegex = /^5[0-9]{8}$/;
       currentPhoneValid = phoneRegex.test(value);
       setIsPhoneValid(currentPhoneValid);
     }
 
-    // Trigger InitiateCheckout on first interaction with PII fields
-    // Only trigger if the field is valid (especially for phone)
+    // Trigger InitiateCheckout logic (remains the same)
     if (
       !formStarted &&
       ['name', 'email'].includes(name) &&
@@ -138,75 +95,52 @@ export default function LondonScotlandTrip() {
     ) {
       setFormStarted(true);
       console.log('Form started (name/email), triggering InitiateCheckout');
-      // Client-side Pixel event
       if (typeof window !== 'undefined' && window.fbq) {
-        console.log('Firing Pixel InitiateCheckout');
         window.fbq('track', 'InitiateCheckout');
-      } else {
-        console.log('fbq not available for InitiateCheckout');
       }
-      // Server-side CAPI event (send current state + new value)
       sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
     } else if (!formStarted && name === 'phone' && currentPhoneValid) {
-      // Trigger for phone only if it becomes valid on first interaction
       setFormStarted(true);
       console.log('Form started (valid phone), triggering InitiateCheckout');
-      // Client-side Pixel event
       if (typeof window !== 'undefined' && window.fbq) {
-        console.log('Firing Pixel InitiateCheckout');
         window.fbq('track', 'InitiateCheckout');
-      } else {
-        console.log('fbq not available for InitiateCheckout');
       }
-      // Server-side CAPI event (send current state + new value)
       sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
     } else if (
       !formStarted &&
       ['name', 'phone', 'email'].includes(name) &&
       value.trim() !== ''
     ) {
-      // Fallback original logic just in case - might be redundant now
       setFormStarted(true);
       console.log('Form started, triggering InitiateCheckout');
-
-      // Client-side Pixel event
       if (typeof window !== 'undefined' && window.fbq) {
-        console.log('Firing Pixel InitiateCheckout');
         window.fbq('track', 'InitiateCheckout');
-      } else {
-        console.log('fbq not available for InitiateCheckout');
       }
-
-      // Server-side CAPI event (send current state + new value)
-      // We send minimal data here as not all fields might be filled yet
       sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
     }
   };
 
   const handleSubmit = async (e) => {
-    // Make handleSubmit async
     e.preventDefault();
 
     // --- Form Validation Check ---
     if (!isPhoneValid && formData.phone.trim() !== '') {
-      // Check if phone is invalid (and not empty)
       alert('الرجاء إدخال رقم جوال سعودي صحيح (يبدأ بـ 5 ويتكون من 9 أرقام).');
-      return; // Stop submission
+      return;
     }
-    // Ensure other required fields are filled if necessary (currently only phone has strict validation)
     if (!formData.nationality) {
       alert('الرجاء اختيار الجنسية.');
-      return; // Stop submission
+      return;
     }
+
     // --- Facebook Event Tracking ---
     const eventData = {
-      content_name: 'London Scotland Trip Form',
+      content_name: 'Generic Trip Form', // Updated form name
       content_category: 'Travel Lead',
-      value: 0, // Optional: Assign a value to the lead
-      currency: 'SAR', // Optional: Specify currency
+      value: 0,
+      currency: 'SAR',
     };
 
-    // 1. Client-side Pixel Event
     if (typeof window !== 'undefined' && window.fbq) {
       console.log('Firing Pixel Lead event');
       window.fbq('track', 'Lead', eventData);
@@ -214,8 +148,6 @@ export default function LondonScotlandTrip() {
       console.log('fbq not available for Lead event');
     }
 
-    // 2. Server-side CAPI Event
-    console.log('Sending Lead event via CAPI');
     await sendFbEvent('Lead', formData);
     // --- End Facebook Event Tracking ---
 
@@ -236,7 +168,7 @@ export default function LondonScotlandTrip() {
         const date = now.toLocaleDateString();
         const time = now.toLocaleTimeString();
 
-        formBody.append('formName', 'London Scotland Trip Form');
+        formBody.append('formName', 'Generic Trip Form'); // Updated form name
         formBody.append('pageUrl', window.location.href);
         formBody.append('timestamp', now.toISOString());
         formBody.append('date', date);
@@ -274,19 +206,18 @@ export default function LondonScotlandTrip() {
     router.push(thankYouPage);
     // --- End Redirect ---
 
-    // Reset form (Might happen after redirect, which is usually fine)
+    // Reset form
     setFormData({
       name: '',
       phone: '',
       email: '',
-      nationality: '', // Reset nationality
-      // city: '', // Removed city field
-      destination: 'لندن واسكتلندا',
+      nationality: '',
+      destination: 'وجهة مختارة', // Reset to generic destination
     });
-    setFormStarted(false); // Reset form started state
+    setFormStarted(false);
   };
 
-  // Saudi cities
+  // Saudi cities (kept for now, might need adjustment)
   const cities = [
     'الرياض',
     'جدة',
@@ -299,29 +230,16 @@ export default function LondonScotlandTrip() {
     'أخرى',
   ];
 
-  // Features data - Using updated WebP image paths
-  const features = [
-    { text: 'تأشيرة سريعة', iconPath: '/icons/تأشيرة.webp' }, // Matches file list
-    { text: 'راحة تامة', iconPath: '/icons/راحة تامة.webp' }, // Matches file list (with space)
-    { text: 'مواعيد مرنة', iconPath: '/icons/مواعيد مرنة.webp' }, // Matches file list (with space)
-    { text: 'إقامة فاخرة', iconPath: '/icons/اقامه.webp' }, // Matches file list (shortened name)
-    { text: 'فعاليات ممتعة', iconPath: '/icons/فعاليات-ممتعة.webp' }, // Matches file list (with hyphen)
-    { text: 'إطلالة نهرية', iconPath: '/icons/إطلالة نهرية.webp' }, // Matches file list (with space)
-    { text: 'أسعار تنافسية', iconPath: '/icons/اسعار-تنافسيه.webp' }, // Matches file list (with hyphen)
-    { text: 'تقييمات عالية', iconPath: '/icons/تقييمات-عالية.webp' }, // Matches file list (with hyphen)
-    { text: 'مرشد خبير', iconPath: '/icons/مرشد .webp' }, // Matches file list (with trailing space before .webp) - MIGHT CAUSE ISSUES
-    { text: 'جولات مخصصة', iconPath: '/icons/جولات-مخصصة.webp' }, // Matches file list (with hyphen)
-  ];
-
-  // Removed iconComponents map
+  // Removed specific features array
 
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>استكشف لندن واسكتلندا مع مدارات الكون | رحلة ساحرة</title>
+        {/* Generic Title and Description */}
+        <title>عرض رحلة خاصة | مدارات الكون للسياحة والسفر</title>
         <meta
           name="description"
-          content="رحلة سياحية استثنائية إلى لندن واسكتلندا مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة في بريطانيا"
+          content="اكتشف أفضل عروض السفر والرحلات السياحية مع مدارات الكون. احجز رحلتك الآن!"
         />
         <meta
           name="viewport"
@@ -334,6 +252,7 @@ export default function LondonScotlandTrip() {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        {/* Font link kept, assuming it's global */}
         <link
           href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
           rel="stylesheet"
@@ -343,15 +262,15 @@ export default function LondonScotlandTrip() {
       <main className={styles.main}>
         {/* Hero Section */}
         <section className={styles.hero}>
-          {/* Background Image using next/image */}
+          {/* Background Image using placeholder path */}
           <Image
-            src="/london-edinburgh.jpg" // Ensure this path is correct relative to public folder
-            alt="Scenic view of London and Edinburgh"
+            src="/images/placeholder-trip.jpg" // Placeholder path
+            alt="Scenic view of travel destination" // Generic alt text
             layout="fill"
             objectFit="cover"
-            quality={75} // Adjust quality as needed
-            priority // Prioritize loading for LCP
-            className={styles.heroBackgroundImage} // Add a class for z-index
+            quality={75}
+            priority
+            className={styles.heroBackgroundImage}
           />
           <div className={styles.heroOverlay}></div>
           <div className={styles.heroContent}>
@@ -362,71 +281,41 @@ export default function LondonScotlandTrip() {
                 width={240}
                 height={75}
                 priority
-                // Removed unoptimized prop
               />
             </div>
+            {/* Generic Headline and Description */}
             <h1 className={styles.title}>
-              رحلة <span className={styles.highlight}>لندن</span> و{' '}
-              <span className={styles.highlight}>اسكتلندا</span> الساحرة
+              اكتشف <span className={styles.highlight}>وجهتك</span> التالية
             </h1>
             <p className={styles.description}>
-              تجربة سفر فريدة لاستكشاف جمال الطبيعة والتاريخ والثقافة في المملكة
-              المتحدة. رحلة استثنائية تجمع بين سحر المدن العريقة وروعة الطبيعة
-              الخلابة.
+              نقدم لك تجربة سفر فريدة مصممة خصيصاً لك. استكشف أفضل الوجهات
+              السياحية معنا.
             </p>
 
-            {/* Features Section - Moved Inside Hero & Made Marquee */}
-            <div className={styles.featuresSection}>
-              <div className={styles.featuresGrid}>
-                {/* Render features twice for infinite scroll effect */}
-                {[...features, ...features].map((feature, index) => (
-                  <div
-                    key={`${feature.iconPath}-${index}`} // Use iconPath for key
-                    className={styles.featureItem}
-                  >
-                    {' '}
-                    {/* Added index to key for uniqueness */}
-                    <div className={styles.featureIcon}>
-                      {/* Render using Next.js Image component */}
-                      <Image
-                        src={feature.iconPath}
-                        alt={feature.text} // Use feature text as alt text
-                        width={60} // Updated width
-                        height={60} // Updated height
-                        unoptimized // Keep optimization disabled for these icons
-                      />
-                    </div>
-                    <p className={styles.featureText}>{feature.text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* End Features Section */}
+            {/* Removed Features Section */}
 
             {/* Contact Form */}
             <div className={styles.formContainer}>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
+                {/* Form fields remain mostly the same */}
                 <div
                   className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
                 >
                   <input
                     type="text"
                     id="name"
-                    className={styles.formInput} // Add class for styling
+                    className={styles.formInput}
                     name="name"
                     value={formData.name}
-                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
-                    placeholder=" " // Use space for placeholder trick
-                    autoComplete="name" // Added autocomplete
-                    // required // Made optional
+                    onChange={handleInputChange}
+                    placeholder=" "
+                    autoComplete="name"
                   />
                   <label htmlFor="name" className={styles.formLabel}>
                     الاسم الكامل (اختياري)
                   </label>
                 </div>
 
-                {/* Phone field needs special handling due to country code */}
-                {/* Add hasValue and inputError classes conditionally */}
                 <div
                   className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`}
                 >
@@ -434,24 +323,22 @@ export default function LondonScotlandTrip() {
                     الجوال
                   </label>
                   <div className={styles.phoneInput}>
-                    {/* Moved country code to the left */}
                     <input
                       type="tel"
                       id="phone"
-                      className={styles.formInput} // Add class for styling
+                      className={styles.formInput}
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
-                      placeholder=" " // Use space for placeholder trick
-                      autoComplete="tel" // Added autocomplete
-                      required // Made required
-                      pattern="^5[0-9]{8}$" // Added HTML pattern for native validation
-                      title="يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام" // Tooltip for pattern
+                      onBlur={() => setPhoneTouched(true)}
+                      placeholder=" "
+                      autoComplete="tel"
+                      required
+                      pattern="^5[0-9]{8}$"
+                      title="يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام"
                     />
                     <span className={styles.countryCode}>+966</span>
                   </div>
-                  {/* Updated error message display */}
                   {phoneTouched &&
                     !isPhoneValid &&
                     formData.phone.trim() !== '' && (
@@ -467,13 +354,12 @@ export default function LondonScotlandTrip() {
                   <input
                     type="email"
                     id="email"
-                    className={styles.formInput} // Add class for styling
+                    className={styles.formInput}
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    placeholder=" " // Use space for placeholder trick
-                    autoComplete="email" // Added autocomplete
-                    // required // Made optional
+                    placeholder=" "
+                    autoComplete="email"
                   />
                   <label htmlFor="email" className={styles.formLabel}>
                     البريد الإلكتروني (اختياري)
@@ -484,7 +370,6 @@ export default function LondonScotlandTrip() {
                 <div
                   className={`${styles.formGroup} ${styles.nationalityGroup}`}
                 >
-                  {/* <label>الجنسية</label> Removed this label */}
                   <div className={styles.radioGroup}>
                     <label className={styles.radioLabel}>
                       <input
@@ -511,32 +396,19 @@ export default function LondonScotlandTrip() {
                   </div>
                 </div>
 
-                {/* Removed City Field */}
-                {/* <div className={styles.formGroup}> ... </div> */}
+                {/* Removed City Dropdown */}
 
                 <div className={styles.formActions}>
-                  <SparkleButton
-                    type="submit"
-                    className={styles.mainCTA}
-                    fullWidth
-                  >
-                    اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة
-                    عندنا
-                  </SparkleButton>
+                  <SparkleButton type="submit">أرسل طلبك الآن</SparkleButton>
                 </div>
               </form>
             </div>
+            {/* End Contact Form */}
           </div>
         </section>
-
-        {/* Features section moved inside hero content */}
+        <Chatbot />
+        <ExitPopup />
       </main>
-
-      {/* Chatbot - Disabled */}
-      {/* <Chatbot /> */}
-
-      {/* Exit Intent Popup - Disabled */}
-      {/* <ExitPopup /> */}
     </div>
   );
 }
