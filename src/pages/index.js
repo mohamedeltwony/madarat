@@ -60,8 +60,8 @@ export default function Home({
         <Hero
           title="مدارات الكون"
           description="اكتشف معنا أجمل الوجهات السياحية حول العالم. نقدم لك دليلاً شاملاً للسفر والسياحة، من التخطيط للرحلة إلى أفضل الأماكن للزيارة والإقامة."
-          // backgroundImage="/images/hero-background.jpg" // Keep original image as fallback maybe?
-          backgroundVideo="https://res.cloudinary.com/dn4akr8gq/video/upload/v1744811869/samples/dance-2.mp4" // Use video prop
+          backgroundImage="/images/hero-background-new.png" // Use correct .png extension
+          // backgroundVideo="https://res.cloudinary.com/dn4akr8gq/video/upload/v1744811869/samples/dance-2.mp4" // Remove video prop
           featuredText="اكتشف المزيد"
           featuredLink="/destinations"
         />
@@ -74,21 +74,13 @@ export default function Home({
                 <p>جاري تحميل الوجهات السياحية...</p>
               </div>
             ) : (
-              <>
-                {' '}
-                {/* Use Fragment */}
-                {/* <BentoDestinations destinations={destinations} /> */}
-                <p>Destinations temporarily hidden for debugging.</p>{' '}
-                {/* Corrected comment */}
-              </>
+              <BentoDestinations destinations={destinations} />
             )}
           </Container>
         </Section>
 
         {posts.length > 0 && (
           <>
-            {/* Temporarily commented out for debugging */}
-            {/*
             <Section className={styles.morphSection}>
               <Container>
                 <h2 className={styles.sectionTitle}>Featured Stories</h2>
@@ -102,9 +94,7 @@ export default function Home({
                 <BentoPosts posts={posts.slice(3, 9)} />
               </Container>
             </Section>
-            */}
 
-            {/* Restore latestPosts section */}
             <Section className={styles.latestPosts}>
               <Container>
                 <h2 className={styles.sectionTitle}>More Adventures</h2>
@@ -112,9 +102,7 @@ export default function Home({
                   {posts.slice(9).map((post) => {
                     return (
                       <li key={post.slug}>
-                        {/* Comment out PostCard for testing */}
-                        {/* <PostCard post={post} /> */}
-                        <p>Post: {post.title}</p> {/* Placeholder */}
+                        <PostCard post={post} />
                       </li>
                     );
                   })}
@@ -128,7 +116,6 @@ export default function Home({
                 )}
               </Container>
             </Section>
-            {/* End of commented out section */}
           </>
         )}
 

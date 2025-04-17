@@ -7,6 +7,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    // unoptimized: true, // Re-enable Next.js Image Optimization globally
     domains: ['madaratalkon.com'],
     remotePatterns: [
       {
@@ -22,6 +23,9 @@ const nextConfig = {
   },
   poweredByHeader: false,
   compress: true,
+
+  // Removed webpack config for SVGR as it's no longer needed
+
   async headers() {
     return [
       {

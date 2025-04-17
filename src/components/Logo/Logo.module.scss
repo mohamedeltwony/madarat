@@ -7,8 +7,11 @@
   color: #333;
   text-decoration: none;
   padding: 0.5rem 0;
+  line-height: 0; // Prevent extra space if container has line-height
 }
 
+/* Remove text styles */
+/*
 .text {
   background: linear-gradient(45deg, #1a365d, #2c5282);
   -webkit-background-clip: text;
@@ -17,6 +20,7 @@
   font-family: var(--font-primary);
   letter-spacing: -0.02em;
 }
+*/
 
 @media (max-width: 768px) {
   .logo {

@@ -64,6 +64,12 @@ $font-family: 'Cairo', sans-serif;
   z-index: 0; // Place image above default background but below overlay
 }
 
+// Added basic styles for standard img tag used as background
+.heroBackgroundImageStd {
+  // Styles are mostly applied inline in the component now
+  // but we can keep this class for potential future overrides
+}
+
 // Overlay for better text contrast
 .heroOverlay {
   position: absolute;
@@ -103,12 +109,31 @@ $font-family: 'Cairo', sans-serif;
 // Logo container
 .logoContainer {
   margin-bottom: 2rem;
+  width: fit-content; // Allow container to size to image initially
+  margin-left: auto; // Center the container
+  margin-right: auto; // Center the container
 
-  img {
-    max-width: 100%;
-    height: auto;
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+  // Ensure logo is 240px on mobile, allow it to be its natural size otherwise
+  // Note: Next/Image handles responsiveness, this is more about container control
+  @media (max-width: 767px) { // Target mobile screens
+     // You might not need specific mobile styles if width={240} on Image is sufficient
+     // and the container doesn't restrict it. Let's ensure the container allows it.
+     max-width: 240px; // Ensure container doesn't shrink image below 240px if possible
+     width: 100%; // Allow it to shrink if viewport is < 240px
   }
+
+  img { // Target the actual img rendered by Next/Image
+    display: block; // Ensure block display
+    max-width: 100%; // Ensure image doesn't overflow container
+    height: auto; // Maintain aspect ratio
+    // width: 240px; // Setting width here might conflict with Next/Image props
+  }
+
+  // img { // Remove potentially conflicting styles for next/image
+  //   max-width: 100%;
+  //   height: auto;
+  //   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+  // }
 }
 
 // Main headline
@@ -360,6 +385,16 @@ $font-family: 'Cairo', sans-serif;
   }
 }
 
+/* Add styles for the error message */
+.errorMessage {
+  color: #e53e3e; /* Use standard red for errors */
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  text-align: right; /* Align text to the right */
+  font-family: $font-family;
+  padding-right: 0.5rem; // Add some padding for alignment
+}
+
 // Phone input with country code
 .phoneInput {
   display: flex;
@@ -513,7 +548,7 @@ $font-family: 'Cairo', sans-serif;
 }
 
 .featureIcon {
-  margin-bottom: 0.5rem; // Reduced margin
+  margin-bottom: 0; // Removed margin between icon and text
   color: $color-gold; // Keep gold for the icon color
 
   svg {

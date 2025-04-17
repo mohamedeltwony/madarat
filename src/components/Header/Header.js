@@ -1,10 +1,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router'; // Import useRouter
 import { FaSearch, FaChevronDown } from 'react-icons/fa';
 import Logo from '../Logo';
 import styles from './Header.module.scss';
 
 const Header = () => {
+  const router = useRouter(); // Get router instance
+  const { pathname } = router; // Get current pathname
+  const isHomePage = pathname === '/'; // Check if it's the homepage
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -21,8 +26,11 @@ const Header = () => {
     }
   };
 
+  // Conditionally apply a class for homepage styling
+  const headerClassName = `${styles.header} ${isHomePage ? styles.homeHeader : ''}`;
+
   return (
-    <header className={styles.header}>
+    <header className={headerClassName}>
       <div className={styles.container}>
         <div className={styles.logo}>
           <Link href="/">

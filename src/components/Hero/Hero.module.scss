@@ -1,7 +1,7 @@
 .hero {
   position: relative;
-  height: 80vh;
-  min-height: 600px;
+  height: 100vh; // Changed from 80vh
+  min-height: 600px; // Keep min-height as a fallback
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,7 +73,7 @@
   }
 }
 
-.curve {
+/* .curve { // Removed styles for the curve element
   position: absolute;
   bottom: -1px;
   left: 0;
@@ -82,7 +82,7 @@
   background: white;
   clip-path: ellipse(50% 60% at 50% 100%);
   z-index: 2;
-}
+} */
 
 .featuredButton {
   display: inline-block;

@@ -10,10 +10,68 @@ $breakpoint-large: 1200px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 1rem 0;
-  position: relative;
+  position: relative; // Default position
+  transition: background-color 0.3s ease; // Smooth transition for scroll effect later
+
+  // Styles for the homepage header variant
+  &.homeHeader {
+    background-color: transparent; // Start transparent
+    box-shadow: none; // No shadow initially
+    position: fixed; // Make it sticky
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; // Ensure it's above other content
+
+    // Style links and icons white for homepage
+    .menuLink,
+    .searchButton,
+    .menuButton span {
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); // Add shadow for readability
+    }
+
+    .menuButton span {
+       background-color: white; // Hamburger icon lines
+    }
+
+    // Adjust dropdown background for transparent header
+    .dropdown {
+       background-color: rgba(12, 68, 68, 0.9); // Dark teal semi-transparent
+       backdrop-filter: blur(5px);
+       border: 1px solid rgba(255, 255, 255, 0.1);
+
+       a {
+         color: #f0f0f0; // Light text for dropdown items
+         &:hover {
+           background-color: rgba(255, 255, 255, 0.1);
+           color: white;
+         }
+       }
+    }
+
+     // Optional: Add a background when scrolled (requires JS)
+     // &.scrolled {
+     //   background-color: white;
+     //   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+     //   .menuLink, .searchButton, .menuButton span {
+     //      color: $color-gray-900; // Revert to default color
+     //      text-shadow: none;
+     //   }
+     //   .menuButton span {
+     //      background-color: $color-gray-900;
+     //   }
+     // }
+  }
 }
 
 .container {
+  // Added styles from inspector
+  backdrop-filter: blur(3px);
+  padding: 8px; // Overrides default padding: 0 1rem; - adjust if needed
+  border-radius: 35px;
+  border: 1px solid #b2aeae;
+  // Original styles below
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -73,7 +131,7 @@ $breakpoint-large: 1200px;
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  color: $color-gray-900;
+  color: $color-gray-900; // Default color
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
@@ -146,7 +204,7 @@ $breakpoint-large: 1200px;
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: $color-gray-900;
+  color: $color-gray-900; // Default color
   cursor: pointer;
   padding: 0.5rem;
   margin-right: 1rem;
@@ -172,7 +230,7 @@ $breakpoint-large: 1200px;
     display: block;
     width: 100%;
     height: 2px;
-    background-color: $color-gray-900;
+    background-color: $color-gray-900; // Default color
     transition: all 0.3s ease;
   }
 

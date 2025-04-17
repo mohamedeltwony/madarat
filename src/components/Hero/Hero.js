@@ -66,8 +66,8 @@ const Hero = ({
         </div>
       </Container>
 
-      {/* Optional Curve/Shape */}
-      <div className={styles.curve} />
+      {/* Optional Curve/Shape Removed */}
+      {/* <div className={styles.curve} /> */}
     </div>
   );
 };

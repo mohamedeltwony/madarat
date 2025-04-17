@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import NextApp from 'next/app';
 import { ApolloProvider } from '@apollo/client'; // Import ApolloProvider
+import { Analytics } from '@vercel/analytics/react'; // Import Vercel Analytics
+import { SpeedInsights } from '@vercel/speed-insights/next'; // Import Speed Insights
 
 import { SiteContext, useSiteContext } from '../hooks/use-site';
 import { SearchProvider } from '../hooks/use-search';
@@ -97,6 +99,8 @@ function App({
         <SearchProvider>
           <NextNProgress height={4} color={variables.progressbarColor} />
           <Component {...pageProps} />
+          <Analytics /> {/* Add Vercel Analytics component */}
+          <SpeedInsights /> {/* Add Vercel Speed Insights component */}
         </SearchProvider>
       </SiteContext.Provider>
     </ApolloProvider>
