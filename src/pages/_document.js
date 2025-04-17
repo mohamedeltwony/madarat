@@ -28,7 +28,7 @@ export default class MyDocument extends Document {
             type="font/woff2"
             crossOrigin="anonymous"
           />
-           {/* Add other weights (500, 600) if heavily used above the fold */}
+          {/* Add other weights (500, 600) if heavily used above the fold */}
 
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 

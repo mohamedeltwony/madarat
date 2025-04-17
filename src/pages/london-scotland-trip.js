@@ -21,11 +21,12 @@ import styles from '@/styles/pages/LondonScotland.module.scss';
 // --- End SVG Icons ---
 
 // Dynamically import components
-const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false });
-const ExitPopup = dynamic(() => import('@/components/ExitPopup'), { ssr: false });
-
-
+const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false }); // Keep this one-line for consistency unless Prettier complains
+const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
+  ssr: false, // Format options object multi-line as requested
+});
 export default function LondonScotlandTrip() {
+  // Removed blank line above
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
     name: '',

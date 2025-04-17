@@ -1,4 +1,4 @@
-ddimport React from 'react';
+import React from 'react'; // Fixed typo and added semicolon
 import styles from './WhatsAppButton.module.scss';
 // Placeholder for an actual WhatsApp icon SVG component if you have one
 // import WhatsAppIcon from '@/Icons/whatsapp.svg';
@@ -23,3 +23,5 @@ const WhatsAppButton = () => {
 };
 
 export default WhatsAppButton;
+
+// Added blank line at EOF

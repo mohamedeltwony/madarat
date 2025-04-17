@@ -115,14 +115,16 @@ $font-family: 'Cairo', sans-serif;
 
   // Ensure logo is 240px on mobile, allow it to be its natural size otherwise
   // Note: Next/Image handles responsiveness, this is more about container control
-  @media (max-width: 767px) { // Target mobile screens
-     // You might not need specific mobile styles if width={240} on Image is sufficient
-     // and the container doesn't restrict it. Let's ensure the container allows it.
-     max-width: 240px; // Ensure container doesn't shrink image below 240px if possible
-     width: 100%; // Allow it to shrink if viewport is < 240px
+  @media (max-width: 767px) {
+    // Target mobile screens
+    // You might not need specific mobile styles if width={240} on Image is sufficient
+    // and the container doesn't restrict it. Let's ensure the container allows it.
+    max-width: 240px; // Ensure container doesn't shrink image below 240px if possible
+    width: 100%; // Allow it to shrink if viewport is < 240px
   }
 
-  img { // Target the actual img rendered by Next/Image
+  img {
+    // Target the actual img rendered by Next/Image
     display: block; // Ensure block display
     max-width: 100%; // Ensure image doesn't overflow container
     height: auto; // Maintain aspect ratio
