@@ -93,8 +93,7 @@ export default function ThankYouCitizen() {
       // 1. From Query Parameters (adjust keys if different)
       const email = router.query.email || null;
       const phone = router.query.phone || null;
-      // Add other potential params like external_id if needed
-      // const external_id = router.query.external_id || null;
+      const external_id = router.query.external_id || null; // Read external_id
 
       // --- Get Cookie Data ---
       const fbc = getCookieValue('_fbc');
@@ -109,7 +108,7 @@ export default function ThankYouCitizen() {
       if (hashedPhone) userData.ph = hashedPhone;
       if (fbc) userData.fbc = fbc;
       if (fbp) userData.fbp = fbp;
-      // if (external_id) userData.external_id = external_id; // Add if needed
+      if (external_id) userData.external_id = external_id; // Add external_id if present
 
       // --- Fire Pixel Event ---
       if (Object.keys(userData).length > 0) {

@@ -265,14 +265,25 @@ export default function LondonScotlandTrip() {
     }
     // --- End Zapier Integration ---
 
-    // --- Redirect based on nationality ---
-    const thankYouPage =
+    // --- Generate External ID ---
+    const externalId = crypto.randomUUID();
+    console.log(`Generated External ID: ${externalId}`);
+
+    // --- Construct Redirect URL with Query Params ---
+    const thankYouPageBase =
       formData.nationality === 'مواطن'
         ? '/thank-you-citizen'
         : '/thank-you-resident';
 
-    console.log(`Redirecting to: ${thankYouPage}`);
-    router.push(thankYouPage);
+    const queryParams = new URLSearchParams();
+    if (formData.email) queryParams.set('email', formData.email);
+    if (formData.phone) queryParams.set('phone', formData.phone);
+    queryParams.set('external_id', externalId); // Add external_id
+
+    const redirectUrl = `${thankYouPageBase}?${queryParams.toString()}`;
+
+    console.log(`Redirecting to: ${redirectUrl}`);
+    router.push(redirectUrl);
     // --- End Redirect ---
 
     // Reset form (Might happen after redirect, which is usually fine)
