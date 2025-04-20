@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react'; // Import useCallback
 import { useRouter } from 'next/router';
 import NextApp from 'next/app';
 import { ApolloProvider } from '@apollo/client'; // Import ApolloProvider
@@ -43,8 +43,8 @@ function App({
     document.documentElement.lang = 'ar';
   }, []);
 
-  // Helper function to get cookie value by name
-  const getCookieValue = (name) => {
+  // Helper function to get cookie value by name (wrapped in useCallback)
+  const getCookieValue = useCallback((name) => {
     if (typeof document === 'undefined') {
       return null; // Return null on server-side
     }
@@ -52,29 +52,31 @@ function App({
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
     return null;
-  };
+  }, []); // No dependencies, safe to memoize
 
-  // Function to track PageView with fbc/fbp parameters
-  const trackPageView = (eventType = 'INITIAL') => {
-    if (typeof window.fbq === 'function' && window.fbq.queue) {
-      const fbc = getCookieValue('_fbc');
-      const fbp = getCookieValue('_fbp');
-      const userData = {};
-      if (fbc) userData.fbc = fbc;
-      if (fbp) userData.fbp = fbp;
+  // Function to track PageView with fbc/fbp parameters (wrapped in useCallback)
+  const trackPageView = useCallback(
+    (eventType = 'INITIAL') => {
+      if (typeof window.fbq === 'function' && window.fbq.queue) {
+        const fbc = getCookieValue('_fbc');
+        const fbp = getCookieValue('_fbp');
+        const userData = {};
+        if (fbc) userData.fbc = fbc;
+        if (fbp) userData.fbp = fbp;
 
-      console.log(`[Pixel] Tracking ${eventType} PageView`, userData);
-      // Send PageView event with user data if available, otherwise just PageView
-      if (Object.keys(userData).length > 0) {
-        window.fbq('track', 'PageView', userData);
+        console.log(`[Pixel] Tracking ${eventType} PageView`, userData);
+        // Send PageView event with user data if available, otherwise just PageView
+        if (Object.keys(userData).length > 0) {
+          window.fbq('track', 'PageView', userData);
+        } else {
+          window.fbq('track', 'PageView');
+        }
       } else {
-        window.fbq('track', 'PageView');
+        console.log(`[Pixel] fbq not ready for ${eventType} PageView`);
       }
-    } else {
-      console.log(`[Pixel] fbq not ready for ${eventType} PageView`);
-    }
-  };
-
+    },
+    [getCookieValue] // Dependency: getCookieValue
+  );
 
   // Facebook Pixel PageView Tracking
 
@@ -82,11 +84,11 @@ function App({
   useEffect(() => {
     // Use a slightly longer delay for the initial load, hoping fbq initializes
     const initialTimer = setTimeout(() => {
-       trackPageView('INITIAL');
+      trackPageView('INITIAL');
     }, 150); // 150ms delay for initial load
 
     return () => clearTimeout(initialTimer); // Cleanup timeout
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, [trackPageView]); // Add trackPageView to dependency array
 
   // Effect for SUBSEQUENT PageViews on route change
   useEffect(() => {
@@ -110,7 +112,7 @@ function App({
         clearTimeout(router.routeChangeTimerId);
       }
     };
-  }, [router.events, router]); // Add router to dependency array
+  }, [router.events, router, trackPageView]); // Add trackPageView to dependency array
 
   return (
     // Wrap everything with ApolloProvider
