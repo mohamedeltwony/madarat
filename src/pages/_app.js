@@ -43,18 +43,46 @@ function App({
     document.documentElement.lang = 'ar';
   }, []);
 
+  // Helper function to get cookie value by name
+  const getCookieValue = (name) => {
+    if (typeof document === 'undefined') {
+      return null; // Return null on server-side
+    }
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
+  // Function to track PageView with fbc/fbp parameters
+  const trackPageView = (eventType = 'INITIAL') => {
+    if (typeof window.fbq === 'function' && window.fbq.queue) {
+      const fbc = getCookieValue('_fbc');
+      const fbp = getCookieValue('_fbp');
+      const userData = {};
+      if (fbc) userData.fbc = fbc;
+      if (fbp) userData.fbp = fbp;
+
+      console.log(`[Pixel] Tracking ${eventType} PageView`, userData);
+      // Send PageView event with user data if available, otherwise just PageView
+      if (Object.keys(userData).length > 0) {
+        window.fbq('track', 'PageView', userData);
+      } else {
+        window.fbq('track', 'PageView');
+      }
+    } else {
+      console.log(`[Pixel] fbq not ready for ${eventType} PageView`);
+    }
+  };
+
+
   // Facebook Pixel PageView Tracking
 
   // Effect for INITIAL PageView
   useEffect(() => {
     // Use a slightly longer delay for the initial load, hoping fbq initializes
     const initialTimer = setTimeout(() => {
-      if (typeof window.fbq === 'function' && window.fbq.queue) {
-        console.log('[Pixel] Tracking INITIAL PageView (after delay)');
-        window.fbq('track', 'PageView');
-      } else {
-        console.log('[Pixel] fbq not ready for initial PageView');
-      }
+       trackPageView('INITIAL');
     }, 150); // 150ms delay for initial load
 
     return () => clearTimeout(initialTimer); // Cleanup timeout
@@ -65,16 +93,8 @@ function App({
     const handleRouteChange = (url) => {
       // Use a shorter delay for subsequent navigations
       const routeChangeTimer = setTimeout(() => {
-        if (typeof window.fbq === 'function' && window.fbq.queue) {
-          console.log(
-            `[Pixel] Tracking PageView for route change: ${url} (after delay)`
-          );
-          window.fbq('track', 'PageView');
-        } else {
-          console.log(
-            `[Pixel] fbq not ready for route change PageView: ${url}`
-          );
-        }
+        console.log(`[Pixel] Route change detected: ${url}`);
+        trackPageView('SUBSEQUENT');
       }, 50); // 50ms delay
       // Store timer ID on router object dynamically for potential cleanup
       router.routeChangeTimerId = routeChangeTimer;
