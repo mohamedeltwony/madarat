@@ -50,9 +50,7 @@ export default async function handler(req, res) {
         nationality,
         destination,
       });
-      return res
-        .status(400)
-        .json({ message: 'Missing required form fields.' });
+      return res.status(400).json({ message: 'Missing required form fields.' });
     }
 
     // --- Server-side Data Extraction ---
@@ -67,7 +65,7 @@ export default async function handler(req, res) {
     } catch (uaError) {
       console.error(
         '[API /send-lead-email] Error parsing User Agent:',
-        uaError,
+        uaError
       );
       // Continue without UA data if parsing fails
     }
@@ -77,7 +75,7 @@ export default async function handler(req, res) {
     const recipientEmails = process.env.LEAD_RECIPIENT_EMAILS;
     if (!recipientEmails) {
       console.error(
-        '[API /send-lead-email] LEAD_RECIPIENT_EMAILS environment variable is not set.',
+        '[API /send-lead-email] LEAD_RECIPIENT_EMAILS environment variable is not set.'
       );
       return res.status(500).json({
         message: 'Server configuration error: Missing recipient emails.',
@@ -93,14 +91,14 @@ export default async function handler(req, res) {
 
     if (!smtpHost || !smtpPort || !smtpUser || !smtpPass) {
       console.error(
-        '[API /send-lead-email] Missing one or more SMTP environment variables (EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS).',
+        '[API /send-lead-email] Missing one or more SMTP environment variables (EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS).'
       );
       return res.status(500).json({
         message: 'Server configuration error: Missing SMTP credentials.',
       });
     }
     console.log(
-      `[API /send-lead-email] SMTP Config: Host=${smtpHost}, Port=${smtpPort}, User=${smtpUser}, Pass=****`,
+      `[API /send-lead-email] SMTP Config: Host=${smtpHost}, Port=${smtpPort}, User=${smtpUser}, Pass=****`
     );
 
     // Create transporter
@@ -127,11 +125,10 @@ export default async function handler(req, res) {
       // console.log('[API /send-lead-email] Verifying transporter connection...');
       // await transporter.verify();
       // console.log('[API /send-lead-email] Transporter connection verified.');
-
     } catch (transportError) {
       console.error(
         '[API /send-lead-email] Error creating or verifying transporter:',
-        transportError,
+        transportError
       );
       return res.status(500).json({
         message:
@@ -139,7 +136,6 @@ export default async function handler(req, res) {
         error: transportError.message,
       });
     }
-
 
     // --- Construct Enhanced Email Content ---
     const subject = `🚀 New Lead: ${formName || 'Website Form'} (${destination || 'N/A'})`;
@@ -238,20 +234,19 @@ export default async function handler(req, res) {
     const info = await transporter.sendMail(mailOptions);
     console.log(
       '[API /send-lead-email] Email sent successfully:',
-      info.messageId,
+      info.messageId
     );
     // Log accepted/rejected recipients for detailed info
     console.log('[API /send-lead-email] Accepted:', info.accepted);
     console.log('[API /send-lead-email] Rejected:', info.rejected);
     return res.status(200).json({ message: 'Lead email sent successfully.' });
-
   } catch (error) {
     console.error('[API /send-lead-email] CRITICAL ERROR:', error);
     // Log the full error object
     if (error.response) {
       console.error(
         '[API /send-lead-email] SMTP Response Error:',
-        error.response,
+        error.response
       );
     }
     if (error.code) {
@@ -260,7 +255,7 @@ export default async function handler(req, res) {
     if (error.command) {
       console.error(
         '[API /send-lead-email] SMTP Error Command:',
-        error.command,
+        error.command
       );
     }
     return res
