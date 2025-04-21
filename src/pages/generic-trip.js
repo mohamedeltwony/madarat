@@ -24,6 +24,7 @@ export default function GenericTrip() {
   const [formStarted, setFormStarted] = useState(false); // Track if form interaction started
   const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
   const [isPhoneValid, setIsPhoneValid] = useState(true); // Track phone validity, assume valid initially
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   // Helper function to send events to the backend API
   const sendFbEvent = async (eventName, data) => {
@@ -121,8 +122,34 @@ export default function GenericTrip() {
     }
   };
 
+  // Helper function to get cookie by name
+  const getCookie = (name) => {
+    if (typeof document === 'undefined') return null; // Guard for SSR
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isLoading) return; // Prevent multiple submissions
+    setIsLoading(true); // Start loading
+
+    // --- Collect Additional Client Data ---
+    const queryParams = new URLSearchParams(window.location.search);
+    const clientData = {
+      utm_source: queryParams.get('utm_source'),
+      utm_medium: queryParams.get('utm_medium'),
+      utm_campaign: queryParams.get('utm_campaign'),
+      utm_term: queryParams.get('utm_term'),
+      utm_content: queryParams.get('utm_content'),
+      screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
+      fbc: getCookie('_fbc'),
+      fbp: getCookie('_fbp'),
+    };
+    console.log('Collected Client Data:', clientData);
+    // --- End Collect Additional Client Data ---
 
     // --- Form Validation Check ---
     if (!isPhoneValid && formData.phone.trim() !== '') {
@@ -197,6 +224,40 @@ export default function GenericTrip() {
     }
     // --- End Zapier Integration ---
 
+    // --- Send Lead Email via API Route ---
+    try {
+      console.log('Sending form data to email API route');
+      const emailResponse = await fetch('/api/send-lead-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          nationality: formData.nationality,
+          destination: formData.destination,
+          formName: 'Generic Trip Form', // Match form name if needed
+          pageUrl: window.location.href,
+          // Spread the collected client data
+          ...clientData,
+        }),
+      });
+
+      if (!emailResponse.ok) {
+        const errorData = await emailResponse.json();
+        console.error('Failed to send lead email:', errorData.message);
+        // Optional: Display a user-friendly error message, but don't block redirect
+      } else {
+        console.log('Lead email sent successfully via API route');
+      }
+    } catch (error) {
+      console.error('Error calling send-lead-email API:', error);
+      // Optional: Display a user-friendly error message, but don't block redirect
+    }
+    // --- End Send Lead Email ---
+
     // --- Redirect based on nationality ---
     const thankYouPage =
       formData.nationality === 'مواطن'
@@ -204,6 +265,7 @@ export default function GenericTrip() {
         : '/thank-you-resident';
 
     console.log(`Redirecting to: ${thankYouPage}`);
+    // No need to set isLoading false here, page is changing
     router.push(thankYouPage);
     // --- End Redirect ---
 
@@ -400,7 +462,9 @@ export default function GenericTrip() {
                 {/* Removed City Dropdown */}
 
                 <div className={styles.formActions}>
-                  <SparkleButton type="submit">أرسل طلبك الآن</SparkleButton>
+                  <SparkleButton type="submit" disabled={isLoading}>
+                    {isLoading ? '🚀 جاري الإرسال...' : 'أرسل طلبك الآن'}
+                  </SparkleButton>
                 </div>
               </form>
             </div>

@@ -39,6 +39,7 @@ export default function LondonScotlandTrip() {
   const [formStarted, setFormStarted] = useState(false); // Track if form interaction started
   const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
   const [isPhoneValid, setIsPhoneValid] = useState(true); // Track phone validity, assume valid initially
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   // Helper function to send events to the backend API
   const sendFbEvent = async (eventName, data) => {
@@ -184,9 +185,35 @@ export default function LondonScotlandTrip() {
     }
   };
 
+  // Helper function to get cookie by name
+  const getCookie = (name) => {
+    if (typeof document === 'undefined') return null; // Guard for SSR
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     // Make handleSubmit async
     e.preventDefault();
+    if (isLoading) return; // Prevent multiple submissions
+    setIsLoading(true); // Start loading
+
+    // --- Collect Additional Client Data ---
+    const queryParams = new URLSearchParams(window.location.search);
+    const clientData = {
+      utm_source: queryParams.get('utm_source'),
+      utm_medium: queryParams.get('utm_medium'),
+      utm_campaign: queryParams.get('utm_campaign'),
+      utm_term: queryParams.get('utm_term'),
+      utm_content: queryParams.get('utm_content'),
+      screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
+      fbc: getCookie('_fbc'),
+      fbp: getCookie('_fbp'),
+    };
+    console.log('Collected Client Data:', clientData);
+    // --- End Collect Additional Client Data ---
 
     // --- Form Validation Check ---
     if (!isPhoneValid && formData.phone.trim() !== '') {
@@ -207,17 +234,16 @@ export default function LondonScotlandTrip() {
       currency: 'SAR', // Optional: Specify currency
     };
 
-    // 1. Client-side Pixel Event
-    if (typeof window !== 'undefined' && window.fbq) {
-      console.log('Firing Pixel Lead event');
-      window.fbq('track', 'Lead', eventData);
-    } else {
-      console.log('fbq not available for Lead event');
-    }
+    // 1. Client-side Pixel Event - REMOVED to prevent double firing
+    // The Lead event is now fired only on the thank-you-citizen page load.
 
-    // 2. Server-side CAPI Event
-    console.log('Sending Lead event via CAPI');
-    await sendFbEvent('Lead', formData);
+    // 2. Server-side CAPI Event (Conditional based on nationality)
+    if (formData.nationality === 'مواطن') {
+      console.log('Sending Lead event via CAPI for citizen');
+      await sendFbEvent('Lead', formData);
+    } else {
+      console.log('Skipping CAPI Lead event for non-citizen');
+    }
     // --- End Facebook Event Tracking ---
 
     // --- Zapier Webhook Integration ---
@@ -265,6 +291,40 @@ export default function LondonScotlandTrip() {
     }
     // --- End Zapier Integration ---
 
+    // --- Send Lead Email via API Route ---
+    try {
+      console.log('Sending form data to email API route');
+      const emailResponse = await fetch('/api/send-lead-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          nationality: formData.nationality,
+          destination: formData.destination, // Specific destination for this page
+          formName: 'London Scotland Trip Form', // Specific form name
+          pageUrl: window.location.href,
+          // Spread the collected client data
+          ...clientData,
+        }),
+      });
+
+      if (!emailResponse.ok) {
+        const errorData = await emailResponse.json();
+        console.error('Failed to send lead email:', errorData.message);
+        // Optional: Display a user-friendly error message, but don't block redirect
+      } else {
+        console.log('Lead email sent successfully via API route');
+      }
+    } catch (error) {
+      console.error('Error calling send-lead-email API:', error);
+      // Optional: Display a user-friendly error message, but don't block redirect
+    }
+    // --- End Send Lead Email ---
+
     // --- Generate External ID ---
     const externalId = crypto.randomUUID();
     console.log(`Generated External ID: ${externalId}`);
@@ -275,14 +335,15 @@ export default function LondonScotlandTrip() {
         ? '/thank-you-citizen'
         : '/thank-you-resident';
 
-    const queryParams = new URLSearchParams();
-    if (formData.email) queryParams.set('email', formData.email);
-    if (formData.phone) queryParams.set('phone', formData.phone);
-    queryParams.set('external_id', externalId); // Add external_id
+    const redirectQueryParams = new URLSearchParams(); // Renamed variable
+    if (formData.email) redirectQueryParams.set('email', formData.email);
+    if (formData.phone) redirectQueryParams.set('phone', formData.phone);
+    redirectQueryParams.set('external_id', externalId); // Add external_id
 
-    const redirectUrl = `${thankYouPageBase}?${queryParams.toString()}`;
+    const redirectUrl = `${thankYouPageBase}?${redirectQueryParams.toString()}`; // Use renamed variable
 
     console.log(`Redirecting to: ${redirectUrl}`);
+    // No need to set isLoading false here, page is changing
     router.push(redirectUrl);
     // --- End Redirect ---
 
@@ -531,9 +592,12 @@ export default function LondonScotlandTrip() {
                     type="submit"
                     className={styles.mainCTA}
                     fullWidth
+                    disabled={isLoading} // Add disabled attribute
                   >
-                    اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة
-                    عندنا
+                    {/* Change button text based on loading state */}
+                    {isLoading
+                      ? '🚀 جاري الإرسال...'
+                      : 'اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا'}
                   </SparkleButton>
                 </div>
               </form>
