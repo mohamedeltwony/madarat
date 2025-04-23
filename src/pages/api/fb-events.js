@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { eventName, userData, eventSourceUrl } = req.body;
+  const { eventName, userData, eventSourceUrl, eventId } = req.body; // Add eventId
   const pixelId = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
   const accessToken = process.env.FACEBOOK_ACCESS_TOKEN;
 
@@ -70,8 +70,8 @@ export default async function handler(req, res) {
     action_source: 'website',
     user_data: preparedUserData,
     custom_data: customData,
-    // Optional: Add event_id for deduplication if needed
-    // event_id: `${eventName}_${Date.now()}`
+    // Add event_id for deduplication if it exists in the request
+    ...(eventId && { event_id: eventId }),
   };
 
   const payload = {

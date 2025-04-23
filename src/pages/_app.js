@@ -54,10 +54,55 @@ function App({
     return null;
   }, []); // No dependencies, safe to memoize
 
+  // Function to send PageView via CAPI (New Function)
+  const sendPageViewCAPI = useCallback(
+    async (eventId, userData) => {
+      // Don't send sensitive data like email/phone for PageView from client
+      const capiUserData = {
+        fbc: userData.fbc || null,
+        fbp: userData.fbp || null,
+      };
+      // Remove nulls
+      Object.keys(capiUserData).forEach((key) => {
+        if (capiUserData[key] === null) {
+          delete capiUserData[key];
+        }
+      });
+
+      try {
+        const response = await fetch('/api/fb-events', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            eventName: 'PageView',
+            eventId: eventId, // Pass the generated eventId
+            userData: capiUserData, // Send only fbc/fbp
+            eventSourceUrl: window.location.href,
+            // custom_data can be added if needed for PageView
+          }),
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Failed to send PageView event to CAPI:', errorData.message);
+        } else {
+          const successData = await response.json();
+          console.log('PageView event sent successfully via CAPI:', successData);
+        }
+      } catch (error) {
+        console.error('Error sending PageView event via CAPI:', error);
+      }
+    },
+    [] // No dependencies needed for this specific CAPI call structure
+  );
+
+
   // Function to track PageView with fbc/fbp parameters (wrapped in useCallback)
   const trackPageView = useCallback(
     (eventType = 'INITIAL') => {
       if (typeof window.fbq === 'function' && window.fbq.queue) {
+        const eventId = crypto.randomUUID(); // Generate unique event ID for PageView
         const fbc = getCookieValue('_fbc');
         const fbp = getCookieValue('_fbp');
         const userData = {};
@@ -66,16 +111,24 @@ function App({
 
         console.log(`[Pixel] Tracking ${eventType} PageView`, userData);
         // Send PageView event with user data if available, otherwise just PageView
+        // ALWAYS include eventID for deduplication
         if (Object.keys(userData).length > 0) {
-          window.fbq('track', 'PageView', userData);
+          window.fbq('track', 'PageView', userData, { eventID: eventId });
         } else {
-          window.fbq('track', 'PageView');
+          window.fbq('track', 'PageView', {}, { eventID: eventId }); // Send empty object if no user data
         }
+
+        // Send CAPI event ONLY for the initial page load to help with matching
+        if (eventType === 'INITIAL') {
+          console.log('[CAPI] Sending INITIAL PageView via CAPI');
+          sendPageViewCAPI(eventId, userData); // Pass eventId and userData (fbc/fbp)
+        }
+
       } else {
         console.log(`[Pixel] fbq not ready for ${eventType} PageView`);
       }
     },
-    [getCookieValue] // Dependency: getCookieValue
+    [getCookieValue, sendPageViewCAPI] // Add sendPageViewCAPI dependency
   );
 
   // Facebook Pixel PageView Tracking

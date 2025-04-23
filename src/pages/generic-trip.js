@@ -27,7 +27,7 @@ export default function GenericTrip() {
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   // Helper function to send events to the backend API
-  const sendFbEvent = async (eventName, data) => {
+  const sendFbEvent = async (eventName, data, eventId = null) => { // Add eventId parameter
     const phoneDigits = data.phone?.replace(/[^0-9]/g, '');
 
     try {
@@ -38,6 +38,7 @@ export default function GenericTrip() {
         },
         body: JSON.stringify({
           eventName: eventName,
+          eventId: eventId, // Include eventId in the request body
           userData: {
             em: data.email || null,
             ph: phoneDigits || null,
@@ -96,29 +97,32 @@ export default function GenericTrip() {
       value.trim() !== ''
     ) {
       setFormStarted(true);
+      const eventId = crypto.randomUUID(); // Generate unique event ID
       console.log('Form started (name/email), triggering InitiateCheckout');
       if (typeof window !== 'undefined' && window.fbq) {
-        window.fbq('track', 'InitiateCheckout');
+        window.fbq('track', 'InitiateCheckout', {}, { eventID: eventId }); // Add eventID
       }
-      sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
+      sendFbEvent('InitiateCheckout', { ...formData, [name]: value }, eventId); // Pass eventId
     } else if (!formStarted && name === 'phone' && currentPhoneValid) {
       setFormStarted(true);
+      const eventId = crypto.randomUUID(); // Generate unique event ID
       console.log('Form started (valid phone), triggering InitiateCheckout');
       if (typeof window !== 'undefined' && window.fbq) {
-        window.fbq('track', 'InitiateCheckout');
+        window.fbq('track', 'InitiateCheckout', {}, { eventID: eventId }); // Add eventID
       }
-      sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
+      sendFbEvent('InitiateCheckout', { ...formData, [name]: value }, eventId); // Pass eventId
     } else if (
       !formStarted &&
       ['name', 'phone', 'email'].includes(name) &&
       value.trim() !== ''
     ) {
       setFormStarted(true);
+      const eventId = crypto.randomUUID(); // Generate unique event ID
       console.log('Form started, triggering InitiateCheckout');
       if (typeof window !== 'undefined' && window.fbq) {
-        window.fbq('track', 'InitiateCheckout');
+        window.fbq('track', 'InitiateCheckout', {}, { eventID: eventId }); // Add eventID
       }
-      sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
+      sendFbEvent('InitiateCheckout', { ...formData, [name]: value }, eventId); // Pass eventId
     }
   };
 
@@ -161,6 +165,10 @@ export default function GenericTrip() {
       return;
     }
 
+    // --- Generate Event ID for Lead ---
+    const leadEventId = crypto.randomUUID();
+    console.log(`Generated Lead Event ID: ${leadEventId}`);
+
     // --- Facebook Event Tracking ---
     const eventData = {
       content_name: 'Generic Trip Form', // Updated form name
@@ -169,14 +177,16 @@ export default function GenericTrip() {
       currency: 'SAR',
     };
 
+    // Fire Pixel Event with eventID
     if (typeof window !== 'undefined' && window.fbq) {
       console.log('Firing Pixel Lead event');
-      window.fbq('track', 'Lead', eventData);
+      window.fbq('track', 'Lead', eventData, { eventID: leadEventId }); // Add eventID
     } else {
       console.log('fbq not available for Lead event');
     }
 
-    await sendFbEvent('Lead', formData);
+    // Fire CAPI Event with eventId
+    await sendFbEvent('Lead', formData, leadEventId); // Pass eventId
     // --- End Facebook Event Tracking ---
 
     // --- Zapier Webhook Integration ---
@@ -264,9 +274,17 @@ export default function GenericTrip() {
         ? '/thank-you-citizen'
         : '/thank-you-resident';
 
-    console.log(`Redirecting to: ${thankYouPage}`);
+    // Add eventId to redirect URL
+    const redirectQueryParams = new URLSearchParams();
+    if (formData.email) redirectQueryParams.set('email', formData.email); // Keep existing params if needed
+    if (formData.phone) redirectQueryParams.set('phone', formData.phone);
+    redirectQueryParams.set('eventId', leadEventId); // Add eventId
+
+    const redirectUrl = `${thankYouPage}?${redirectQueryParams.toString()}`;
+
+    console.log(`Redirecting to: ${redirectUrl}`);
     // No need to set isLoading false here, page is changing
-    router.push(thankYouPage);
+    router.push(redirectUrl);
     // --- End Redirect ---
 
     // Reset form

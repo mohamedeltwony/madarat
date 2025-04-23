@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic'; // Import dynamic
 import SparkleButton from '@/components/UI/SparkleButton';
 // import Chatbot from '@/components/Chatbot'; // Import dynamically
 // import ExitPopup from '@/components/ExitPopup'; // Import dynamically
-import styles from '@/styles/pages/LondonScotland.module.scss';
+import styles from '@/styles/pages/LondonScotland.module.scss'; // Use LondonScotland styles for the marquee
 
 // Removed SVG Icon imports
 
@@ -25,7 +25,7 @@ const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false }); /
 const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
   ssr: false, // Format options object multi-line as requested
 });
-export default function LondonScotlandTrip() {
+export default function CruiseItalySpainFrance() { // Updated component name
   // Removed blank line above
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
@@ -34,12 +34,11 @@ export default function LondonScotlandTrip() {
     email: '',
     nationality: '', // Added nationality field
     // city: '', // Removed city field
-    destination: 'لندن واسكتلندا',
+    destination: 'كروز: إيطاليا، إسبانيا، فرنسا', // Updated destination
   });
   const [formStarted, setFormStarted] = useState(false); // Track if form interaction started
   const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
   const [isPhoneValid, setIsPhoneValid] = useState(true); // Track phone validity, assume valid initially
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   // Helper function to send events to the backend API
   const sendFbEvent = async (eventName, data, eventId = null) => { // Add eventId parameter
@@ -189,35 +188,9 @@ export default function LondonScotlandTrip() {
     }
   };
 
-  // Helper function to get cookie by name
-  const getCookie = (name) => {
-    if (typeof document === 'undefined') return null; // Guard for SSR
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
-  };
-
   const handleSubmit = async (e) => {
     // Make handleSubmit async
     e.preventDefault();
-    if (isLoading) return; // Prevent multiple submissions
-    setIsLoading(true); // Start loading
-
-    // --- Collect Additional Client Data ---
-    const queryParams = new URLSearchParams(window.location.search);
-    const clientData = {
-      utm_source: queryParams.get('utm_source'),
-      utm_medium: queryParams.get('utm_medium'),
-      utm_campaign: queryParams.get('utm_campaign'),
-      utm_term: queryParams.get('utm_term'),
-      utm_content: queryParams.get('utm_content'),
-      screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
-      fbc: getCookie('_fbc'),
-      fbp: getCookie('_fbp'),
-    };
-    console.log('Collected Client Data:', clientData);
-    // --- End Collect Additional Client Data ---
 
     // --- Form Validation Check ---
     if (!isPhoneValid && formData.phone.trim() !== '') {
@@ -232,15 +205,13 @@ export default function LondonScotlandTrip() {
     }
     // --- Facebook Event Tracking ---
     const eventData = {
-      content_name: 'London Scotland Trip Form',
-      content_category: 'Travel Lead',
-      value: 0, // Optional: Assign a value to the lead
+      content_name: 'Cruise Italy Spain France Form', // Updated content name
+      content_category: 'Travel Lead', // Keep category generic or specify 'Cruise Lead'
+      value: 3700, // Updated value based on offer price
       currency: 'SAR', // Optional: Specify currency
     };
 
     // --- Generate Event ID for Lead ---
-    // Generate eventId regardless of nationality, as it's needed for the redirect
-    // and potentially for the pixel event on the thank-you page.
     const leadEventId = crypto.randomUUID();
     console.log(`Generated Lead Event ID: ${leadEventId}`);
 
@@ -276,7 +247,7 @@ export default function LondonScotlandTrip() {
         const date = now.toLocaleDateString();
         const time = now.toLocaleTimeString();
 
-        formBody.append('formName', 'London Scotland Trip Form');
+        formBody.append('formName', 'Cruise Italy Spain France Form'); // Updated form name for Zapier
         formBody.append('pageUrl', window.location.href);
         formBody.append('timestamp', now.toISOString());
         formBody.append('date', date);
@@ -304,40 +275,6 @@ export default function LondonScotlandTrip() {
     }
     // --- End Zapier Integration ---
 
-    // --- Send Lead Email via API Route ---
-    try {
-      console.log('Sending form data to email API route');
-      const emailResponse = await fetch('/api/send-lead-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          nationality: formData.nationality,
-          destination: formData.destination, // Specific destination for this page
-          formName: 'London Scotland Trip Form', // Specific form name
-          pageUrl: window.location.href,
-          // Spread the collected client data
-          ...clientData,
-        }),
-      });
-
-      if (!emailResponse.ok) {
-        const errorData = await emailResponse.json();
-        console.error('Failed to send lead email:', errorData.message);
-        // Optional: Display a user-friendly error message, but don't block redirect
-      } else {
-        console.log('Lead email sent successfully via API route');
-      }
-    } catch (error) {
-      console.error('Error calling send-lead-email API:', error);
-      // Optional: Display a user-friendly error message, but don't block redirect
-    }
-    // --- End Send Lead Email ---
-
     // --- Generate External ID ---
     const externalId = crypto.randomUUID();
     console.log(`Generated External ID: ${externalId}`);
@@ -348,16 +285,15 @@ export default function LondonScotlandTrip() {
         ? '/thank-you-citizen'
         : '/thank-you-resident';
 
-    const redirectQueryParams = new URLSearchParams(); // Renamed variable
-    if (formData.email) redirectQueryParams.set('email', formData.email);
-    if (formData.phone) redirectQueryParams.set('phone', formData.phone);
-    redirectQueryParams.set('external_id', externalId); // Add external_id
-    redirectQueryParams.set('eventId', leadEventId); // Add eventId for deduplication on thank-you page
+    const queryParams = new URLSearchParams();
+    if (formData.email) queryParams.set('email', formData.email);
+    if (formData.phone) queryParams.set('phone', formData.phone);
+    queryParams.set('external_id', externalId); // Add external_id
+    queryParams.set('eventId', leadEventId); // Add eventId for deduplication on thank-you page
 
-    const redirectUrl = `${thankYouPageBase}?${redirectQueryParams.toString()}`; // Use renamed variable
+    const redirectUrl = `${thankYouPageBase}?${queryParams.toString()}`;
 
     console.log(`Redirecting to: ${redirectUrl}`);
-    // No need to set isLoading false here, page is changing
     router.push(redirectUrl);
     // --- End Redirect ---
 
@@ -368,7 +304,7 @@ export default function LondonScotlandTrip() {
       email: '',
       nationality: '', // Reset nationality
       // city: '', // Removed city field
-      destination: 'لندن واسكتلندا',
+      destination: 'كروز: إيطاليا، إسبانيا، فرنسا', // Updated destination on reset
     });
     setFormStarted(false); // Reset form started state
   };
@@ -386,18 +322,18 @@ export default function LondonScotlandTrip() {
     'أخرى',
   ];
 
-  // Features data - Using updated WebP image paths
+  // Features data - Copied from London/Scotland page
   const features = [
-    { text: 'تأشيرة سريعة', iconPath: '/icons/تأشيرة.webp' }, // Matches file list
-    { text: 'راحة تامة', iconPath: '/icons/راحة تامة.webp' }, // Matches file list (with space)
-    { text: 'مواعيد مرنة', iconPath: '/icons/مواعيد مرنة.webp' }, // Matches file list (with space)
-    { text: 'إقامة فاخرة', iconPath: '/icons/اقامه.webp' }, // Matches file list (shortened name)
-    { text: 'فعاليات ممتعة', iconPath: '/icons/فعاليات-ممتعة.webp' }, // Matches file list (with hyphen)
-    { text: 'إطلالة نهرية', iconPath: '/icons/إطلالة نهرية.webp' }, // Matches file list (with space)
-    { text: 'أسعار تنافسية', iconPath: '/icons/اسعار-تنافسيه.webp' }, // Matches file list (with hyphen)
-    { text: 'تقييمات عالية', iconPath: '/icons/تقييمات-عالية.webp' }, // Matches file list (with hyphen)
-    { text: 'مرشد خبير', iconPath: '/icons/مرشد .webp' }, // Matches file list (with trailing space before .webp) - MIGHT CAUSE ISSUES
-    { text: 'جولات مخصصة', iconPath: '/icons/جولات-مخصصة.webp' }, // Matches file list (with hyphen)
+    { text: 'تأشيرة سريعة', iconPath: '/icons/تأشيرة.webp' },
+    { text: 'راحة تامة', iconPath: '/icons/راحة تامة.webp' },
+    { text: 'مواعيد مرنة', iconPath: '/icons/مواعيد مرنة.webp' },
+    { text: 'إقامة فاخرة', iconPath: '/icons/اقامه.webp' },
+    { text: 'فعاليات ممتعة', iconPath: '/icons/فعاليات-ممتعة.webp' },
+    { text: 'إطلالة نهرية', iconPath: '/icons/إطلالة نهرية.webp' },
+    { text: 'أسعار تنافسية', iconPath: '/icons/اسعار-تنافسيه.webp' },
+    { text: 'تقييمات عالية', iconPath: '/icons/تقييمات-عالية.webp' },
+    { text: 'مرشد خبير', iconPath: '/icons/مرشد .webp' },
+    { text: 'جولات مخصصة', iconPath: '/icons/جولات-مخصصة.webp' },
   ];
 
   // Removed iconComponents map
@@ -405,10 +341,10 @@ export default function LondonScotlandTrip() {
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>استكشف لندن واسكتلندا مع مدارات الكون | رحلة ساحرة</title>
+        <title>عرض كروز الأحلام: إيطاليا، إسبانيا، فرنسا | مدارات الكون</title> {/* Updated Title */}
         <meta
           name="description"
-          content="رحلة سياحية استثنائية إلى لندن واسكتلندا مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة في بريطانيا"
+          content="انطلق في رحلة بحرية لا تُنسى لمدة 8 أيام عبر إيطاليا وإسبانيا وفرنسا مع مدارات الكون. إقامة ووجبات وترفيه بـ 3700 ريال فقط!" // Updated Description
         />
         <meta
           name="viewport"
@@ -431,9 +367,10 @@ export default function LondonScotlandTrip() {
         {/* Hero Section */}
         <section className={styles.hero}>
           {/* Background Image using next/image */}
+          {/* TODO: Replace with actual cruise image path */}
           <Image
-            src="/london-edinburgh.jpg" // Ensure this path is correct relative to public folder
-            alt="Scenic view of London and Edinburgh"
+            src="/images/cruise-background.jpg" // Placeholder - UPDATE THIS PATH
+            alt="كروز بحري فاخر في البحر المتوسط" // Updated Alt Text
             layout="fill"
             objectFit="cover"
             quality={75} // Adjust quality as needed
@@ -453,16 +390,15 @@ export default function LondonScotlandTrip() {
               />
             </div>
             <h1 className={styles.title}>
-              رحلة <span className={styles.highlight}>لندن</span> و{' '}
-              <span className={styles.highlight}>اسكتلندا</span> الساحرة
-            </h1>
+              كروز الأحلام: <span className={styles.highlight}>إيطاليا</span>،{' '}
+              <span className={styles.highlight}>إسبانيا</span>،{' '}
+              <span className={styles.highlight}>فرنسا</span>
+            </h1> {/* Updated Headline */}
             <p className={styles.description}>
-              تجربة سفر فريدة لاستكشاف جمال الطبيعة والتاريخ والثقافة في المملكة
-              المتحدة. رحلة استثنائية تجمع بين سحر المدن العريقة وروعة الطبيعة
-              الخلابة.
-            </p>
+              انطلق في مغامرة بحرية استثنائية لمدة 8 أيام و 7 ليالي بسعر يبدأ من 3700 ريال للشخص. استمتع بالإقامة الفاخرة، الوجبات الشهية، والمرافق الترفيهية على متن الكروز.
+            </p> {/* Updated Description */}
 
-            {/* Features Section - Moved Inside Hero & Made Marquee */}
+            {/* Features Section - Copied from London/Scotland page */}
             <div className={styles.featuresSection}>
               <div className={styles.featuresGrid}>
                 {/* Render features twice for infinite scroll effect */}
@@ -598,35 +534,22 @@ export default function LondonScotlandTrip() {
                   </div>
                 </div>
 
-                {/* Removed City Field */}
-                {/* <div className={styles.formGroup}> ... </div> */}
+                {/* Removed City Dropdown */}
 
-                <div className={styles.formActions}>
-                  <SparkleButton
-                    type="submit"
-                    className={styles.mainCTA}
-                    fullWidth
-                    disabled={isLoading} // Add disabled attribute
-                  >
-                    {/* Change button text based on loading state */}
-                    {isLoading
-                      ? '🚀 جاري الإرسال...'
-                      : 'اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا'}
-                  </SparkleButton>
-                </div>
+                <SparkleButton type="submit" className={styles.submitButton}>
+                  احجز مكانك الآن
+                </SparkleButton>
               </form>
             </div>
+            {/* End Contact Form */}
           </div>
         </section>
+        {/* End Hero Section */}
 
-        {/* Features section moved inside hero content */}
+        {/* Dynamically loaded components */}
+        <Chatbot />
+        <ExitPopup />
       </main>
-
-      {/* Chatbot - Disabled */}
-      {/* <Chatbot /> */}
-
-      {/* Exit Intent Popup - Disabled */}
-      {/* <ExitPopup /> */}
     </div>
   );
 }

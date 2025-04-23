@@ -6,17 +6,12 @@ import dynamic from 'next/dynamic'; // Import dynamic
 import SparkleButton from '@/components/UI/SparkleButton';
 // import Chatbot from '@/components/Chatbot'; // Import dynamically
 // import ExitPopup from '@/components/ExitPopup'; // Import dynamically
-import styles from '@/styles/pages/LondonScotland.module.scss';
+import styles from '@/styles/pages/LondonScotland.module.scss'; // Keep existing style for now, suggest creating a new one later
 
-// Removed SVG Icon imports
-
-// import UIStyles from '@/components/UI/UI.module.scss'; // Commented out - unused
-
-// NOTE: Please add a high-quality image of London and Edinburgh to:
-// public/images/destinations/london-edinburgh.jpg
+// NOTE: Please add a high-quality image for Turkey to:
+// public/images/destinations/turkey-hero.jpg (or similar) and update the path below
 
 // --- SVG Icons ---
-
 // Removed PlaceholderIcon and inline VisaIcon component definition
 // --- End SVG Icons ---
 
@@ -25,7 +20,7 @@ const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false }); /
 const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
   ssr: false, // Format options object multi-line as requested
 });
-export default function LondonScotlandTrip() {
+export default function TurkeyTrip() { // Renamed component
   // Removed blank line above
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
@@ -34,7 +29,7 @@ export default function LondonScotlandTrip() {
     email: '',
     nationality: '', // Added nationality field
     // city: '', // Removed city field
-    destination: 'لندن واسكتلندا',
+    destination: 'تركيا', // Updated destination
   });
   const [formStarted, setFormStarted] = useState(false); // Track if form interaction started
   const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
@@ -223,24 +218,24 @@ export default function LondonScotlandTrip() {
     if (!isPhoneValid && formData.phone.trim() !== '') {
       // Check if phone is invalid (and not empty)
       alert('الرجاء إدخال رقم جوال سعودي صحيح (يبدأ بـ 5 ويتكون من 9 أرقام).');
+      setIsLoading(false); // Stop loading on validation error
       return; // Stop submission
     }
     // Ensure other required fields are filled if necessary (currently only phone has strict validation)
     if (!formData.nationality) {
       alert('الرجاء اختيار الجنسية.');
+      setIsLoading(false); // Stop loading on validation error
       return; // Stop submission
     }
     // --- Facebook Event Tracking ---
     const eventData = {
-      content_name: 'London Scotland Trip Form',
+      content_name: 'Turkey Trip Form', // Updated form name
       content_category: 'Travel Lead',
       value: 0, // Optional: Assign a value to the lead
       currency: 'SAR', // Optional: Specify currency
     };
 
     // --- Generate Event ID for Lead ---
-    // Generate eventId regardless of nationality, as it's needed for the redirect
-    // and potentially for the pixel event on the thank-you page.
     const leadEventId = crypto.randomUUID();
     console.log(`Generated Lead Event ID: ${leadEventId}`);
 
@@ -271,12 +266,12 @@ export default function LondonScotlandTrip() {
         formBody.append('phone', formData.phone);
         formBody.append('email', formData.email);
         formBody.append('nationality', formData.nationality);
-        formBody.append('destination', formData.destination);
+        formBody.append('destination', formData.destination); // Sends 'تركيا'
         const now = new Date();
         const date = now.toLocaleDateString();
         const time = now.toLocaleTimeString();
 
-        formBody.append('formName', 'London Scotland Trip Form');
+        formBody.append('formName', 'Turkey Trip Form'); // Updated form name
         formBody.append('pageUrl', window.location.href);
         formBody.append('timestamp', now.toISOString());
         formBody.append('date', date);
@@ -317,8 +312,8 @@ export default function LondonScotlandTrip() {
           phone: formData.phone,
           email: formData.email,
           nationality: formData.nationality,
-          destination: formData.destination, // Specific destination for this page
-          formName: 'London Scotland Trip Form', // Specific form name
+          destination: formData.destination, // Sends 'تركيا'
+          formName: 'Turkey Trip Form', // Updated form name
           pageUrl: window.location.href,
           // Spread the collected client data
           ...clientData,
@@ -368,12 +363,13 @@ export default function LondonScotlandTrip() {
       email: '',
       nationality: '', // Reset nationality
       // city: '', // Removed city field
-      destination: 'لندن واسكتلندا',
+      destination: 'تركيا', // Reset destination
     });
     setFormStarted(false); // Reset form started state
+    // setIsLoading(false); // Reset loading state after redirect logic starts
   };
 
-  // Saudi cities
+  // Saudi cities (Keep as is, might be relevant for user origin)
   const cities = [
     'الرياض',
     'جدة',
@@ -386,18 +382,18 @@ export default function LondonScotlandTrip() {
     'أخرى',
   ];
 
-  // Features data - Using updated WebP image paths
+  // Features data - Updated for Turkey based on provided text
   const features = [
-    { text: 'تأشيرة سريعة', iconPath: '/icons/تأشيرة.webp' }, // Matches file list
-    { text: 'راحة تامة', iconPath: '/icons/راحة تامة.webp' }, // Matches file list (with space)
-    { text: 'مواعيد مرنة', iconPath: '/icons/مواعيد مرنة.webp' }, // Matches file list (with space)
-    { text: 'إقامة فاخرة', iconPath: '/icons/اقامه.webp' }, // Matches file list (shortened name)
-    { text: 'فعاليات ممتعة', iconPath: '/icons/فعاليات-ممتعة.webp' }, // Matches file list (with hyphen)
-    { text: 'إطلالة نهرية', iconPath: '/icons/إطلالة نهرية.webp' }, // Matches file list (with space)
-    { text: 'أسعار تنافسية', iconPath: '/icons/اسعار-تنافسيه.webp' }, // Matches file list (with hyphen)
-    { text: 'تقييمات عالية', iconPath: '/icons/تقييمات-عالية.webp' }, // Matches file list (with hyphen)
-    { text: 'مرشد خبير', iconPath: '/icons/مرشد .webp' }, // Matches file list (with trailing space before .webp) - MIGHT CAUSE ISSUES
-    { text: 'جولات مخصصة', iconPath: '/icons/جولات-مخصصة.webp' }, // Matches file list (with hyphen)
+    { text: 'بدون تأشيرة للسعوديين', iconPath: '/icons/تأشيرة.webp' }, // Assuming visa icon is relevant
+    { text: 'إقامة 4 نجوم مع فطور', iconPath: '/icons/اقامه.webp' }, // Using existing accommodation icon
+    { text: 'استقبال من المطار', iconPath: '/icons/راحة تامة.webp' }, // Using existing comfort icon
+    { text: 'تنقلات خاصة', iconPath: '/icons/جولات-مخصصة.webp' }, // Using existing tours icon
+    { text: 'دخول شامل للفعاليات', iconPath: '/icons/فعاليات-ممتعة.webp' }, // Using existing activities icon
+    { text: 'منطاد كابادوكيا', iconPath: '/icons/مواعيد مرنة.webp' }, // Reusing an icon, consider adding specific ones
+    { text: 'مغامرات دبابات وخيول', iconPath: '/icons/مرشد .webp' }, // Reusing an icon
+    { text: 'شلالات ومعالم طبيعية', iconPath: '/icons/إطلالة نهرية.webp' }, // Using existing view icon
+    { text: 'أشهى المأكولات التركية', iconPath: '/icons/اسعار-تنافسيه.webp' }, // Reusing an icon
+    { text: 'ضمان استرجاع', iconPath: '/icons/تقييمات-عالية.webp' }, // Reusing an icon
   ];
 
   // Removed iconComponents map
@@ -405,10 +401,10 @@ export default function LondonScotlandTrip() {
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>استكشف لندن واسكتلندا مع مدارات الكون | رحلة ساحرة</title>
+        <title>رحلتك إلى تركيا من جدة مع مدارات الكون | بدون تأشيرة!</title> {/* Updated Title */}
         <meta
           name="description"
-          content="رحلة سياحية استثنائية إلى لندن واسكتلندا مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة في بريطانيا"
+          content="سافر إلى تركيا من جدة بدون تأشيرة وبأقل سعر مع مدارات الكون. رحلة منظمة تشمل إقامة 4 نجوم، استقبال، تنقلات، وفعاليات ممتعة مثل منطاد كابادوكيا." // Updated Description
         />
         <meta
           name="viewport"
@@ -432,8 +428,8 @@ export default function LondonScotlandTrip() {
         <section className={styles.hero}>
           {/* Background Image using next/image */}
           <Image
-            src="/london-edinburgh.jpg" // Ensure this path is correct relative to public folder
-            alt="Scenic view of London and Edinburgh"
+            src="/images/destinations/turkey-hero.jpg" // UPDATE THIS PATH with a real Turkey image
+            alt="Scenic view of Turkey (e.g., Cappadocia or Istanbul)"
             layout="fill"
             objectFit="cover"
             quality={75} // Adjust quality as needed
@@ -453,14 +449,11 @@ export default function LondonScotlandTrip() {
               />
             </div>
             <h1 className={styles.title}>
-              رحلة <span className={styles.highlight}>لندن</span> و{' '}
-              <span className={styles.highlight}>اسكتلندا</span> الساحرة
-            </h1>
+              هلا بأهل ديرتنا الغالية! <br /> رحلتك لـ <span className={styles.highlight}>تركيا</span> من جدة صارت أسهل!
+            </h1> {/* Updated Headline */}
             <p className={styles.description}>
-              تجربة سفر فريدة لاستكشاف جمال الطبيعة والتاريخ والثقافة في المملكة
-              المتحدة. رحلة استثنائية تجمع بين سحر المدن العريقة وروعة الطبيعة
-              الخلابة.
-            </p>
+              سافر بدون تأشيرة، بدون مجهود، وبأقل سعر! اكتشف سحر تركيا الآسيوي والأوروبي مع رحلة مرتبة وآمنة ومريحة لك ولعائلتك. كل شي جاهز من يوم توصل!
+            </p> {/* Updated Description */}
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}
             <div className={styles.featuresSection}>
@@ -492,6 +485,7 @@ export default function LondonScotlandTrip() {
 
             {/* Contact Form */}
             <div className={styles.formContainer}>
+              <h2 className={styles.formTitle}>احجز مغامرتك الآن قبل اكتمال العدد!</h2>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
                 <div
                   className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
@@ -512,40 +506,32 @@ export default function LondonScotlandTrip() {
                   </label>
                 </div>
 
-                {/* Phone field needs special handling due to country code */}
-                {/* Add hasValue and inputError classes conditionally */}
                 <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`}
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${
+                    phoneTouched && !isPhoneValid ? styles.invalid : ''
+                  }`}
                 >
+                  <input
+                    type="tel" // Use tel type for phone numbers
+                    id="phone"
+                    className={styles.formInput}
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder=" "
+                    autoComplete="tel" // Added autocomplete
+                    required // Phone is required
+                    pattern="^5[0-9]{8}$" // Add pattern for basic HTML5 validation hint
+                    title="أدخل رقم جوال سعودي صحيح (9 أرقام تبدأ بـ 5)" // Add title for validation message hint
+                  />
                   <label htmlFor="phone" className={styles.formLabel}>
-                    الجوال
+                    رقم الجوال (9 أرقام تبدأ بـ 5) *
                   </label>
-                  <div className={styles.phoneInput}>
-                    {/* Moved country code to the left */}
-                    <input
-                      type="tel"
-                      id="phone"
-                      className={styles.formInput} // Add class for styling
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
-                      placeholder=" " // Use space for placeholder trick
-                      autoComplete="tel" // Added autocomplete
-                      required // Made required
-                      pattern="^5[0-9]{8}$" // Added HTML pattern for native validation
-                      title="يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام" // Tooltip for pattern
-                    />
-                    <span className={styles.countryCode}>+966</span>
-                  </div>
-                  {/* Updated error message display */}
-                  {phoneTouched &&
-                    !isPhoneValid &&
-                    formData.phone.trim() !== '' && (
-                      <p className={styles.errorMessage}>
-                        يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام.
-                      </p>
-                    )}
+                  {phoneTouched && !isPhoneValid && (
+                    <span className={styles.errorMessage}>
+                      الرجاء إدخال رقم جوال سعودي صحيح.
+                    </span>
+                  )}
                 </div>
 
                 <div
@@ -554,11 +540,11 @@ export default function LondonScotlandTrip() {
                   <input
                     type="email"
                     id="email"
-                    className={styles.formInput} // Add class for styling
+                    className={styles.formInput}
                     name="email"
                     value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder=" " // Use space for placeholder trick
+                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
+                    placeholder=" "
                     autoComplete="email" // Added autocomplete
                     // required // Made optional
                   />
@@ -567,66 +553,104 @@ export default function LondonScotlandTrip() {
                   </label>
                 </div>
 
-                {/* Nationality Field */}
+                {/* Nationality Dropdown */}
                 <div
-                  className={`${styles.formGroup} ${styles.nationalityGroup}`}
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
                 >
-                  {/* <label>الجنسية</label> Removed this label */}
-                  <div className={styles.radioGroup}>
-                    <label className={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="nationality"
-                        value="مواطن"
-                        checked={formData.nationality === 'مواطن'}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <span>مواطن</span>
-                    </label>
-                    <label className={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="nationality"
-                        value="مقيم"
-                        checked={formData.nationality === 'مقيم'}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <span>مقيم</span>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Removed City Field */}
-                {/* <div className={styles.formGroup}> ... </div> */}
-
-                <div className={styles.formActions}>
-                  <SparkleButton
-                    type="submit"
-                    className={styles.mainCTA}
-                    fullWidth
-                    disabled={isLoading} // Add disabled attribute
+                  <select
+                    id="nationality"
+                    name="nationality"
+                    className={styles.formInput} // Use same styling as input
+                    value={formData.nationality}
+                    onChange={handleInputChange}
+                    required // Nationality is required
                   >
-                    {/* Change button text based on loading state */}
-                    {isLoading
-                      ? '🚀 جاري الإرسال...'
-                      : 'اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا'}
-                  </SparkleButton>
+                    <option value="" disabled>
+                      اختر الجنسية *
+                    </option>
+                    <option value="مواطن">مواطن</option>
+                    <option value="مقيم">مقيم</option>
+                  </select>
+                  {/* No floating label needed for select if it has a default prompt */}
                 </div>
+
+                {/* City Dropdown - Removed */}
+                {/* <div className={`${styles.formGroup} ${styles.floatingLabelGroup}`}>
+                  <select
+                    id="city"
+                    name="city"
+                    className={styles.formInput} // Use same styling as input
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    required // City is required
+                  >
+                    <option value="" disabled>اختر مدينتك *</option>
+                    {cities.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
+                </div> */}
+
+                {/* Submit Button */}
+                <SparkleButton
+                  type="submit"
+                  className={styles.submitButton}
+                  disabled={isLoading || (phoneTouched && !isPhoneValid)} // Disable if loading or phone invalid
+                >
+                  {isLoading ? 'جاري الإرسال...' : 'أرسل لنا "سعودي وأفتخر" الآن!'}
+                </SparkleButton>
+                <p className={styles.ctaNote}>
+                  لا تفوت الفرصة! المقاعد محدودة والعرض قد لا يتكرر.
+                </p>
               </form>
             </div>
+            {/* End Contact Form */}
           </div>
         </section>
+        {/* End Hero Section */}
 
-        {/* Features section moved inside hero content */}
+        {/* Rest of the page content can be added here, mirroring the structure of the original page but with Turkey-specific details */}
+        {/* Example: Why Choose Us Section */}
+        <section className={styles.whyChooseUs}>
+          <h2>ليش تثق في مدارات الكون؟</h2>
+          <ul>
+            <li>✅ أكثر من 250 عميل راضٍ بتقييم 4.9 نجوم.</li>
+            <li>✅ ضمان استرجاع كامل المبلغ إذا لم تجد الفعاليات كما وُعدت.</li>
+            <li>✅ أسعار تنافسية لن تجدها في مكان آخر.</li>
+            <li>✅ مرشد سياحي خاص ودعم 24/7 طوال الرحلة.</li>
+          </ul>
+        </section>
+
+        {/* Example: What Awaits You Section */}
+        <section className={styles.whatAwaits}>
+          <h2>💥 وش ينتظرك هناك؟</h2>
+          <ul>
+            <li>جمال مضيق البسفور</li>
+            <li>منطاد شروق الشمس في كابادوكيا</li>
+            <li>مغامرات بالدبابات والخيول في وادي الخيول</li>
+            <li>مدينة الجن الغامضة</li>
+            <li>شلالات أوزنجول، جبل كارتبيه، قلعة ريزا</li>
+            <li>حمامات ايدر الحارة</li>
+            <li>كباب الجرة، البقلاوة، الشاي التركي الأصيل</li>
+          </ul>
+          <p>كل لحظة أحلى من الثانية!</p>
+        </section>
+
+        {/* Final CTA */}
+        <section className={styles.finalCta}>
+          <h2>الرحلة اللي تستاهل تعب السنة كلها… تبدأ بخطوة بسيطة:</h2>
+          <p>✍️ أرسل لنا "سعودي وأفتخر" الآن عبر النموذج أعلاه!</p>
+          <p>وخلنا نحجز لك مقعد في مغامرة ما تنسى، ممكن ما تلاقي نفس العرض بكرة! فالحين فرصتك!</p>
+        </section>
+
+
       </main>
 
-      {/* Chatbot - Disabled */}
-      {/* <Chatbot /> */}
-
-      {/* Exit Intent Popup - Disabled */}
-      {/* <ExitPopup /> */}
+      {/* Dynamically loaded components */}
+      <Chatbot />
+      <ExitPopup />
     </div>
   );
 }

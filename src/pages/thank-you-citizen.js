@@ -94,6 +94,7 @@ export default function ThankYouCitizen() {
       const email = router.query.email || null;
       const phone = router.query.phone || null;
       const external_id = router.query.external_id || null; // Read external_id
+      const eventId = router.query.eventId || null; // Read eventId for deduplication
 
       // --- Get Cookie Data ---
       const fbc = getCookieValue('_fbc');
@@ -112,11 +113,22 @@ export default function ThankYouCitizen() {
 
       // --- Fire Pixel Event ---
       if (Object.keys(userData).length > 0) {
-        console.log('[Pixel] Firing Lead event with user data:', userData);
-        window.fbq('track', 'Lead', userData);
+        // Include eventID for deduplication if available
+        if (eventId) {
+          console.log('[Pixel] Firing Lead event with user data and eventID:', userData, eventId);
+          window.fbq('track', 'Lead', userData, { eventID: eventId });
+        } else {
+          console.log('[Pixel] Firing Lead event with user data (no eventID):', userData);
+          window.fbq('track', 'Lead', userData);
+        }
       } else {
-        console.log('[Pixel] Firing Lead event (no user data found)');
-        window.fbq('track', 'Lead'); // Fallback to basic Lead event
+        console.log('[Pixel] Firing Lead event (no user data, no eventID)');
+        // Fallback, consider if eventId should be generated even without user data
+        if (eventId) {
+          window.fbq('track', 'Lead', {}, { eventID: eventId });
+        } else {
+          window.fbq('track', 'Lead');
+        }
       }
     };
 

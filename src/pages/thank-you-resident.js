@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-// Removed useRouter import
+import { useRouter } from 'next/router'; // Re-add useRouter import
 import styles from '@/styles/pages/ThankYou.module.scss';
 import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti';
@@ -10,7 +10,7 @@ import confetti from 'canvas-confetti';
 // Removed sha256 helper function
 
 export default function ThankYouResident() {
-  // Removed router initialization
+  const router = useRouter(); // Initialize router
 
   // Function to fire confetti with specific options
   const fireConfetti = () => {
@@ -55,7 +55,37 @@ export default function ThankYouResident() {
     return () => clearTimeout(timer);
   }, []); // Empty dependency array, fire only once on mount + intervals
 
-  // Removed useEffect hook for firing Pixel Lead event
+  // Fire Pixel Lead event on page load with eventId if available
+  useEffect(() => {
+    const trackLeadEvent = () => {
+      // Check if fbq is loaded
+      if (typeof window.fbq !== 'function') {
+        console.log('[Pixel] fbq not available on thank-you-resident page load');
+        return;
+      }
+
+      // --- Get Event ID from Query Parameters ---
+      const eventId = router.query.eventId || null; // Read eventId for deduplication
+
+      // --- Fire Pixel Event ---
+      // This page doesn't seem to pass user data in query, so send empty object {}
+      // but include eventID if present.
+      if (eventId) {
+        console.log('[Pixel] Firing Lead event with eventID:', eventId);
+        window.fbq('track', 'Lead', {}, { eventID: eventId });
+      } else {
+        console.log('[Pixel] Firing Lead event (no eventID)');
+        window.fbq('track', 'Lead'); // Fallback basic Lead event
+      }
+    };
+
+    // Wait for router to be ready before accessing query params
+    if (router.isReady) {
+      // Use a small delay to ensure fbq might be ready if loaded async
+      const timer = setTimeout(trackLeadEvent, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [router.isReady, router.query]); // Re-run if router becomes ready or query params change
 
   return (
     <div className={styles.container} dir="rtl">
