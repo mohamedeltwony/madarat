@@ -210,6 +210,7 @@ function App({
           width="1"
           style={{ display: 'none' }}
           src="https://www.facebook.com/tr?id=330286163283402&ev=PageView&noscript=1"
+          alt=""
         />
       </noscript>
       {/* End Facebook Pixel Code */}

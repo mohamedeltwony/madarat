@@ -55,39 +55,7 @@ export default function ThankYouResident() {
     return () => clearTimeout(timer);
   }, []); // Empty dependency array, fire only once on mount + intervals
 
-  // Fire Pixel Lead event on page load with eventId if available
-  useEffect(() => {
-    const trackLeadEvent = () => {
-      // Check if fbq is loaded
-      if (typeof window.fbq !== 'function') {
-        console.log(
-          '[Pixel] fbq not available on thank-you-resident page load'
-        );
-        return;
-      }
-
-      // --- Get Event ID from Query Parameters ---
-      const eventId = router.query.eventId || null; // Read eventId for deduplication
-
-      // --- Fire Pixel Event ---
-      // This page doesn't seem to pass user data in query, so send empty object {}
-      // but include eventID if present.
-      if (eventId) {
-        console.log('[Pixel] Firing Lead event with eventID:', eventId);
-        window.fbq('track', 'Lead', {}, { eventID: eventId });
-      } else {
-        console.log('[Pixel] Firing Lead event (no eventID)');
-        window.fbq('track', 'Lead'); // Fallback basic Lead event
-      }
-    };
-
-    // Wait for router to be ready before accessing query params
-    if (router.isReady) {
-      // Use a small delay to ensure fbq might be ready if loaded async
-      const timer = setTimeout(trackLeadEvent, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [router.isReady, router.query]); // Re-run if router becomes ready or query params change
+  // Removed useEffect hook that fired Pixel Lead event
 
   return (
     <div className={styles.container} dir="rtl">
