@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import SparkleButton from '@/components/UI/SparkleButton';
-import Chatbot from '@/components/Chatbot';
-import ExitPopup from '@/components/ExitPopup';
+// import Chatbot from '@/components/Chatbot'; // Removed
+// import ExitPopup from '@/components/ExitPopup'; // Removed
 import StickyLeadForm from '@/components/StickyLeadForm';
 import styles from '@/styles/pages/Home.module.scss';
 import UIStyles from '@/components/UI/UI.module.scss';
@@ -154,11 +154,11 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* Chatbot */}
-      <Chatbot />
+      {/* Chatbot Removed */}
+      {/* <Chatbot /> */}
 
-      {/* Exit Intent Popup */}
-      <ExitPopup />
+      {/* Exit Intent Popup Removed */}
+      {/* <ExitPopup /> */}
 
       {/* Sticky Lead Form */}
       <StickyLeadForm />

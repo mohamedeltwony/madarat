@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router'; // Import useRouter
 import dynamic from 'next/dynamic'; // Import dynamic
 import SparkleButton from '@/components/UI/SparkleButton';
-// import Chatbot from '@/components/Chatbot'; // Import dynamically
-// import ExitPopup from '@/components/ExitPopup'; // Import dynamically
+// import Chatbot from '@/components/Chatbot'; // Removed
+// import ExitPopup from '@/components/ExitPopup'; // Removed
 import styles from '@/styles/pages/LondonScotland.module.scss';
 
 // Removed SVG Icon imports
@@ -20,11 +20,11 @@ import styles from '@/styles/pages/LondonScotland.module.scss';
 // Removed PlaceholderIcon and inline VisaIcon component definition
 // --- End SVG Icons ---
 
-// Dynamically import components
-const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false }); // Keep this one-line for consistency unless Prettier complains
-const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
-  ssr: false, // Format options object multi-line as requested
-});
+// Dynamically import components - Removed
+// const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false });
+// const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
+//   ssr: false,
+// });
 export default function LondonScotlandTrip() {
   // Removed blank line above
   const router = useRouter(); // Get router instance
@@ -481,7 +481,7 @@ export default function LondonScotlandTrip() {
                         alt={feature.text} // Use feature text as alt text
                         width={60} // Updated width
                         height={60} // Updated height
-                        unoptimized // Keep optimization disabled for these icons
+                        // unoptimized // Removed to allow Next.js optimization
                       />
                     </div>
                     <p className={styles.featureText}>{feature.text}</p>

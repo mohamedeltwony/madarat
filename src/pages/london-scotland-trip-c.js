@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import SparkleButton from '@/components/UI/SparkleButton';
-import Chatbot from '@/components/Chatbot';
-import ExitPopup from '@/components/ExitPopup';
+// import Chatbot from '@/components/Chatbot'; // Removed
+// import ExitPopup from '@/components/ExitPopup'; // Removed
 import styles from '@/styles/pages/LondonScotland.module.scss'; // Reusing original styles
 import UIStyles from '@/components/UI/UI.module.scss';
 
@@ -272,11 +272,11 @@ export default function LondonScotlandTripC() {
         {/* Features section moved inside hero content */}
       </main>
 
-      {/* Chatbot */}
-      <Chatbot />
+      {/* Chatbot Removed */}
+      {/* <Chatbot /> */}
 
-      {/* Exit Intent Popup */}
-      <ExitPopup />
+      {/* Exit Intent Popup Removed */}
+      {/* <ExitPopup /> */}
     </div>
   );
 }

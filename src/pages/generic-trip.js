@@ -3,8 +3,8 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router'; // Import useRouter
 import SparkleButton from '@/components/UI/SparkleButton';
-import Chatbot from '@/components/Chatbot';
-import ExitPopup from '@/components/ExitPopup';
+// import Chatbot from '@/components/Chatbot'; // Removed
+// import ExitPopup from '@/components/ExitPopup'; // Removed
 // Reusing LondonScotland styles for now
 import styles from '@/styles/pages/LondonScotland.module.scss';
 
@@ -490,8 +490,8 @@ export default function GenericTrip() {
             {/* End Contact Form */}
           </div>
         </section>
-        <Chatbot />
-        <ExitPopup />
+        {/* <Chatbot /> */} {/* Removed */}
+        {/* <ExitPopup /> */} {/* Removed */}
       </main>
     </div>
   );
