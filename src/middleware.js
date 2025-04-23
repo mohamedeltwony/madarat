@@ -9,7 +9,6 @@ const ALLOWED_PATHS = [
   '/cruise-italy-spain-france', // Add the new cruise page
   '/', // Add the new thank you page
   '/turkey-trip',
-
 ];
 
 // Define paths/patterns to exclude from the middleware altogether (e.g., static assets, API routes)

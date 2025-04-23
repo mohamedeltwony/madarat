@@ -115,10 +115,17 @@ export default function ThankYouCitizen() {
       if (Object.keys(userData).length > 0) {
         // Include eventID for deduplication if available
         if (eventId) {
-          console.log('[Pixel] Firing Lead event with user data and eventID:', userData, eventId);
+          console.log(
+            '[Pixel] Firing Lead event with user data and eventID:',
+            userData,
+            eventId
+          );
           window.fbq('track', 'Lead', userData, { eventID: eventId });
         } else {
-          console.log('[Pixel] Firing Lead event with user data (no eventID):', userData);
+          console.log(
+            '[Pixel] Firing Lead event with user data (no eventID):',
+            userData
+          );
           window.fbq('track', 'Lead', userData);
         }
       } else {

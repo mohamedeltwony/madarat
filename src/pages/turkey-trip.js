@@ -20,7 +20,8 @@ const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false }); /
 const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
   ssr: false, // Format options object multi-line as requested
 });
-export default function TurkeyTrip() { // Renamed component
+export default function TurkeyTrip() {
+  // Renamed component
   // Removed blank line above
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
@@ -37,7 +38,8 @@ export default function TurkeyTrip() { // Renamed component
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   // Helper function to send events to the backend API
-  const sendFbEvent = async (eventName, data, eventId = null) => { // Add eventId parameter
+  const sendFbEvent = async (eventName, data, eventId = null) => {
+    // Add eventId parameter
     // Ensure phone number doesn't include country code if API expects only digits
     // Basic check assuming phone is just digits after potential country code removal client-side
     const phoneDigits = data.phone?.replace(/[^0-9]/g, '');
@@ -97,13 +99,13 @@ export default function TurkeyTrip() { // Renamed component
   //   const checkIfMobile = () => {
   //     setIsMobile(window.innerWidth < 768);
   //   };
-
+  //
   //   // Check on initial load
   //   checkIfMobile();
-
+  //
   //   // Add listener for window resize
   //   window.addEventListener('resize', checkIfMobile);
-
+  //
   //   // Cleanup
   //   return () => window.removeEventListener('resize', checkIfMobile);
   // }, []);
@@ -401,7 +403,8 @@ export default function TurkeyTrip() { // Renamed component
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>رحلتك إلى تركيا من جدة مع مدارات الكون | بدون تأشيرة!</title> {/* Updated Title */}
+        <title>رحلتك إلى تركيا من جدة مع مدارات الكون | بدون تأشيرة!</title>{' '}
+        {/* Updated Title */}
         <meta
           name="description"
           content="سافر إلى تركيا من جدة بدون تأشيرة وبأقل سعر مع مدارات الكون. رحلة منظمة تشمل إقامة 4 نجوم، استقبال، تنقلات، وفعاليات ممتعة مثل منطاد كابادوكيا." // Updated Description
@@ -449,12 +452,16 @@ export default function TurkeyTrip() { // Renamed component
               />
             </div>
             <h1 className={styles.title}>
-              هلا بأهل ديرتنا الغالية! <br /> رحلتك لـ <span className={styles.highlight}>تركيا</span> من جدة صارت أسهل!
-            </h1> {/* Updated Headline */}
+              هلا بأهل ديرتنا الغالية! <br /> رحلتك لـ{' '}
+              <span className={styles.highlight}>تركيا</span> من جدة صارت أسهل!
+            </h1>{' '}
+            {/* Updated Headline */}
             <p className={styles.description}>
-              سافر بدون تأشيرة، بدون مجهود، وبأقل سعر! اكتشف سحر تركيا الآسيوي والأوروبي مع رحلة مرتبة وآمنة ومريحة لك ولعائلتك. كل شي جاهز من يوم توصل!
-            </p> {/* Updated Description */}
-
+              سافر بدون تأشيرة، بدون مجهود، وبأقل سعر! اكتشف سحر تركيا الآسيوي
+              والأوروبي مع رحلة مرتبة وآمنة ومريحة لك ولعائلتك. كل شي جاهز من
+              يوم توصل!
+            </p>{' '}
+            {/* Updated Description */}
             {/* Features Section - Moved Inside Hero & Made Marquee */}
             <div className={styles.featuresSection}>
               <div className={styles.featuresGrid}>
@@ -482,10 +489,11 @@ export default function TurkeyTrip() { // Renamed component
               </div>
             </div>
             {/* End Features Section */}
-
             {/* Contact Form */}
             <div className={styles.formContainer}>
-              <h2 className={styles.formTitle}>احجز مغامرتك الآن قبل اكتمال العدد!</h2>
+              <h2 className={styles.formTitle}>
+                احجز مغامرتك الآن قبل اكتمال العدد!
+              </h2>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
                 <div
                   className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
@@ -511,27 +519,34 @@ export default function TurkeyTrip() { // Renamed component
                     phoneTouched && !isPhoneValid ? styles.invalid : ''
                   }`}
                 >
-                  <input
-                    type="tel" // Use tel type for phone numbers
-                    id="phone"
-                    className={styles.formInput}
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder=" "
-                    autoComplete="tel" // Added autocomplete
-                    required // Phone is required
-                    pattern="^5[0-9]{8}$" // Add pattern for basic HTML5 validation hint
-                    title="أدخل رقم جوال سعودي صحيح (9 أرقام تبدأ بـ 5)" // Add title for validation message hint
-                  />
                   <label htmlFor="phone" className={styles.formLabel}>
-                    رقم الجوال (9 أرقام تبدأ بـ 5) *
+                    الجوال
                   </label>
-                  {phoneTouched && !isPhoneValid && (
-                    <span className={styles.errorMessage}>
-                      الرجاء إدخال رقم جوال سعودي صحيح.
-                    </span>
-                  )}
+                  <div className={styles.phoneInput}>
+                    <input
+                      type="tel"
+                      id="phone"
+                      className={styles.formInput} // Add class for styling
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
+                      placeholder=" " // Use space for placeholder trick
+                      autoComplete="tel" // Added autocomplete
+                      required // Made required
+                      pattern="^5[0-9]{8}$" // Added HTML pattern for native validation
+                      title="يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام" // Tooltip for pattern
+                    />
+                    <span className={styles.countryCode}>+966</span>
+                  </div>
+                  {/* Updated error message display */}
+                  {phoneTouched &&
+                    !isPhoneValid &&
+                    formData.phone.trim() !== '' && (
+                      <p className={styles.errorMessage}>
+                        يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام.
+                      </p>
+                    )}
                 </div>
 
                 <div
@@ -540,11 +555,11 @@ export default function TurkeyTrip() { // Renamed component
                   <input
                     type="email"
                     id="email"
-                    className={styles.formInput}
+                    className={styles.formInput} // Add class for styling
                     name="email"
                     value={formData.email}
-                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
-                    placeholder=" "
+                    onChange={handleInputChange}
+                    placeholder=" " // Use space for placeholder trick
                     autoComplete="email" // Added autocomplete
                     // required // Made optional
                   />
@@ -553,102 +568,61 @@ export default function TurkeyTrip() { // Renamed component
                   </label>
                 </div>
 
-                {/* Nationality Dropdown */}
+                {/* Nationality Field */}
                 <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
+                  className={`${styles.formGroup} ${styles.nationalityGroup}`}
                 >
-                  <select
-                    id="nationality"
-                    name="nationality"
-                    className={styles.formInput} // Use same styling as input
-                    value={formData.nationality}
-                    onChange={handleInputChange}
-                    required // Nationality is required
-                  >
-                    <option value="" disabled>
-                      اختر الجنسية *
-                    </option>
-                    <option value="مواطن">مواطن</option>
-                    <option value="مقيم">مقيم</option>
-                  </select>
-                  {/* No floating label needed for select if it has a default prompt */}
+                  {/* <label>الجنسية</label> Removed this label */}
+                  <div className={styles.radioGroup}>
+                    <label className={styles.radioLabel}>
+                      <input
+                        type="radio"
+                        name="nationality"
+                        value="مواطن"
+                        checked={formData.nationality === 'مواطن'}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <span>مواطن</span>
+                    </label>
+                    <label className={styles.radioLabel}>
+                      <input
+                        type="radio"
+                        name="nationality"
+                        value="مقيم"
+                        checked={formData.nationality === 'مقيم'}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <span>مقيم</span>
+                    </label>
+                  </div>
                 </div>
 
-                {/* City Dropdown - Removed */}
-                {/* <div className={`${styles.formGroup} ${styles.floatingLabelGroup}`}>
-                  <select
-                    id="city"
-                    name="city"
-                    className={styles.formInput} // Use same styling as input
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    required // City is required
-                  >
-                    <option value="" disabled>اختر مدينتك *</option>
-                    {cities.map((city) => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))}
-                  </select>
-                </div> */}
+                {/* Removed City Dropdown */}
 
-                {/* Submit Button */}
-                <SparkleButton
-                  type="submit"
-                  className={styles.submitButton}
-                  disabled={isLoading || (phoneTouched && !isPhoneValid)} // Disable if loading or phone invalid
-                >
-                  {isLoading ? 'جاري الإرسال...' : 'أرسل لنا "سعودي وأفتخر" الآن!'}
-                </SparkleButton>
-                <p className={styles.ctaNote}>
-                  لا تفوت الفرصة! المقاعد محدودة والعرض قد لا يتكرر.
-                </p>
+                <div className={styles.formActions}>
+                  <SparkleButton type="submit" disabled={isLoading}>
+                    {isLoading ? '🚀 جاري الإرسال...' : 'أرسل طلبك الآن'}
+                  </SparkleButton>
+                </div>
               </form>
             </div>
             {/* End Contact Form */}
           </div>
-        </section>
-        {/* End Hero Section */}
-
-        {/* Rest of the page content can be added here, mirroring the structure of the original page but with Turkey-specific details */}
-        {/* Example: Why Choose Us Section */}
-        <section className={styles.whyChooseUs}>
-          <h2>ليش تثق في مدارات الكون؟</h2>
-          <ul>
-            <li>✅ أكثر من 250 عميل راضٍ بتقييم 4.9 نجوم.</li>
-            <li>✅ ضمان استرجاع كامل المبلغ إذا لم تجد الفعاليات كما وُعدت.</li>
-            <li>✅ أسعار تنافسية لن تجدها في مكان آخر.</li>
-            <li>✅ مرشد سياحي خاص ودعم 24/7 طوال الرحلة.</li>
-          </ul>
-        </section>
-
-        {/* Example: What Awaits You Section */}
-        <section className={styles.whatAwaits}>
-          <h2>💥 وش ينتظرك هناك؟</h2>
-          <ul>
-            <li>جمال مضيق البسفور</li>
-            <li>منطاد شروق الشمس في كابادوكيا</li>
-            <li>مغامرات بالدبابات والخيول في وادي الخيول</li>
-            <li>مدينة الجن الغامضة</li>
-            <li>شلالات أوزنجول، جبل كارتبيه، قلعة ريزا</li>
-            <li>حمامات ايدر الحارة</li>
-            <li>كباب الجرة، البقلاوة، الشاي التركي الأصيل</li>
-          </ul>
-          <p>كل لحظة أحلى من الثانية!</p>
         </section>
 
         {/* Final CTA */}
         <section className={styles.finalCta}>
           <h2>الرحلة اللي تستاهل تعب السنة كلها… تبدأ بخطوة بسيطة:</h2>
           <p>✍️ أرسل لنا "سعودي وأفتخر" الآن عبر النموذج أعلاه!</p>
-          <p>وخلنا نحجز لك مقعد في مغامرة ما تنسى، ممكن ما تلاقي نفس العرض بكرة! فالحين فرصتك!</p>
+          <p>
+            وخلنا نحجز لك مقعد في مغامرة ما تنسى، ممكن ما تلاقي نفس العرض بكرة!
+            فالحين فرصتك!
+          </p>
         </section>
-
-
       </main>
 
-      {/* Dynamically loaded components */}
       <Chatbot />
       <ExitPopup />
     </div>

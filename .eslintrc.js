@@ -13,7 +13,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended', // Keep Prettier integration enabled now
-    'plugin:@next/next/recommended',
+    // 'plugin:@next/next/recommended', // Removed - included by next/core-web-vitals
     'next/core-web-vitals',
   ],
   parserOptions: {

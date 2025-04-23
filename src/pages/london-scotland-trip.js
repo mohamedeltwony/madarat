@@ -42,7 +42,8 @@ export default function LondonScotlandTrip() {
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   // Helper function to send events to the backend API
-  const sendFbEvent = async (eventName, data, eventId = null) => { // Add eventId parameter
+  const sendFbEvent = async (eventName, data, eventId = null) => {
+    // Add eventId parameter
     // Ensure phone number doesn't include country code if API expects only digits
     // Basic check assuming phone is just digits after potential country code removal client-side
     const phoneDigits = data.phone?.replace(/[^0-9]/g, '');
