@@ -4,6 +4,7 @@ import NextApp from 'next/app';
 import { ApolloProvider } from '@apollo/client'; // Import ApolloProvider
 import { Analytics } from '@vercel/analytics/react'; // Import Vercel Analytics
 import { SpeedInsights } from '@vercel/speed-insights/next'; // Import Speed Insights
+import Script from 'next/script'; // Import Script component
 
 import { SiteContext, useSiteContext } from '../hooks/use-site';
 import { SearchProvider } from '../hooks/use-search';
@@ -172,17 +173,63 @@ function App({
   }, [router.events, router, trackPageView]); // Add trackPageView to dependency array
 
   return (
-    // Wrap everything with ApolloProvider
-    <ApolloProvider client={apolloClient}>
-      <SiteContext.Provider value={site}>
-        <SearchProvider>
-          <NextNProgress height={4} color={variables.progressbarColor} />
-          <Component {...pageProps} />
-          <Analytics /> {/* Add Vercel Analytics component */}
-          <SpeedInsights /> {/* Add Vercel Speed Insights component */}
-        </SearchProvider>
-      </SiteContext.Provider>
-    </ApolloProvider>
+    <>
+      {/* Wrap everything with ApolloProvider */}
+      <ApolloProvider client={apolloClient}>
+        <SiteContext.Provider value={site}>
+          <SearchProvider>
+            <NextNProgress height={4} color={variables.progressbarColor} />
+            <Component {...pageProps} />
+            <Analytics /> {/* Add Vercel Analytics component */}
+            <SpeedInsights /> {/* Add Vercel Speed Insights component */}
+          </SearchProvider>
+        </SiteContext.Provider>
+      </ApolloProvider>
+
+      {/* Facebook Pixel Code */}
+      <Script
+        id="facebook-pixel"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '330286163283402');
+          `,
+        }}
+      />
+      <noscript>
+        <img
+          height="1"
+          width="1"
+          style={{ display: 'none' }}
+          src="https://www.facebook.com/tr?id=330286163283402&ev=PageView&noscript=1"
+        />
+      </noscript>
+      {/* End Facebook Pixel Code */}
+
+      {/* Clarity Tracking Code */}
+      <Script
+        id="microsoft-clarity"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "r7izccxz4q");
+          `,
+        }}
+      />
+      {/* End Clarity Tracking Code */}
+    </>
   );
 }
 
