@@ -425,7 +425,6 @@ export default function TurkeyTrip() {
           rel="stylesheet"
         />
       </Head>
-
       <main className={styles.main}>
         {/* Hero Section */}
         <section className={styles.hero}>
@@ -622,7 +621,6 @@ export default function TurkeyTrip() {
           </p>
         </section>
       </main>
-
       {/* <Chatbot /> */} {/* Removed */}
       {/* <ExitPopup /> */} {/* Removed */}
     </div>
