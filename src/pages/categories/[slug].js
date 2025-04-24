@@ -37,7 +37,7 @@ export async function getStaticProps({ params = {} } = {}) {
   // Fetch layout data
   const { metadata } = await getSiteMetadata();
   const { menus } = await getAllMenus();
-  
+
   const { category } = await getCategoryBySlug(params?.slug);
 
   if (!category) {

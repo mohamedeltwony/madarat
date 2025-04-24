@@ -36,7 +36,7 @@ export async function getStaticProps() {
   // Fetch layout data
   const { metadata } = await getSiteMetadata();
   const { menus } = await getAllMenus();
-  
+
   // Fetch page-specific data
   const { posts } = await getPaginatedPosts({
     queryIncludes: 'archive',

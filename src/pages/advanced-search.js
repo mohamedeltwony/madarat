@@ -259,14 +259,14 @@ export async function getStaticProps() {
   // Fetch layout data
   const { metadata } = await getSiteMetadata();
   const { menus } = await getAllMenus();
-  
+
   // Fetch page-specific data
   const { categories } = await getCategories({
     count: 100, // Get all available categories
   });
 
   const { years } = await getYearArchives();
-  
+
   // Sanitize data to remove undefined values
   const sanitizedMetadata = JSON.parse(JSON.stringify(metadata || {}));
   const sanitizedMenus = JSON.parse(JSON.stringify(menus || {}));
