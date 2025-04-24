@@ -373,6 +373,46 @@ export default function GeorgiaTrip() {
           as="image"
           type="image/webp"
         />
+        {/* Preload logo image as it's now the LCP element */}
+        <link
+          rel="preload"
+          href="/logo.png"
+          as="image"
+        />
+        {/* Inline critical CSS to reduce render delay */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            /* Critical styles for hero title to prevent render delay */
+            .LondonScotland_title__G_j0W {
+              font-family: 'Arial', sans-serif !important;
+              font-size: 2.5rem;
+              font-weight: 700;
+              margin-bottom: 1.5rem;
+              color: white;
+              text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+              line-height: 1.2;
+              min-height: 3.5rem;
+              will-change: contents;
+              display: block;
+            }
+            
+            @media (min-width: 768px) {
+              .LondonScotland_title__G_j0W {
+                font-size: 3.5rem;
+                min-height: 4.5rem;
+              }
+            }
+            
+            /* Apply Cairo font after it loads */
+            @font-face {
+              font-family: 'Cairo';
+              font-style: normal;
+              font-weight: 700;
+              font-display: swap;
+              src: url(https://fonts.gstatic.com/s/cairo/v28/SLXbc1nY6HkvamqM9ZqKjIMqpxz1uLd4pQ.woff2) format('woff2');
+            }
+          `
+        }} />
         {/* Removed redundant Google Font link - loaded in _document.js */}
       </Head>
 
@@ -392,7 +432,7 @@ export default function GeorgiaTrip() {
           />
           <div className={styles.heroOverlay}></div>
           <div className={styles.heroContent}>
-            <div className={styles.logoContainer}>
+            <div className={styles.logoContainer} style={{height: '75px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
               <Image
                 src="/logo.png"
                 alt="مدارات الكون للسياحة والسفر"
@@ -400,14 +440,21 @@ export default function GeorgiaTrip() {
                 height={75}
                 priority
                 sizes="(max-width: 768px) 150px, 240px" // Refined sizes prop for responsiveness
-                // Removed unoptimized prop
+                style={{objectFit: 'contain'}}
               />
             </div>
-            <h1 className={styles.title} style={{fontDisplay: 'swap', fontWeight: 700}}>
+            <h1 
+              className={`${styles.title} preventCLS`} 
+              style={{
+                fontDisplay: 'swap', 
+                fontWeight: 700,
+                fontFamily: 'Arial, Cairo, sans-serif' // Force Arial first for immediate rendering
+              }}
+            >
               رحلة <span className={styles.highlight}>جورجيا</span> الساحرة{' '}
               {/* Changed title */}
             </h1>
-            <p className={styles.description}>
+            <p className={`${styles.description} preventCLS`}>
               {' '}
               {/* Changed description */}
               ٨ أيام - ٧ ليالي

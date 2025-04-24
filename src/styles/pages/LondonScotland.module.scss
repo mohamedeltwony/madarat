@@ -116,6 +116,10 @@ $font-family: 'Cairo', sans-serif;
   width: fit-content; // Allow container to size to image initially
   margin-left: auto; // Center the container
   margin-right: auto; // Center the container
+  min-height: 75px; // Set explicit height to prevent layout shift
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   // Ensure logo is 240px on mobile, allow it to be its natural size otherwise
   // Note: Next/Image handles responsiveness, this is more about container control
@@ -125,6 +129,7 @@ $font-family: 'Cairo', sans-serif;
     // and the container doesn't restrict it. Let's ensure the container allows it.
     max-width: 240px; // Ensure container doesn't shrink image below 240px if possible
     width: 100%; // Allow it to shrink if viewport is < 240px
+    min-height: 60px; // Adjusted height for mobile
   }
 
   img {
@@ -132,7 +137,7 @@ $font-family: 'Cairo', sans-serif;
     display: block; // Ensure block display
     max-width: 100%; // Ensure image doesn't overflow container
     height: auto; // Maintain aspect ratio
-    // width: 240px; // Setting width here might conflict with Next/Image props
+    object-fit: contain; // Ensure proper scaling
   }
 
   // img { // Remove potentially conflicting styles for next/image
@@ -151,9 +156,12 @@ $font-family: 'Cairo', sans-serif;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); // Simplified shadow for faster rendering
   line-height: 1.2;
   font-family: $font-family, 'Arial', sans-serif; // Added system font fallback
+  display: block;
+  min-height: 3.5rem; // Add minimum height to prevent layout shift during font loading
 
   @media (min-width: 768px) {
     font-size: 3.5rem;
+    min-height: 4.5rem; // Adjusted minimum height for larger font
   }
 }
 
@@ -184,10 +192,12 @@ $font-family: 'Cairo', sans-serif;
   margin-left: auto;
   margin-right: auto;
   font-family: $font-family;
+  min-height: 5rem; // Add minimum height to prevent layout shift during font loading
 
   @media (min-width: 768px) {
     font-size: 1.25rem;
     margin-bottom: 2.5rem; // Keep margin-bottom
+    min-height: 6rem; // Adjusted minimum height for larger font
   }
 }
 

@@ -12,15 +12,22 @@ export default class MyDocument extends Document {
             href="https://fonts.gstatic.com"
             crossOrigin="anonymous"
           />
-          {/* Main Google Font Stylesheet - Reverting to display=swap */}
+          {/* Main Google Font Stylesheet - Using font-display: swap for better CLS */}
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-            media="print"
-            onLoad="this.media='all'"
           />
 
           {/* Preload critical font files used above the fold (Hero Title/Desc) */}
+          {/* Preloading Bold 700 (Used for hero title) - most critical font */}
+          <link
+            rel="preload"
+            href="https://fonts.gstatic.com/s/cairo/v28/SLXbc1nY6HkvamqM9ZqKjIMqpxz1uLd4pQ.woff2" /* Bold 700 */
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+            fetchpriority="high"
+          />
           {/* Preloading Regular 400 */}
           <link
             rel="preload"
@@ -29,15 +36,25 @@ export default class MyDocument extends Document {
             type="font/woff2"
             crossOrigin="anonymous"
           />
-          {/* Preloading Bold 700 (Used for hero title) */}
-          <link
-            rel="preload"
-            href="https://fonts.gstatic.com/s/cairo/v28/SLXbc1nY6HkvamqM9ZqKjIMqpxz1uLd4pQ.woff2" /* Bold 700 */
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
           {/* Only preload fonts that are used in above-the-fold content */}
+
+          {/* Add inline font-face definitions as fallback to prevent layout shifts */}
+          <style dangerouslySetInnerHTML={{
+            __html: `
+              /* Fallback font metrics */
+              @font-face {
+                font-family: 'Cairo Fallback';
+                size-adjust: 105%;
+                ascent-override: 90%;
+                src: local('Arial');
+              }
+              
+              /* Apply fallback first in the stack */
+              .preventCLS {
+                font-family: 'Cairo Fallback', 'Cairo', sans-serif;
+              }
+            `
+          }} />
 
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           {/* Facebook Pixel Code */}
