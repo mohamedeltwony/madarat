@@ -14,7 +14,12 @@ import Section from '@/components/Section';
 import PostCard from '@/components/PostCard';
 import Meta from '@/components/Meta';
 
-export default function AdvancedSearch({ categories, years, metadata: siteMetadata, menus }) {
+export default function AdvancedSearch({
+  categories,
+  years,
+  metadata: siteMetadata,
+  menus,
+}) {
   const router = useRouter();
   const { q, category, year, month, author } = router.query;
 
@@ -273,9 +278,9 @@ export async function getStaticProps() {
       categories: sanitizedCategories,
       years: sanitizedYears,
       metadata: sanitizedMetadata,
-      menus: sanitizedMenus
+      menus: sanitizedMenus,
     },
     // Add ISR with a reasonable revalidation period
-    revalidate: 600 // Revalidate every 10 minutes
+    revalidate: 600, // Revalidate every 10 minutes
   };
 }

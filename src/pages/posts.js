@@ -51,9 +51,9 @@ export async function getStaticProps() {
     props: {
       posts: sanitizedPosts,
       metadata: sanitizedMetadata,
-      menus: sanitizedMenus
+      menus: sanitizedMenus,
     },
     // Add ISR with a reasonable revalidation period
-    revalidate: 600 // Revalidate every 10 minutes
+    revalidate: 600, // Revalidate every 10 minutes
   };
 }

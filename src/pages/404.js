@@ -45,7 +45,7 @@ export async function getStaticProps() {
   return {
     props: {
       metadata: sanitizedMetadata,
-      menus: sanitizedMenus
-    }
+      menus: sanitizedMenus,
+    },
   };
 }
