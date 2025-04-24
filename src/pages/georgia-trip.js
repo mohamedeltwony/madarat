@@ -366,6 +366,13 @@ export default function GeorgiaTrip() {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        {/* Preload hero image for faster LCP */}
+        <link
+          rel="preload"
+          href="/images/gorgia-background.webp"
+          as="image"
+          type="image/webp"
+        />
         {/* Removed redundant Google Font link - loaded in _document.js */}
       </Head>
 
@@ -378,8 +385,9 @@ export default function GeorgiaTrip() {
             alt="Scenic view of Georgia" // Changed alt text
             fill // Use fill prop instead of layout="fill"
             // objectFit="cover" // Remove prop, handle with CSS
-            quality={75} // Adjust quality as needed
+            quality={65} // Reduced quality from 75 to 65 for faster loading
             priority // Prioritize loading for LCP
+            sizes="100vw" // Set sizes attribute for responsive loading
             className={styles.heroBackgroundImage} // Ensure this class handles object-fit: cover
           />
           <div className={styles.heroOverlay}></div>
@@ -395,7 +403,7 @@ export default function GeorgiaTrip() {
                 // Removed unoptimized prop
               />
             </div>
-            <h1 className={styles.title}>
+            <h1 className={styles.title} style={{fontDisplay: 'swap', fontWeight: 700}}>
               رحلة <span className={styles.highlight}>جورجيا</span> الساحرة{' '}
               {/* Changed title */}
             </h1>

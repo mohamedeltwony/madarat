@@ -62,6 +62,10 @@ $font-family: 'Cairo', sans-serif;
 // Style for the next/image background component
 .heroBackgroundImage {
   z-index: 0; // Place image above default background but below overlay
+  object-fit: cover; // Add object-fit property to ensure image covers the area
+  object-position: center; // Center the image
+  width: 100%;
+  height: 100%;
 }
 
 // Added basic styles for standard img tag used as background
@@ -141,12 +145,12 @@ $font-family: 'Cairo', sans-serif;
 // Main headline
 .title {
   font-size: 2.5rem;
-  font-weight: 800;
+  font-weight: 700; // Changed from 800 to match preloaded font weight
   margin-bottom: 1.5rem;
   color: white;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); // Simplified shadow for faster rendering
   line-height: 1.2;
-  font-family: $font-family;
+  font-family: $font-family, 'Arial', sans-serif; // Added system font fallback
 
   @media (min-width: 768px) {
     font-size: 3.5rem;
