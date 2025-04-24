@@ -1,0 +1,9 @@
+.aligncenter {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  #secondary {
+    z-index: 999999 !important; // Ensure override for mobile sidebar
+  }
+}

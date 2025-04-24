@@ -1,0 +1,63 @@
+{
+  "name": "next-wordpress-starter",
+  "homepage": "https://next-wordpress-starter.spacejelly.dev",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": "Colby Fayock <hello@colbyfayock.com>",
+  "packageManager": "pnpm@10.6.1",
+  "scripts": {
+    "build": "SKIP_LINT=1 next build",
+    "dev": "next dev",
+    "export": "next export",
+    "format": "npm run lint --fix",
+    "format:no-path": "npm run lint:no-path --fix",
+    "lint": "eslint .",
+    "lint:no-path": "eslint",
+    "start": "next start -p ${PORT:=3000}",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*.js": "npm run format:no-path",
+    "**/*.scss": "npm run prettier --write"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.13.5",
+    "@apollo/link-retry": "^2.0.0-beta.3",
+    "date-fns": "^2.30.0",
+    "dotenv": "^16.0.3",
+    "fuse.js": "^6.6.2",
+    "graphql": "^16.6.0",
+    "he": "^1.2.0",
+    "loader-utils": "^3.2.1",
+    "next": "^14.1.0",
+    "nextjs-progressbar": "^0.0.16",
+    "parameterize": "^1.0.0",
+    "path": "^0.12.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
+    "react-icons": "^4.8.0",
+    "rss": "^1.2.2",
+    "sass": "^1.62.1",
+    "style.css": "^1.0.3",
+    "react-fireworks": "^1.0.4"
+  },
+  "devDependencies": {
+    "eslint": "8.39.0",
+    "eslint-config-next": "^14.1.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.4",
+    "eslint-plugin-react": "^7.32.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "playwright": "^1.33.0",
+    "prettier": "^3.5.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/colbyfayock/next-wordpress-starter"
+  },
+  "bugs": {
+    "url": "https://github.com/colbyfayock/next-wordpress-starter/issues"
+  }
+}

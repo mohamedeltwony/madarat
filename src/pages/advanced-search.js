@@ -5,6 +5,8 @@ import usePageMetadata from '@/hooks/use-page-metadata';
 import { getCategories } from '@/lib/categories';
 import { getYearArchives } from '@/lib/posts';
 import { getMonthName } from '@/lib/datetime';
+import { getSiteMetadata } from '@/lib/site';
+import { getAllMenus } from '@/lib/menus';
 
 import Layout from '@/components/Layout';
 import Container from '@/components/Container';
@@ -12,7 +14,7 @@ import Section from '@/components/Section';
 import PostCard from '@/components/PostCard';
 import Meta from '@/components/Meta';
 
-export default function AdvancedSearch({ categories, years }) {
+export default function AdvancedSearch({ categories, years, metadata: siteMetadata, menus }) {
   const router = useRouter();
   const { q, category, year, month, author } = router.query;
 
@@ -98,7 +100,7 @@ export default function AdvancedSearch({ categories, years }) {
   };
 
   return (
-    <Layout>
+    <Layout metadata={siteMetadata} menus={menus}>
       <Meta title={metadata.title} description={metadata.description} />
 
       <Section>
@@ -249,16 +251,31 @@ export default function AdvancedSearch({ categories, years }) {
 }
 
 export async function getStaticProps() {
+  // Fetch layout data
+  const { metadata } = await getSiteMetadata();
+  const { menus } = await getAllMenus();
+  
+  // Fetch page-specific data
   const { categories } = await getCategories({
     count: 100, // Get all available categories
   });
 
-  const years = await getYearArchives();
+  const { years } = await getYearArchives();
+  
+  // Sanitize data to remove undefined values
+  const sanitizedMetadata = JSON.parse(JSON.stringify(metadata || {}));
+  const sanitizedMenus = JSON.parse(JSON.stringify(menus || {}));
+  const sanitizedCategories = JSON.parse(JSON.stringify(categories || []));
+  const sanitizedYears = JSON.parse(JSON.stringify(years || []));
 
   return {
     props: {
-      categories,
-      years,
+      categories: sanitizedCategories,
+      years: sanitizedYears,
+      metadata: sanitizedMetadata,
+      menus: sanitizedMenus
     },
+    // Add ISR with a reasonable revalidation period
+    revalidate: 600 // Revalidate every 10 minutes
   };
 }

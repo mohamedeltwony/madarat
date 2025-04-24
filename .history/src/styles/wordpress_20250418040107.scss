@@ -1,0 +1,9 @@
+.aligncenter {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  html body #secondary.widget-area.shop-sidebar {
+    z-index: 999999 !important; // Ensure override for mobile sidebar with higher specificity
+  }
+}

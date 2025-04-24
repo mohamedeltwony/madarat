@@ -4,6 +4,8 @@ import { Helmet } from 'react-helmet';
 import useSite from 'hooks/use-site';
 import { getAllCategories, categoryPathBySlug } from 'lib/categories';
 import { WebpageJsonLd } from 'lib/json-ld';
+import { getSiteMetadata } from 'lib/site';
+import { getAllMenus } from 'lib/menus';
 
 import Layout from 'components/Layout';
 import Header from 'components/Header';
@@ -13,7 +15,7 @@ import SectionTitle from 'components/SectionTitle';
 
 import styles from 'styles/pages/Categories.module.scss';
 
-export default function Categories({ categories }) {
+export default function Categories({ categories, siteMetadata, menus }) {
   const { metadata = {} } = useSite();
   const { title: siteTitle } = metadata;
   const title = 'Categories';
@@ -21,7 +23,7 @@ export default function Categories({ categories }) {
   let metaDescription = `Read ${categories.length} categories at ${siteTitle}.`;
 
   return (
-    <Layout>
+    <Layout metadata={siteMetadata} menus={menus}>
       <Helmet>
         <title>Categories</title>
         <meta name="description" content={metaDescription} />
@@ -63,11 +65,25 @@ export default function Categories({ categories }) {
 }
 
 export async function getStaticProps() {
+  // Fetch layout data
+  const { metadata } = await getSiteMetadata();
+  const { menus } = await getAllMenus();
+  
+  // Fetch page-specific data
   const { categories } = await getAllCategories();
+
+  // Sanitize data to remove undefined values
+  const sanitizedMetadata = JSON.parse(JSON.stringify(metadata || {}));
+  const sanitizedMenus = JSON.parse(JSON.stringify(menus || {}));
+  const sanitizedCategories = JSON.parse(JSON.stringify(categories || []));
 
   return {
     props: {
-      categories,
+      categories: sanitizedCategories,
+      siteMetadata: sanitizedMetadata,
+      menus: sanitizedMenus
     },
+    // Add ISR with a reasonable revalidation period
+    revalidate: 600 // Revalidate every 10 minutes
   };
 }

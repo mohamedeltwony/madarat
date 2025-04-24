@@ -1,0 +1,135 @@
+@import 'styles/settings/__settings';
+
+// Variables from LondonScotland page for consistency
+$color-gold: #cc9c64;
+$color-teal: #0c4c44;
+$color-dark-teal: #0c4444;
+$font-family: 'Cairo', sans-serif;
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden; // Prevent scrollbars from video/fireworks
+  direction: rtl; // Ensure RTL layout
+  font-family: $font-family;
+
+  // Add background image and overlay like the landing page
+  &::before { // Background Image
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/london-edinburgh.jpg'); // Use the same image
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: 0; // Behind overlay and content
+    filter: brightness(0.5); // Adjust brightness as needed
+  }
+
+  &::after { // Overlay
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba($color-teal, 0.7),
+      rgba($color-dark-teal, 0.6)
+    );
+    z-index: 1; // Above background, below fireworks/content
+  }
+}
+
+// Remove backgroundVideo styles
+/*
+.backgroundVideo { ... removed ... }
+*/
+
+// Fireworks component is positioned via inline styles (z-index: 5)
+
+.mainContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  z-index: 10; // Ensure content is definitely above fireworks/background
+  padding: 2rem;
+  text-align: center;
+  color: white; // Default text color
+}
+
+.contentBox {
+  background: rgba(12, 68, 68, 0.7); // Dark teal semi-transparent background
+  backdrop-filter: blur(8px);
+  padding: 2.5rem 3rem;
+  border-radius: 1rem;
+  border: 1px solid rgba($color-gold, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 650px;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 2rem 1.5rem;
+  }
+}
+
+.logoContainer { // Added styles for logo container
+  margin-bottom: 1.5rem; // Add space below the logo
+  line-height: 0; // Prevent extra space from line height
+}
+
+.title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: $color-gold; // Gold color for title
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+
+  @media (max-width: 768px) {
+    font-size: 2.2rem;
+  }
+}
+
+.message {
+  font-size: 1.2rem;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  color: #f0f0f0; // Light color for readability
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column; // Stack buttons vertically
+  gap: 1rem; // Space between buttons
+  align-items: center; // Center buttons horizontally
+}
+
+.downloadLink {
+  text-decoration: none; // Remove underline from link
+  width: 100%; // Make link take full width for button alignment
+  max-width: 350px; // Max width for buttons
+}
+
+.downloadButton {
+  // Inherits SparkleButton styles, add specific overrides if needed
+  width: 100%; // Make button fill the link width
+  background-color: $color-gold !important; // Ensure gold background
+  font-size: 1rem !important;
+  padding: 0.8rem 1rem !important;
+
+  &:hover {
+     box-shadow: 0 5px 15px rgba($color-gold, 0.5) !important; // Enhance hover shadow
+  }
+}

@@ -5,6 +5,8 @@ import Layout from 'components/Layout';
 import Header from 'components/Header';
 import Hero from 'components/Hero';
 import styles from 'styles/Accommodation.module.scss';
+import { getSiteMetadata } from '@/lib/site';
+import { getAllMenus } from '@/lib/menus';
 
 const accommodations = [
   {
@@ -39,13 +41,13 @@ const accommodations = [
   },
 ];
 
-export default function Accommodation() {
+export default function Accommodation({ metadata, menus }) {
   useEffect(() => {
     document.documentElement.dir = 'rtl';
   }, []);
 
   return (
-    <Layout>
+    <Layout metadata={metadata} menus={menus}>
       <Head>
         <title>أماكن الإقامة - WeSeek Travel</title>
         <meta
@@ -86,4 +88,23 @@ export default function Accommodation() {
       </main>
     </Layout>
   );
+}
+
+export async function getStaticProps() {
+  // Fetch necessary data for the layout
+  const { metadata } = await getSiteMetadata();
+  const { menus } = await getAllMenus();
+
+  // Sanitize the data to remove any undefined values
+  const sanitizedMetadata = JSON.parse(JSON.stringify(metadata || {}));
+  const sanitizedMenus = JSON.parse(JSON.stringify(menus || {}));
+
+  return {
+    props: {
+      metadata: sanitizedMetadata,
+      menus: sanitizedMenus
+    },
+    // Use ISR with a reasonable revalidation period
+    revalidate: 600 // Revalidate every 10 minutes
+  };
 }

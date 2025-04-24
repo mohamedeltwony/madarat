@@ -1,11 +1,13 @@
 import { getCategoryBySlug } from '@/lib/categories';
 import { getPostsByCategoryId } from '@/lib/posts';
 import usePageMetadata from '@/hooks/use-page-metadata';
+import { getSiteMetadata } from '@/lib/site';
+import { getAllMenus } from '@/lib/menus';
 
 import ArchiveTemplate from '@/templates/archive';
 import Title from '@/components/Title';
 
-export default function Category({ category, posts }) {
+export default function Category({ category, posts, siteMetadata, menus }) {
   const { name, description, slug } = category;
 
   const { metadata } = usePageMetadata({
@@ -25,11 +27,17 @@ export default function Category({ category, posts }) {
       posts={posts}
       slug={slug}
       metadata={metadata}
+      siteMetadata={siteMetadata}
+      menus={menus}
     />
   );
 }
 
 export async function getStaticProps({ params = {} } = {}) {
+  // Fetch layout data
+  const { metadata } = await getSiteMetadata();
+  const { menus } = await getAllMenus();
+  
   const { category } = await getCategoryBySlug(params?.slug);
 
   if (!category) {
@@ -44,11 +52,21 @@ export async function getStaticProps({ params = {} } = {}) {
     queryIncludes: 'archive',
   });
 
+  // Sanitize data to remove undefined values
+  const sanitizedMetadata = JSON.parse(JSON.stringify(metadata || {}));
+  const sanitizedMenus = JSON.parse(JSON.stringify(menus || {}));
+  const sanitizedCategory = JSON.parse(JSON.stringify(category || {}));
+  const sanitizedPosts = JSON.parse(JSON.stringify(posts || []));
+
   return {
     props: {
-      category,
-      posts,
+      category: sanitizedCategory,
+      posts: sanitizedPosts,
+      siteMetadata: sanitizedMetadata,
+      menus: sanitizedMenus
     },
+    // Add ISR with a reasonable revalidation period
+    revalidate: 600 // Revalidate every 10 minutes
   };
 }
 

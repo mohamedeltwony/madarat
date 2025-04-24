@@ -1,0 +1,29 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Optimize crawling
+Crawl-delay: 10
+
+# Sitemaps
+Sitemap: https://madaratalkon.com/sitemap.xml
+
+# Disallow crawling of unnecessary paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+Disallow: /search
+Disallow: /*?*
+Disallow: /*.json$
+
+# Allow media files
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.png$
+Allow: /*.svg$
+
+# Allow essential resources
+Allow: /favicon.ico
+Allow: /site.webmanifest
+Allow: /robots.txt

@@ -1,0 +1,85 @@
+/* eslint-disable @next/next/no-document-import-in-page */
+import Document, { Html, Head, Main, NextScript } from 'next/document';
+
+export default class MyDocument extends Document {
+  render() {
+    return (
+      <Html lang="ar" dir="rtl">
+        <Head>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+          {/* Preload critical font files */}
+          {/* NOTE: URLs might change; verify in browser dev tools if possible */}
+          <link
+            rel="preload"
+            href="https://fonts.gstatic.com/s/cairo/v28/SLXVc1nY6HkvangtZmpQdkhzfH5lkSs2Sg.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            href="https://fonts.gstatic.com/s/cairo/v28/SLXgc1nY6HkvamImRJqExst1P4wdCTELYDb3pw.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          {/* Add other weights (500, 600) if heavily used above the fold */}
+
+          <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+
+          <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+          />
+          {/* Facebook Pixel Code */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '330286163283402');
+          `,
+            }}
+          />
+          <noscript
+            dangerouslySetInnerHTML={{
+              __html: `<img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=330286163283402&ev=PageView&noscript=1"
+          />`,
+            }}
+          />
+          {/* End Facebook Pixel Code */}
+          {/* Clarity Tracking Code */}
+          <script
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(c,l,a,r,i,t,y){
+                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "r7izccxz4q");
+              `,
+            }}
+          />
+          {/* End Clarity Tracking Code */}
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}

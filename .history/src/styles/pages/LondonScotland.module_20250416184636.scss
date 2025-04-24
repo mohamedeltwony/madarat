@@ -1,0 +1,531 @@
+@import 'styles/settings/__settings';
+
+// Variables for our brand colors
+$color-gold: #cc9c64;
+$color-teal: #0c4c44;
+$color-dark-teal: #0c4444;
+$font-family: 'Cairo', sans-serif;
+
+// Main container
+.container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+  // RTL default for Arabic content
+  direction: rtl;
+  text-align: right;
+  font-family: $font-family;
+}
+
+// Main content
+.main {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+// Hero section
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  // Fallback background if image isn't available
+  background: linear-gradient(135deg, $color-teal 0%, $color-dark-teal 100%);
+
+  // Background image with overlay - Image removed, handled by next/image in JS
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    // background-image: url('/london-edinburgh.jpg'); // Removed
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: 0;
+
+    // Fallback if image isn't available
+    @media (max-width: 768px) {
+      background-position: center 20%;
+    }
+  }
+}
+
+// Style for the next/image background component
+.heroBackgroundImage {
+  z-index: 0; // Place image above default background but below overlay
+}
+
+// Overlay for better text contrast
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba($color-teal, 0.7),
+    rgba($color-dark-teal, 0.6)
+  );
+  z-index: 1; // Place overlay above background image
+}
+
+// Hero content container
+.heroContent {
+  width: 100%;
+  max-width: 90%;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  z-index: 2; // Ensure content is above overlay
+  position: relative;
+
+  @media (min-width: 768px) {
+    max-width: 800px;
+    padding: 3rem;
+  }
+}
+
+// Logo container
+.logoContainer {
+  margin-bottom: 2rem;
+
+  // img { // Remove potentially conflicting styles for next/image
+  //   max-width: 100%;
+  //   height: auto;
+  //   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+  // }
+}
+
+// Main headline
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  line-height: 1.2;
+  font-family: $font-family;
+
+  @media (min-width: 768px) {
+    font-size: 3.5rem;
+  }
+}
+
+// Highlight for spans in title
+.highlight {
+  position: relative;
+  color: $color-gold;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background-color: rgba($color-gold, 0.3);
+    z-index: -1;
+    border-radius: 4px;
+  }
+}
+
+// Description text
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem; // Keep margin-bottom to space before features
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: $font-family;
+
+  @media (min-width: 768px) {
+    font-size: 1.25rem;
+    margin-bottom: 2.5rem; // Keep margin-bottom
+  }
+}
+
+// Form container
+.formContainer {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 2rem; // Keep margin-top to space after features
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  min-height: 450px; // Added min-height to potentially reduce CLS
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    min-height: auto; // Reset min-height on smaller screens if needed
+  }
+}
+
+// Trip form
+.tripForm {
+  display: grid;
+  grid-template-columns: 1fr; // Always single column
+  gap: 1.25rem;
+  font-family: $font-family;
+
+  // @media (min-width: 768px) { // Remove two-column layout
+  //   grid-template-columns: repeat(2, 1fr);
+  // }
+}
+
+// Main CTA
+.mainCTA {
+  background-color: $color-gold !important;
+  font-family: $font-family !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  padding: 0.75rem 1rem !important;
+
+  &:hover {
+    box-shadow: 0 5px 15px rgba($color-gold, 0.4) !important;
+  }
+}
+
+// Form elements styling
+.formGroup {
+  position: relative; // Needed for absolute positioning of the label
+  margin-top: 1rem; // Add some top margin for the floating label
+
+  @media (min-width: 768px) {
+    grid-column: 1 / -1; // Ensure all groups span full width even if grid changes later
+  }
+
+  // Default label style (for Nationality)
+  label:not(.formLabel) {
+    // Exclude floating labels from this default style
+    display: block;
+    margin-bottom: 0.5rem; // Keep for Nationality label
+    font-weight: 600;
+    color: $color-teal;
+    font-size: 1rem;
+    text-shadow: none;
+    font-family: $font-family;
+  }
+
+  // Input specific styles (used by floating label inputs)
+  .formInput {
+    width: 100%; // Explicitly set width to 100%
+    padding: 1.25rem 1rem 0.5rem 1rem; // Adjust padding: top, right, bottom, left (RTL)
+    border: 1px solid rgba($color-teal, 0.3);
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: $color-dark-teal;
+    font-weight: 500;
+    font-family: $font-family;
+
+    &::placeholder {
+      color: rgba($color-dark-teal, 0.5);
+      font-family: $font-family;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-gold;
+      box-shadow: 0 0 0 3px rgba($color-gold, 0.2);
+      background-color: white;
+    }
+
+    // Remove placeholder styles if using floating label trick
+    &::placeholder {
+      color: transparent; // Hide placeholder text visually
+    }
+  }
+
+  // Floating Label specific styles
+  .formLabel {
+    position: absolute;
+    top: 0.875rem; // Adjust initial top position to be inside the input padding area (0.75rem input padding + small offset)
+    right: 1rem; // Position from the right for RTL
+    font-size: 1rem; // Initial font size same as input
+    color: rgba($color-dark-teal, 0.6); // Placeholder-like color
+    pointer-events: none; // Allow clicks to pass through to input
+    transition: all 0.2s ease-out;
+    background-color: transparent; // Ensure no background interferes
+    padding: 0 0.25rem; // Small padding for background clearing effect
+    font-family: $font-family;
+    font-weight: 500;
+    line-height: 1; // Prevent line height issues
+  }
+
+  // Styles for when the label should float up
+  // Using :not(:placeholder-shown) relies on the placeholder=" " trick
+  .formInput:focus + .formLabel,
+  .formInput:not(:placeholder-shown) + .formLabel {
+    top: 0; // Move label to the very top of the group
+    transform: translateY(-50%); // Center vertically relative to the top border
+    font-size: 0.75rem; // Smaller font size when floated
+    color: $color-teal; // Active color
+    background-color: rgba(
+      255,
+      255,
+      255,
+      0.95
+    ); // Match form background for overlap
+    font-weight: 600;
+  }
+
+  // Specific adjustments for the phone group label
+  &.phoneGroup {
+    // The label is now a sibling of the div.phoneInput, not the input itself
+    // We need to rely on focus-within for focus state and :has() or sibling logic for value state
+
+    // Use focus-within on the group to trigger label float for phone focus
+    &:focus-within {
+      .formLabel {
+        top: 0; // Move label to the very top of the group
+        transform: translateY(
+          -50%
+        ); // Center vertically relative to the top border
+        font-size: 0.75rem; // Smaller font size when floated
+        color: $color-teal; // Active color
+        background-color: rgba(255, 255, 255, 0.95);
+        font-weight: 600;
+      }
+    }
+    // Also trigger float if the input inside has value (placeholder-shown trick)
+    // This targets the label if the input inside .phoneInput is not showing its placeholder
+    .phoneInput .formInput:not(:placeholder-shown) ~ .formLabel {
+      // Target label as sibling of .phoneInput
+      top: 0; // Move label to the very top of the group
+      transform: translateY(
+        -50%
+      ); // Center vertically relative to the top border
+      font-size: 0.75rem; // Smaller font size when floated
+      color: $color-teal; // Active color
+      background-color: rgba(255, 255, 255, 0.95);
+      font-weight: 600;
+    }
+
+    // Keep label floated when the group has the .hasValue class (set via JS)
+    // This ensures the label stays up even when not focused, if there's a value
+    &.hasValue .formLabel {
+      top: 0;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: $color-teal;
+      background-color: rgba(255, 255, 255, 0.95);
+      font-weight: 600;
+    }
+
+    // Initial position for phone label (now that country code is on left)
+    .formLabel {
+      top: 0.875rem; // Match other fields' initial position
+      right: 1rem; // Position from right edge of input area
+    }
+  }
+
+  select {
+    // Keep select styles separate
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%230c4c44' viewBox='0 0 16 16'%3E%3Cpath d='M8 10.5l4-4H4l4 4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 0.75rem center;
+    padding-left: 2.5rem;
+
+    option {
+      background-color: white;
+      color: $color-dark-teal;
+      padding: 0.5rem;
+      font-family: $font-family;
+    }
+  }
+}
+
+// Phone input with country code
+.phoneInput {
+  display: flex;
+  align-items: stretch;
+
+  .countryCode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba($color-teal, 0.1);
+    border: 1px solid rgba($color-teal, 0.3);
+    border-left: none; // Border is now on the right side of the code
+    border-top-left-radius: 0.375rem; // Rounded corners on the left
+    border-bottom-left-radius: 0.375rem;
+    padding: 0 0.75rem;
+    color: $color-teal;
+    font-weight: 600;
+    min-width: 70px;
+    font-family: $font-family;
+  }
+
+  // Adjust phone input padding since label is handled by group
+  // Use the same padding as other inputs for consistency
+  .phoneInput input.formInput {
+    padding: 1.25rem 1rem 0.5rem 1rem; // Match other inputs
+    border-top-left-radius: 0; // Flat corners on the left
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0.375rem; // Rounded corners on the right
+    border-bottom-right-radius: 0.375rem;
+  }
+
+  // Style for error state on phone group
+  &.inputError {
+    .phoneInput,
+    .phoneInput .countryCode {
+      // Target both parts
+      border-color: #e53e3e; // Red color for error
+      box-shadow: 0 0 0 1px #e53e3e; // Add a subtle red shadow/outline
+    }
+    .formLabel {
+      // Make label red too
+      color: #c53030;
+    }
+  }
+}
+
+// Nationality Radio Button Group Styles
+.nationalityGroup {
+  grid-column: 1 / -1; // Make it span full width like the button
+}
+
+.radioGroup {
+  display: flex;
+  gap: 1.5rem; // Space between radio buttons
+  margin-top: 0.5rem; // Space below the label
+  align-items: center;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: $color-dark-teal;
+  font-weight: 500;
+  font-family: $font-family;
+
+  input[type='radio'] {
+    margin-left: 0.5rem; // Space between radio and text (adjust for RTL)
+    accent-color: $color-gold; // Style the radio button color
+    width: 1.1em;
+    height: 1.1em;
+    cursor: pointer;
+  }
+
+  span {
+    // Style for the text next to the radio
+  }
+}
+
+// Form actions
+.formActions {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+}
+
+// Responsive improvements for mobile
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .heroContent {
+    padding: 1.5rem;
+  }
+}
+
+// --- Features Section Marquee Styles ---
+
+// Keyframes for the scrolling animation (Right-to-Left for Arabic)
+@keyframes scrollRTL {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    // Scroll one full set of items (50% of the doubled content)
+    transform: translateX(50%);
+  }
+}
+
+.featuresSection {
+  margin-bottom: 2.5rem; // Space before the form container
+  width: 100%;
+  max-width: 700px; // Align with description width
+  margin-left: auto;
+  margin-right: auto;
+  font-family: $font-family;
+  overflow: hidden; // Hide the overflowing content
+  position: relative;
+  // Removed fading edges (::before, ::after)
+}
+
+.featuresGrid {
+  display: flex; // Use flexbox for horizontal layout
+  flex-wrap: nowrap; // Prevent wrapping
+  width: fit-content; // Let the container size itself based on content
+  // Apply the animation
+  // Duration needs adjustment based on number of items and desired speed
+  // Assuming 10 items initially, duplicated to 20.
+  // Let's try 40s for a moderate speed.
+  animation: scrollRTL 40s linear infinite;
+
+  // Pause animation on hover (optional)
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+.featureItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0; // Prevent items from shrinking
+  width: 120px; // Give items a fixed width
+  margin: 0 1rem; // Add horizontal margin between items
+}
+
+.featureIcon {
+  margin-bottom: 0.5rem; // Reduced margin
+  color: $color-gold; // Keep gold for the icon color
+
+  svg {
+    // Target the SVG within the icon div
+    display: block; // Ensure SVG behaves like a block element
+  }
+}
+
+.featureText {
+  font-size: 0.9rem; // Slightly smaller font size
+  font-weight: 500;
+  color: white; // Text color white for hero background
+  line-height: 1.3; // Adjusted line height
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); // Add subtle shadow for readability
+}
