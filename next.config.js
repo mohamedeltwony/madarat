@@ -1,3 +1,7 @@
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 // const indexSearch = require('./plugins/search-index'); // Commented out - unused
 // const feed = require('./plugins/feed'); // Commented out - unused
 // const sitemap = require('./plugins/sitemap'); // Commented out - unused
@@ -88,7 +92,8 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// Wrap the config with the analyzer
+module.exports = withBundleAnalyzer(nextConfig);
 
 /**
  * parseEnv

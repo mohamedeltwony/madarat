@@ -342,7 +342,6 @@ export default function GeorgiaTrip() {
       text: 'وجبات الإفطار اليومية',
       iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp',
     },
-    { text: 'تأمين سفر دولي', iconPath: '/icons/gorgia/جولات-جماعية.webp' },
     { text: 'تأمين سفر دولي', iconPath: '/icons/gorgia/تأمين.webp' },
     { text: 'خدمة عملاء ٢٤/٧', iconPath: '/icons/gorgia/خدمة-عملاء.webp' },
   ];
