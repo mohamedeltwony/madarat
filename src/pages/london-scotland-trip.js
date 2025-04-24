@@ -9,8 +9,8 @@ const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
 // import Chatbot from '@/components/Chatbot'; // Removed
 // import ExitPopup from '@/components/ExitPopup'; // Removed
 import styles from '@/styles/pages/LondonScotland.module.scss';
-import { getSiteMetadata } from '@/lib/site'; // Import site metadata fetcher
-import { getAllMenus } from '@/lib/menus'; // Import menu fetcher
+// Removed getSiteMetadata import as it's no longer fetched here
+import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though unused in getStaticProps
 
 // Removed SVG Icon imports
 
@@ -637,18 +637,13 @@ export default function LondonScotlandTrip() {
 }
 
 export async function getStaticProps() {
-  // Fetch only metadata needed by the Layout component for SEO
-  // Removed getAllMenus() as menus are not used on this landing page
-  const { metadata } = await getSiteMetadata();
-
-  // Sanitize metadata to remove undefined values
-  const sanitizedMetadata = JSON.parse(JSON.stringify(metadata || {}));
+  // No longer fetching getSiteMetadata here to improve build/revalidation speed.
+  // Ensure necessary <Head> tags (title, meta description, OG tags)
+  // are added directly within the LondonScotlandTrip component's JSX.
+  // Also removed getAllMenus() call.
 
   return {
-    props: {
-      metadata: sanitizedMetadata, // Pass sanitized metadata
-      // menus prop removed
-    },
-    revalidate: 600, // Revalidate every 10 minutes
+    props: {}, // Return empty props
+    revalidate: 600, // Revalidate every 10 minutes (keeps ISR active)
   };
 }

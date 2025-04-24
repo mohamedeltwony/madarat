@@ -7,6 +7,7 @@ import SparkleButton from '@/components/UI/SparkleButton';
 // import Chatbot from '@/components/Chatbot'; // Removed
 // import ExitPopup from '@/components/ExitPopup'; // Removed
 import styles from '@/styles/pages/LondonScotland.module.scss'; // Use LondonScotland styles for the marquee
+// Removed getSiteMetadata import as it's no longer fetched here
 
 // Removed SVG Icon imports
 
@@ -557,4 +558,15 @@ export default function CruiseItalySpainFrance() {
       </main>
     </div>
   );
+}
+
+export async function getStaticProps() {
+  // No longer fetching getSiteMetadata here to improve build/revalidation speed.
+  // Ensure necessary <Head> tags (title, meta description, OG tags)
+  // are added directly within the CruiseItalySpainFrance component's JSX.
+
+  return {
+    props: {}, // Return empty props
+    revalidate: 600, // Revalidate every 10 minutes (keeps ISR active)
+  };
 }
