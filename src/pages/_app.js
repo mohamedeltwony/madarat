@@ -1,10 +1,11 @@
 import { useEffect, useCallback } from 'react'; // Import useCallback
 import { useRouter } from 'next/router';
 import NextApp from 'next/app';
-import { ApolloProvider } from '@apollo/client'; // Import ApolloProvider
+// import { ApolloProvider } from '@apollo/client'; // Import dynamically below
 import { Analytics } from '@vercel/analytics/react'; // Import Vercel Analytics
 import { SpeedInsights } from '@vercel/speed-insights/next'; // Import Speed Insights
 import Script from 'next/script'; // Import Script component
+import dynamic from 'next/dynamic'; // Import dynamic
 
 import { SiteContext, useSiteContext } from '../hooks/use-site';
 import { SearchProvider } from '../hooks/use-search';
@@ -21,6 +22,12 @@ import '../styles/wordpress.scss';
 import variables from '../styles/variables';
 
 function App({ Component, pageProps = {} }) {
+  // Define dynamic import inside the component scope
+  const DynamicApolloProvider = dynamic(
+    () => import('@apollo/client').then((mod) => mod.ApolloProvider),
+    { ssr: false } // Load only on client-side
+  );
+
   // Removed metadata, recentPosts, categories, menus from props
   // as getInitialProps is being removed.
 
@@ -174,8 +181,8 @@ function App({ Component, pageProps = {} }) {
 
   return (
     <>
-      {/* Wrap everything with ApolloProvider */}
-      <ApolloProvider client={apolloClient}>
+      {/* Wrap everything with the dynamically imported ApolloProvider */}
+      <DynamicApolloProvider client={apolloClient}>
         <SiteContext.Provider value={site}>
           <SearchProvider>
             <NextNProgress height={4} color={variables.progressbarColor} />
@@ -184,7 +191,7 @@ function App({ Component, pageProps = {} }) {
             <SpeedInsights /> {/* Add Vercel Speed Insights component */}
           </SearchProvider>
         </SiteContext.Provider>
-      </ApolloProvider>
+      </DynamicApolloProvider>
 
       {/* Facebook Pixel Code */}
       <Script
