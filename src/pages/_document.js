@@ -12,23 +12,25 @@ export default class MyDocument extends Document {
             href="https://fonts.gstatic.com"
             crossOrigin="anonymous"
           />
-          {/* Preload critical font files */}
-          {/* NOTE: URLs might change; verify in browser dev tools if possible */}
+          {/* Preload critical font files used above the fold (Hero Title/Desc) */}
+          {/* NOTE: Verify exact URLs/weights in browser dev tools */}
+          {/* Preloading Regular 400 */}
           <link
             rel="preload"
-            href="https://fonts.gstatic.com/s/cairo/v28/SLXVc1nY6HkvangtZmpQdkhzfH5lkSs2Sg.woff2"
+            href="https://fonts.gstatic.com/s/cairo/v28/SLXVc1nY6HkvangtZmpQdkhzfH5lkSs2Sg.woff2" /* Guess for Regular 400 */
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
           />
+          {/* Preloading Bold 700 (Assuming hero title uses bold) */}
           <link
             rel="preload"
-            href="https://fonts.gstatic.com/s/cairo/v28/SLXgc1nY6HkvamImRJqExst1P4wdCTELYDb3pw.woff2"
+            href="https://fonts.gstatic.com/s/cairo/v28/SLXbc1nY6HkvamqM9ZqKjIMqpxz1uLd4pQ.woff2" /* Guess for Bold 700 */
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
           />
-          {/* Add other weights (500, 600) if heavily used above the fold */}
+          {/* Remove preloads for weights not critical for initial hero render if known */}
 
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 

@@ -395,6 +395,7 @@ export default function GeorgiaTrip() {
                 width={240}
                 height={75}
                 priority
+                sizes="240px" // Add sizes prop for this specific instance
                 // Removed unoptimized prop
               />
             </div>

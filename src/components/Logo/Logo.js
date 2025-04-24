@@ -16,6 +16,7 @@ const Logo = ({ width = 150, height = 46 }) => {
         width={width} // Use prop or default
         height={height} // Use prop or default
         priority // Load logo quickly
+        sizes={`${width}px`} // Add sizes prop based on the rendered width
       />
     </div>
   );
