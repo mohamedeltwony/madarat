@@ -12,6 +12,12 @@ export default class MyDocument extends Document {
             href="https://fonts.gstatic.com"
             crossOrigin="anonymous"
           />
+          {/* Main Google Font Stylesheet */}
+          <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+          />
+
           {/* Preload critical font files used above the fold (Hero Title/Desc) */}
           {/* NOTE: Verify exact URLs/weights in browser dev tools */}
           {/* Preloading Regular 400 */}
@@ -33,11 +39,6 @@ export default class MyDocument extends Document {
           {/* Remove preloads for weights not critical for initial hero render if known */}
 
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-
-          <link
-            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-          />
           {/* Facebook Pixel Code */}
         </Head>
         <body>

@@ -367,10 +367,7 @@ export default function GeorgiaTrip() {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
+        {/* Removed redundant Google Font link - loaded in _document.js */}
       </Head>
 
       <main className={styles.main}>
@@ -395,7 +392,7 @@ export default function GeorgiaTrip() {
                 width={240}
                 height={75}
                 priority
-                sizes="240px" // Add sizes prop for this specific instance
+                sizes="(max-width: 768px) 150px, 240px" // Refined sizes prop for responsiveness
                 // Removed unoptimized prop
               />
             </div>
