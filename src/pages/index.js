@@ -1,8 +1,9 @@
-import { getPaginatedPosts } from '@/lib/posts';
+import { getPaginatedPosts, getYearArchives } from '@/lib/posts'; // Combined post imports
 import { WebsiteJsonLd } from '@/lib/json-ld';
 import useSite from '@/hooks/use-site';
 import { getAllAuthors } from '@/lib/users';
-import { getYearArchives } from '@/lib/posts';
+import { getSiteMetadata } from '@/lib/site'; // Import site metadata fetcher
+import { getAllMenus } from '@/lib/menus'; // Import menu fetcher
 
 import Layout from '@/components/Layout';
 import Hero from '@/components/Hero';
@@ -289,6 +290,10 @@ export default function Home({
 }
 
 export async function getStaticProps() {
+  // Fetch layout data (metadata) concurrently with page data
+  // Removed getAllMenus() as menus are not used on the homepage layout (assuming)
+  const { metadata } = await getSiteMetadata(); // Fetch metadata needed by Layout
+
   try {
     console.log('Starting to fetch destinations...');
 
@@ -365,8 +370,13 @@ export async function getStaticProps() {
       console.error('Error fetching archives:', error);
     }
 
+    // Sanitize metadata to remove undefined values
+    const sanitizedMetadata = JSON.parse(JSON.stringify(metadata || {}));
+
     return {
       props: {
+        metadata: sanitizedMetadata, // Pass sanitized metadata
+        // menus prop removed
         destinations: formattedDestinations,
         posts,
         pagination,
@@ -377,8 +387,12 @@ export async function getStaticProps() {
     };
   } catch (error) {
     console.error('Error in getStaticProps:', error);
+    // Sanitize metadata even in error case if it was fetched *before* returning
+    const sanitizedMetadataOnError = JSON.parse(JSON.stringify(metadata || {}));
     return {
       props: {
+        metadata: sanitizedMetadataOnError, // Pass sanitized metadata
+        // menus prop removed
         destinations: [],
         posts: [],
         pagination: null,
