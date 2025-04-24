@@ -407,7 +407,7 @@ export default function GeorgiaTrip() {
               <br />
               السعر يبدأ من
               <br />
-              <span className={styles.highlight}>2699</span> ج.م في الغرفة
+              <span className={styles.highlight}>2699</span> ر.س في الغرفة
               المزدوجة
             </p>
 
