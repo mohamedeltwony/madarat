@@ -12,9 +12,9 @@ export default class MyDocument extends Document {
             href="https://fonts.gstatic.com"
             crossOrigin="anonymous"
           />
-          {/* Main Google Font Stylesheet - Using display=optional to prioritize CLS */}
+          {/* Main Google Font Stylesheet - Reverting to display=swap */}
           <link
-            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=optional"
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
             rel="stylesheet"
           />
 

@@ -184,12 +184,23 @@ function App({ Component, pageProps = {} }) {
       {/* Wrap everything with the dynamically imported ApolloProvider */}
       <DynamicApolloProvider client={apolloClient}>
         <SiteContext.Provider value={site}>
-          <SearchProvider>
-            <NextNProgress height={4} color={variables.progressbarColor} />
-            <Component {...pageProps} />
-            <Analytics /> {/* Add Vercel Analytics component */}
-            <SpeedInsights /> {/* Add Vercel Speed Insights component */}
-          </SearchProvider>
+          {/* Conditionally render SearchProvider */}
+          {['/search', '/advanced-search', '/posts', '/blog'].some((path) => router.pathname.startsWith(path)) ? (
+            <SearchProvider>
+              <NextNProgress height={4} color={variables.progressbarColor} />
+              <Component {...pageProps} />
+              <Analytics /> {/* Add Vercel Analytics component */}
+            </SearchProvider>
+          ) : (
+            <>
+              {/* Render without SearchProvider for other pages (e.g., landing pages) */}
+              <NextNProgress height={4} color={variables.progressbarColor} />
+              <Component {...pageProps} />
+              <Analytics /> {/* Add Vercel Analytics component */}
+            </>
+          )}
+          {/* SpeedInsights can likely stay outside conditional rendering */}
+          <SpeedInsights /> {/* Add Vercel Speed Insights component */}
         </SiteContext.Provider>
       </DynamicApolloProvider>
 
