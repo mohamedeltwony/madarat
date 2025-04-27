@@ -25,7 +25,8 @@ const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false }); /
 const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
   ssr: false, // Format options object multi-line as requested
 });
-export default function CruiseItalySpainFrance() { // Updated component name
+export default function CruiseItalySpainFrance() {
+  // Updated component name
   // Removed blank line above
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
@@ -329,7 +330,8 @@ export default function CruiseItalySpainFrance() { // Updated component name
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>عرض كروز الأحلام: إيطاليا، إسبانيا، فرنسا | مدارات الكون</title> {/* Updated Title */}
+        <title>عرض كروز الأحلام: إيطاليا، إسبانيا، فرنسا | مدارات الكون</title>{' '}
+        {/* Updated Title */}
         <meta
           name="description"
           content="انطلق في رحلة بحرية لا تُنسى لمدة 8 أيام عبر إيطاليا وإسبانيا وفرنسا مع مدارات الكون. إقامة ووجبات وترفيه بـ 3700 ريال فقط!" // Updated Description
@@ -381,11 +383,14 @@ export default function CruiseItalySpainFrance() { // Updated component name
               كروز الأحلام: <span className={styles.highlight}>إيطاليا</span>،{' '}
               <span className={styles.highlight}>إسبانيا</span>،{' '}
               <span className={styles.highlight}>فرنسا</span>
-            </h1> {/* Updated Headline */}
+            </h1>{' '}
+            {/* Updated Headline */}
             <p className={styles.description}>
-              انطلق في مغامرة بحرية استثنائية لمدة 8 أيام و 7 ليالي بسعر يبدأ من 3700 ريال للشخص. استمتع بالإقامة الفاخرة، الوجبات الشهية، والمرافق الترفيهية على متن الكروز.
-            </p> {/* Updated Description */}
-
+              انطلق في مغامرة بحرية استثنائية لمدة 8 أيام و 7 ليالي بسعر يبدأ من
+              3700 ريال للشخص. استمتع بالإقامة الفاخرة، الوجبات الشهية، والمرافق
+              الترفيهية على متن الكروز.
+            </p>{' '}
+            {/* Updated Description */}
             {/* Features Section - Copied from London/Scotland page */}
             <div className={styles.featuresSection}>
               <div className={styles.featuresGrid}>
@@ -413,7 +418,6 @@ export default function CruiseItalySpainFrance() { // Updated component name
               </div>
             </div>
             {/* End Features Section */}
-
             {/* Contact Form */}
             <div className={styles.formContainer}>
               <form onSubmit={handleSubmit} className={styles.tripForm}>

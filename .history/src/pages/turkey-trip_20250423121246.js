@@ -603,9 +603,7 @@ export default function TurkeyTrip() {
 
                 <div className={styles.formActions}>
                   <SparkleButton type="submit" disabled={isLoading}>
-                    {isLoading
-                      ? '🚀 جاري الإرسال...'
-                      : 'أرسل طلبك الآن'}
+                    {isLoading ? '🚀 جاري الإرسال...' : 'أرسل طلبك الآن'}
                   </SparkleButton>
                 </div>
               </form>

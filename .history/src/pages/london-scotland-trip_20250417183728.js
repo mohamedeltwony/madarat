@@ -26,7 +26,6 @@ const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
   ssr: false, // Format options object multi-line as requested
 });
 
-
 export default function LondonScotlandTrip() {
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({

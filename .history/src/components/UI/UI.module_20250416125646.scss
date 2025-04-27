@@ -60,9 +60,12 @@ $breakpoint-large: 1200px;
   // Use brand gold color for the gradient
   background: linear-gradient(
     45deg,
-    #cc9c64, // Brand gold
-    lighten(#cc9c64, 10%), // Lighter gold
-    darken(#cc9c64, 10%), // Darker gold
+    #cc9c64,
+    // Brand gold
+    lighten(#cc9c64, 10%),
+    // Lighter gold
+    darken(#cc9c64, 10%),
+    // Darker gold
     #cc9c64 // Brand gold
   );
   background-size: 400% 400%;

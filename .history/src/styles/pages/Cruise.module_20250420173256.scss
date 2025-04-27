@@ -519,11 +519,19 @@ $font-family: 'Cairo', sans-serif;
   }
   &::before {
     left: 0;
-    background: linear-gradient(to right, rgba(12, 76, 68, 1), rgba(12, 76, 68, 0)); // Match overlay start color
+    background: linear-gradient(
+      to right,
+      rgba(12, 76, 68, 1),
+      rgba(12, 76, 68, 0)
+    ); // Match overlay start color
   }
   &::after {
     right: 0;
-    background: linear-gradient(to left, rgba(12, 68, 68, 1), rgba(12, 68, 68, 0)); // Match overlay end color
+    background: linear-gradient(
+      to left,
+      rgba(12, 68, 68, 1),
+      rgba(12, 68, 68, 0)
+    ); // Match overlay end color
   }
 }
 

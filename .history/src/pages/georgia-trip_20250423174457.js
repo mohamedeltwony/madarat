@@ -3,7 +3,9 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router'; // Import useRouter
 import dynamic from 'next/dynamic'; // Import dynamic
-const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), { ssr: false });
+const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
+  ssr: false,
+});
 // import Chatbot from '@/components/Chatbot'; // Removed
 // import ExitPopup from '@/components/ExitPopup'; // Removed
 import styles from '@/styles/pages/LondonScotland.module.scss';

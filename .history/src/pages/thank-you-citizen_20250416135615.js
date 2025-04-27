@@ -5,20 +5,19 @@ import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti'; // Import the confetti function directly
 
 export default function ThankYouCitizen() {
-
   // Function to fire confetti with specific options
   const fireConfetti = () => {
     const count = 200;
     const defaults = {
       origin: { y: 0.6 },
-      colors: ['#cc9c64', '#ffffff', '#0c4c44'] // Gold, White, Teal
+      colors: ['#cc9c64', '#ffffff', '#0c4c44'], // Gold, White, Teal
     };
 
     function fire(particleRatio, opts) {
       confetti({
         ...defaults,
         ...opts,
-        particleCount: Math.floor(count * particleRatio)
+        particleCount: Math.floor(count * particleRatio),
       });
     }
 
@@ -44,13 +43,16 @@ export default function ThankYouCitizen() {
     return () => clearTimeout(timer);
   }, []); // Empty dependency array, fire only once on mount + intervals
 
-
   return (
     <div className={styles.container} dir="rtl">
       <Head>
         <title>شكراً لك! | مدارات الكون</title>
-        <meta name="description" content="شكراً لتسجيلك معنا في رحلة لندن واسكتلندا." />
-        <meta name="robots" content="noindex, nofollow" /> {/* Prevent indexing */}
+        <meta
+          name="description"
+          content="شكراً لتسجيلك معنا في رحلة لندن واسكتلندا."
+        />
+        <meta name="robots" content="noindex, nofollow" />{' '}
+        {/* Prevent indexing */}
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -63,30 +65,59 @@ export default function ThankYouCitizen() {
       */}
 
       {/* Confetti Canvas */}
-      <ReactCanvasConfetti refConfetti={getInstance} style={{ position: 'fixed', pointerEvents: 'none', width: '100%', height: '100%', top: 0, left: 0, zIndex: 5 }} />
+      <ReactCanvasConfetti
+        refConfetti={getInstance}
+        style={{
+          position: 'fixed',
+          pointerEvents: 'none',
+          width: '100%',
+          height: '100%',
+          top: 0,
+          left: 0,
+          zIndex: 5,
+        }}
+      />
 
       {/* Content Overlay */}
       <main className={styles.mainContent}>
         <div className={styles.contentBox}>
           <h1 className={styles.title}>شكراً لك!</h1>
           <p className={styles.message}>
-            يعطيك العافية! استلمنا بياناتك وبيتواصل معك مستشار السفر حقنا في أقرب وقت ممكن عشان يضبط لك رحلتك.
+            يعطيك العافية! استلمنا بياناتك وبيتواصل معك مستشار السفر حقنا في
+            أقرب وقت ممكن عشان يضبط لك رحلتك.
           </p>
           <div className={styles.buttonGroup}>
             {/* IMPORTANT: Replace href with your actual PDF paths */}
-            <a href="/pdfs/london-scotland-activities.pdf" download className={styles.downloadLink}>
+            <a
+              href="/pdfs/london-scotland-activities.pdf"
+              download
+              className={styles.downloadLink}
+            >
               <SparkleButton className={styles.downloadButton}>
                 حمّل جدول الأنشطة
               </SparkleButton>
             </a>
-            <a href="/pdfs/bonus-destination-guide.pdf" download className={styles.downloadLink}>
+            <a
+              href="/pdfs/bonus-destination-guide.pdf"
+              download
+              className={styles.downloadLink}
+            >
               <SparkleButton className={styles.downloadButton}>
                 حمّل دليل الوجهة الإضافي
               </SparkleButton>
             </a>
           </div>
           {/* Temporary Test Button */}
-          <button onClick={fire} style={{ marginTop: '20px', padding: '10px', cursor: 'pointer', zIndex: 100, position: 'relative' }}>
+          <button
+            onClick={fire}
+            style={{
+              marginTop: '20px',
+              padding: '10px',
+              cursor: 'pointer',
+              zIndex: 100,
+              position: 'relative',
+            }}
+          >
             Test Confetti
           </button>
         </div>

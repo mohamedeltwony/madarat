@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'; // Added useMemo and useCallback
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from 'react'; // Added useMemo and useCallback
 import styles from './LeadMagnets.module.scss';
 import SparkleButton from '@/components/UI/SparkleButton';
 
@@ -41,7 +47,7 @@ export default function ChatBot({ isOpen, onToggle }) {
       addBotMessage(botMessages[0]);
     }
     // Added addBotMessage to dependencies
-  }, [isOpen, botMessages, messages.length, addBotMessage]); 
+  }, [isOpen, botMessages, messages.length, addBotMessage]);
 
   useEffect(() => {
     scrollToBottom();

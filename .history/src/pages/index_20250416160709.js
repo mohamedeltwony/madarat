@@ -74,9 +74,12 @@ export default function Home({
                 <p>جاري تحميل الوجهات السياحية...</p>
               </div>
             ) : (
-              <> {/* Use Fragment */}
+              <>
+                {' '}
+                {/* Use Fragment */}
                 {/* <BentoDestinations destinations={destinations} /> */}
-                <p>Destinations temporarily hidden for debugging.</p> {/* Corrected comment */}
+                <p>Destinations temporarily hidden for debugging.</p>{' '}
+                {/* Corrected comment */}
               </>
             )}
           </Container>

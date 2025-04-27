@@ -39,23 +39,23 @@ graph TD
 **Refactoring Strategies (Order of Preference):**
 
 1.  **Eliminate `App.getInitialProps`:**
-    *   Remove the `App.getInitialProps` function entirely from `src/pages/_app.js`.
-    *   Identify the specific data required by each page.
-    *   Fetch page-specific data within the page's `getStaticProps` (for static/ISR pages) or `getServerSideProps` (for dynamic per-request data).
+    - Remove the `App.getInitialProps` function entirely from `src/pages/_app.js`.
+    - Identify the specific data required by each page.
+    - Fetch page-specific data within the page's `getStaticProps` (for static/ISR pages) or `getServerSideProps` (for dynamic per-request data).
 2.  **Handle Layout Data:**
-    *   For data needed by the main layout (e.g., menus, site metadata for `<Head>`):
-        *   **Option A (Preferred for Static):** Fetch it in `getStaticProps`/`getServerSideProps` on *each page* and pass it down as props to the layout component. Next.js optimizes this well.
-        *   **Option B (Client-Side):** Fetch it client-side within the layout component using `useEffect` and state management, or libraries like SWR/React Query. This won't block TTFB but might cause layout shifts or require loading states.
+    - For data needed by the main layout (e.g., menus, site metadata for `<Head>`):
+      - **Option A (Preferred for Static):** Fetch it in `getStaticProps`/`getServerSideProps` on _each page_ and pass it down as props to the layout component. Next.js optimizes this well.
+      - **Option B (Client-Side):** Fetch it client-side within the layout component using `useEffect` and state management, or libraries like SWR/React Query. This won't block TTFB but might cause layout shifts or require loading states.
 3.  **Optimize Backend & Caching:**
-    *   Analyze the performance of the WordPress API endpoints used by `getSiteMetadata`, `getAllMenus`, etc.
-    *   Implement caching mechanisms on the WordPress side (e.g., object caching, transient API) to speed up responses.
-    *   Consider using Vercel's Data Cache for fetched results if appropriate.
+    - Analyze the performance of the WordPress API endpoints used by `getSiteMetadata`, `getAllMenus`, etc.
+    - Implement caching mechanisms on the WordPress side (e.g., object caching, transient API) to speed up responses.
+    - Consider using Vercel's Data Cache for fetched results if appropriate.
 4.  **Use Incremental Static Regeneration (ISR):**
-    *   For pages where content doesn't need to be real-time (like `/georgia-trip`, blog posts, etc.), use `getStaticProps` with a `revalidate` time (e.g., `revalidate: 600` for 10 minutes). This serves static HTML quickly and updates it in the background.
+    - For pages where content doesn't need to be real-time (like `/georgia-trip`, blog posts, etc.), use `getStaticProps` with a `revalidate` time (e.g., `revalidate: 600` for 10 minutes). This serves static HTML quickly and updates it in the background.
 5.  **(Temporary Fix) Reduce `getInitialProps` Scope:**
-    *   If a full refactor is not immediately feasible, fetch only the *absolute minimum* data required for the initial render within `getInitialProps`.
-    *   Aggressively cache the results of these minimal fetches.
-    *   Load all other "global" data client-side.
+    - If a full refactor is not immediately feasible, fetch only the _absolute minimum_ data required for the initial render within `getInitialProps`.
+    - Aggressively cache the results of these minimal fetches.
+    - Load all other "global" data client-side.
 
 ## Next Steps
 

@@ -22,8 +22,9 @@ import styles from '@/styles/pages/LondonScotland.module.scss';
 
 // Dynamically import components
 const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false });
-const ExitPopup = dynamic(() => import('@/components/ExitPopup'), { ssr: false });
-
+const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
+  ssr: false,
+});
 
 export default function LondonScotlandTrip() {
   const router = useRouter(); // Get router instance

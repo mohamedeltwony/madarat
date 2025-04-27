@@ -75,14 +75,13 @@ function App({
     }
   };
 
-
   // Facebook Pixel PageView Tracking
 
   // Effect for INITIAL PageView
   useEffect(() => {
     // Use a slightly longer delay for the initial load, hoping fbq initializes
     const initialTimer = setTimeout(() => {
-       trackPageView('INITIAL');
+      trackPageView('INITIAL');
     }, 150); // 150ms delay for initial load
 
     return () => clearTimeout(initialTimer); // Cleanup timeout

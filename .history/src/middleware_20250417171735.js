@@ -24,7 +24,8 @@ export const config = {
   ],
 };
 
-export function middleware(request) { // Brace back on same line
+export function middleware(request) {
+  // Brace back on same line
   // Remove type annotation
   const { pathname } = request.nextUrl;
 

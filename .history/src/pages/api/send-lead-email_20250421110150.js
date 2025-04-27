@@ -19,10 +19,21 @@ export default async function handler(req, res) {
 
   // Destructure all expected fields from the request body
   const {
-    name, phone, email, nationality, destination, formName, pageUrl,
-    utm_source, utm_medium, utm_campaign, utm_term, utm_content, // UTM Params
+    name,
+    phone,
+    email,
+    nationality,
+    destination,
+    formName,
+    pageUrl,
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    utm_term,
+    utm_content, // UTM Params
     screenWidth, // Client Info
-    fbc, fbp, // Facebook Cookies
+    fbc,
+    fbp, // Facebook Cookies
   } = req.body;
 
   // Basic validation (keep existing)
@@ -37,12 +48,15 @@ export default async function handler(req, res) {
   const uaResult = parser.getResult();
   // --- End Server-side Data Extraction ---
 
-
   // Retrieve recipient emails from environment variables (keep existing)
   const recipientEmails = process.env.LEAD_RECIPIENT_EMAILS;
   if (!recipientEmails) {
     console.error('LEAD_RECIPIENT_EMAILS environment variable is not set.');
-    return res.status(500).json({ message: 'Server configuration error: Missing recipient emails.' });
+    return res
+      .status(500)
+      .json({
+        message: 'Server configuration error: Missing recipient emails.',
+      });
   }
 
   // Retrieve SMTP credentials from environment variables (keep existing)
@@ -52,8 +66,14 @@ export default async function handler(req, res) {
   const smtpPass = process.env.EMAIL_PASS;
 
   if (!smtpHost || !smtpPort || !smtpUser || !smtpPass) {
-    console.error('Missing one or more SMTP environment variables (EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS).');
-    return res.status(500).json({ message: 'Server configuration error: Missing SMTP credentials.' });
+    console.error(
+      'Missing one or more SMTP environment variables (EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS).'
+    );
+    return res
+      .status(500)
+      .json({
+        message: 'Server configuration error: Missing SMTP credentials.',
+      });
   }
 
   // Create transporter (keep existing)
@@ -71,8 +91,9 @@ export default async function handler(req, res) {
   const subject = `🚀 New Lead: ${formName || 'Website Form'} (${destination || 'N/A'})`;
 
   // Helper to format optional fields
-  const formatField = (label, value) => value ? `${label}: ${value}\n` : '';
-  const formatHtmlField = (label, value) => value ? `<p><strong>${label}:</strong> ${value}</p>` : '';
+  const formatField = (label, value) => (value ? `${label}: ${value}\n` : '');
+  const formatHtmlField = (label, value) =>
+    value ? `<p><strong>${label}:</strong> ${value}</p>` : '';
 
   const textBody = `
     New Lead Submission:
@@ -169,6 +190,8 @@ export default async function handler(req, res) {
     if (error.response) {
       console.error('SMTP Response:', error.response);
     }
-    return res.status(500).json({ message: 'Failed to send lead email.', error: error.message });
+    return res
+      .status(500)
+      .json({ message: 'Failed to send lead email.', error: error.message });
   }
 }

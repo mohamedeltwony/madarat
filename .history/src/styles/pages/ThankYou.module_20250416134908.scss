@@ -15,7 +15,8 @@ $font-family: 'Cairo', sans-serif;
   font-family: $font-family;
 
   // Add background image and overlay like the landing page
-  &::before { // Background Image
+  &::before {
+    // Background Image
     content: '';
     position: fixed;
     top: 0;
@@ -30,7 +31,8 @@ $font-family: 'Cairo', sans-serif;
     filter: brightness(0.5); // Adjust brightness as needed
   }
 
-  &::after { // Overlay
+  &::after {
+    // Overlay
     content: '';
     position: fixed;
     top: 0;
@@ -125,6 +127,6 @@ $font-family: 'Cairo', sans-serif;
   padding: 0.8rem 1rem !important;
 
   &:hover {
-     box-shadow: 0 5px 15px rgba($color-gold, 0.5) !important; // Enhance hover shadow
+    box-shadow: 0 5px 15px rgba($color-gold, 0.5) !important; // Enhance hover shadow
   }
 }

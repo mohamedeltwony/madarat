@@ -60,7 +60,9 @@ export default function ThankYouResident() {
     const trackLeadEvent = () => {
       // Check if fbq is loaded
       if (typeof window.fbq !== 'function') {
-        console.log('[Pixel] fbq not available on thank-you-resident page load');
+        console.log(
+          '[Pixel] fbq not available on thank-you-resident page load'
+        );
         return;
       }
 

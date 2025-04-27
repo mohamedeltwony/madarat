@@ -85,10 +85,16 @@ function App({
         });
         if (!response.ok) {
           const errorData = await response.json();
-          console.error('Failed to send PageView event to CAPI:', errorData.message);
+          console.error(
+            'Failed to send PageView event to CAPI:',
+            errorData.message
+          );
         } else {
           const successData = await response.json();
-          console.log('PageView event sent successfully via CAPI:', successData);
+          console.log(
+            'PageView event sent successfully via CAPI:',
+            successData
+          );
         }
       } catch (error) {
         console.error('Error sending PageView event via CAPI:', error);
@@ -96,7 +102,6 @@ function App({
     },
     [] // No dependencies needed for this specific CAPI call structure
   );
-
 
   // Function to track PageView with fbc/fbp parameters (wrapped in useCallback)
   const trackPageView = useCallback(
@@ -123,7 +128,6 @@ function App({
           console.log('[CAPI] Sending INITIAL PageView via CAPI');
           sendPageViewCAPI(eventId, userData); // Pass eventId and userData (fbc/fbp)
         }
-
       } else {
         console.log(`[Pixel] fbq not ready for ${eventType} PageView`);
       }

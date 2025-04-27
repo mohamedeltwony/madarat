@@ -3,7 +3,9 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router'; // Import useRouter
 import dynamic from 'next/dynamic'; // Import dynamic
-const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), { ssr: false });
+const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
+  ssr: false,
+});
 // import Chatbot from '@/components/Chatbot'; // Removed
 // import ExitPopup from '@/components/ExitPopup'; // Removed
 import styles from '@/styles/pages/LondonScotland.module.scss';
@@ -386,11 +388,23 @@ export default function GeorgiaTrip() {
 
   // Features data - Using updated WebP image paths
   const features = [
-    { text: 'استقبال بسيارة خاصة في المطار والفنادق', iconPath: '/icons/gorgia/استقبال-وتوديع.webp' },
-    { text: 'الإقامة فاخرة في فنادق ٤ و ٥ نجوم', iconPath: '/icons/gorgia/5-نجوم.webp' },
+    {
+      text: 'استقبال بسيارة خاصة في المطار والفنادق',
+      iconPath: '/icons/gorgia/استقبال-وتوديع.webp',
+    },
+    {
+      text: 'الإقامة فاخرة في فنادق ٤ و ٥ نجوم',
+      iconPath: '/icons/gorgia/5-نجوم.webp',
+    },
     { text: 'التنقلات بين المدن السياحية' }, // No matching icon provided
-    { text: 'جولات سياحية جماعية', iconPath: '/icons/gorgia/--جولات-سياحية-بسيارة-خاصة.webp' }, // Using the closest match
-    { text: 'وجبات الإفطار اليومية', iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp' },
+    {
+      text: 'جولات سياحية جماعية',
+      iconPath: '/icons/gorgia/--جولات-سياحية-بسيارة-خاصة.webp',
+    }, // Using the closest match
+    {
+      text: 'وجبات الإفطار اليومية',
+      iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp',
+    },
     { text: 'تأمين سفر دولي' }, // No matching icon provided
     { text: 'خدمة عملاء ٢٤/٧', iconPath: '/icons/gorgia/خدمة-عملاء.webp' },
   ];
@@ -455,7 +469,8 @@ export default function GeorgiaTrip() {
               <br />
               السعر يبدأ من
               <br />
-              <span className={styles.highlight}>2699</span> ج.م في الغرفة المزدوجة
+              <span className={styles.highlight}>2699</span> ج.م في الغرفة
+              المزدوجة
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}
@@ -488,113 +503,113 @@ export default function GeorgiaTrip() {
 
             {/* Contact Form */}
             <div className={styles.formContainer}>
-            <div className={styles.formContainer}>
-              <form onSubmit={handleSubmit} className={styles.tripForm}>
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
-                >
-                  <input
-                    type="text"
-                    id="name"
-                    className={styles.formInput} // Add class for styling
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
-                    placeholder=" " // Use space for placeholder trick
-                    autoComplete="name" // Added autocomplete
-                    // required // Made optional
-                  />
-                  <label htmlFor="name" className={styles.formLabel}>
-                    الاسم الكامل (اختياري)
-                  </label>
-                </div>
-
-                {/* Phone field needs special handling due to country code */}
-                {/* Add hasValue and inputError classes conditionally */}
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`}
-                >
-                  <label htmlFor="phone" className={styles.formLabel}>
-                    الجوال
-                  </label>
-                  <div className={styles.phoneInput}>
-                    {/* Moved country code to the left */}
-                    <input
-                      type="tel"
-                      id="phone"
-                      className={styles.formInput} // Add class for styling
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
-                      placeholder=" " // Use space for placeholder trick
-                      autoComplete="tel" // Added autocomplete
-                      required // Made required
-                      pattern="^5[0-9]{8}$" // Added HTML pattern for native validation
-                      title="يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام" // Tooltip for pattern
-                    />
-                    <span className={styles.countryCode}>+966</span>
-                  </div>
-                  {/* Updated error message display */}
-                  {phoneTouched &&
-                    !isPhoneValid &&
-                    formData.phone.trim() !== '' && (
-                      <p className={styles.errorMessage}>
-                        يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام.
-                      </p>
-                    )}
-                </div>
-
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
-                >
-                  <input
-                    type="email"
-                    id="email"
-                    className={styles.formInput} // Add class for styling
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder=" " // Use space for placeholder trick
-                    autoComplete="email" // Added autocomplete
-                    // required // Made optional
-                  />
-                  <label htmlFor="email" className={styles.formLabel}>
-                    البريد الإلكتروني (اختياري)
-                  </label>
-                </div>
-
-                {/* Nationality Field */}
-                <div
-                  className={`${styles.formGroup} ${styles.nationalityGroup}`}
-                >
-                  {/* <label>الجنسية</label> Removed this label */}
-                  <select
-                    id="nationality"
-                    name="nationality"
-                    required
-                    value={formData.nationality}
-                    onChange={handleInputChange}
-                    className={formData.nationality ? styles.filled : ''} // Add class when filled
+              <div className={styles.formContainer}>
+                <form onSubmit={handleSubmit} className={styles.tripForm}>
+                  <div
+                    className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
                   >
-                    <option value="" disabled hidden>
-                      اختر الجنسية
-                    </option>
-                    <option value="مواطن">مواطن سعودي</option>
-                    <option value="مقيم">مقيم في السعودية</option>
-                    <option value="زائر">زائر للمملكة</option>
-                  </select>
-                  <label htmlFor="nationality" className={styles.formLabel}>
-                    الجنسية
-                  </label>
-                </div>
+                    <input
+                      type="text"
+                      id="name"
+                      className={styles.formInput} // Add class for styling
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange} // Already handles InitiateCheckout trigger
+                      placeholder=" " // Use space for placeholder trick
+                      autoComplete="name" // Added autocomplete
+                      // required // Made optional
+                    />
+                    <label htmlFor="name" className={styles.formLabel}>
+                      الاسم الكامل (اختياري)
+                    </label>
+                  </div>
 
-                {/* Removed City Dropdown */}
-                <SparkleButton type="submit" disabled={isLoading}>
-                  {isLoading ? 'جاري الإرسال...' : 'احجز الآن'}
-                </SparkleButton>
-              </form>
-            </div>
+                  {/* Phone field needs special handling due to country code */}
+                  {/* Add hasValue and inputError classes conditionally */}
+                  <div
+                    className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`}
+                  >
+                    <label htmlFor="phone" className={styles.formLabel}>
+                      الجوال
+                    </label>
+                    <div className={styles.phoneInput}>
+                      {/* Moved country code to the left */}
+                      <input
+                        type="tel"
+                        id="phone"
+                        className={styles.formInput} // Add class for styling
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
+                        placeholder=" " // Use space for placeholder trick
+                        autoComplete="tel" // Added autocomplete
+                        required // Made required
+                        pattern="^5[0-9]{8}$" // Added HTML pattern for native validation
+                        title="يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام" // Tooltip for pattern
+                      />
+                      <span className={styles.countryCode}>+966</span>
+                    </div>
+                    {/* Updated error message display */}
+                    {phoneTouched &&
+                      !isPhoneValid &&
+                      formData.phone.trim() !== '' && (
+                        <p className={styles.errorMessage}>
+                          يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام.
+                        </p>
+                      )}
+                  </div>
+
+                  <div
+                    className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
+                  >
+                    <input
+                      type="email"
+                      id="email"
+                      className={styles.formInput} // Add class for styling
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder=" " // Use space for placeholder trick
+                      autoComplete="email" // Added autocomplete
+                      // required // Made optional
+                    />
+                    <label htmlFor="email" className={styles.formLabel}>
+                      البريد الإلكتروني (اختياري)
+                    </label>
+                  </div>
+
+                  {/* Nationality Field */}
+                  <div
+                    className={`${styles.formGroup} ${styles.nationalityGroup}`}
+                  >
+                    {/* <label>الجنسية</label> Removed this label */}
+                    <select
+                      id="nationality"
+                      name="nationality"
+                      required
+                      value={formData.nationality}
+                      onChange={handleInputChange}
+                      className={formData.nationality ? styles.filled : ''} // Add class when filled
+                    >
+                      <option value="" disabled hidden>
+                        اختر الجنسية
+                      </option>
+                      <option value="مواطن">مواطن سعودي</option>
+                      <option value="مقيم">مقيم في السعودية</option>
+                      <option value="زائر">زائر للمملكة</option>
+                    </select>
+                    <label htmlFor="nationality" className={styles.formLabel}>
+                      الجنسية
+                    </label>
+                  </div>
+
+                  {/* Removed City Dropdown */}
+                  <SparkleButton type="submit" disabled={isLoading}>
+                    {isLoading ? 'جاري الإرسال...' : 'احجز الآن'}
+                  </SparkleButton>
+                </form>
+              </div>
             </div>
             {/* End Contact Form */}
           </div>

@@ -98,7 +98,9 @@ function App({
     <ApolloProvider client={apolloClient}>
       <SiteContext.Provider value={site}>
         <SearchProvider>
-          <Layout> {/* Wrap Component with Layout */}
+          <Layout>
+            {' '}
+            {/* Wrap Component with Layout */}
             <NextNProgress height={4} color={variables.progressbarColor} />
             <Component {...pageProps} />
             <Analytics /> {/* Add Vercel Analytics component */}

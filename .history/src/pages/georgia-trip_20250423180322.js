@@ -3,7 +3,9 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router'; // Import useRouter
 import dynamic from 'next/dynamic'; // Import dynamic
-const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), { ssr: false });
+const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
+  ssr: false,
+});
 // import Chatbot from '@/components/Chatbot'; // Removed
 // import ExitPopup from '@/components/ExitPopup'; // Removed
 import styles from '@/styles/pages/LondonScotland.module.scss';
@@ -386,11 +388,23 @@ export default function GeorgiaTrip() {
 
   // Features data - Using updated WebP image paths
   const features = [
-    { text: 'استقبال بسيارة خاصة في المطار والفنادق', iconPath: '/icons/gorgia/استقبال-وتوديع.webp' },
-    { text: 'الإقامة فاخرة في فنادق ٤ و ٥ نجوم', iconPath: '/icons/gorgia/5-نجوم.webp' },
+    {
+      text: 'استقبال بسيارة خاصة في المطار والفنادق',
+      iconPath: '/icons/gorgia/استقبال-وتوديع.webp',
+    },
+    {
+      text: 'الإقامة فاخرة في فنادق ٤ و ٥ نجوم',
+      iconPath: '/icons/gorgia/5-نجوم.webp',
+    },
     { text: 'التنقلات بين المدن السياحية' }, // No matching icon provided
-    { text: 'جولات سياحية جماعية', iconPath: '/icons/gorgia/--جولات-سياحية-بسيارة-خاصة.webp' }, // Using the closest match
-    { text: 'وجبات الإفطار اليومية', iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp' },
+    {
+      text: 'جولات سياحية جماعية',
+      iconPath: '/icons/gorgia/--جولات-سياحية-بسيارة-خاصة.webp',
+    }, // Using the closest match
+    {
+      text: 'وجبات الإفطار اليومية',
+      iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp',
+    },
     { text: 'تأمين سفر دولي' }, // No matching icon provided
     { text: 'خدمة عملاء ٢٤/٧', iconPath: '/icons/gorgia/خدمة-عملاء.webp' },
   ];
@@ -455,7 +469,8 @@ export default function GeorgiaTrip() {
               <br />
               السعر يبدأ من
               <br />
-              <span className={styles.highlight}>2699</span> ج.م في الغرفة المزدوجة
+              <span className={styles.highlight}>2699</span> ج.م في الغرفة
+              المزدوجة
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}

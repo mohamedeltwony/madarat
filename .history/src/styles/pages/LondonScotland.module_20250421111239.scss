@@ -484,7 +484,8 @@ $font-family: 'Cairo', sans-serif;
 
   // Target the button inside formActions when disabled (loading)
   button:disabled,
-  .sparkleButton:disabled { // Assuming SparkleButton renders a button or has a class
+  .sparkleButton:disabled {
+    // Assuming SparkleButton renders a button or has a class
     cursor: wait; // Change cursor to wait
     opacity: 0.8; // Slightly dim the button
     animation: pulseGlow 1.5s infinite ease-in-out; // Apply animation
@@ -493,16 +494,20 @@ $font-family: 'Cairo', sans-serif;
 
 // Keyframes for the loading animation
 @keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba($color-gold, 0.2), 0 0 10px rgba($color-gold, 0.1);
+  0%,
+  100% {
+    box-shadow:
+      0 0 5px rgba($color-gold, 0.2),
+      0 0 10px rgba($color-gold, 0.1);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 15px rgba($color-gold, 0.4), 0 0 25px rgba($color-gold, 0.2);
+    box-shadow:
+      0 0 15px rgba($color-gold, 0.4),
+      0 0 25px rgba($color-gold, 0.2);
     transform: scale(1.02);
   }
 }
-
 
 // Responsive improvements for mobile
 @media (max-width: 480px) {

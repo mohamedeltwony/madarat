@@ -64,10 +64,14 @@ function App({
       // Use a shorter delay for subsequent navigations
       const routeChangeTimer = setTimeout(() => {
         if (typeof window.fbq === 'function' && window.fbq.queue) {
-          console.log(`[Pixel] Tracking PageView for route change: ${url} (after delay)`);
+          console.log(
+            `[Pixel] Tracking PageView for route change: ${url} (after delay)`
+          );
           window.fbq('track', 'PageView');
         } else {
-          console.log(`[Pixel] fbq not ready for route change PageView: ${url}`);
+          console.log(
+            `[Pixel] fbq not ready for route change PageView: ${url}`
+          );
         }
       }, 50); // 50ms delay
       // Store timer ID on router object dynamically for potential cleanup
@@ -85,7 +89,6 @@ function App({
       }
     };
   }, [router.events]); // Depend on router events
-
 
   return (
     // Wrap everything with ApolloProvider
@@ -142,23 +145,20 @@ App.getInitialProps = async function (appContext) {
       } else {
         console.error('Failed to get menus in _app:', results[2].reason);
       }
-
     } catch (error) {
-       console.error('Error fetching site metadata in _app:', error);
-       // Keep default empty metadata object
+      console.error('Error fetching site metadata in _app:', error);
+      // Keep default empty metadata object
     }
-
   } else {
-     console.log(`Skipping global data fetch for thank you page: ${pathname}`);
-     // Fetch only essential site metadata if needed even on thank you pages
-     // Assuming getSiteMetadata is essential for layout/head tags
-     try {
-       metadata = await getSiteMetadata();
-     } catch (error) {
-        console.error('Error fetching site metadata on thank you page:', error);
-     }
+    console.log(`Skipping global data fetch for thank you page: ${pathname}`);
+    // Fetch only essential site metadata if needed even on thank you pages
+    // Assuming getSiteMetadata is essential for layout/head tags
+    try {
+      metadata = await getSiteMetadata();
+    } catch (error) {
+      console.error('Error fetching site metadata on thank you page:', error);
+    }
   }
-
 
   // const { posts: recentPosts } = await getRecentPosts({ // OLD CODE
   // }); // OLD CODE

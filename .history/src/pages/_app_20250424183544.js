@@ -185,7 +185,9 @@ function App({ Component, pageProps = {} }) {
       <DynamicApolloProvider client={apolloClient}>
         <SiteContext.Provider value={site}>
           {/* Conditionally render SearchProvider */}
-          {['/search', '/advanced-search', '/posts', '/blog'].some((path) => router.pathname.startsWith(path)) ? ( // Revert to single line
+          {['/search', '/advanced-search', '/posts', '/blog'].some((path) =>
+            router.pathname.startsWith(path)
+          ) ? ( // Revert to single line
             <SearchProvider>
               <NextNProgress height={4} color={variables.progressbarColor} />
               <Component {...pageProps} />

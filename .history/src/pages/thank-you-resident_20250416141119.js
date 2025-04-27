@@ -5,25 +5,24 @@ import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti'; // Import the confetti function directly
 
 export default function ThankYouResident() {
-
   // Function to fire confetti with specific options
   const fireConfetti = () => {
     const count = 200;
     const defaults = {
       origin: { y: 0.6 },
-      colors: ['#cc9c64', '#ffffff', '#0c4c44'] // Gold, White, Teal
+      colors: ['#cc9c64', '#ffffff', '#0c4c44'], // Gold, White, Teal
     };
 
     function fire(particleRatio, opts) {
       // Check if confetti function exists before calling
       if (typeof confetti === 'function') {
-          confetti({
-            ...defaults,
-            ...opts,
-            particleCount: Math.floor(count * particleRatio)
-          });
+        confetti({
+          ...defaults,
+          ...opts,
+          particleCount: Math.floor(count * particleRatio),
+        });
       } else {
-          console.warn('Confetti function not available');
+        console.warn('Confetti function not available');
       }
     }
 
@@ -49,13 +48,16 @@ export default function ThankYouResident() {
     return () => clearTimeout(timer);
   }, []); // Empty dependency array, fire only once on mount + intervals
 
-
   return (
     <div className={styles.container} dir="rtl">
       <Head>
         <title>شكراً لك! | مدارات الكون</title>
-        <meta name="description" content="شكراً لتسجيلك معنا في رحلة لندن واسكتلندا." />
-        <meta name="robots" content="noindex, nofollow" /> {/* Prevent indexing */}
+        <meta
+          name="description"
+          content="شكراً لتسجيلك معنا في رحلة لندن واسكتلندا."
+        />
+        <meta name="robots" content="noindex, nofollow" />{' '}
+        {/* Prevent indexing */}
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -67,7 +69,9 @@ export default function ThankYouResident() {
       {/* Content Overlay */}
       <main className={styles.mainContent}>
         <div className={styles.contentBox}>
-          <div className={styles.logoContainer}> {/* Added container for logo */}
+          <div className={styles.logoContainer}>
+            {' '}
+            {/* Added container for logo */}
             <Image
               src="/logo.png" // Path relative to public folder
               alt="مدارات الكون للسياحة والسفر"
@@ -78,16 +82,25 @@ export default function ThankYouResident() {
           </div>
           <h1 className={styles.title}>شكراً لك!</h1>
           <p className={styles.message}>
-            يعطيك العافية! استلمنا بياناتك وبيتواصل معك مستشار السفر حقنا في أقرب وقت ممكن عشان يضبط لك رحلتك.
+            يعطيك العافية! استلمنا بياناتك وبيتواصل معك مستشار السفر حقنا في
+            أقرب وقت ممكن عشان يضبط لك رحلتك.
           </p>
           <div className={styles.buttonGroup}>
             {/* IMPORTANT: Replace href with your actual PDF paths */}
-            <a href="/pdfs/london-scotland-activities.pdf" download className={styles.downloadLink}>
+            <a
+              href="/pdfs/london-scotland-activities.pdf"
+              download
+              className={styles.downloadLink}
+            >
               <SparkleButton className={styles.downloadButton}>
                 حمّل جدول الأنشطة
               </SparkleButton>
             </a>
-            <a href="/pdfs/bonus-destination-guide.pdf" download className={styles.downloadLink}>
+            <a
+              href="/pdfs/bonus-destination-guide.pdf"
+              download
+              className={styles.downloadLink}
+            >
               <SparkleButton className={styles.downloadButton}>
                 حمّل دليل الوجهة الإضافي
               </SparkleButton>

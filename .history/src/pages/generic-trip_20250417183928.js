@@ -11,7 +11,8 @@ import styles from '@/styles/pages/LondonScotland.module.scss';
 // NOTE: Add a generic placeholder background image to:
 // public/images/placeholder-trip.jpg
 
-export default function GenericTrip() { // Brace back on same line
+export default function GenericTrip() {
+  // Brace back on same line
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
     name: '',

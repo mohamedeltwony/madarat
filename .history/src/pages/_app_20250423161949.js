@@ -205,7 +205,10 @@ function App({
         }}
       />
       <noscript>
-        <img height="1" width="1" style={{ display: 'none' }}
+        <img
+          height="1"
+          width="1"
+          style={{ display: 'none' }}
           src="https://www.facebook.com/tr?id=330286163283402&ev=PageView&noscript=1"
         />
       </noscript>

@@ -191,9 +191,7 @@ function App({ Component, pageProps = {} }) {
             '/posts',
             '/blog',
             // Add other paths that need SearchProvider if necessary
-          ].some((path) =>
-            router.pathname.startsWith(path)
-          ) ? ( // Add line break back for Prettier
+          ].some((path) => router.pathname.startsWith(path)) ? ( // Add line break back for Prettier
             <SearchProvider>
               <NextNProgress height={4} color={variables.progressbarColor} />
               <Component {...pageProps} />

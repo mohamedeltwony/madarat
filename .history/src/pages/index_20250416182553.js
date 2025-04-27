@@ -104,7 +104,8 @@ export default function Home({
                       <li key={post.slug}>
                         {/* Uncomment PostCard */}
                         <PostCard post={post} />
-                        {/* <p>Post: {post.title}</p> */} {/* Remove Placeholder */}
+                        {/* <p>Post: {post.title}</p> */}{' '}
+                        {/* Remove Placeholder */}
                       </li>
                     );
                   })}

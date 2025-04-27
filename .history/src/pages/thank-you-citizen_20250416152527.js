@@ -6,25 +6,24 @@ import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti'; // Import the confetti function directly
 
 export default function ThankYouCitizen() {
-
   // Function to fire confetti with specific options
   const fireConfetti = () => {
     const count = 200;
     const defaults = {
       origin: { y: 0.6 },
-      colors: ['#cc9c64', '#ffffff', '#0c4c44'] // Gold, White, Teal
+      colors: ['#cc9c64', '#ffffff', '#0c4c44'], // Gold, White, Teal
     };
 
     function fire(particleRatio, opts) {
       // Check if confetti function exists before calling
       if (typeof confetti === 'function') {
-          confetti({
-            ...defaults,
-            ...opts,
-            particleCount: Math.floor(count * particleRatio)
-          });
+        confetti({
+          ...defaults,
+          ...opts,
+          particleCount: Math.floor(count * particleRatio),
+        });
       } else {
-          console.warn('Confetti function not available');
+        console.warn('Confetti function not available');
       }
     }
 
@@ -61,13 +60,16 @@ export default function ThankYouCitizen() {
     }
   }, []); // Empty dependency array ensures this runs only once on mount
 
-
   return (
     <div className={styles.container} dir="rtl">
       <Head>
         <title>شكراً لك! | مدارات الكون</title>
-        <meta name="description" content="شكراً لتسجيلك معنا في رحلة لندن واسكتلندا." />
-        <meta name="robots" content="noindex, nofollow" /> {/* Prevent indexing */}
+        <meta
+          name="description"
+          content="شكراً لتسجيلك معنا في رحلة لندن واسكتلندا."
+        />
+        <meta name="robots" content="noindex, nofollow" />{' '}
+        {/* Prevent indexing */}
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -79,7 +81,9 @@ export default function ThankYouCitizen() {
       {/* Content Overlay */}
       <main className={styles.mainContent}>
         <div className={styles.contentBox}>
-          <div className={styles.logoContainer}> {/* Added container for logo */}
+          <div className={styles.logoContainer}>
+            {' '}
+            {/* Added container for logo */}
             <Image
               src="/logo.png" // Path relative to public folder
               alt="مدارات الكون للسياحة والسفر"
@@ -90,7 +94,8 @@ export default function ThankYouCitizen() {
           </div>
           <h1 className={styles.title}>شكراً لك!</h1>
           <p className={styles.message}>
-            يعطيك العافية! استلمنا بياناتك وبيتواصل معك مستشار السفر حقنا في أقرب وقت ممكن عشان يضبط لك رحلتك.
+            يعطيك العافية! استلمنا بياناتك وبيتواصل معك مستشار السفر حقنا في
+            أقرب وقت ممكن عشان يضبط لك رحلتك.
           </p>
           <div className={styles.buttonGroup}>
             {/* Updated to single button linking to Google Drive PDF */}

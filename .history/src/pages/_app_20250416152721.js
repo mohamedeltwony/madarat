@@ -52,7 +52,9 @@ function App({
           console.log(`[Pixel] Tracking PageView for: ${url} (after delay)`);
           window.fbq('track', 'PageView');
         } else {
-          console.log(`[Pixel] fbq not loaded after delay, cannot track PageView for: ${url}`);
+          console.log(
+            `[Pixel] fbq not loaded after delay, cannot track PageView for: ${url}`
+          );
         }
       }, 50); // 50ms delay - adjust if needed
     };
@@ -121,23 +123,20 @@ App.getInitialProps = async function (appContext) {
       } else {
         console.error('Failed to get menus in _app:', results[2].reason);
       }
-
     } catch (error) {
-       console.error('Error fetching site metadata in _app:', error);
-       // Keep default empty metadata object
+      console.error('Error fetching site metadata in _app:', error);
+      // Keep default empty metadata object
     }
-
   } else {
-     console.log(`Skipping global data fetch for thank you page: ${pathname}`);
-     // Fetch only essential site metadata if needed even on thank you pages
-     // Assuming getSiteMetadata is essential for layout/head tags
-     try {
-       metadata = await getSiteMetadata();
-     } catch (error) {
-        console.error('Error fetching site metadata on thank you page:', error);
-     }
+    console.log(`Skipping global data fetch for thank you page: ${pathname}`);
+    // Fetch only essential site metadata if needed even on thank you pages
+    // Assuming getSiteMetadata is essential for layout/head tags
+    try {
+      metadata = await getSiteMetadata();
+    } catch (error) {
+      console.error('Error fetching site metadata on thank you page:', error);
+    }
   }
-
 
   // const { posts: recentPosts } = await getRecentPosts({ // OLD CODE
   // }); // OLD CODE

@@ -85,7 +85,9 @@ export default function ThankYouResident() {
     const trackLeadEvent = async () => {
       // Check if fbq is loaded and its queue exists
       if (typeof window.fbq !== 'function' || !window.fbq.queue) {
-        console.log('[Pixel] fbq not available on thank-you-resident page load');
+        console.log(
+          '[Pixel] fbq not available on thank-you-resident page load'
+        );
         return;
       }
 

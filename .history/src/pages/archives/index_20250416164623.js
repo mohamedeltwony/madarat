@@ -17,7 +17,9 @@ export default function ArchivesIndex({ archives = [] }) {
       <Section>
         <Container>
           <h1>Archives</h1>
-          <p>This is the main archives page. Content or links can be added here.</p>
+          <p>
+            This is the main archives page. Content or links can be added here.
+          </p>
           {/* Example: You could list years here if needed */}
           {/* <ul>
             {archives.map(year => (

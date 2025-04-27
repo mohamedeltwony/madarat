@@ -6,12 +6,14 @@ import SparkleButton from '@/components/UI/SparkleButton';
 import dynamic from 'next/dynamic'; // Import dynamic
 
 // Dynamically import Fireworks, disabling SSR
-const FireworksComponent = dynamic(() => import('react-fireworks').then(mod => mod.Fireworks), {
-  ssr: false,
-  // Optional: Add a loading component while fireworks load
-  // loading: () => <p>Loading fireworks...</p>,
-});
-
+const FireworksComponent = dynamic(
+  () => import('react-fireworks').then((mod) => mod.Fireworks),
+  {
+    ssr: false,
+    // Optional: Add a loading component while fireworks load
+    // loading: () => <p>Loading fireworks...</p>,
+  }
+);
 
 export default function ThankYouCitizen() {
   const fwProps = {
@@ -70,8 +72,12 @@ export default function ThankYouCitizen() {
     <div className={styles.container} dir="rtl">
       <Head>
         <title>شكراً لك! | مدارات الكون</title>
-        <meta name="description" content="شكراً لتسجيلك معنا في رحلة لندن واسكتلندا." />
-        <meta name="robots" content="noindex, nofollow" /> {/* Prevent indexing */}
+        <meta
+          name="description"
+          content="شكراً لتسجيلك معنا في رحلة لندن واسكتلندا."
+        />
+        <meta name="robots" content="noindex, nofollow" />{' '}
+        {/* Prevent indexing */}
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -83,23 +89,42 @@ export default function ThankYouCitizen() {
       </video>
 
       {/* Fireworks Overlay - Use the dynamically imported component */}
-      <FireworksComponent {...fwProps} style={{ top: 0, left: 0, width: '100%', height: '100%', position: 'fixed', zIndex: 1 }} />
+      <FireworksComponent
+        {...fwProps}
+        style={{
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          position: 'fixed',
+          zIndex: 1,
+        }}
+      />
 
       {/* Content Overlay */}
       <main className={styles.mainContent}>
         <div className={styles.contentBox}>
           <h1 className={styles.title}>شكراً لك!</h1>
           <p className={styles.message}>
-            يعطيك العافية! استلمنا بياناتك وبيتواصل معك مستشار السفر حقنا في أقرب وقت ممكن عشان يضبط لك رحلتك.
+            يعطيك العافية! استلمنا بياناتك وبيتواصل معك مستشار السفر حقنا في
+            أقرب وقت ممكن عشان يضبط لك رحلتك.
           </p>
           <div className={styles.buttonGroup}>
             {/* IMPORTANT: Replace href with your actual PDF paths */}
-            <a href="/pdfs/london-scotland-activities.pdf" download className={styles.downloadLink}>
+            <a
+              href="/pdfs/london-scotland-activities.pdf"
+              download
+              className={styles.downloadLink}
+            >
               <SparkleButton className={styles.downloadButton}>
                 حمّل جدول الأنشطة
               </SparkleButton>
             </a>
-            <a href="/pdfs/bonus-destination-guide.pdf" download className={styles.downloadLink}>
+            <a
+              href="/pdfs/bonus-destination-guide.pdf"
+              download
+              className={styles.downloadLink}
+            >
               <SparkleButton className={styles.downloadButton}>
                 حمّل دليل الوجهة الإضافي
               </SparkleButton>

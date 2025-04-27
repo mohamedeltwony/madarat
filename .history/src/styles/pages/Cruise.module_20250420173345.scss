@@ -80,8 +80,9 @@ $font-family: 'Cairo', sans-serif;
   // Updated gradient for a blue/sea theme
   background: linear-gradient(
     to bottom,
-    rgba(20, 90, 150, 0.7), // Medium Blue
-    rgba(10, 40, 80, 0.6)   // Dark Blue
+    rgba(20, 90, 150, 0.7),
+    // Medium Blue
+    rgba(10, 40, 80, 0.6) // Dark Blue
   );
   z-index: 1; // Place overlay above background image
 }
@@ -520,11 +521,19 @@ $font-family: 'Cairo', sans-serif;
   }
   &::before {
     left: 0;
-    background: linear-gradient(to right, rgba(20, 90, 150, 1), rgba(20, 90, 150, 0)); // Match new overlay start color
+    background: linear-gradient(
+      to right,
+      rgba(20, 90, 150, 1),
+      rgba(20, 90, 150, 0)
+    ); // Match new overlay start color
   }
   &::after {
     right: 0;
-    background: linear-gradient(to left, rgba(10, 40, 80, 1), rgba(10, 40, 80, 0)); // Match new overlay end color
+    background: linear-gradient(
+      to left,
+      rgba(10, 40, 80, 1),
+      rgba(10, 40, 80, 0)
+    ); // Match new overlay end color
   }
 }
 

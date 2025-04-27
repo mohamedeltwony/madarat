@@ -10,14 +10,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
-    ignoreDuringBuilds: true,
-  },
   images: {
     // unoptimized: true, // Re-enable Next.js Image Optimization globally
-    domains: ['secure.gravatar.com', 'madaratalkon.com', 'madarat.wpengine.com', '0.gravatar.com'],
+    domains: ['madaratalkon.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -94,11 +89,6 @@ const nextConfig = {
         destination: 'https://madaratalkon.com/wp-json/:path*',
       },
     ];
-  },
-  i18n: {
-    locales: ['ar'],
-    defaultLocale: 'ar',
-    localeDetection: false,
   },
 };
 

@@ -25,7 +25,8 @@ const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false }); /
 const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
   ssr: false, // Format options object multi-line as requested
 });
-export default function LondonScotlandTrip() { // Removed blank line above
+export default function LondonScotlandTrip() {
+  // Removed blank line above
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
     name: '',

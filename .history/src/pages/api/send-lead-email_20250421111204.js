@@ -23,17 +23,32 @@ export default async function handler(req, res) {
   try {
     // Destructure all expected fields from the request body
     const {
-      name, phone, email, nationality, destination, formName, pageUrl,
-      utm_source, utm_medium, utm_campaign, utm_term, utm_content, // UTM Params
+      name,
+      phone,
+      email,
+      nationality,
+      destination,
+      formName,
+      pageUrl,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_term,
+      utm_content, // UTM Params
       screenWidth, // Client Info
-      fbc, fbp, // Facebook Cookies
+      fbc,
+      fbp, // Facebook Cookies
     } = req.body;
 
     console.log('[API /send-lead-email] Request Body:', req.body); // Log received body
 
     // Basic validation (keep existing)
     if (!phone || !nationality || !destination) {
-      console.warn('[API /send-lead-email] Missing required fields:', { phone, nationality, destination });
+      console.warn('[API /send-lead-email] Missing required fields:', {
+        phone,
+        nationality,
+        destination,
+      });
       return res.status(400).json({ message: 'Missing required form fields.' });
     }
 
@@ -46,17 +61,25 @@ export default async function handler(req, res) {
       uaResult = parser.getResult();
       console.log('[API /send-lead-email] User Agent Parsed:', uaResult);
     } catch (uaError) {
-      console.error('[API /send-lead-email] Error parsing User Agent:', uaError);
+      console.error(
+        '[API /send-lead-email] Error parsing User Agent:',
+        uaError
+      );
       // Continue without UA data if parsing fails
     }
     // --- End Server-side Data Extraction ---
 
-
     // Retrieve recipient emails from environment variables (keep existing)
     const recipientEmails = process.env.LEAD_RECIPIENT_EMAILS;
     if (!recipientEmails) {
-      console.error('[API /send-lead-email] LEAD_RECIPIENT_EMAILS environment variable is not set.');
-      return res.status(500).json({ message: 'Server configuration error: Missing recipient emails.' });
+      console.error(
+        '[API /send-lead-email] LEAD_RECIPIENT_EMAILS environment variable is not set.'
+      );
+      return res
+        .status(500)
+        .json({
+          message: 'Server configuration error: Missing recipient emails.',
+        });
     }
     console.log(`[API /send-lead-email] Recipient Emails: ${recipientEmails}`);
 
@@ -67,11 +90,18 @@ export default async function handler(req, res) {
     const smtpPass = process.env.EMAIL_PASS;
 
     if (!smtpHost || !smtpPort || !smtpUser || !smtpPass) {
-      console.error('[API /send-lead-email] Missing one or more SMTP environment variables (EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS).');
-      return res.status(500).json({ message: 'Server configuration error: Missing SMTP credentials.' });
+      console.error(
+        '[API /send-lead-email] Missing one or more SMTP environment variables (EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS).'
+      );
+      return res
+        .status(500)
+        .json({
+          message: 'Server configuration error: Missing SMTP credentials.',
+        });
     }
-    console.log(`[API /send-lead-email] SMTP Config: Host=${smtpHost}, Port=${smtpPort}, User=${smtpUser}, Pass=****`);
-
+    console.log(
+      `[API /send-lead-email] SMTP Config: Host=${smtpHost}, Port=${smtpPort}, User=${smtpUser}, Pass=****`
+    );
 
     // Create transporter
     let transporter;
@@ -96,19 +126,27 @@ export default async function handler(req, res) {
       // console.log('[API /send-lead-email] Verifying transporter connection...');
       // await transporter.verify();
       // console.log('[API /send-lead-email] Transporter connection verified.');
-
     } catch (transportError) {
-      console.error('[API /send-lead-email] Error creating or verifying transporter:', transportError);
-      return res.status(500).json({ message: 'Server configuration error: Failed to configure email transporter.', error: transportError.message });
+      console.error(
+        '[API /send-lead-email] Error creating or verifying transporter:',
+        transportError
+      );
+      return res
+        .status(500)
+        .json({
+          message:
+            'Server configuration error: Failed to configure email transporter.',
+          error: transportError.message,
+        });
     }
-
 
     // --- Construct Enhanced Email Content ---
     const subject = `🚀 New Lead: ${formName || 'Website Form'} (${destination || 'N/A'})`;
 
     // Helper to format optional fields
-    const formatField = (label, value) => value ? `${label}: ${value}\n` : '';
-    const formatHtmlField = (label, value) => value ? `<p><strong>${label}:</strong> ${value}</p>` : '';
+    const formatField = (label, value) => (value ? `${label}: ${value}\n` : '');
+    const formatHtmlField = (label, value) =>
+      value ? `<p><strong>${label}:</strong> ${value}</p>` : '';
 
     const textBody = `
       New Lead Submission:
@@ -197,24 +235,34 @@ export default async function handler(req, res) {
     // Send mail
     console.log('[API /send-lead-email] Attempting to send email...');
     const info = await transporter.sendMail(mailOptions);
-    console.log('[API /send-lead-email] Email sent successfully:', info.messageId);
+    console.log(
+      '[API /send-lead-email] Email sent successfully:',
+      info.messageId
+    );
     // Log accepted/rejected recipients for detailed info
     console.log('[API /send-lead-email] Accepted:', info.accepted);
     console.log('[API /send-lead-email] Rejected:', info.rejected);
     return res.status(200).json({ message: 'Lead email sent successfully.' });
-
   } catch (error) {
     console.error('[API /send-lead-email] CRITICAL ERROR:', error);
     // Log the full error object
     if (error.response) {
-      console.error('[API /send-lead-email] SMTP Response Error:', error.response);
+      console.error(
+        '[API /send-lead-email] SMTP Response Error:',
+        error.response
+      );
     }
     if (error.code) {
-       console.error('[API /send-lead-email] SMTP Error Code:', error.code);
+      console.error('[API /send-lead-email] SMTP Error Code:', error.code);
     }
-     if (error.command) {
-       console.error('[API /send-lead-email] SMTP Error Command:', error.command);
+    if (error.command) {
+      console.error(
+        '[API /send-lead-email] SMTP Error Command:',
+        error.command
+      );
     }
-    return res.status(500).json({ message: 'Failed to send lead email.', error: error.message });
+    return res
+      .status(500)
+      .json({ message: 'Failed to send lead email.', error: error.message });
   }
 }

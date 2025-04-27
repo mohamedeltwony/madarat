@@ -45,10 +45,8 @@ const Hero = ({
               objectPosition: 'center', // Center the image
             }}
           />
-        ) : (
-          // Optional: Render a fallback color or nothing if neither is provided
-          null
-        )}
+        ) : // Optional: Render a fallback color or nothing if neither is provided
+        null}
       </div>
 
       {/* Overlay */}

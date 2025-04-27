@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server';
 // import type { NextRequest } from 'next/server' // Remove type import
 
 // Define the paths that should NOT be redirected
@@ -24,9 +24,10 @@ export const config = {
      */
     '/((?!api|_next/static|_next/image|favicon.ico|images|videos|pdfs).*)',
   ],
-}
+};
 
-export function middleware(request) { // Remove type annotation
+export function middleware(request) {
+  // Remove type annotation
   const { pathname } = request.nextUrl;
 
   // Check if the current path is the target or one of the allowed thank you pages

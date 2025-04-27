@@ -264,16 +264,16 @@ export default function LondonScotlandTrip() {
     e.preventDefault();
 
     // --- Form Validation Check ---
-    if (!isPhoneValid && formData.phone.trim() !== '') { // Check if phone is invalid (and not empty)
+    if (!isPhoneValid && formData.phone.trim() !== '') {
+      // Check if phone is invalid (and not empty)
       alert('الرجاء إدخال رقم جوال سعودي صحيح (يبدأ بـ 5 ويتكون من 9 أرقام).');
       return; // Stop submission
     }
     // Ensure other required fields are filled if necessary (currently only phone has strict validation)
     if (!formData.nationality) {
-        alert('الرجاء اختيار الجنسية.');
-        return; // Stop submission
+      alert('الرجاء اختيار الجنسية.');
+      return; // Stop submission
     }
-
 
     // --- Facebook Event Tracking ---
     const eventData = {
@@ -328,7 +328,10 @@ export default function LondonScotlandTrip() {
         });
 
         if (!response.ok) {
-          console.error('Failed to send data to Zapier:', await response.text());
+          console.error(
+            'Failed to send data to Zapier:',
+            await response.text()
+          );
         } else {
           console.log('Data sent successfully to Zapier');
         }

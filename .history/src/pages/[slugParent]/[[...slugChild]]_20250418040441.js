@@ -68,15 +68,15 @@ export default function Page({ page, breadcrumbs }) {
       if (isShopPage && isMobile) {
         // Apply fix only on mobile shop page
         if (element.style.zIndex !== '999999') {
-           console.log('[Z-Index Fix] Applying z-index 999999 to #secondary');
-           element.style.zIndex = '999999';
+          console.log('[Z-Index Fix] Applying z-index 999999 to #secondary');
+          element.style.zIndex = '999999';
         }
       } else {
         // Remove inline style if not mobile shop page OR if screen becomes wider
         // Only remove if this script potentially set it
         if (element.style.zIndex === '999999') {
-           console.log('[Z-Index Fix] Removing inline z-index from #secondary');
-           element.style.zIndex = ''; // Remove inline style
+          console.log('[Z-Index Fix] Removing inline z-index from #secondary');
+          element.style.zIndex = ''; // Remove inline style
         }
       }
     };
@@ -84,7 +84,6 @@ export default function Page({ page, breadcrumbs }) {
     // Apply on mount and route change completion (better timing than just asPath change)
     applyZIndexFix();
     router.events.on('routeChangeComplete', applyZIndexFix);
-
 
     // Apply on resize
     window.addEventListener('resize', applyZIndexFix);
@@ -100,7 +99,6 @@ export default function Page({ page, breadcrumbs }) {
       // }
     };
   }, [router.asPath, router.events]); // Re-run when path changes or events object changes
-
 
   return (
     <Layout>

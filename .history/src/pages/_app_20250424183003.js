@@ -192,8 +192,9 @@ function App({ Component, pageProps = {} }) {
             '/blog',
             // Add other paths that need SearchProvider if necessary
           ].some(
-            (path) => // Break after arrow
-              router.pathname.startsWith(path) // Condition on new line
+            (
+              path // Break after arrow
+            ) => router.pathname.startsWith(path) // Condition on new line
           ) ? (
             <SearchProvider>
               <NextNProgress height={4} color={variables.progressbarColor} />

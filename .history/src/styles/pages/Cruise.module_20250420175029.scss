@@ -80,8 +80,9 @@ $font-family: 'Cairo', sans-serif;
   // Updated gradient to use the gold theme
   background: linear-gradient(
     to bottom,
-    rgba($color-gold, 0.6), // Lighter gold tint
-    rgba($color-gold, 0.8)  // Darker gold tint
+    rgba($color-gold, 0.6),
+    // Lighter gold tint
+    rgba($color-gold, 0.8) // Darker gold tint
   );
   z-index: 1; // Place overlay above background image
 }
@@ -599,12 +600,15 @@ $font-family: 'Cairo', sans-serif;
   font-weight: 700 !important;
   margin-top: 0.5rem; // Add some margin above the button
   background-color: $color-gold !important; // Ensure gold background
-  border-color: darken($color-gold, 10%) !important; // Darker border for contrast
+  border-color: darken(
+    $color-gold,
+    10%
+  ) !important; // Darker border for contrast
 
   // Override hover effect if needed, otherwise SparkleButton default might be fine
   &:hover {
-     background-color: darken($color-gold, 5%) !important;
-     border-color: darken($color-gold, 15%) !important;
-     box-shadow: 0 5px 15px rgba($color-gold, 0.4) !important;
+    background-color: darken($color-gold, 5%) !important;
+    border-color: darken($color-gold, 15%) !important;
+    box-shadow: 0 5px 15px rgba($color-gold, 0.4) !important;
   }
 }

@@ -43,11 +43,11 @@ export async function getPageByUri(uri) {
 
   // Add more robust checking: Check for data object first, then log errors if present
   if (!pageData?.data) {
-     console.error(
-       `[pages][getPageByUri] No data object returned for URI ${uri}. Response:`,
-       JSON.stringify(pageData, null, 2)
-     );
-     return { page: undefined };
+    console.error(
+      `[pages][getPageByUri] No data object returned for URI ${uri}. Response:`,
+      JSON.stringify(pageData, null, 2)
+    );
+    return { page: undefined };
   }
 
   if (!pageData.data.page) {
@@ -57,10 +57,10 @@ export async function getPageByUri(uri) {
     );
     // Check if there were GraphQL errors returned instead of page data
     if (pageData.errors) {
-       console.error(
-         `[pages][getPageByUri] GraphQL errors for URI ${uri}:`,
-         JSON.stringify(pageData.errors, null, 2)
-       );
+      console.error(
+        `[pages][getPageByUri] GraphQL errors for URI ${uri}:`,
+        JSON.stringify(pageData.errors, null, 2)
+      );
     }
     return { page: undefined };
   }
@@ -195,7 +195,7 @@ export function mapPageData(page = {}) {
   if (data.ancestors) {
     // The ancestors query returns nodes, so we map them directly
     // It also returns them in the correct order (top-level parent first)
-    data.ancestors = data.ancestors.nodes.map(node => ({
+    data.ancestors = data.ancestors.nodes.map((node) => ({
       id: node.id,
       title: node.title,
       uri: node.uri,
@@ -204,7 +204,6 @@ export function mapPageData(page = {}) {
     // Ensure ancestors is always an array, even if null/undefined from GraphQL
     data.ancestors = [];
   }
-
 
   return data;
 }

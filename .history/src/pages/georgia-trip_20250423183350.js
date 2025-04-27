@@ -27,7 +27,8 @@ import styles from '@/styles/pages/LondonScotland.module.scss'; // Keep using th
 // const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
 //   ssr: false,
 // });
-export default function GeorgiaTrip() { // Changed component name
+export default function GeorgiaTrip() {
+  // Changed component name
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
     name: '',
@@ -222,7 +223,10 @@ export default function GeorgiaTrip() { // Changed component name
           body: formBody.toString(),
         });
         if (!response.ok) {
-          console.error('Failed to send data to Zapier:', await response.text());
+          console.error(
+            'Failed to send data to Zapier:',
+            await response.text()
+          );
         } else {
           console.log('Data sent successfully to Zapier');
         }
@@ -287,17 +291,39 @@ export default function GeorgiaTrip() { // Changed component name
 
   // Saudi cities (Keep original if needed by form logic, though not displayed)
   const cities = [
-    'الرياض', 'جدة', 'القصيم – حائل', 'مكة - الطائف', 'المدينة المنورة',
-    'المنطقة الشرقية', 'المنطقة الشمالية', 'المنطقة الجنوبية', 'أخرى',
+    'الرياض',
+    'جدة',
+    'القصيم – حائل',
+    'مكة - الطائف',
+    'المدينة المنورة',
+    'المنطقة الشرقية',
+    'المنطقة الشمالية',
+    'المنطقة الجنوبية',
+    'أخرى',
   ];
 
   // Features data - Updated for Georgia
   const features = [
-    { text: 'استقبال بسيارة خاصة في المطار والفنادق', iconPath: '/icons/gorgia/استقبال-وتوديع.webp' },
-    { text: 'الإقامة فاخرة في فنادق ٤ و ٥ نجوم', iconPath: '/icons/gorgia/5-نجوم.webp' },
-    { text: 'التنقلات بين المدن السياحية', iconPath: '/icons/gorgia/التنقلات-بين-المدن.webp' }, // Added new icon
-    { text: 'جولات سياحية جماعية', iconPath: '/icons/gorgia/--جولات-سياحية-بسيارة-خاصة.webp' }, // Using the closest match
-    { text: 'وجبات الإفطار اليومية', iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp' },
+    {
+      text: 'استقبال بسيارة خاصة في المطار والفنادق',
+      iconPath: '/icons/gorgia/استقبال-وتوديع.webp',
+    },
+    {
+      text: 'الإقامة فاخرة في فنادق ٤ و ٥ نجوم',
+      iconPath: '/icons/gorgia/5-نجوم.webp',
+    },
+    {
+      text: 'التنقلات بين المدن السياحية',
+      iconPath: '/icons/gorgia/التنقلات-بين-المدن.webp',
+    }, // Added new icon
+    {
+      text: 'جولات سياحية جماعية',
+      iconPath: '/icons/gorgia/--جولات-سياحية-بسيارة-خاصة.webp',
+    }, // Using the closest match
+    {
+      text: 'وجبات الإفطار اليومية',
+      iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp',
+    },
     { text: 'تأمين سفر دولي' }, // No matching icon provided
     { text: 'خدمة عملاء ٢٤/٧', iconPath: '/icons/gorgia/خدمة-عملاء.webp' },
   ];
@@ -305,7 +331,8 @@ export default function GeorgiaTrip() { // Changed component name
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>استكشف جورجيا مع مدارات الكون | رحلة ساحرة</title> {/* Changed title */}
+        <title>استكشف جورجيا مع مدارات الكون | رحلة ساحرة</title>{' '}
+        {/* Changed title */}
         <meta
           name="description"
           content="رحلة سياحية استثنائية إلى جورجيا مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة في جورجيا." // Changed description
@@ -353,14 +380,18 @@ export default function GeorgiaTrip() { // Changed component name
               />
             </div>
             <h1 className={styles.title}>
-              رحلة <span className={styles.highlight}>جورجيا</span> الساحرة {/* Changed title */}
+              رحلة <span className={styles.highlight}>جورجيا</span> الساحرة{' '}
+              {/* Changed title */}
             </h1>
-            <p className={styles.description}> {/* Changed description */}
+            <p className={styles.description}>
+              {' '}
+              {/* Changed description */}
               ٨ أيام - ٧ ليالي
               <br />
               السعر يبدأ من
               <br />
-              <span className={styles.highlight}>2699</span> ج.م في الغرفة المزدوجة
+              <span className={styles.highlight}>2699</span> ج.م في الغرفة
+              المزدوجة
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}
@@ -491,7 +522,8 @@ export default function GeorgiaTrip() { // Changed component name
                   >
                     <div className={styles.buttonGlow}></div>
                     <span className={styles.buttonContent}>
-                      اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا
+                      اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين
+                      السياحة عندنا
                     </span>
                   </SparkleButton>
                 </div>

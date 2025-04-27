@@ -20,7 +20,8 @@ const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false }); /
 const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
   ssr: false, // Format options object multi-line as requested
 });
-export default function TurkeyTrip() { // Renamed component
+export default function TurkeyTrip() {
+  // Renamed component
   // Removed blank line above
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
@@ -37,7 +38,8 @@ export default function TurkeyTrip() { // Renamed component
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   // Helper function to send events to the backend API
-  const sendFbEvent = async (eventName, data, eventId = null) => { // Add eventId parameter
+  const sendFbEvent = async (eventName, data, eventId = null) => {
+    // Add eventId parameter
     // Ensure phone number doesn't include country code if API expects only digits
     // Basic check assuming phone is just digits after potential country code removal client-side
     const phoneDigits = data.phone?.replace(/[^0-9]/g, '');
@@ -401,7 +403,8 @@ export default function TurkeyTrip() { // Renamed component
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>رحلتك إلى تركيا من جدة مع مدارات الكون | بدون تأشيرة!</title> {/* Updated Title */}
+        <title>رحلتك إلى تركيا من جدة مع مدارات الكون | بدون تأشيرة!</title>{' '}
+        {/* Updated Title */}
         <meta
           name="description"
           content="سافر إلى تركيا من جدة بدون تأشيرة وبأقل سعر مع مدارات الكون. رحلة منظمة تشمل إقامة 4 نجوم، استقبال، تنقلات، وفعاليات ممتعة مثل منطاد كابادوكيا." // Updated Description
@@ -449,12 +452,16 @@ export default function TurkeyTrip() { // Renamed component
               />
             </div>
             <h1 className={styles.title}>
-              هلا بأهل ديرتنا الغالية! <br /> رحلتك لـ <span className={styles.highlight}>تركيا</span> من جدة صارت أسهل!
-            </h1> {/* Updated Headline */}
+              هلا بأهل ديرتنا الغالية! <br /> رحلتك لـ{' '}
+              <span className={styles.highlight}>تركيا</span> من جدة صارت أسهل!
+            </h1>{' '}
+            {/* Updated Headline */}
             <p className={styles.description}>
-              سافر بدون تأشيرة، بدون مجهود، وبأقل سعر! اكتشف سحر تركيا الآسيوي والأوروبي مع رحلة مرتبة وآمنة ومريحة لك ولعائلتك. كل شي جاهز من يوم توصل!
-            </p> {/* Updated Description */}
-
+              سافر بدون تأشيرة، بدون مجهود، وبأقل سعر! اكتشف سحر تركيا الآسيوي
+              والأوروبي مع رحلة مرتبة وآمنة ومريحة لك ولعائلتك. كل شي جاهز من
+              يوم توصل!
+            </p>{' '}
+            {/* Updated Description */}
             {/* Features Section - Moved Inside Hero & Made Marquee */}
             <div className={styles.featuresSection}>
               <div className={styles.featuresGrid}>
@@ -482,10 +489,11 @@ export default function TurkeyTrip() { // Renamed component
               </div>
             </div>
             {/* End Features Section */}
-
             {/* Contact Form */}
             <div className={styles.formContainer}>
-              <h2 className={styles.formTitle}>احجز مغامرتك الآن قبل اكتمال العدد!</h2>
+              <h2 className={styles.formTitle}>
+                احجز مغامرتك الآن قبل اكتمال العدد!
+              </h2>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
                 <div
                   className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
@@ -599,7 +607,9 @@ export default function TurkeyTrip() { // Renamed component
                   className={styles.submitButton}
                   disabled={isLoading || (phoneTouched && !isPhoneValid)} // Disable if loading or phone invalid
                 >
-                  {isLoading ? 'جاري الإرسال...' : 'أرسل لنا "سعودي وأفتخر" الآن!'}
+                  {isLoading
+                    ? 'جاري الإرسال...'
+                    : 'أرسل لنا "سعودي وأفتخر" الآن!'}
                 </SparkleButton>
                 <p className={styles.ctaNote}>
                   لا تفوت الفرصة! المقاعد محدودة والعرض قد لا يتكرر.
@@ -642,10 +652,11 @@ export default function TurkeyTrip() { // Renamed component
         <section className={styles.finalCta}>
           <h2>الرحلة اللي تستاهل تعب السنة كلها… تبدأ بخطوة بسيطة:</h2>
           <p>✍️ أرسل لنا "سعودي وأفتخر" الآن عبر النموذج أعلاه!</p>
-          <p>وخلنا نحجز لك مقعد في مغامرة ما تنسى، ممكن ما تلاقي نفس العرض بكرة! فالحين فرصتك!</p>
+          <p>
+            وخلنا نحجز لك مقعد في مغامرة ما تنسى، ممكن ما تلاقي نفس العرض بكرة!
+            فالحين فرصتك!
+          </p>
         </section>
-
-
       </main>
 
       {/* Dynamically loaded components */}

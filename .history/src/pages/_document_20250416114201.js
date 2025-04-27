@@ -20,7 +20,9 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
           {/* Facebook Pixel Code */}
-          <script dangerouslySetInnerHTML={{ __html: `
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
             n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -30,10 +32,16 @@ export default class MyDocument extends Document {
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '330286163283402');
-          ` }} />
-          <noscript dangerouslySetInnerHTML={{ __html: `<img height="1" width="1" style="display:none"
+          `,
+            }}
+          />
+          <noscript
+            dangerouslySetInnerHTML={{
+              __html: `<img height="1" width="1" style="display:none"
             src="https://www.facebook.com/tr?id=330286163283402&ev=PageView&noscript=1"
-          />` }} />
+          />`,
+            }}
+          />
           {/* End Facebook Pixel Code */}
         </Head>
         <body>

@@ -309,7 +309,10 @@ export default function LondonScotlandTrip() {
         });
 
         if (!response.ok) {
-          console.error('Failed to send data to Zapier:', await response.text());
+          console.error(
+            'Failed to send data to Zapier:',
+            await response.text()
+          );
         } else {
           console.log('Data sent successfully to Zapier');
         }

@@ -3,7 +3,10 @@ import crypto from 'crypto';
 // Helper function to hash data using SHA-256
 const hashData = (data) => {
   if (!data) return null;
-  return crypto.createHash('sha256').update(data.toLowerCase().trim()).digest('hex');
+  return crypto
+    .createHash('sha256')
+    .update(data.toLowerCase().trim())
+    .digest('hex');
 };
 
 export default async function handler(req, res) {
@@ -16,7 +19,9 @@ export default async function handler(req, res) {
   const accessToken = process.env.FACEBOOK_ACCESS_TOKEN;
 
   if (!pixelId || !accessToken) {
-    console.error('Facebook Pixel ID or Access Token is missing in environment variables.');
+    console.error(
+      'Facebook Pixel ID or Access Token is missing in environment variables.'
+    );
     return res.status(500).json({ message: 'Server configuration error.' });
   }
 
@@ -29,14 +34,15 @@ export default async function handler(req, res) {
     em: hashData(userData.email), // Hashed Email
     ph: hashData(userData.phone), // Hashed Phone Number (assuming no country code needed for hashing)
     // Add other fields if needed by Facebook for matching (e.g., fn, ln, ct, st, zp)
-    client_ip_address: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+    client_ip_address:
+      req.headers['x-forwarded-for'] || req.socket.remoteAddress,
     client_user_agent: req.headers['user-agent'],
     // fbc: userData.fbc, // Facebook Click ID (if available)
     // fbp: userData.fbp, // Facebook Browser ID (if available)
   };
 
   // Remove null values from preparedUserData
-  Object.keys(preparedUserData).forEach(key => {
+  Object.keys(preparedUserData).forEach((key) => {
     if (preparedUserData[key] === null || preparedUserData[key] === undefined) {
       delete preparedUserData[key];
     }
@@ -51,12 +57,11 @@ export default async function handler(req, res) {
   };
 
   // Remove null/undefined values from customData
-  Object.keys(customData).forEach(key => {
+  Object.keys(customData).forEach((key) => {
     if (customData[key] === null || customData[key] === undefined) {
       delete customData[key];
     }
   });
-
 
   const eventData = {
     event_name: eventName,
@@ -96,7 +101,6 @@ export default async function handler(req, res) {
 
     console.log('Event sent successfully to Facebook CAPI:', responseData);
     return res.status(200).json({ success: true, fbResponse: responseData });
-
   } catch (error) {
     console.error('Error in /api/fb-events:', error);
     return res.status(500).json({ message: 'Internal Server Error' });

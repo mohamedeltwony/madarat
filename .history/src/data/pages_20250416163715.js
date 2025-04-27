@@ -126,7 +126,8 @@ export const QUERY_PAGE_BY_URI = gql`
         nodes {
           id
           uri
-          ... on Page { # Specify the type that has the title
+          ... on Page {
+            # Specify the type that has the title
             title
           }
           # Add other types if ancestors can be Posts, etc.

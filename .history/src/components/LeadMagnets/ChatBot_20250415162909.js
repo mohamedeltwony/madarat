@@ -26,7 +26,7 @@ export default function ChatBot({ isOpen, onToggle }) {
       addBotMessage(botMessages[0]);
     }
     // Added missing dependencies to satisfy exhaustive-deps rule
-  }, [isOpen, botMessages, messages.length]); 
+  }, [isOpen, botMessages, messages.length]);
 
   useEffect(() => {
     scrollToBottom();

@@ -64,7 +64,6 @@ $font-family: 'Cairo', sans-serif;
   z-index: 0; // Place image above default background but below overlay
 }
 
-
 // Overlay for better text contrast
 .heroOverlay {
   position: absolute;
@@ -217,7 +216,8 @@ $font-family: 'Cairo', sans-serif;
   }
 
   // Default label style (for Nationality)
-  label:not(.formLabel) { // Exclude floating labels from this default style
+  label:not(.formLabel) {
+    // Exclude floating labels from this default style
     display: block;
     margin-bottom: 0.5rem; // Keep for Nationality label
     font-weight: 600;
@@ -283,45 +283,50 @@ $font-family: 'Cairo', sans-serif;
     transform: translateY(-50%); // Center vertically relative to new top
     font-size: 0.8rem;
     color: $color-teal;
-    background-color: rgba(255, 255, 255, 0.95); // Match form background for overlap
+    background-color: rgba(
+      255,
+      255,
+      255,
+      0.95
+    ); // Match form background for overlap
     font-weight: 600;
   }
 
   // Specific adjustments for the phone group label
   &.phoneGroup {
-     // The label is now a sibling of the div.phoneInput, not the input itself
-     // We need to rely on focus-within for focus state and :has() or sibling logic for value state
+    // The label is now a sibling of the div.phoneInput, not the input itself
+    // We need to rely on focus-within for focus state and :has() or sibling logic for value state
 
     // Use focus-within on the group to trigger label float for phone focus
     &:focus-within {
       .formLabel {
-         top: 0.25rem;
-         transform: translateY(-50%);
-         font-size: 0.8rem;
-         color: $color-teal;
-         background-color: rgba(255, 255, 255, 0.95);
-         font-weight: 600;
-      }
-    }
-     // Also trigger float if the input inside has value (placeholder-shown trick)
-     // This targets the label if the input inside .phoneInput is not showing its placeholder
-    .phoneInput .formInput:not(:placeholder-shown) ~ .formLabel {
         top: 0.25rem;
         transform: translateY(-50%);
         font-size: 0.8rem;
         color: $color-teal;
         background-color: rgba(255, 255, 255, 0.95);
         font-weight: 600;
+      }
+    }
+    // Also trigger float if the input inside has value (placeholder-shown trick)
+    // This targets the label if the input inside .phoneInput is not showing its placeholder
+    .phoneInput .formInput:not(:placeholder-shown) ~ .formLabel {
+      top: 0.25rem;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      color: $color-teal;
+      background-color: rgba(255, 255, 255, 0.95);
+      font-weight: 600;
     }
 
-     // Initial position for phone label might need slight adjustment
-     .formLabel {
-       // top: 1rem; // Keep initial position same as others for now
-     }
+    // Initial position for phone label might need slight adjustment
+    .formLabel {
+      // top: 1rem; // Keep initial position same as others for now
+    }
   }
 
-
-  select { // Keep select styles separate
+  select {
+    // Keep select styles separate
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%230c4c44' viewBox='0 0 16 16'%3E%3Cpath d='M8 10.5l4-4H4l4 4z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -360,9 +365,9 @@ $font-family: 'Cairo', sans-serif;
 
   // Adjust phone input padding since label is handled by group
   .phoneInput input.formInput {
-     padding: 0.75rem 1rem; // Reset padding for phone input itself
-     border-top-right-radius: 0;
-     border-bottom-right-radius: 0;
+    padding: 0.75rem 1rem; // Reset padding for phone input itself
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 }
 
@@ -399,7 +404,6 @@ $font-family: 'Cairo', sans-serif;
     // Style for the text next to the radio
   }
 }
-
 
 // Form actions
 .formActions {

@@ -24,14 +24,15 @@ async function sha256(str) {
     const buffer = new TextEncoder().encode(str.toLowerCase().trim()); // Ensure lowercase and trimmed
     const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
     return hashHex;
   } catch (error) {
     console.error('SHA-256 Hashing Error:', error);
     return null;
   }
 }
-
 
 export default function ThankYouCitizen() {
   const router = useRouter(); // Initialize router
@@ -122,11 +123,10 @@ export default function ThankYouCitizen() {
 
     // Wait for router to be ready before accessing query params
     if (router.isReady) {
-       // Use a small delay to ensure fbq might be ready if loaded async
-       const timer = setTimeout(trackLeadEvent, 100);
-       return () => clearTimeout(timer);
+      // Use a small delay to ensure fbq might be ready if loaded async
+      const timer = setTimeout(trackLeadEvent, 100);
+      return () => clearTimeout(timer);
     }
-
   }, [router.isReady, router.query]); // Re-run if router becomes ready or query params change
 
   return (

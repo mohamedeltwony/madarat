@@ -133,16 +133,21 @@ export default function LondonScotlandTrip() {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        console.error(`Failed to send ${eventName} event to CAPI:`, errorData.message);
+        console.error(
+          `Failed to send ${eventName} event to CAPI:`,
+          errorData.message
+        );
       } else {
         const successData = await response.json();
-        console.log(`${eventName} event sent successfully via CAPI:`, successData);
+        console.log(
+          `${eventName} event sent successfully via CAPI:`,
+          successData
+        );
       }
     } catch (error) {
       console.error(`Error sending ${eventName} event via CAPI:`, error);
     }
   };
-
 
   // // Detect mobile devices - Commented out as isMobile state is unused
   // useEffect(() => {
@@ -168,7 +173,11 @@ export default function LondonScotlandTrip() {
     });
 
     // Trigger InitiateCheckout on first interaction with PII fields
-    if (!formStarted && ['name', 'phone', 'email'].includes(name) && value.trim() !== '') {
+    if (
+      !formStarted &&
+      ['name', 'phone', 'email'].includes(name) &&
+      value.trim() !== ''
+    ) {
       setFormStarted(true);
       console.log('Form started, triggering InitiateCheckout');
 
@@ -177,7 +186,7 @@ export default function LondonScotlandTrip() {
         console.log('Firing Pixel InitiateCheckout');
         window.fbq('track', 'InitiateCheckout');
       } else {
-         console.log('fbq not available for InitiateCheckout');
+        console.log('fbq not available for InitiateCheckout');
       }
 
       // Server-side CAPI event (send current state + new value)
@@ -186,7 +195,8 @@ export default function LondonScotlandTrip() {
     }
   };
 
-  const handleSubmit = async (e) => { // Make handleSubmit async
+  const handleSubmit = async (e) => {
+    // Make handleSubmit async
     e.preventDefault();
 
     // --- Facebook Event Tracking ---
@@ -202,15 +212,13 @@ export default function LondonScotlandTrip() {
       console.log('Firing Pixel Lead event');
       window.fbq('track', 'Lead', eventData);
     } else {
-       console.log('fbq not available for Lead event');
+      console.log('fbq not available for Lead event');
     }
-
 
     // 2. Server-side CAPI Event
     console.log('Sending Lead event via CAPI');
     await sendFbEvent('Lead', formData);
     // --- End Facebook Event Tracking ---
-
 
     // Original form submission logic
     alert('شكراً لك! سنتواصل معك قريباً.');

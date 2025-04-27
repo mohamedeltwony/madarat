@@ -176,7 +176,7 @@ export function mapPageData(page = {}) {
   if (data.ancestors) {
     // The ancestors query returns nodes, so we map them directly
     // It also returns them in the correct order (top-level parent first)
-    data.ancestors = data.ancestors.nodes.map(node => ({
+    data.ancestors = data.ancestors.nodes.map((node) => ({
       id: node.id,
       title: node.title,
       uri: node.uri,
@@ -185,7 +185,6 @@ export function mapPageData(page = {}) {
     // Ensure ancestors is always an array, even if null/undefined from GraphQL
     data.ancestors = [];
   }
-
 
   return data;
 }

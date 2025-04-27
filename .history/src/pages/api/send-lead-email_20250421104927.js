@@ -6,7 +6,8 @@ export default async function handler(req, res) {
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
-  const { name, phone, email, nationality, destination, formName, pageUrl } = req.body;
+  const { name, phone, email, nationality, destination, formName, pageUrl } =
+    req.body;
 
   // Basic validation
   if (!phone || !nationality || !destination) {
@@ -17,7 +18,11 @@ export default async function handler(req, res) {
   const recipientEmails = process.env.LEAD_RECIPIENT_EMAILS;
   if (!recipientEmails) {
     console.error('LEAD_RECIPIENT_EMAILS environment variable is not set.');
-    return res.status(500).json({ message: 'Server configuration error: Missing recipient emails.' });
+    return res
+      .status(500)
+      .json({
+        message: 'Server configuration error: Missing recipient emails.',
+      });
   }
 
   // Retrieve SMTP credentials from environment variables
@@ -27,8 +32,14 @@ export default async function handler(req, res) {
   const smtpPass = process.env.EMAIL_PASS;
 
   if (!smtpHost || !smtpPort || !smtpUser || !smtpPass) {
-    console.error('Missing one or more SMTP environment variables (EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS).');
-    return res.status(500).json({ message: 'Server configuration error: Missing SMTP credentials.' });
+    console.error(
+      'Missing one or more SMTP environment variables (EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS).'
+    );
+    return res
+      .status(500)
+      .json({
+        message: 'Server configuration error: Missing SMTP credentials.',
+      });
   }
 
   // Create a transporter object using the default SMTP transport
@@ -96,6 +107,8 @@ export default async function handler(req, res) {
     if (error.response) {
       console.error('SMTP Response:', error.response);
     }
-    return res.status(500).json({ message: 'Failed to send lead email.', error: error.message });
+    return res
+      .status(500)
+      .json({ message: 'Failed to send lead email.', error: error.message });
   }
 }

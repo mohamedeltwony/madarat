@@ -127,12 +127,15 @@ export default function LondonScotlandTrip() {
         },
         body: JSON.stringify({
           eventName: eventName,
-           // Send standard user data fields expected by Facebook CAPI
+          // Send standard user data fields expected by Facebook CAPI
           userData: {
             em: data.email || null, // Send email if available
             ph: phoneDigits || null, // Send phone if available
             fn: data.name ? data.name.split(' ')[0] : null, // Attempt to get first name
-            ln: data.name && data.name.includes(' ') ? data.name.substring(data.name.indexOf(' ') + 1) : null, // Attempt to get last name
+            ln:
+              data.name && data.name.includes(' ')
+                ? data.name.substring(data.name.indexOf(' ') + 1)
+                : null, // Attempt to get last name
             // Add other standard fields like ct (city), st (state), zp (zip) if you collect them
           },
           // Send other form fields as custom data
@@ -149,16 +152,21 @@ export default function LondonScotlandTrip() {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        console.error(`Failed to send ${eventName} event to CAPI:`, errorData.message);
+        console.error(
+          `Failed to send ${eventName} event to CAPI:`,
+          errorData.message
+        );
       } else {
         const successData = await response.json();
-        console.log(`${eventName} event sent successfully via CAPI:`, successData);
+        console.log(
+          `${eventName} event sent successfully via CAPI:`,
+          successData
+        );
       }
     } catch (error) {
       console.error(`Error sending ${eventName} event via CAPI:`, error);
     }
   };
-
 
   // // Detect mobile devices - Commented out as isMobile state is unused
   // useEffect(() => {
@@ -196,7 +204,11 @@ export default function LondonScotlandTrip() {
 
     // Trigger InitiateCheckout on first interaction with PII fields
     // Only trigger if the field is valid (especially for phone)
-    if (!formStarted && ['name', 'email'].includes(name) && value.trim() !== '') {
+    if (
+      !formStarted &&
+      ['name', 'email'].includes(name) &&
+      value.trim() !== ''
+    ) {
       setFormStarted(true);
       console.log('Form started (name/email), triggering InitiateCheckout');
       // Client-side Pixel event
@@ -204,25 +216,29 @@ export default function LondonScotlandTrip() {
         console.log('Firing Pixel InitiateCheckout');
         window.fbq('track', 'InitiateCheckout');
       } else {
-         console.log('fbq not available for InitiateCheckout');
+        console.log('fbq not available for InitiateCheckout');
       }
       // Server-side CAPI event (send current state + new value)
       sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
-
     } else if (!formStarted && name === 'phone' && currentPhoneValid) {
-       // Trigger for phone only if it becomes valid on first interaction
-       setFormStarted(true);
-       console.log('Form started (valid phone), triggering InitiateCheckout');
-       // Client-side Pixel event
-       if (typeof window !== 'undefined' && window.fbq) {
-         console.log('Firing Pixel InitiateCheckout');
-         window.fbq('track', 'InitiateCheckout');
-       } else {
-          console.log('fbq not available for InitiateCheckout');
-       }
-       // Server-side CAPI event (send current state + new value)
-       sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
-    } else if (!formStarted && ['name', 'phone', 'email'].includes(name) && value.trim() !== '') { // Fallback original logic just in case - might be redundant now
+      // Trigger for phone only if it becomes valid on first interaction
+      setFormStarted(true);
+      console.log('Form started (valid phone), triggering InitiateCheckout');
+      // Client-side Pixel event
+      if (typeof window !== 'undefined' && window.fbq) {
+        console.log('Firing Pixel InitiateCheckout');
+        window.fbq('track', 'InitiateCheckout');
+      } else {
+        console.log('fbq not available for InitiateCheckout');
+      }
+      // Server-side CAPI event (send current state + new value)
+      sendFbEvent('InitiateCheckout', { ...formData, [name]: value });
+    } else if (
+      !formStarted &&
+      ['name', 'phone', 'email'].includes(name) &&
+      value.trim() !== ''
+    ) {
+      // Fallback original logic just in case - might be redundant now
       setFormStarted(true);
       console.log('Form started, triggering InitiateCheckout');
 
@@ -231,7 +247,7 @@ export default function LondonScotlandTrip() {
         console.log('Firing Pixel InitiateCheckout');
         window.fbq('track', 'InitiateCheckout');
       } else {
-         console.log('fbq not available for InitiateCheckout');
+        console.log('fbq not available for InitiateCheckout');
       }
 
       // Server-side CAPI event (send current state + new value)
@@ -240,7 +256,8 @@ export default function LondonScotlandTrip() {
     }
   };
 
-  const handleSubmit = async (e) => { // Make handleSubmit async
+  const handleSubmit = async (e) => {
+    // Make handleSubmit async
     e.preventDefault();
 
     // --- Facebook Event Tracking ---
@@ -256,15 +273,13 @@ export default function LondonScotlandTrip() {
       console.log('Firing Pixel Lead event');
       window.fbq('track', 'Lead', eventData);
     } else {
-       console.log('fbq not available for Lead event');
+      console.log('fbq not available for Lead event');
     }
-
 
     // 2. Server-side CAPI Event
     console.log('Sending Lead event via CAPI');
     await sendFbEvent('Lead', formData);
     // --- End Facebook Event Tracking ---
-
 
     // Original form submission logic
     alert('شكراً لك! سنتواصل معك قريباً.');
@@ -397,7 +412,9 @@ export default function LondonScotlandTrip() {
             {/* Contact Form */}
             <div className={styles.formContainer}>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
-                <div className={`${styles.formGroup} ${styles.floatingLabelGroup}`}>
+                <div
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
+                >
                   <input
                     type="text"
                     id="name"
@@ -409,19 +426,25 @@ export default function LondonScotlandTrip() {
                     autoComplete="name" // Added autocomplete
                     // required // Made optional
                   />
-                  <label htmlFor="name" className={styles.formLabel}>الاسم الكامل (اختياري)</label>
+                  <label htmlFor="name" className={styles.formLabel}>
+                    الاسم الكامل (اختياري)
+                  </label>
                 </div>
 
                 {/* Phone field needs special handling due to country code */}
                 {/* Add hasValue and inputError classes conditionally */}
-                <div className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid ? styles.inputError : ''}`}>
-                   <label htmlFor="phone" className={styles.formLabel}>الجوال</label>
-                   <div className={styles.phoneInput}>
-                     {/* Moved country code to the left */}
-                     <input
-                       type="tel"
-                       id="phone"
-                       className={styles.formInput} // Add class for styling
+                <div
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid ? styles.inputError : ''}`}
+                >
+                  <label htmlFor="phone" className={styles.formLabel}>
+                    الجوال
+                  </label>
+                  <div className={styles.phoneInput}>
+                    {/* Moved country code to the left */}
+                    <input
+                      type="tel"
+                      id="phone"
+                      className={styles.formInput} // Add class for styling
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
@@ -432,10 +455,12 @@ export default function LondonScotlandTrip() {
                       autoComplete="tel" // Added autocomplete
                     />
                     <span className={styles.countryCode}>+966</span>
-                   </div>
+                  </div>
                 </div>
 
-                <div className={`${styles.formGroup} ${styles.floatingLabelGroup}`}>
+                <div
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
+                >
                   <input
                     type="email"
                     id="email"
@@ -447,11 +472,15 @@ export default function LondonScotlandTrip() {
                     autoComplete="email" // Added autocomplete
                     // required // Made optional
                   />
-                  <label htmlFor="email" className={styles.formLabel}>البريد الإلكتروني (اختياري)</label>
+                  <label htmlFor="email" className={styles.formLabel}>
+                    البريد الإلكتروني (اختياري)
+                  </label>
                 </div>
 
                 {/* Nationality Field */}
-                <div className={`${styles.formGroup} ${styles.nationalityGroup}`}>
+                <div
+                  className={`${styles.formGroup} ${styles.nationalityGroup}`}
+                >
                   {/* <label>الجنسية</label> Removed this label */}
                   <div className={styles.radioGroup}>
                     <label className={styles.radioLabel}>
@@ -478,7 +507,6 @@ export default function LondonScotlandTrip() {
                     </label>
                   </div>
                 </div>
-
 
                 {/* Removed City Field */}
                 {/* <div className={styles.formGroup}> ... </div> */}

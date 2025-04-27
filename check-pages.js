@@ -26,37 +26,37 @@ const exceptions = [
 function scanPages() {
   const pagesDir = path.join(process.cwd(), 'src/pages');
   const pageFiles = glob.sync('**/*.js', { cwd: pagesDir });
-  
+
   const results = {
     ok: [],
     needUpdate: [],
     exceptions: [],
   };
 
-  pageFiles.forEach(file => {
+  pageFiles.forEach((file) => {
     // Skip exception files
-    if (exceptions.some(ex => file.startsWith(ex))) {
+    if (exceptions.some((ex) => file.startsWith(ex))) {
       results.exceptions.push(file);
       return;
     }
 
     const content = fs.readFileSync(path.join(pagesDir, file), 'utf8');
-    
+
     // Check if the file has getStaticProps or getServerSideProps
     const hasStaticProps = patterns.getStaticProps.test(content);
     const hasServerProps = patterns.getServerSideProps.test(content);
-    
+
     // Check if it imports and uses metadata/menus
     const hasSiteMetadata = patterns.getSiteMetadata.test(content);
     const hasAllMenus = patterns.getAllMenus.test(content);
     const hasLayoutWithMetadata = patterns.layoutWithMetadata.test(content);
     const hasLayoutWithoutProps = patterns.layoutWithoutProps.test(content);
-    
+
     // Determine if the page needs updating
     const hasDataFetching = hasStaticProps || hasServerProps;
     const hasMetadataImports = hasSiteMetadata && hasAllMenus;
     const usesMetadataInLayout = hasLayoutWithMetadata;
-    
+
     if (hasDataFetching && hasMetadataImports && usesMetadataInLayout) {
       // Page seems to be properly updated
       results.ok.push(file);
@@ -67,9 +67,10 @@ function scanPages() {
         issues: {
           missingMetadataImport: !hasSiteMetadata,
           missingMenusImport: !hasAllMenus,
-          layoutWithoutMetadata: hasLayoutWithoutProps && !hasLayoutWithMetadata,
+          layoutWithoutMetadata:
+            hasLayoutWithoutProps && !hasLayoutWithMetadata,
           missingDataFetching: !hasDataFetching,
-        }
+        },
       });
     } else if (hasDataFetching && !hasMetadataImports) {
       // Page has data fetching but doesn't get metadata/menus
@@ -78,8 +79,9 @@ function scanPages() {
         issues: {
           missingMetadataImport: !hasSiteMetadata,
           missingMenusImport: !hasAllMenus,
-          layoutWithoutMetadata: hasLayoutWithoutProps && !hasLayoutWithMetadata,
-        }
+          layoutWithoutMetadata:
+            hasLayoutWithoutProps && !hasLayoutWithMetadata,
+        },
       });
     }
   });
@@ -93,18 +95,22 @@ const results = scanPages();
 console.log('\n======= PAGES SCAN RESULTS =======\n');
 
 console.log(`💚 ${results.ok.length} pages appear to be correctly updated:`);
-results.ok.forEach(file => console.log(`  - ${file}`));
+results.ok.forEach((file) => console.log(`  - ${file}`));
 
 console.log(`\n🚫 ${results.exceptions.length} pages excluded from checks:`);
-results.exceptions.forEach(file => console.log(`  - ${file}`));
+results.exceptions.forEach((file) => console.log(`  - ${file}`));
 
 console.log(`\n⚠️ ${results.needUpdate.length} pages need updates:`);
 results.needUpdate.forEach(({ file, issues }) => {
   console.log(`  - ${file}`);
-  if (issues.missingDataFetching) console.log('    • Missing getStaticProps or getServerSideProps');
-  if (issues.missingMetadataImport) console.log('    • Missing getSiteMetadata import/usage');
-  if (issues.missingMenusImport) console.log('    • Missing getAllMenus import/usage');
-  if (issues.layoutWithoutMetadata) console.log('    • Layout component without metadata/menus props');
+  if (issues.missingDataFetching)
+    console.log('    • Missing getStaticProps or getServerSideProps');
+  if (issues.missingMetadataImport)
+    console.log('    • Missing getSiteMetadata import/usage');
+  if (issues.missingMenusImport)
+    console.log('    • Missing getAllMenus import/usage');
+  if (issues.layoutWithoutMetadata)
+    console.log('    • Layout component without metadata/menus props');
 });
 
-console.log('\n==================================\n'); 
+console.log('\n==================================\n');

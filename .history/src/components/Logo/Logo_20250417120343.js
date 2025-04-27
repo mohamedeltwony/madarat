@@ -2,7 +2,8 @@ import Image from 'next/image'; // Import Image
 import { useSiteContext } from 'hooks/use-site';
 import styles from './Logo.module.scss';
 
-const Logo = ({ width = 150, height = 46 }) => { // Add optional width/height props
+const Logo = ({ width = 150, height = 46 }) => {
+  // Add optional width/height props
   const { metadata = {} } = useSiteContext();
   const { title } = metadata;
 

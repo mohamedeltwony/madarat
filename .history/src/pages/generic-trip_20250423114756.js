@@ -27,7 +27,8 @@ export default function GenericTrip() {
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   // Helper function to send events to the backend API
-  const sendFbEvent = async (eventName, data, eventId = null) => { // Add eventId parameter
+  const sendFbEvent = async (eventName, data, eventId = null) => {
+    // Add eventId parameter
     const phoneDigits = data.phone?.replace(/[^0-9]/g, '');
 
     try {
