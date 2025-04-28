@@ -3,10 +3,14 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router'; // Import useRouter
 import dynamic from 'next/dynamic'; // Import dynamic
-import SparkleButton from '@/components/UI/SparkleButton';
+const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
+  ssr: false,
+});
 // import Chatbot from '@/components/Chatbot'; // Removed
 // import ExitPopup from '@/components/ExitPopup'; // Removed
-import styles from '@/styles/pages/LondonScotland.module.scss'; // Use LondonScotland styles for the marquee
+import styles from '@/styles/pages/LondonScotland.module.scss'; // Keep using the same styles for cloning
+// Removed getSiteMetadata import as it's no longer fetched here
+import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though unused in getStaticProps
 // Removed getSiteMetadata import as it's no longer fetched here
 
 // Removed SVG Icon imports
@@ -41,7 +45,7 @@ export default function CruiseItalySpainFrance() {
   const [formStarted, setFormStarted] = useState(false); // Track if form interaction started
   const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
   const [isPhoneValid, setIsPhoneValid] = useState(true); // Track phone validity, assume valid initially
-
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
   // Helper function to send events to the backend API
   const sendFbEvent = async (eventName, data, eventId = null) => {
     // Add eventId parameter
@@ -390,15 +394,11 @@ export default function CruiseItalySpainFrance() {
                 // Removed unoptimized prop
               />
             </div>
-            <h1 className={styles.title}>
-              كروز الأحلام: <span className={styles.highlight}>إيطاليا</span>،{' '}
-              <span className={styles.highlight}>إسبانيا</span>،{' '}
-              <span className={styles.highlight}>فرنسا</span>
-            </h1>{' '}
+            <h1 className={styles.title}>كروز الأحلام</h1>
             {/* Updated Headline */}
             <p className={styles.description}>
               انطلق في مغامرة بحرية استثنائية لمدة 8 أيام و 7 ليالي بسعر يبدأ من
-              3700 ريال للشخص. استمتع بالإقامة الفاخرة، الوجبات الشهية، والمرافق
+              3655 ريال للشخص. استمتع بالإقامة الفاخرة، الوجبات الشهية، والمرافق
               الترفيهية على متن الكروز.
             </p>{' '}
             {/* Updated Description */}
@@ -429,7 +429,7 @@ export default function CruiseItalySpainFrance() {
               </div>
             </div>
             {/* End Features Section */}
-            {/* Contact Form */}
+            {/* Contact Form - Using London/Scotland structure */}
             <div className={styles.formContainer}>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
                 <div
@@ -538,10 +538,19 @@ export default function CruiseItalySpainFrance() {
                 </div>
 
                 {/* Removed City Dropdown */}
-
-                <SparkleButton type="submit" className={styles.submitButton}>
-                  احجز مكانك الآن
-                </SparkleButton>
+                <div className={styles.formActions}>
+                  <SparkleButton
+                    type="submit"
+                    disabled={isLoading}
+                    className={styles.mainCTA}
+                  >
+                    <div className={styles.buttonGlow}></div>
+                    <span className={styles.buttonContent}>
+                      اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين
+                      السياحة لدينا
+                    </span>
+                  </SparkleButton>
+                </div>
               </form>
             </div>
             {/* End Contact Form */}

@@ -14,6 +14,7 @@ const ALLOWED_PATHS = [
   '/italy-trip',
   '/poland-trip',
   '/azerbaijan-trip',
+  '/',
 ];
 
 // Define paths/patterns to exclude from the middleware altogether (e.g., static assets, API routes)

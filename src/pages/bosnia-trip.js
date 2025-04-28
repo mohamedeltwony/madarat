@@ -562,7 +562,7 @@ export default function BosniaTrip() {
                     <div className={styles.buttonGlow}></div>
                     <span className={styles.buttonContent}>
                       اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين
-                      السياحة عندنا
+                      السياحة لدينا
                     </span>
                   </SparkleButton>
                 </div>
