@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router'; // Import useRouter
@@ -10,14 +10,13 @@ const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
 // import ExitPopup from '@/components/ExitPopup'; // Removed
 import styles from '@/styles/pages/LondonScotland.module.scss'; // Keep using the same styles for cloning
 // Removed getSiteMetadata import as it's no longer fetched here
-import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though unused in getStaticProps
 
 // Removed SVG Icon imports
 
 // import UIStyles from '@/components/UI/UI.module.scss'; // Commented out - unused
 
 // NOTE: Update image path comment if needed
-// public/images/north-turkey-background.webp
+// public/images/gorgia-background.webp
 
 // --- SVG Icons ---
 
@@ -29,7 +28,7 @@ import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though u
 // const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
 //   ssr: false,
 // });
-export default function TrabzonNorthTurkeyTrip() {
+export default function SchengenVisaTrip() {
   // Changed component name
   const router = useRouter(); // Get router instance
   const [formData, setFormData] = useState({
@@ -38,7 +37,7 @@ export default function TrabzonNorthTurkeyTrip() {
     email: '',
     nationality: '', // Added nationality field
     // city: '', // Removed city field
-    destination: 'الشمال التركي', // Changed destination to North Turkey
+    destination: 'تأشيرة شنغن', // Changed destination
   });
   const [formStarted, setFormStarted] = useState(false); // Track if form interaction started
   const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
@@ -68,7 +67,7 @@ export default function TrabzonNorthTurkeyTrip() {
           },
           custom_data: {
             nationality: data.nationality,
-            destination: data.destination, // This will be 'الشمال التركي' from state
+            destination: data.destination, // This will be 'تأشيرة شنغن' from state
             full_name: data.name,
           },
           eventSourceUrl: window.location.href,
@@ -105,7 +104,9 @@ export default function TrabzonNorthTurkeyTrip() {
 
     if (name === 'phone') {
       setPhoneTouched(true);
-      const phoneRegex = /^5[0-9]{8}$/;
+      // Updated phone validation regex to accept numbers starting with 0, 5, or 966
+      // and allow lengths of 10, 11, or 13 digits
+      const phoneRegex = /^(0|5|966)([0-9]{9,12})$/;
       currentPhoneValid = phoneRegex.test(value);
       setIsPhoneValid(currentPhoneValid);
     }
@@ -172,7 +173,9 @@ export default function TrabzonNorthTurkeyTrip() {
     };
 
     if (!isPhoneValid && formData.phone.trim() !== '') {
-      alert('الرجاء إدخال رقم جوال سعودي صحيح (يبدأ بـ 5 ويتكون من 9 أرقام).');
+      alert(
+        'الرجاء إدخال رقم جوال صحيح (يبدأ بـ 0 أو 5 أو 966 ويتكون من 10 أو 11 أو 13 رقم).'
+      );
       setIsLoading(false); // Reset loading state on validation error
       return;
     }
@@ -183,12 +186,6 @@ export default function TrabzonNorthTurkeyTrip() {
     }
 
     // --- Facebook Event Tracking (Keep original logic/names) ---
-    const eventData = {
-      content_name: 'Trabzon North Turkey Trip Form', // Updated form name
-      content_category: 'Travel Lead',
-      value: 0, // Keep original value
-      currency: 'SAR',
-    };
     const leadEventId = crypto.randomUUID();
     console.log(`Generated Lead Event ID: ${leadEventId}`);
     if (formData.nationality === 'مواطن') {
@@ -210,11 +207,11 @@ export default function TrabzonNorthTurkeyTrip() {
         formBody.append('phone', formData.phone);
         formBody.append('email', formData.email);
         formBody.append('nationality', formData.nationality);
-        formBody.append('destination', formData.destination); // Will send 'الشمال التركي'
+        formBody.append('destination', formData.destination); // Will send 'تأشيرة شنغن'
         const now = new Date();
         const date = now.toLocaleDateString();
         const time = now.toLocaleTimeString();
-        formBody.append('formName', 'Trabzon North Turkey Trip Form'); // Updated form name
+        formBody.append('formName', 'Schengen Visa Service Form'); // Updated form name
         formBody.append('pageUrl', window.location.href);
         formBody.append('timestamp', now.toISOString());
         formBody.append('date', date);
@@ -264,8 +261,8 @@ export default function TrabzonNorthTurkeyTrip() {
           phone: formData.phone,
           email: formData.email,
           nationality: formData.nationality,
-          destination: formData.destination, // Will send 'الشمال التركي'
-          formName: 'Trabzon North Turkey Trip Form', // Updated form name
+          destination: formData.destination, // Will send 'تأشيرة شنغن'
+          formName: 'Schengen Visa Service Form', // Updated form name
           pageUrl: window.location.href,
           ...clientData,
         }),
@@ -301,56 +298,51 @@ export default function TrabzonNorthTurkeyTrip() {
       phone: '',
       email: '',
       nationality: '',
-      destination: 'الشمال التركي', // Updated destination in reset
+      destination: 'تأشيرة شنغن', // Updated destination in reset
     });
     setFormStarted(false);
     // Don't reset isLoading here as page is redirecting
   };
 
-  // Saudi cities (Keep original if needed by form logic, though not displayed)
-  const cities = [
-    'الرياض',
-    'جدة',
-    'القصيم – حائل',
-    'مكة - الطائف',
-    'المدينة المنورة',
-    'المنطقة الشرقية',
-    'المنطقة الشمالية',
-    'المنطقة الجنوبية',
-    'أخرى',
-  ];
-
-  // Features data - Updated for North Turkey
+  // Features data - Updated for Schengen visa
   const features = [
     {
-      text: 'استقبال وتوديع بسيارة خاصة',
-      iconPath: '/icons/gorgia/استقبال-وتوديع.webp',
+      text: 'خبرة واسعة في تأشيرات شنغن',
+      iconPath: '/icons/gorgia/تأمين.webp',
     },
     {
-      text: 'الإقامة فاخرة فى كوخ وفندقية',
-      iconPath: '/icons/gorgia/5-نجوم.webp',
+      text: 'متابعة متكاملة للطلب',
+      iconPath: '/icons/gorgia/خدمة-عملاء.webp',
     },
     {
-      text: 'جولات سياحية بسيارة خاصة',
+      text: 'خدمة سريعة وموثوقة',
       iconPath: '/icons/gorgia/التنقلات-بين-المدن.webp',
     },
     {
-      text: 'شرائح اتصال وانترنت',
-      iconPath: '/icons/gorgia/شريحة-انترنت.webp',
+      text: 'استشارات مجانية للسفر',
+      iconPath: '/icons/gorgia/جولات-جماعية.webp',
     },
     {
-      text: 'خدمة عملاء ٢٤/٧',
-      iconPath: '/icons/gorgia/خدمة-عملاء.webp',
+      text: 'مساعدة في الأوراق المطلوبة',
+      iconPath: '/icons/gorgia/5-نجوم.webp',
+    },
+    {
+      text: 'متابعة الطلب إلكترونياً',
+      iconPath: '/icons/gorgia/استقبال-وتوديع.webp',
+    },
+    {
+      text: 'دعم فني ٢٤/٧',
+      iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp',
     },
   ];
 
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>استكشف الشمال التركي مع مدارات الكون | طربزون وايدر</title>
+        <title>احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر</title>
         <meta
           name="description"
-          content="رحلة فاخرة الى الشمال التركي مع شركة مدارات الكون للسياحة والسفر. استمتع بإقامة فاخرة في أكواخ طبيعية خلابة وتجربة سياحية مميزة في طربزون وايدر."
+          content="خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 299 ريال سعودي فقط."
         />
         <meta
           name="viewport"
@@ -371,8 +363,8 @@ export default function TrabzonNorthTurkeyTrip() {
         <section className={styles.hero}>
           {/* Background Image using next/image */}
           <Image
-            src="/images/north-turkey-background.webp" // Changed image src for North Turkey
-            alt="Scenic view of North Turkey" // Changed alt text
+            src="/images/schengen-background.webp" // Using Italy image as it's a Schengen country
+            alt="تأشيرة شنغن" // Changed alt text
             fill // Use fill prop instead of layout="fill"
             // objectFit="cover" // Remove prop, handle with CSS
             quality={75} // Adjust quality as needed
@@ -393,23 +385,14 @@ export default function TrabzonNorthTurkeyTrip() {
               />
             </div>
             <h1 className={styles.title}>
-              <span className={styles.highlight}>الشمال التركي</span>
-              <div
-                className={styles.subtitle}
-                style={{ fontSize: '0.6em', marginTop: '5px' }}
-              >
-                طربزون و ايدر
-              </div>
+              تأشيرة <span className={styles.highlight}>شنغن</span>
             </h1>
             <p className={styles.description}>
-              7 أيام - 6 ليالي
+              خدمة استخراج تأشيرة شنغن بطريقة سهلة وميسرة
               <br />
-              إقامة فاخرة في أكواخ خشبية ساحرة
+              السعر
               <br />
-              السعر يبدأ من
-              <br />
-              <span className={styles.highlight}>2499</span> ر.س في الغرفة
-              المزدوجة
+              <span className={styles.highlight}>299</span> ر.س فقط
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}
@@ -442,9 +425,45 @@ export default function TrabzonNorthTurkeyTrip() {
             </div>
             {/* End Features Section */}
 
-            {/* Contact Form - Using London/Scotland structure */}
+            {/* Contact Form - Visa service form */}
             <div className={styles.formContainer}>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
+                {/* Phone field needs special handling due to country code */}
+                {/* Add hasValue and inputError classes conditionally */}
+                <div
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`}
+                >
+                  <label htmlFor="phone" className={styles.formLabel}>
+                    الجوال
+                  </label>
+                  <div className={styles.phoneInput}>
+                    {/* Removed country code span since we now accept various formats */}
+                    <input
+                      type="tel"
+                      id="phone"
+                      className={styles.formInput} // Add class for styling
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
+                      placeholder=" " // Use space for placeholder trick
+                      autoComplete="tel" // Added autocomplete
+                      required // Made required
+                      pattern="^(0|5|966)([0-9]{9,12})$" // Updated HTML pattern for native validation
+                      title="يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من 10 أو 11 أو 13 رقم" // Updated tooltip
+                    />
+                  </div>
+                  {/* Updated error message display */}
+                  {phoneTouched &&
+                    !isPhoneValid &&
+                    formData.phone.trim() !== '' && (
+                      <p className={styles.errorMessage}>
+                        يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من 10 أو 11 أو
+                        13 رقم.
+                      </p>
+                    )}
+                </div>
+
                 <div
                   className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
                 >
@@ -462,42 +481,6 @@ export default function TrabzonNorthTurkeyTrip() {
                   <label htmlFor="name" className={styles.formLabel}>
                     الاسم الكامل (اختياري)
                   </label>
-                </div>
-
-                {/* Phone field needs special handling due to country code */}
-                {/* Add hasValue and inputError classes conditionally */}
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`}
-                >
-                  <label htmlFor="phone" className={styles.formLabel}>
-                    الجوال
-                  </label>
-                  <div className={styles.phoneInput}>
-                    {/* Moved country code to the left */}
-                    <input
-                      type="tel"
-                      id="phone"
-                      className={styles.formInput} // Add class for styling
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
-                      placeholder=" " // Use space for placeholder trick
-                      autoComplete="tel" // Added autocomplete
-                      required // Made required
-                      pattern="^5[0-9]{8}$" // Added HTML pattern for native validation
-                      title="يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام" // Tooltip for pattern
-                    />
-                    <span className={styles.countryCode}>+966</span>
-                  </div>
-                  {/* Updated error message display */}
-                  {phoneTouched &&
-                    !isPhoneValid &&
-                    formData.phone.trim() !== '' && (
-                      <p className={styles.errorMessage}>
-                        يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام.
-                      </p>
-                    )}
                 </div>
 
                 <div
@@ -559,8 +542,7 @@ export default function TrabzonNorthTurkeyTrip() {
                   >
                     <div className={styles.buttonGlow}></div>
                     <span className={styles.buttonContent}>
-                      اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين
-                      السياحة لدينا
+                      اضغط هنا للحصول على تأشيرة شنغن الآن بسعر ٢٩٩ ريال فقط
                     </span>
                   </SparkleButton>
                 </div>
@@ -583,7 +565,7 @@ export default function TrabzonNorthTurkeyTrip() {
 export async function getStaticProps() {
   // No longer fetching getSiteMetadata here to improve build/revalidation speed.
   // Ensure necessary <Head> tags (title, meta description, OG tags)
-  // are added directly within the TrabzonNorthTurkeyTrip component's JSX.
+  // are added directly within the SchengenVisaTrip component's JSX.
 
   return {
     props: {}, // Return empty props
