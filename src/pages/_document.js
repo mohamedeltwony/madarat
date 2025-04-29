@@ -22,7 +22,7 @@ export default class MyDocument extends Document {
           {/* NOTE: Verify exact URLs/weights in browser dev tools */}
           {/* Preloading Regular 400 */}
           <link
-            rel="preconnect" // Added to satisfy linter
+            rel="preconnect"
             href="https://fonts.gstatic.com"
             crossOrigin="anonymous"
           />

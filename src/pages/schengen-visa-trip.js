@@ -308,31 +308,31 @@ export default function SchengenVisaTrip() {
   const features = [
     {
       text: 'خبرة واسعة في تأشيرات شنغن',
-      iconPath: '/icons/gorgia/تأمين.webp',
+      iconPath: '/icons/خبرة.webp',
     },
     {
       text: 'متابعة متكاملة للطلب',
-      iconPath: '/icons/gorgia/خدمة-عملاء.webp',
+      iconPath: '/icons/متابعة متكاملة.webp',
     },
     {
       text: 'خدمة سريعة وموثوقة',
-      iconPath: '/icons/gorgia/التنقلات-بين-المدن.webp',
+      iconPath: '/icons/خدمة_سريعة_وموثوقة.webp',
     },
     {
       text: 'استشارات مجانية للسفر',
-      iconPath: '/icons/gorgia/جولات-جماعية.webp',
+      iconPath: '/icons/استشارات السفر.webp',
     },
     {
       text: 'مساعدة في الأوراق المطلوبة',
-      iconPath: '/icons/gorgia/5-نجوم.webp',
+      iconPath: '/icons/مساعدة في الأوراق.webp',
     },
     {
       text: 'متابعة الطلب إلكترونياً',
-      iconPath: '/icons/gorgia/استقبال-وتوديع.webp',
+      iconPath: '/icons/متابعة الطلب الكترونيا .webp',
     },
     {
-      text: 'دعم فني ٢٤/٧',
-      iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp',
+      text: 'دعم فني 24/7',
+      iconPath: '/icons/خدمة عملاء.webp',
     },
   ];
 

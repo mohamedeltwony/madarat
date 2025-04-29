@@ -429,9 +429,45 @@ export default function CruiseItalySpainFrance() {
               </div>
             </div>
             {/* End Features Section */}
-            {/* Contact Form - Using London/Scotland structure */}
+            {/* Contact Form - Visa service form */}
             <div className={styles.formContainer}>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
+                {/* Phone field needs special handling due to country code */}
+                {/* Add hasValue and inputError classes conditionally */}
+                <div
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`}
+                >
+                  <label htmlFor="phone" className={styles.formLabel}>
+                    الجوال
+                  </label>
+                  <div className={styles.phoneInput}>
+                    {/* Removed country code span since we now accept various formats */}
+                    <input
+                      type="tel"
+                      id="phone"
+                      className={styles.formInput} // Add class for styling
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
+                      placeholder=" " // Use space for placeholder trick
+                      autoComplete="tel" // Added autocomplete
+                      required // Made required
+                      pattern="^(0|5|966)([0-9]{9,12})$" // Updated HTML pattern for native validation
+                      title="يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من 10 أو 11 أو 13 رقم" // Updated tooltip
+                    />
+                  </div>
+                  {/* Updated error message display */}
+                  {phoneTouched &&
+                    !isPhoneValid &&
+                    formData.phone.trim() !== '' && (
+                      <p className={styles.errorMessage}>
+                        يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من 10 أو 11 أو
+                        13 رقم.
+                      </p>
+                    )}
+                </div>
+
                 <div
                   className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
                 >
@@ -449,42 +485,6 @@ export default function CruiseItalySpainFrance() {
                   <label htmlFor="name" className={styles.formLabel}>
                     الاسم الكامل (اختياري)
                   </label>
-                </div>
-
-                {/* Phone field needs special handling due to country code */}
-                {/* Add hasValue and inputError classes conditionally */}
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`}
-                >
-                  <label htmlFor="phone" className={styles.formLabel}>
-                    الجوال
-                  </label>
-                  <div className={styles.phoneInput}>
-                    {/* Moved country code to the left */}
-                    <input
-                      type="tel"
-                      id="phone"
-                      className={styles.formInput} // Add class for styling
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
-                      placeholder=" " // Use space for placeholder trick
-                      autoComplete="tel" // Added autocomplete
-                      required // Made required
-                      pattern="^5[0-9]{8}$" // Added HTML pattern for native validation
-                      title="يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام" // Tooltip for pattern
-                    />
-                    <span className={styles.countryCode}>+966</span>
-                  </div>
-                  {/* Updated error message display */}
-                  {phoneTouched &&
-                    !isPhoneValid &&
-                    formData.phone.trim() !== '' && (
-                      <p className={styles.errorMessage}>
-                        يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام.
-                      </p>
-                    )}
                 </div>
 
                 <div
