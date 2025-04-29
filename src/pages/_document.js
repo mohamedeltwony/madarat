@@ -13,10 +13,7 @@ export default class MyDocument extends Document {
             crossOrigin="anonymous"
           />
           {/* Main Google Font Stylesheet - Reverting to display=swap */}
-          <link
-            rel="preconnect"
-            href="https://fonts.googleapis.com"
-          />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
             rel="preconnect"
             href="https://fonts.gstatic.com"
@@ -30,6 +27,7 @@ export default class MyDocument extends Document {
           {/* Preload critical font files used above the fold (Hero Title/Desc) */}
           {/* NOTE: Verify exact URLs/weights in browser dev tools */}
           {/* Preloading Regular 400 */}
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
             rel="preconnect"
             href="https://fonts.gstatic.com"
@@ -43,7 +41,12 @@ export default class MyDocument extends Document {
             crossOrigin="anonymous"
           />
           {/* Preloading Bold 700 (Assuming hero title uses bold) */}
-          {/* Preconnect already added above for fonts.gstatic.com */}
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
           <link
             rel="preload"
             href="https://fonts.gstatic.com/s/cairo/v28/SLXbc1nY6HkvamqM9ZqKjIMqpxz1uLd4pQ.woff2" /* Guess for Bold 700 */
