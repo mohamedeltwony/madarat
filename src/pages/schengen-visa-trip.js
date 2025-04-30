@@ -104,9 +104,8 @@ export default function SchengenVisaTrip() {
 
     if (name === 'phone') {
       setPhoneTouched(true);
-      // Updated phone validation regex to accept numbers starting with 0, 5, or 966
-      // and allow lengths of 10, 11, or 13 digits
-      const phoneRegex = /^(0|5|966)([0-9]{9,12})$/;
+      // Updated phone validation regex to match cruise page
+      const phoneRegex = /^(0|5|966)([0-9]{8,12})$/;
       currentPhoneValid = phoneRegex.test(value);
       setIsPhoneValid(currentPhoneValid);
     }
@@ -174,7 +173,7 @@ export default function SchengenVisaTrip() {
 
     if (!isPhoneValid && formData.phone.trim() !== '') {
       alert(
-        'الرجاء إدخال رقم جوال صحيح (يبدأ بـ 0 أو 5 أو 966 ويتكون من 10 أو 11 أو 13 رقم).'
+        'يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام.'
       );
       setIsLoading(false); // Reset loading state on validation error
       return;
@@ -196,60 +195,122 @@ export default function SchengenVisaTrip() {
     }
     // --- End Facebook Event Tracking ---
 
-    // --- Zapier Webhook Integration (Keep original logic/names) ---
+    // --- Zapier Webhook Integration using API Proxy ---
     try {
-      const zapierWebhookUrl = process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL;
-      if (!zapierWebhookUrl) {
-        console.error('Zapier webhook URL is not configured');
-      } else {
-        const formBody = new URLSearchParams();
-        formBody.append('name', formData.name);
-        formBody.append('phone', formData.phone);
-        formBody.append('email', formData.email);
-        formBody.append('nationality', formData.nationality);
-        formBody.append('destination', formData.destination); // Will send 'تأشيرة شنغن'
-        const now = new Date();
-        const date = now.toLocaleDateString();
-        const time = now.toLocaleTimeString();
-        formBody.append('formName', 'Schengen Visa Service Form'); // Updated form name
-        formBody.append('pageUrl', window.location.href);
-        formBody.append('timestamp', now.toISOString());
-        formBody.append('date', date);
-        formBody.append('time', time);
-        const response = await fetch(zapierWebhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formBody.toString(),
-        });
-        if (!response.ok) {
-          console.error(
-            'Failed to send data to Zapier:',
-            await response.text()
+      // Process phone number for Zapier to ensure consistent format
+      let processedPhone = formData.phone;
+      if (processedPhone) {
+        // Remove all non-digit characters
+        processedPhone = processedPhone.replace(/[^0-9]/g, '');
+
+        // Handle different formats: standardize to Saudi mobile format
+        if (processedPhone.startsWith('966') && processedPhone.length >= 12) {
+          // If starts with 966, convert to 05xx format for better display
+          processedPhone = '0' + processedPhone.substring(3);
+          console.log(
+            'Converted international format to local format:',
+            processedPhone
           );
+        } else if (
+          !processedPhone.startsWith('0') &&
+          processedPhone.startsWith('5') &&
+          processedPhone.length === 9
+        ) {
+          // If starts with 5 and is 9 digits, add leading 0
+          processedPhone = '0' + processedPhone;
+          console.log('Added leading 0 to phone number:', processedPhone);
+        }
+      }
+
+      const now = new Date();
+
+      // Create payload for submission
+      const zapierPayload = {
+        name: formData.name || 'Not provided',
+        phone: processedPhone || 'Not provided',
+        email: formData.email || 'Not provided',
+        nationality: formData.nationality,
+        destination: formData.destination,
+        formSource: 'schengen-visa-trip',
+        formName: 'Schengen Visa Service Form',
+        pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+        timestamp: now.toISOString(),
+        date: now.toLocaleDateString(),
+        time: now.toLocaleTimeString(),
+        leadEventId: leadEventId,
+        externalId: crypto.randomUUID(),
+        ...clientData, // Include UTM parameters and other client data
+      };
+
+      console.log('Sending data to Zapier via API proxy:', zapierPayload);
+
+      try {
+        // Use our own API endpoint as proxy to avoid CORS issues
+        const proxyResponse = await fetch('/api/zapier-proxy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(zapierPayload),
+        });
+
+        const proxyData = await proxyResponse.json();
+        console.log('Zapier proxy response:', proxyData);
+
+        if (!proxyResponse.ok) {
+          console.error('Error from Zapier proxy:', proxyData);
+          // If the main proxy fails, try the direct endpoint as backup
+          console.warn('Trying direct endpoint as backup');
+          try {
+            const directResponse = await fetch('/api/zapier-direct', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(zapierPayload),
+            });
+
+            const directData = await directResponse.json();
+            console.log('Direct endpoint response:', directData);
+
+            if (directResponse.ok) {
+              console.log('Successfully logged data via direct endpoint');
+            }
+          } catch (directError) {
+            console.error('Error with direct endpoint:', directError);
+          }
         } else {
-          console.log('Data sent successfully to Zapier');
+          console.log('Successfully sent data to Zapier via proxy');
+        }
+      } catch (zapierError) {
+        console.error('Error sending to Zapier proxy:', zapierError);
+
+        // Try the direct endpoint as backup
+        console.warn('Proxy failed, trying direct endpoint as backup');
+        try {
+          const directResponse = await fetch('/api/zapier-direct', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(zapierPayload),
+          });
+
+          const directData = await directResponse.json();
+          console.log('Direct endpoint response:', directData);
+
+          if (directResponse.ok) {
+            console.log('Successfully logged data via direct endpoint');
+          }
+        } catch (directError) {
+          console.error('Error with direct endpoint:', directError);
         }
       }
     } catch (error) {
-      console.error('Error sending to Zapier:', error);
+      console.error('Error in Zapier integration:', error);
+      // Don't block the form submission due to Zapier errors
     }
-    // --- Facebook Event Tracking ---
-    console.log(`Generated Lead Event ID: ${leadEventId}`);
-    // 1. Client-side Pixel Event - REMOVED to prevent double firing
-    // The Lead event is now fired only on the thank-you-citizen/resident page load.
-    // 2. Server-side CAPI Event (Conditional based on nationality)
-    if (formData.nationality === 'مواطن') {
-      console.log('Sending Lead event via CAPI for citizen');
-      // Pass the generated leadEventId to the CAPI call
-      await sendFbEvent('Lead', formData, leadEventId);
-    } else {
-      console.log('Skipping CAPI Lead event for non-citizen');
-      // Note: Even if CAPI isn't sent, the pixel on thank-you-resident might still fire.
-      // We still pass the eventId in the redirect for potential pixel deduplication there.
-    }
-    // --- End Facebook Event Tracking ---
-
-    // --- Zapier Webhook Integration (Keep original logic/names) ---
+    // --- End Zapier Integration ---
 
     // --- Send Lead Email via API Route (Keep original logic/names) ---
     try {
@@ -449,8 +510,8 @@ export default function SchengenVisaTrip() {
                       placeholder=" " // Use space for placeholder trick
                       autoComplete="tel" // Added autocomplete
                       required // Made required
-                      pattern="^(0|5|966)([0-9]{9,12})$" // Updated HTML pattern for native validation
-                      title="يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من 10 أو 11 أو 13 رقم" // Updated tooltip
+                      pattern="^(0|5|966)([0-9]{8,12})$" // Updated HTML pattern for native validation
+                      title="يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام." // Updated tooltip
                     />
                   </div>
                   {/* Updated error message display */}
@@ -458,8 +519,8 @@ export default function SchengenVisaTrip() {
                     !isPhoneValid &&
                     formData.phone.trim() !== '' && (
                       <p className={styles.errorMessage}>
-                        يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من 10 أو 11 أو
-                        13 رقم.
+                        يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع
+                        المناسب من الأرقام.
                       </p>
                     )}
                 </div>
