@@ -49,9 +49,29 @@ export default function CruiseItalySpainFrance() {
   // Helper function to send events to the backend API
   const sendFbEvent = async (eventName, data, eventId = null) => {
     // Add eventId parameter
-    // Ensure phone number doesn't include country code if API expects only digits
-    // Basic check assuming phone is just digits after potential country code removal client-side
-    const phoneDigits = data.phone?.replace(/[^0-9]/g, '');
+    // Process phone number to standardize format regardless of input pattern
+    let phoneDigits = '';
+    if (data.phone) {
+      // Remove all non-digit characters
+      phoneDigits = data.phone.replace(/[^0-9]/g, '');
+
+      // Handle different formats: remove country code prefix if present
+      if (phoneDigits.startsWith('966') && phoneDigits.length >= 12) {
+        // If starts with 966 and long enough, remove 966
+        phoneDigits = phoneDigits.substring(3);
+      } else if (phoneDigits.startsWith('0') && phoneDigits.length >= 10) {
+        // If starts with 0, remove the 0
+        phoneDigits = phoneDigits.substring(1);
+      }
+
+      // Ensure we start with a 5 for standard Saudi mobile format
+      if (!phoneDigits.startsWith('5') && phoneDigits.length === 9) {
+        console.warn(
+          'Phone number may not be in standard Saudi format:',
+          phoneDigits
+        );
+      }
+    }
 
     try {
       const response = await fetch('/api/fb-events', {
@@ -132,8 +152,8 @@ export default function CruiseItalySpainFrance() {
     // Real-time phone validation
     if (name === 'phone') {
       setPhoneTouched(true); // Mark as touched on any change
-      // Saudi Phone Validation: Starts with 5, exactly 9 digits total
-      const phoneRegex = /^5[0-9]{8}$/;
+      // Updated phone validation to match HTML pattern: accept numbers starting with 0, 5, or 966
+      const phoneRegex = /^(0|5|966)([0-9]{8,12})$/;
       currentPhoneValid = phoneRegex.test(value);
       setIsPhoneValid(currentPhoneValid);
     }
@@ -198,122 +218,210 @@ export default function CruiseItalySpainFrance() {
   const handleSubmit = async (e) => {
     // Make handleSubmit async
     e.preventDefault();
+    setIsLoading(true); // Set loading state at the beginning
 
-    // --- Form Validation Check ---
-    if (!isPhoneValid && formData.phone.trim() !== '') {
-      // Check if phone is invalid (and not empty)
-      alert('الرجاء إدخال رقم جوال سعودي صحيح (يبدأ بـ 5 ويتكون من 9 أرقام).');
-      return; // Stop submission
-    }
-    // Ensure other required fields are filled if necessary (currently only phone has strict validation)
-    if (!formData.nationality) {
-      alert('الرجاء اختيار الجنسية.');
-      return; // Stop submission
-    }
-    // --- Facebook Event Tracking ---
-    const eventData = {
-      content_name: 'Cruise Italy Spain France Form', // Updated content name
-      content_category: 'Travel Lead', // Keep category generic or specify 'Cruise Lead'
-      value: 3700, // Updated value based on offer price
-      currency: 'SAR', // Optional: Specify currency
-    };
-
-    // --- Generate Event ID for Lead ---
-    const leadEventId = crypto.randomUUID();
-    console.log(`Generated Lead Event ID: ${leadEventId}`);
-
-    // 1. Client-side Pixel Event - REMOVED to prevent double firing
-    // The Lead event is now fired only on the thank-you-citizen/resident page load.
-
-    // 2. Server-side CAPI Event (Conditional based on nationality)
-    if (formData.nationality === 'مواطن') {
-      console.log('Sending Lead event via CAPI for citizen');
-      // Pass the generated leadEventId to the CAPI call
-      await sendFbEvent('Lead', formData, leadEventId);
-    } else {
-      console.log('Skipping CAPI Lead event for non-citizen');
-      // Note: Even if CAPI isn't sent, the pixel on thank-you-resident might still fire.
-      // We still pass the eventId in the redirect for potential pixel deduplication there.
-    }
-    // --- End Facebook Event Tracking ---
-
-    // --- Zapier Webhook Integration ---
     try {
-      const zapierWebhookUrl = process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL;
-      if (!zapierWebhookUrl) {
-        console.error('Zapier webhook URL is not configured');
+      // --- Form Validation Check ---
+      if (!isPhoneValid && formData.phone.trim() !== '') {
+        // Check if phone is invalid (and not empty)
+        alert(
+          'يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام.'
+        );
+        return; // Stop submission
+      }
+      // Ensure other required fields are filled if necessary (currently only phone has strict validation)
+      if (!formData.nationality) {
+        alert('الرجاء اختيار الجنسية.');
+        return; // Stop submission
+      }
+
+      // --- Generate IDs for tracking ---
+      const leadEventId = crypto.randomUUID();
+      const externalId = crypto.randomUUID();
+      console.log(`Generated Lead Event ID: ${leadEventId}`);
+      console.log(`Generated External ID: ${externalId}`);
+
+      // --- Facebook Event Tracking ---
+      const eventData = {
+        content_name: 'Cruise Italy Spain France Form', // Updated content name
+        content_category: 'Travel Lead', // Keep category generic or specify 'Cruise Lead'
+        value: 3700, // Updated value based on offer price
+        currency: 'SAR', // Optional: Specify currency
+      };
+
+      // 1. Client-side Pixel Event - REMOVED to prevent double firing
+      // The Lead event is now fired only on the thank-you-citizen/resident page load.
+
+      // 2. Server-side CAPI Event (Conditional based on nationality)
+      if (formData.nationality === 'مواطن') {
+        console.log('Sending Lead event via CAPI for citizen');
+        // Pass the generated leadEventId to the CAPI call
+        await sendFbEvent('Lead', formData, leadEventId);
       } else {
-        console.log('Sending form data to Zapier');
-        const formBody = new URLSearchParams();
-        formBody.append('name', formData.name);
-        formBody.append('phone', formData.phone);
-        formBody.append('email', formData.email);
-        formBody.append('nationality', formData.nationality);
-        formBody.append('destination', formData.destination);
-        const now = new Date();
-        const date = now.toLocaleDateString();
-        const time = now.toLocaleTimeString();
+        console.log('Skipping CAPI Lead event for non-citizen');
+        // Note: Even if CAPI isn't sent, the pixel on thank-you-resident might still fire.
+        // We still pass the eventId in the redirect for potential pixel deduplication there.
+      }
+      // --- End Facebook Event Tracking ---
 
-        formBody.append('formName', 'Cruise Italy Spain France Form'); // Updated form name for Zapier
-        formBody.append('pageUrl', window.location.href);
-        formBody.append('timestamp', now.toISOString());
-        formBody.append('date', date);
-        formBody.append('time', time);
+      // --- Zapier Integration using API Proxy ---
+      // Process phone number for Zapier to ensure consistent format
+      let processedPhone = formData.phone;
+      if (processedPhone) {
+        // Remove all non-digit characters
+        processedPhone = processedPhone.replace(/[^0-9]/g, '');
 
-        const response = await fetch(zapierWebhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: formBody.toString(),
-        });
-
-        if (!response.ok) {
-          console.error(
-            'Failed to send data to Zapier:',
-            await response.text()
+        // Handle different formats: standardize to Saudi mobile format
+        if (processedPhone.startsWith('966') && processedPhone.length >= 12) {
+          // If starts with 966, convert to 05xx format for better display
+          processedPhone = '0' + processedPhone.substring(3);
+          console.log(
+            'Converted international format to local format:',
+            processedPhone
           );
-        } else {
-          console.log('Data sent successfully to Zapier');
+        } else if (
+          !processedPhone.startsWith('0') &&
+          processedPhone.startsWith('5') &&
+          processedPhone.length === 9
+        ) {
+          // If starts with 5 and is 9 digits, add leading 0
+          processedPhone = '0' + processedPhone;
+          console.log('Added leading 0 to phone number:', processedPhone);
         }
       }
+
+      const now = new Date();
+
+      // Create payload for submission
+      const zapierPayload = {
+        name: formData.name || 'Not provided',
+        phone: processedPhone || 'Not provided',
+        email: formData.email || 'Not provided',
+        nationality: formData.nationality,
+        destination: formData.destination,
+        formSource: 'cruise-italy-spain-france',
+        formName: 'Cruise Italy Spain France Form',
+        pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+        timestamp: now.toISOString(),
+        date: now.toLocaleDateString(),
+        time: now.toLocaleTimeString(),
+        leadEventId: leadEventId,
+        externalId: externalId,
+      };
+
+      console.log('Sending data to Zapier via API proxy:', zapierPayload);
+
+      try {
+        // Use our own API endpoint as proxy to avoid CORS issues
+        const proxyResponse = await fetch('/api/zapier-proxy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(zapierPayload),
+        });
+
+        const proxyData = await proxyResponse.json();
+        console.log('Zapier proxy response:', proxyData);
+
+        if (!proxyResponse.ok) {
+          console.error('Error from Zapier proxy:', proxyData);
+          // If the main proxy fails, try the direct endpoint as backup
+          console.warn('Trying direct endpoint as backup');
+          try {
+            const directResponse = await fetch('/api/zapier-direct', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(zapierPayload),
+            });
+
+            const directData = await directResponse.json();
+            console.log('Direct endpoint response:', directData);
+
+            if (directResponse.ok) {
+              console.log('Successfully logged data via direct endpoint');
+            }
+          } catch (directError) {
+            console.error('Error with direct endpoint:', directError);
+          }
+
+          // Don't show an error to the user, still continue with the redirect
+          console.warn('Continuing with form submission despite Zapier errors');
+        } else {
+          console.log('Successfully sent data to Zapier via proxy');
+        }
+      } catch (zapierError) {
+        console.error('Error sending to Zapier proxy:', zapierError);
+
+        // Try the direct endpoint as backup
+        console.warn('Proxy failed, trying direct endpoint as backup');
+        try {
+          const directResponse = await fetch('/api/zapier-direct', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(zapierPayload),
+          });
+
+          const directData = await directResponse.json();
+          console.log('Direct endpoint response:', directData);
+
+          if (directResponse.ok) {
+            console.log('Successfully logged data via direct endpoint');
+          }
+        } catch (directError) {
+          console.error('Error with direct endpoint:', directError);
+        }
+
+        // Don't block the submission due to Zapier errors
+        console.warn('Continuing with form submission despite Zapier errors');
+      }
+      // --- End Zapier Integration ---
+
+      // --- Construct Redirect URL with Query Params ---
+      const thankYouPageBase =
+        formData.nationality === 'مواطن'
+          ? '/thank-you-citizen'
+          : '/thank-you-resident';
+
+      const queryParams = new URLSearchParams();
+      if (formData.email) queryParams.set('email', formData.email);
+      if (formData.phone) queryParams.set('phone', formData.phone);
+      queryParams.set('external_id', externalId); // Add external_id
+      queryParams.set('eventId', leadEventId); // Add eventId for deduplication on thank-you page
+
+      const redirectUrl = `${thankYouPageBase}?${queryParams.toString()}`;
+
+      console.log(`Redirecting to: ${redirectUrl}`);
+      router.push(redirectUrl);
+      // --- End Redirect ---
+
+      // Reset form (Might happen after redirect, which is usually fine)
+      setFormData({
+        name: '',
+        phone: '',
+        email: '',
+        nationality: '', // Reset nationality
+        // city: '', // Removed city field
+        destination: 'كروز: إيطاليا، إسبانيا، فرنسا', // Updated destination on reset
+      });
+      setFormStarted(false); // Reset form started state
     } catch (error) {
-      console.error('Error sending to Zapier:', error);
+      console.error('Error processing form submission:', error);
+      // You might want to track this error in analytics
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'form_submission_error', {
+          event_category: 'error',
+          event_label: error.message,
+        });
+      }
+      alert('حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setIsLoading(false); // Reset loading state regardless of outcome
     }
-    // --- End Zapier Integration ---
-
-    // --- Generate External ID ---
-    const externalId = crypto.randomUUID();
-    console.log(`Generated External ID: ${externalId}`);
-
-    // --- Construct Redirect URL with Query Params ---
-    const thankYouPageBase =
-      formData.nationality === 'مواطن'
-        ? '/thank-you-citizen'
-        : '/thank-you-resident';
-
-    const queryParams = new URLSearchParams();
-    if (formData.email) queryParams.set('email', formData.email);
-    if (formData.phone) queryParams.set('phone', formData.phone);
-    queryParams.set('external_id', externalId); // Add external_id
-    queryParams.set('eventId', leadEventId); // Add eventId for deduplication on thank-you page
-
-    const redirectUrl = `${thankYouPageBase}?${queryParams.toString()}`;
-
-    console.log(`Redirecting to: ${redirectUrl}`);
-    router.push(redirectUrl);
-    // --- End Redirect ---
-
-    // Reset form (Might happen after redirect, which is usually fine)
-    setFormData({
-      name: '',
-      phone: '',
-      email: '',
-      nationality: '', // Reset nationality
-      // city: '', // Removed city field
-      destination: 'كروز: إيطاليا، إسبانيا، فرنسا', // Updated destination on reset
-    });
-    setFormStarted(false); // Reset form started state
   };
 
   // Saudi cities
@@ -453,17 +561,17 @@ export default function CruiseItalySpainFrance() {
                       placeholder=" " // Use space for placeholder trick
                       autoComplete="tel" // Added autocomplete
                       required // Made required
-                      pattern="^(0|5|966)([0-9]{9,12})$" // Updated HTML pattern for native validation
-                      title="يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من 10 أو 11 أو 13 رقم" // Updated tooltip
+                      pattern="^(0|5|966)([0-9]{8,12})$" // Match pattern with JS validation
+                      title="يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام" // Updated tooltip
                     />
                   </div>
-                  {/* Updated error message display */}
+                  {/* Updated error message display to match the alert and HTML title */}
                   {phoneTouched &&
                     !isPhoneValid &&
                     formData.phone.trim() !== '' && (
                       <p className={styles.errorMessage}>
-                        يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من 10 أو 11 أو
-                        13 رقم.
+                        يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع
+                        المناسب من الأرقام.
                       </p>
                     )}
                 </div>
