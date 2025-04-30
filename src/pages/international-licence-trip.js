@@ -375,21 +375,21 @@ export default function InternationalLicence() {
       text: 'معترف بها دولياً',
       iconPath: '/icons/gorgia/تأمين.webp',
     },
-    { 
-      text: 'صالحة في أكثر من 150 دولة', 
-      iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp' 
+    {
+      text: 'صالحة في أكثر من 150 دولة',
+      iconPath: '/icons/gorgia/الفنادق-مع-الافطار.webp',
     },
-    { 
-      text: 'عرض محدود لفترة محدودة', 
-      iconPath: '/icons/gorgia/--جولات-سياحية-بسيارة-خاصة.webp' 
+    {
+      text: 'عرض محدود لفترة محدودة',
+      iconPath: '/icons/gorgia/--جولات-سياحية-بسيارة-خاصة.webp',
     },
-    { 
-      text: 'خدمة عملاء 24/7', 
-      iconPath: '/icons/gorgia/خدمة-عملاء.webp' 
+    {
+      text: 'خدمة عملاء 24/7',
+      iconPath: '/icons/gorgia/خدمة-عملاء.webp',
     },
-    { 
-      text: 'توصيل لجميع أنحاء المملكة', 
-      iconPath: '/icons/gorgia/دليل-سياحي-كامل.webp' 
+    {
+      text: 'توصيل لجميع أنحاء المملكة',
+      iconPath: '/icons/gorgia/دليل-سياحي-كامل.webp',
     },
   ];
 
@@ -441,7 +441,8 @@ export default function InternationalLicence() {
               />
             </div>
             <h1 className={styles.title}>
-              اصدار <span className={styles.highlight}>الرخصة الدولية</span> للقيادة
+              اصدار <span className={styles.highlight}>الرخصة الدولية</span>{' '}
+              للقيادة
             </h1>
             <p className={styles.description}>
               عرض خاص لفترة محدودة
