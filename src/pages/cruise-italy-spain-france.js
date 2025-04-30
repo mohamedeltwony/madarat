@@ -561,8 +561,6 @@ export default function CruiseItalySpainFrance() {
                       placeholder=" " // Use space for placeholder trick
                       autoComplete="tel" // Added autocomplete
                       required // Made required
-                      pattern="^(0|5|966)([0-9]{8,12})$" // Match pattern with JS validation
-                      title="يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام" // Updated tooltip
                     />
                   </div>
                   {/* Updated error message display to match the alert and HTML title */}

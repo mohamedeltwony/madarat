@@ -105,7 +105,8 @@ export default function PolandTrip() {
 
     if (name === 'phone') {
       setPhoneTouched(true);
-      const phoneRegex = /^5[0-9]{8}$/;
+      // Updated phone validation regex to be consistent with cruise and schengen pages
+      const phoneRegex = /^(0|5|966)([0-9]{8,12})$/;
       currentPhoneValid = phoneRegex.test(value);
       setIsPhoneValid(currentPhoneValid);
     }
@@ -159,152 +160,196 @@ export default function PolandTrip() {
     if (isLoading) return;
     setIsLoading(true);
 
-    const queryParams = new URLSearchParams(window.location.search);
-    const clientData = {
-      utm_source: queryParams.get('utm_source'),
-      utm_medium: queryParams.get('utm_medium'),
-      utm_campaign: queryParams.get('utm_campaign'),
-      utm_term: queryParams.get('utm_term'),
-      utm_content: queryParams.get('utm_content'),
-      screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
-      fbc: getCookie('_fbc'),
-      fbp: getCookie('_fbp'),
-    };
-
-    if (!isPhoneValid && formData.phone.trim() !== '') {
-      alert('الرجاء إدخال رقم جوال سعودي صحيح (يبدأ بـ 5 ويتكون من 9 أرقام).');
-      setIsLoading(false); // Reset loading state on validation error
-      return;
-    }
-    if (!formData.nationality) {
-      alert('الرجاء اختيار الجنسية.');
-      setIsLoading(false); // Reset loading state on validation error
-      return;
-    }
-
-    // --- Facebook Event Tracking (Keep original logic/names) ---
-    const eventData = {
-      content_name: 'Poland Trip Form',
-      content_category: 'Travel Lead',
-      value: 0, // Keep original value
-      currency: 'SAR',
-    };
-    const leadEventId = crypto.randomUUID();
-    console.log(`Generated Lead Event ID: ${leadEventId}`);
-    if (formData.nationality === 'مواطن') {
-      console.log('Sending Lead event via CAPI for citizen');
-      await sendFbEvent('Lead', formData, leadEventId);
-    } else {
-      console.log('Skipping CAPI Lead event for non-citizen');
-    }
-    // --- End Facebook Event Tracking ---
-
-    // --- Zapier Webhook Integration (Keep original logic/names) ---
     try {
-      const zapierWebhookUrl = process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL;
-      if (!zapierWebhookUrl) {
-        console.error('Zapier webhook URL is not configured');
+      // --- Form Validation Check ---
+      if (!isPhoneValid && formData.phone.trim() !== '') {
+        alert(
+          'يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام.'
+        );
+        setIsLoading(false);
+        return;
+      }
+      if (!formData.nationality) {
+        alert('الرجاء اختيار الجنسية.');
+        setIsLoading(false);
+        return;
+      }
+
+      const queryParams = new URLSearchParams(window.location.search);
+      const clientData = {
+        utm_source: queryParams.get('utm_source'),
+        utm_medium: queryParams.get('utm_medium'),
+        utm_campaign: queryParams.get('utm_campaign'),
+        utm_term: queryParams.get('utm_term'),
+        utm_content: queryParams.get('utm_content'),
+        screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
+        fbc: getCookie('_fbc'),
+        fbp: getCookie('_fbp'),
+      };
+
+      // --- Facebook Event Tracking (Keep original logic/names) ---
+      const eventData = {
+        content_name: 'Poland Trip Form',
+        content_category: 'Travel Lead',
+        value: 0, // Keep original value
+        currency: 'SAR',
+      };
+      const leadEventId = crypto.randomUUID();
+      console.log(`Generated Lead Event ID: ${leadEventId}`);
+      if (formData.nationality === 'مواطن') {
+        console.log('Sending Lead event via CAPI for citizen');
+        await sendFbEvent('Lead', formData, leadEventId);
       } else {
-        const formBody = new URLSearchParams();
-        formBody.append('name', formData.name);
-        formBody.append('phone', formData.phone);
-        formBody.append('email', formData.email);
-        formBody.append('nationality', formData.nationality);
-        formBody.append('destination', formData.destination); // Will send 'بولندا'
-        const now = new Date();
-        const date = now.toLocaleDateString();
-        const time = now.toLocaleTimeString();
-        formBody.append('formName', 'Poland Trip Form');
-        formBody.append('pageUrl', window.location.href);
-        formBody.append('timestamp', now.toISOString());
-        formBody.append('date', date);
-        formBody.append('time', time);
-        const response = await fetch(zapierWebhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formBody.toString(),
-        });
-        if (!response.ok) {
-          console.error(
-            'Failed to send data to Zapier:',
-            await response.text()
-          );
-        } else {
-          console.log('Data sent successfully to Zapier');
+        console.log('Skipping CAPI Lead event for non-citizen');
+      }
+      // --- End Facebook Event Tracking ---
+
+      // --- Zapier Webhook Integration using API Proxy ---
+      try {
+        // Process phone number for Zapier to ensure consistent format
+        let processedPhone = formData.phone;
+        if (processedPhone) {
+          // Remove all non-digit characters
+          processedPhone = processedPhone.replace(/[^0-9]/g, '');
+
+          // Handle different formats: standardize to Saudi mobile format
+          if (processedPhone.startsWith('966') && processedPhone.length >= 12) {
+            // If starts with 966, convert to 05xx format for better display
+            processedPhone = '0' + processedPhone.substring(3);
+            console.log(
+              'Converted international format to local format:',
+              processedPhone
+            );
+          } else if (
+            !processedPhone.startsWith('0') &&
+            processedPhone.startsWith('5') &&
+            processedPhone.length === 9
+          ) {
+            // If starts with 5 and is 9 digits, add leading 0
+            processedPhone = '0' + processedPhone;
+            console.log('Added leading 0 to phone number:', processedPhone);
+          }
         }
-      }
-    } catch (error) {
-      console.error('Error sending to Zapier:', error);
-    }
-    // --- Facebook Event Tracking ---
-    console.log(`Generated Lead Event ID: ${leadEventId}`);
-    // 1. Client-side Pixel Event - REMOVED to prevent double firing
-    // The Lead event is now fired only on the thank-you-citizen/resident page load.
-    // 2. Server-side CAPI Event (Conditional based on nationality)
-    if (formData.nationality === 'مواطن') {
-      console.log('Sending Lead event via CAPI for citizen');
-      // Pass the generated leadEventId to the CAPI call
-      await sendFbEvent('Lead', formData, leadEventId);
-    } else {
-      console.log('Skipping CAPI Lead event for non-citizen');
-      // Note: Even if CAPI isn't sent, the pixel on thank-you-resident might still fire.
-      // We still pass the eventId in the redirect for potential pixel deduplication there.
-    }
-    // --- End Facebook Event Tracking ---
 
-    // --- Zapier Webhook Integration (Keep original logic/names) ---
+        const now = new Date();
 
-    // --- Send Lead Email via API Route (Keep original logic/names) ---
-    try {
-      const emailResponse = await fetch('/api/send-lead-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
+        // Create payload for submission
+        const zapierPayload = {
+          name: formData.name || 'Not provided',
+          phone: processedPhone || 'Not provided',
+          email: formData.email || 'Not provided',
           nationality: formData.nationality,
-          destination: formData.destination, // Will send 'بولندا'
+          destination: formData.destination,
+          formSource: 'poland-trip',
           formName: 'Poland Trip Form',
-          pageUrl: window.location.href,
-          ...clientData,
-        }),
-      });
-      if (!emailResponse.ok) {
-        const errorData = await emailResponse.json();
-        console.error('Failed to send lead email:', errorData.message);
-      } else {
-        console.log('Lead email sent successfully via API route');
+          pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+          timestamp: now.toISOString(),
+          date: now.toLocaleDateString(),
+          time: now.toLocaleTimeString(),
+          leadEventId: leadEventId,
+          externalId: crypto.randomUUID(),
+          ...clientData, // Include UTM parameters and other client data
+        };
+
+        console.log('Sending data to Zapier via API proxy:', zapierPayload);
+
+        try {
+          // Use our own API endpoint as proxy to avoid CORS issues
+          const proxyResponse = await fetch('/api/zapier-proxy', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(zapierPayload),
+          });
+
+          const proxyData = await proxyResponse.json();
+          console.log('Zapier proxy response:', proxyData);
+
+          if (!proxyResponse.ok) {
+            console.error('Error from Zapier proxy:', proxyData);
+            // If the main proxy fails, try the direct endpoint as backup
+            console.warn('Trying direct endpoint as backup');
+            try {
+              const directResponse = await fetch('/api/zapier-direct', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(zapierPayload),
+              });
+
+              const directData = await directResponse.json();
+              console.log('Direct endpoint response:', directData);
+
+              if (directResponse.ok) {
+                console.log('Successfully logged data via direct endpoint');
+              }
+            } catch (directError) {
+              console.error('Error with direct endpoint:', directError);
+            }
+          } else {
+            console.log('Successfully sent data to Zapier via proxy');
+          }
+        } catch (zapierError) {
+          console.error('Error sending to Zapier proxy:', zapierError);
+
+          // Try the direct endpoint as backup
+          console.warn('Proxy failed, trying direct endpoint as backup');
+          try {
+            const directResponse = await fetch('/api/zapier-direct', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(zapierPayload),
+            });
+
+            const directData = await directResponse.json();
+            console.log('Direct endpoint response:', directData);
+
+            if (directResponse.ok) {
+              console.log('Successfully logged data via direct endpoint');
+            }
+          } catch (directError) {
+            console.error('Error with direct endpoint:', directError);
+          }
+        }
+      } catch (error) {
+        console.error('Error in Zapier integration:', error);
+        // Don't block the form submission due to Zapier errors
       }
+      // --- End Zapier Integration ---
+
+      const externalId = crypto.randomUUID();
+      const thankYouPageBase =
+        formData.nationality === 'مواطن'
+          ? '/thank-you-citizen'
+          : '/thank-you-resident';
+      const redirectQueryParams = new URLSearchParams();
+      if (formData.email) redirectQueryParams.set('email', formData.email);
+      if (formData.phone) redirectQueryParams.set('phone', formData.phone);
+      redirectQueryParams.set('external_id', externalId);
+      redirectQueryParams.set('eventId', leadEventId);
+      const redirectUrl = `${thankYouPageBase}?${redirectQueryParams.toString()}`;
+      console.log(`Redirecting to: ${redirectUrl}`);
+      router.push(redirectUrl);
+
+      // Reset form (Keep original logic)
+      setFormData({
+        name: '',
+        phone: '',
+        email: '',
+        nationality: '',
+        destination: 'بولندا',
+      });
+      setFormStarted(false);
+      // Don't reset isLoading here as page is redirecting
     } catch (error) {
-      console.error('Error calling send-lead-email API:', error);
+      console.error('Error processing form submission:', error);
+      alert('حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.');
+      setIsLoading(false); // Reset loading state on error
     }
-    // --- End Send Lead Email ---
-
-    const externalId = crypto.randomUUID();
-    const thankYouPageBase =
-      formData.nationality === 'مواطن'
-        ? '/thank-you-citizen'
-        : '/thank-you-resident';
-    const redirectQueryParams = new URLSearchParams();
-    if (formData.email) redirectQueryParams.set('email', formData.email);
-    if (formData.phone) redirectQueryParams.set('phone', formData.phone);
-    redirectQueryParams.set('external_id', externalId);
-    redirectQueryParams.set('eventId', leadEventId);
-    const redirectUrl = `${thankYouPageBase}?${redirectQueryParams.toString()}`;
-    console.log(`Redirecting to: ${redirectUrl}`);
-    router.push(redirectUrl);
-
-    // Reset form (Keep original logic)
-    setFormData({
-      name: '',
-      phone: '',
-      email: '',
-      nationality: '',
-      destination: 'بولندا',
-    });
-    setFormStarted(false);
-    // Don't reset isLoading here as page is redirecting
   };
 
   // Saudi cities (Keep original if needed by form logic, though not displayed)
@@ -433,25 +478,6 @@ export default function PolandTrip() {
             {/* Contact Form - Using London/Scotland structure */}
             <div className={styles.formContainer}>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
-                >
-                  <input
-                    type="text"
-                    id="name"
-                    className={styles.formInput} // Add class for styling
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
-                    placeholder=" " // Use space for placeholder trick
-                    autoComplete="name" // Added autocomplete
-                    // required // Made optional
-                  />
-                  <label htmlFor="name" className={styles.formLabel}>
-                    الاسم الكامل (اختياري)
-                  </label>
-                </div>
-
                 {/* Phone field needs special handling due to country code */}
                 {/* Add hasValue and inputError classes conditionally */}
                 <div
@@ -473,19 +499,37 @@ export default function PolandTrip() {
                       placeholder=" " // Use space for placeholder trick
                       autoComplete="tel" // Added autocomplete
                       required // Made required
-                      pattern="^5[0-9]{8}$" // Added HTML pattern for native validation
-                      title="يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام" // Tooltip for pattern
+                      // Removed pattern attribute to avoid conflicts with JS validation
                     />
-                    <span className={styles.countryCode}>+966</span>
                   </div>
                   {/* Updated error message display */}
                   {phoneTouched &&
                     !isPhoneValid &&
                     formData.phone.trim() !== '' && (
                       <p className={styles.errorMessage}>
-                        يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام.
+                        يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع
+                        المناسب من الأرقام.
                       </p>
                     )}
+                </div>
+
+                <div
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
+                >
+                  <input
+                    type="text"
+                    id="name"
+                    className={styles.formInput} // Add class for styling
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
+                    placeholder=" " // Use space for placeholder trick
+                    autoComplete="name" // Added autocomplete
+                    // required // Made optional
+                  />
+                  <label htmlFor="name" className={styles.formLabel}>
+                    الاسم الكامل (اختياري)
+                  </label>
                 </div>
 
                 <div
