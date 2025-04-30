@@ -21,6 +21,7 @@ import styles from '@/styles/pages/Home.module.scss';
 import UIStyles from '@/components/UI/UI.module.scss';
 import React, { useState } from 'react';
 import Head from 'next/head';
+import OfferTrips from '@/components/OfferTrips';
 
 export default function Home({
   posts = [],
@@ -66,6 +67,13 @@ export default function Home({
           featuredText="اكتشف المزيد"
           featuredLink="/destinations"
         />
+
+        {/* Offer Trips Section */}
+        <Section style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%)' }}>
+          <Container>
+            <OfferTrips />
+          </Container>
+        </Section>
 
         <Section className={styles.destinationsSection}>
           <Container>
