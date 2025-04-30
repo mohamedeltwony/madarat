@@ -131,8 +131,8 @@ export default function LondonScotlandTrip() {
     // Real-time phone validation
     if (name === 'phone') {
       setPhoneTouched(true); // Mark as touched on any change
-      // Saudi Phone Validation: Starts with 5, exactly 9 digits total
-      const phoneRegex = /^5[0-9]{8}$/;
+      // Updated phone validation regex to be consistent with cruise and schengen pages
+      const phoneRegex = /^(0|5|966)([0-9]{8,12})$/;
       currentPhoneValid = phoneRegex.test(value);
       setIsPhoneValid(currentPhoneValid);
     }
@@ -209,173 +209,262 @@ export default function LondonScotlandTrip() {
     if (isLoading) return; // Prevent multiple submissions
     setIsLoading(true); // Start loading
 
-    // --- Collect Additional Client Data ---
-    const queryParams = new URLSearchParams(window.location.search);
-    const clientData = {
-      utm_source: queryParams.get('utm_source'),
-      utm_medium: queryParams.get('utm_medium'),
-      utm_campaign: queryParams.get('utm_campaign'),
-      utm_term: queryParams.get('utm_term'),
-      utm_content: queryParams.get('utm_content'),
-      screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
-      fbc: getCookie('_fbc'),
-      fbp: getCookie('_fbp'),
-    };
-    console.log('Collected Client Data:', clientData);
-    // --- End Collect Additional Client Data ---
-
-    // --- Form Validation Check ---
-    if (!isPhoneValid && formData.phone.trim() !== '') {
-      // Check if phone is invalid (and not empty)
-      alert('الرجاء إدخال رقم جوال سعودي صحيح (يبدأ بـ 5 ويتكون من 9 أرقام).');
-      return; // Stop submission
-    }
-    // Ensure other required fields are filled if necessary (currently only phone has strict validation)
-    if (!formData.nationality) {
-      alert('الرجاء اختيار الجنسية.');
-      return; // Stop submission
-    }
-    // --- Facebook Event Tracking ---
-    const eventData = {
-      content_name: 'London Scotland Trip Form',
-      content_category: 'Travel Lead',
-      value: 0, // Optional: Assign a value to the lead
-      currency: 'SAR', // Optional: Specify currency
-    };
-
-    // --- Generate Event ID for Lead ---
-    // Generate eventId regardless of nationality, as it's needed for the redirect
-    // and potentially for the pixel event on the thank-you page.
-    const leadEventId = crypto.randomUUID();
-    console.log(`Generated Lead Event ID: ${leadEventId}`);
-
-    // 1. Client-side Pixel Event - REMOVED to prevent double firing
-    // The Lead event is now fired only on the thank-you-citizen/resident page load.
-
-    // 2. Server-side CAPI Event (Conditional based on nationality)
-    if (formData.nationality === 'مواطن') {
-      console.log('Sending Lead event via CAPI for citizen');
-      // Pass the generated leadEventId to the CAPI call
-      await sendFbEvent('Lead', formData, leadEventId);
-    } else {
-      console.log('Skipping CAPI Lead event for non-citizen');
-      // Note: Even if CAPI isn't sent, the pixel on thank-you-resident might still fire.
-      // We still pass the eventId in the redirect for potential pixel deduplication there.
-    }
-    // --- End Facebook Event Tracking ---
-
-    // --- Zapier Webhook Integration ---
     try {
-      const zapierWebhookUrl = process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL;
-      if (!zapierWebhookUrl) {
-        console.error('Zapier webhook URL is not configured');
+      // --- Form Validation Check ---
+      if (!isPhoneValid && formData.phone.trim() !== '') {
+        alert(
+          'يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام.'
+        );
+        setIsLoading(false);
+        return;
+      }
+      // Ensure other required fields are filled if necessary (currently only phone has strict validation)
+      if (!formData.nationality) {
+        alert('الرجاء اختيار الجنسية.');
+        setIsLoading(false);
+        return; // Stop submission
+      }
+
+      // --- Collect Additional Client Data ---
+      const queryParams = new URLSearchParams(window.location.search);
+      const clientData = {
+        utm_source: queryParams.get('utm_source'),
+        utm_medium: queryParams.get('utm_medium'),
+        utm_campaign: queryParams.get('utm_campaign'),
+        utm_term: queryParams.get('utm_term'),
+        utm_content: queryParams.get('utm_content'),
+        screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
+        fbc: getCookie('_fbc'),
+        fbp: getCookie('_fbp'),
+      };
+      console.log('Collected Client Data:', clientData);
+      // --- End Collect Additional Client Data ---
+
+      // --- Facebook Event Tracking ---
+      const eventData = {
+        content_name: 'London Scotland Trip Form',
+        content_category: 'Travel Lead',
+        value: 0, // Optional: Assign a value to the lead
+        currency: 'SAR', // Optional: Specify currency
+      };
+
+      // --- Generate Event ID for Lead ---
+      // Generate eventId regardless of nationality, as it's needed for the redirect
+      // and potentially for the pixel event on the thank-you page.
+      const leadEventId = crypto.randomUUID();
+      console.log(`Generated Lead Event ID: ${leadEventId}`);
+
+      // 1. Client-side Pixel Event - REMOVED to prevent double firing
+      // The Lead event is now fired only on the thank-you-citizen/resident page load.
+
+      // 2. Server-side CAPI Event (Conditional based on nationality)
+      if (formData.nationality === 'مواطن') {
+        console.log('Sending Lead event via CAPI for citizen');
+        // Pass the generated leadEventId to the CAPI call
+        await sendFbEvent('Lead', formData, leadEventId);
       } else {
-        console.log('Sending form data to Zapier');
-        const formBody = new URLSearchParams();
-        formBody.append('name', formData.name);
-        formBody.append('phone', formData.phone);
-        formBody.append('email', formData.email);
-        formBody.append('nationality', formData.nationality);
-        formBody.append('destination', formData.destination);
+        console.log('Skipping CAPI Lead event for non-citizen');
+        // Note: Even if CAPI isn't sent, the pixel on thank-you-resident might still fire.
+        // We still pass the eventId in the redirect for potential pixel deduplication there.
+      }
+      // --- End Facebook Event Tracking ---
+
+      // --- Zapier Webhook Integration using API Proxy ---
+      try {
+        // Process phone number for Zapier to ensure consistent format
+        let processedPhone = formData.phone;
+        if (processedPhone) {
+          // Remove all non-digit characters
+          processedPhone = processedPhone.replace(/[^0-9]/g, '');
+
+          // Handle different formats: standardize to Saudi mobile format
+          if (processedPhone.startsWith('966') && processedPhone.length >= 12) {
+            // If starts with 966, convert to 05xx format for better display
+            processedPhone = '0' + processedPhone.substring(3);
+            console.log(
+              'Converted international format to local format:',
+              processedPhone
+            );
+          } else if (
+            !processedPhone.startsWith('0') &&
+            processedPhone.startsWith('5') &&
+            processedPhone.length === 9
+          ) {
+            // If starts with 5 and is 9 digits, add leading 0
+            processedPhone = '0' + processedPhone;
+            console.log('Added leading 0 to phone number:', processedPhone);
+          }
+        }
+
         const now = new Date();
-        const date = now.toLocaleDateString();
-        const time = now.toLocaleTimeString();
 
-        formBody.append('formName', 'London Scotland Trip Form');
-        formBody.append('pageUrl', window.location.href);
-        formBody.append('timestamp', now.toISOString());
-        formBody.append('date', date);
-        formBody.append('time', time);
+        // Create payload for submission
+        const zapierPayload = {
+          name: formData.name || 'Not provided',
+          phone: processedPhone || 'Not provided',
+          email: formData.email || 'Not provided',
+          nationality: formData.nationality,
+          destination: formData.destination,
+          formSource: 'london-scotland-trip',
+          formName: 'London Scotland Trip Form',
+          pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+          timestamp: now.toISOString(),
+          date: now.toLocaleDateString(),
+          time: now.toLocaleTimeString(),
+          leadEventId: leadEventId,
+          externalId: crypto.randomUUID(),
+          ...clientData, // Include UTM parameters and other client data
+        };
 
-        const response = await fetch(zapierWebhookUrl, {
+        console.log('Sending data to Zapier via API proxy:', zapierPayload);
+
+        try {
+          // Use our own API endpoint as proxy to avoid CORS issues
+          const proxyResponse = await fetch('/api/zapier-proxy', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(zapierPayload),
+          });
+
+          const proxyData = await proxyResponse.json();
+          console.log('Zapier proxy response:', proxyData);
+
+          if (!proxyResponse.ok) {
+            console.error('Error from Zapier proxy:', proxyData);
+            // If the main proxy fails, try the direct endpoint as backup
+            console.warn('Trying direct endpoint as backup');
+            try {
+              const directResponse = await fetch('/api/zapier-direct', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(zapierPayload),
+              });
+
+              const directData = await directResponse.json();
+              console.log('Direct endpoint response:', directData);
+
+              if (directResponse.ok) {
+                console.log('Successfully logged data via direct endpoint');
+              }
+            } catch (directError) {
+              console.error('Error with direct endpoint:', directError);
+            }
+          } else {
+            console.log('Successfully sent data to Zapier via proxy');
+          }
+        } catch (zapierError) {
+          console.error('Error sending to Zapier proxy:', zapierError);
+
+          // Try the direct endpoint as backup
+          console.warn('Proxy failed, trying direct endpoint as backup');
+          try {
+            const directResponse = await fetch('/api/zapier-direct', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(zapierPayload),
+            });
+
+            const directData = await directResponse.json();
+            console.log('Direct endpoint response:', directData);
+
+            if (directResponse.ok) {
+              console.log('Successfully logged data via direct endpoint');
+            }
+          } catch (directError) {
+            console.error('Error with direct endpoint:', directError);
+          }
+        }
+      } catch (error) {
+        console.error('Error in Zapier integration:', error);
+        // Don't block the form submission due to Zapier errors
+      }
+      // --- End Zapier Integration ---
+
+      // --- Send Lead Email via API Route ---
+      try {
+        console.log('Sending form data to email API route');
+        const emailResponse = await fetch('/api/send-lead-email', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
           },
-          body: formBody.toString(),
+          body: JSON.stringify({
+            name: formData.name,
+            phone: formData.phone,
+            email: formData.email,
+            nationality: formData.nationality,
+            destination: formData.destination, // Specific destination for this page
+            formName: 'London Scotland Trip Form', // Specific form name
+            pageUrl: window.location.href,
+            // Spread the collected client data
+            ...clientData,
+          }),
         });
 
-        if (!response.ok) {
-          console.error(
-            'Failed to send data to Zapier:',
-            await response.text()
-          );
+        if (!emailResponse.ok) {
+          const errorData = await emailResponse.json();
+          console.error('Failed to send lead email:', errorData.message);
+          // Optional: Display a user-friendly error message, but don't block redirect
         } else {
-          console.log('Data sent successfully to Zapier');
+          console.log('Lead email sent successfully via API route');
         }
-      }
-    } catch (error) {
-      console.error('Error sending to Zapier:', error);
-    }
-    // --- End Zapier Integration ---
-
-    // --- Send Lead Email via API Route ---
-    try {
-      console.log('Sending form data to email API route');
-      const emailResponse = await fetch('/api/send-lead-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          nationality: formData.nationality,
-          destination: formData.destination, // Specific destination for this page
-          formName: 'London Scotland Trip Form', // Specific form name
-          pageUrl: window.location.href,
-          // Spread the collected client data
-          ...clientData,
-        }),
-      });
-
-      if (!emailResponse.ok) {
-        const errorData = await emailResponse.json();
-        console.error('Failed to send lead email:', errorData.message);
+      } catch (error) {
+        console.error('Error calling send-lead-email API:', error);
         // Optional: Display a user-friendly error message, but don't block redirect
-      } else {
-        console.log('Lead email sent successfully via API route');
       }
+      // --- End Send Lead Email ---
+
+      // --- Generate External ID ---
+      const externalId = crypto.randomUUID();
+      console.log(`Generated External ID: ${externalId}`);
+
+      // --- Construct Redirect URL with Query Params ---
+      const thankYouPageBase =
+        formData.nationality === 'مواطن'
+          ? '/thank-you-citizen'
+          : '/thank-you-resident';
+
+      const redirectQueryParams = new URLSearchParams(); // Renamed variable
+      if (formData.email) redirectQueryParams.set('email', formData.email);
+      if (formData.phone) redirectQueryParams.set('phone', formData.phone);
+      redirectQueryParams.set('external_id', externalId); // Add external_id
+      redirectQueryParams.set('eventId', leadEventId); // Add eventId for deduplication on thank-you page
+
+      const redirectUrl = `${thankYouPageBase}?${redirectQueryParams.toString()}`; // Use renamed variable
+
+      console.log(`Redirecting to: ${redirectUrl}`);
+      // No need to set isLoading false here, page is changing
+      router.push(redirectUrl);
+      // --- End Redirect ---
+
+      // Reset form (Might happen after redirect, which is usually fine)
+      setFormData({
+        name: '',
+        phone: '',
+        email: '',
+        nationality: '', // Reset nationality
+        // city: '', // Removed city field
+        destination: 'لندن واسكتلندا',
+      });
+      setFormStarted(false); // Reset form started state
     } catch (error) {
-      console.error('Error calling send-lead-email API:', error);
-      // Optional: Display a user-friendly error message, but don't block redirect
+      console.error('Error processing form submission:', error);
+      // You might want to track this error in analytics
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'form_submission_error', {
+          event_category: 'error',
+          event_label: error.message,
+        });
+      }
+      alert('حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.');
+      setIsLoading(false); // Reset loading state on error
     }
-    // --- End Send Lead Email ---
-
-    // --- Generate External ID ---
-    const externalId = crypto.randomUUID();
-    console.log(`Generated External ID: ${externalId}`);
-
-    // --- Construct Redirect URL with Query Params ---
-    const thankYouPageBase =
-      formData.nationality === 'مواطن'
-        ? '/thank-you-citizen'
-        : '/thank-you-resident';
-
-    const redirectQueryParams = new URLSearchParams(); // Renamed variable
-    if (formData.email) redirectQueryParams.set('email', formData.email);
-    if (formData.phone) redirectQueryParams.set('phone', formData.phone);
-    redirectQueryParams.set('external_id', externalId); // Add external_id
-    redirectQueryParams.set('eventId', leadEventId); // Add eventId for deduplication on thank-you page
-
-    const redirectUrl = `${thankYouPageBase}?${redirectQueryParams.toString()}`; // Use renamed variable
-
-    console.log(`Redirecting to: ${redirectUrl}`);
-    // No need to set isLoading false here, page is changing
-    router.push(redirectUrl);
-    // --- End Redirect ---
-
-    // Reset form (Might happen after redirect, which is usually fine)
-    setFormData({
-      name: '',
-      phone: '',
-      email: '',
-      nationality: '', // Reset nationality
-      // city: '', // Removed city field
-      destination: 'لندن واسكتلندا',
-    });
-    setFormStarted(false); // Reset form started state
   };
 
   // Saudi cities
@@ -495,25 +584,6 @@ export default function LondonScotlandTrip() {
             {/* Contact Form */}
             <div className={styles.formContainer}>
               <form onSubmit={handleSubmit} className={styles.tripForm}>
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
-                >
-                  <input
-                    type="text"
-                    id="name"
-                    className={styles.formInput} // Add class for styling
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
-                    placeholder=" " // Use space for placeholder trick
-                    autoComplete="name" // Added autocomplete
-                    // required // Made optional
-                  />
-                  <label htmlFor="name" className={styles.formLabel}>
-                    الاسم الكامل (اختياري)
-                  </label>
-                </div>
-
                 {/* Phone field needs special handling due to country code */}
                 {/* Add hasValue and inputError classes conditionally */}
                 <div
@@ -535,8 +605,7 @@ export default function LondonScotlandTrip() {
                       placeholder=" " // Use space for placeholder trick
                       autoComplete="tel" // Added autocomplete
                       required // Made required
-                      pattern="^5[0-9]{8}$" // Added HTML pattern for native validation
-                      title="يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام" // Tooltip for pattern
+                      // Removed pattern attribute to avoid conflicts with JS validation
                     />
                     <span className={styles.countryCode}>+966</span>
                   </div>
@@ -545,9 +614,29 @@ export default function LondonScotlandTrip() {
                     !isPhoneValid &&
                     formData.phone.trim() !== '' && (
                       <p className={styles.errorMessage}>
-                        يجب أن يبدأ الرقم بـ 5 ويتكون من 9 أرقام.
+                        يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع
+                        المناسب من الأرقام.
                       </p>
                     )}
+                </div>
+
+                <div
+                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
+                >
+                  <input
+                    type="text"
+                    id="name"
+                    className={styles.formInput} // Add class for styling
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
+                    placeholder=" " // Use space for placeholder trick
+                    autoComplete="name" // Added autocomplete
+                    // required // Made optional
+                  />
+                  <label htmlFor="name" className={styles.formLabel}>
+                    الاسم الكامل (اختياري)
+                  </label>
                 </div>
 
                 <div
