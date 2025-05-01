@@ -2,7 +2,7 @@ import { getApolloClient } from '@/lib/apollo-client';
 
 import parameterize from 'parameterize';
 
-import { QUERY_ALL_USERS, QUERY_ALL_USERS_SEO } from '@/data/users';
+import { QUERY_ALL_USERS, QUERY_USER_BY_SLUG, QUERY_ALL_USERS_SEO } from '@/data/users';
 
 // const ROLES_AUTHOR = ['author', 'administrator'];
 
@@ -40,14 +40,42 @@ export function authorPathByName(name) {
  * getUserByNameSlug
  */
 
-export async function getUserByNameSlug(name) {
-  const { users } = await getAllUsers();
+export async function getUserByNameSlug(slug) {
+  try {
+    const response = await fetch(`https://madaratalkon.com/wp-json/wp/v2/users?slug=${slug}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
+    });
 
-  const user = users.find((user) => parameterize(user.name) === name);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user: ${response.status}`);
+    }
 
-  return {
-    user,
-  };
+    const data = await response.json();
+    
+    if (data.length === 0) {
+      return { user: undefined };
+    }
+    
+    const author = data[0];
+    
+    return {
+      user: {
+        id: author.id,
+        name: author.name,
+        slug: author.slug,
+        description: author.description,
+        avatar: { 
+          url: author.avatar_urls?.[96] || '' 
+        }
+      }
+    };
+  } catch (error) {
+    console.error(`[getUserByNameSlug] Error fetching user with slug ${slug}:`, error);
+    return { user: undefined };
+  }
 }
 
 /**
@@ -63,68 +91,37 @@ export function userSlugByName(name) {
  */
 
 export async function getAllUsers() {
-  const apolloClient = getApolloClient();
-
-  let usersData;
-  let seoData;
-
   try {
-    usersData = await apolloClient.query({
-      query: QUERY_ALL_USERS,
+    const response = await fetch('https://madaratalkon.com/wp-json/wp/v2/users', {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
     });
-  } catch (e) {
-    console.log(
-      `[users][getAllUsers] Failed to query users data: ${e.message}`
-    );
-    throw e;
-  }
 
-  let users = usersData?.data.users.edges
-    .map(({ node = {} }) => node)
-    .map(mapUserData);
-
-  // If the SEO plugin is enabled, look up the data
-  // and apply it to the default settings
-
-  if (process.env.WORDPRESS_PLUGIN_SEO === true) {
-    try {
-      seoData = await apolloClient.query({
-        query: QUERY_ALL_USERS_SEO,
-      });
-    } catch (e) {
-      console.log(
-        `[users][getAllUsers] Failed to query SEO plugin: ${e.message}`
-      );
-      console.log(
-        'Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.'
-      );
-      throw e;
+    if (!response.ok) {
+      throw new Error(`Failed to fetch users: ${response.status}`);
     }
 
-    users = users.map((user) => {
-      const data = { ...user };
-      const { id } = data;
+    const data = await response.json();
+    
+    const users = data.map(user => ({
+      id: user.id,
+      name: user.name || '',
+      slug: user.slug || '',
+      description: user.description || '',
+      avatar: { 
+        url: user.avatar_urls?.[96] || '' 
+      },
+      roles: user.roles || [],
+      // Add additional fields as needed
+    }));
 
-      const seo = seoData?.data?.users.edges
-        .map(({ node = {} }) => node)
-        .find((node) => node.id === id)?.seo;
-
-      return {
-        ...data,
-        title: seo.title,
-        description: seo.metaDesc,
-        robots: {
-          nofollow: seo.metaRobotsNofollow,
-          noindex: seo.metaRobotsNoindex,
-        },
-        social: seo.social,
-      };
-    });
+    return { users };
+  } catch (error) {
+    console.error('[getAllUsers] Error:', error);
+    return { users: [] };
   }
-
-  return {
-    users,
-  };
 }
 
 /**
@@ -132,19 +129,35 @@ export async function getAllUsers() {
  */
 
 export async function getAllAuthors() {
-  const { users } = await getAllUsers();
+  try {
+    const response = await fetch('https://madaratalkon.com/wp-json/wp/v2/users', {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
+    });
 
-  // TODO: Roles aren't showing in response - we should be filtering here
+    if (!response.ok) {
+      throw new Error(`Failed to fetch authors: ${response.status}`);
+    }
 
-  // const authors = users.filter(({ roles }) => {
-  //   const userRoles = roles.map(({ name }) => name);
-  //   const authorRoles = userRoles.filter(role => ROLES_AUTHOR.includes(role));
-  //   return authorRoles.length > 0;
-  // });
+    const data = await response.json();
+    
+    const authors = data.map(author => ({
+      id: author.id,
+      name: author.name || '',
+      slug: author.slug || '',
+      description: author.description || '',
+      avatar: { 
+        url: author.avatar_urls?.[96] || '' 
+      }
+    }));
 
-  return {
-    authors: users,
-  };
+    return { authors };
+  } catch (error) {
+    console.error('[getAllAuthors] Error:', error);
+    return { authors: [] };
+  }
 }
 
 /**
@@ -154,7 +167,7 @@ export async function getAllAuthors() {
 export function mapUserData(user) {
   return {
     ...user,
-    roles: user.roles?.nodes ? [...user.roles.nodes] : [],
+    roles: user.roles || [],
     avatar: user.avatar && updateUserAvatar(user.avatar),
   };
 }
@@ -173,4 +186,47 @@ export function updateUserAvatar(avatar) {
     ...avatar,
     url: avatar.url?.replace('http://', 'https://'),
   };
+}
+
+export async function getPostsByAuthorSlug({ slug, ...options }) {
+  try {
+    const response = await fetch(`https://madaratalkon.com/wp-json/wp/v2/posts?author_name=${slug}&_embed`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch posts for author: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    const posts = data.map(post => ({
+      id: post.id,
+      title: post.title.rendered,
+      slug: post.slug,
+      date: post.date,
+      content: post.content.rendered,
+      excerpt: post.excerpt?.rendered,
+      author: post._embedded?.author?.[0] ? {
+        name: post._embedded.author[0].name,
+        slug: post._embedded.author[0].slug
+      } : null,
+      categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug,
+      })) || [],
+      featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+        sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
+      } : null,
+    }));
+
+    return { posts };
+  } catch (error) {
+    console.error(`[getPostsByAuthorSlug] Error fetching posts for author ${slug}:`, error);
+    return { posts: [] };
+  }
 }

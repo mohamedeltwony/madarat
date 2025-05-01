@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_TRIPS } from '@/lib/queries';
 import Layout from '@/components/Layout';
 import TripCard from '@/components/TripCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -12,44 +10,26 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Meta from '../../components/Meta';
 import styles from '../../styles/pages/Trips.module.scss';
+import { getTripsREST } from '@/lib/rest-api';
+import { getSiteMetadataREST, getAllMenusREST } from '@/lib/rest-api';
 
 const TRIPS_PER_PAGE = 20;
 
-export default function TripsPage() {
+export default function TripsPage({ initialTrips = [], metadata, menus }) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [trips, setTrips] = useState([]);
+  const [trips, setTrips] = useState(initialTrips);
   const [currentPage, setCurrentPage] = useState(
     parseInt(router.query.page) || 1
   );
-
-  const {
-    loading,
-    error: queryError,
-    data,
-    refetch,
-  } = useQuery(GET_TRIPS, {
-    notifyOnNetworkStatusChange: true,
-    errorPolicy: 'all',
-  });
-
-  useEffect(() => {
-    if (data?.trips?.nodes) {
-      setTrips(data.trips.nodes);
-      setIsLoading(false);
-    }
-    if (queryError) {
-      setError(queryError.message);
-      setIsLoading(false);
-    }
-  }, [data, queryError]);
 
   const handleRetry = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      await refetch();
+      const { trips: fetchedTrips } = await getTripsREST();
+      setTrips(fetchedTrips);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -76,7 +56,7 @@ export default function TripsPage() {
   const currentTrips = trips.slice(startIndex, endIndex);
 
   return (
-    <Layout>
+    <Layout metadata={metadata} menus={menus}>
       <Head>
         <title>الرحلات السياحية | مدارات الكون</title>
         <Meta
@@ -117,8 +97,27 @@ export default function TripsPage() {
 
         {!isLoading && !error && trips.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {trips.map((trip) => (
+            {currentTrips.map((trip) => (
               <TripCard key={trip.id} trip={trip} />
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {trips.length > TRIPS_PER_PAGE && (
+          <div className="flex justify-center mt-8">
+            {Array.from({ length: Math.ceil(trips.length / TRIPS_PER_PAGE) }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+                className={`mx-1 px-3 py-1 rounded ${
+                  currentPage === index + 1
+                    ? 'bg-primary text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {index + 1}
+              </button>
             ))}
           </div>
         )}
@@ -127,4 +126,36 @@ export default function TripsPage() {
   );
 }
 
-// Removed getStaticProps to avoid conflict with client-side useQuery
+export async function getStaticProps() {
+  try {
+    // Fetch trips
+    const { trips = [] } = await getTripsREST();
+    
+    // Fetch layout data
+    const metadata = await getSiteMetadataREST(); 
+    const { menus = [] } = await getAllMenusREST();
+
+    return {
+      props: {
+        initialTrips: trips,
+        metadata: metadata || {}, // Ensure metadata is never undefined
+        menus: menus || []
+      },
+      revalidate: 60, // Revalidate every 60 seconds
+    };
+  } catch (error) {
+    console.error('Error in getStaticProps:', error);
+    return {
+      props: {
+        initialTrips: [],
+        metadata: {
+          title: 'مدارات الكون',
+          siteTitle: 'مدارات الكون',
+          description: 'موقع السفر والرحلات الأول في الوطن العربي',
+        },
+        menus: []
+      },
+      revalidate: 60
+    };
+  }
+}

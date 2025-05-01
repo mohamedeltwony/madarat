@@ -1,26 +1,8 @@
-import { getApolloClient } from '@/lib/apollo-client';
+// Define API URL constant
+const API_URL = 'https://madaratalkon.com';
 
 import { updateUserAvatar } from '@/lib/users';
 import { sortObjectsByDate } from '@/lib/datetime';
-
-import {
-  QUERY_ALL_POSTS_INDEX,
-  QUERY_ALL_POSTS_ARCHIVE,
-  QUERY_ALL_POSTS,
-  QUERY_POST_BY_SLUG,
-  QUERY_POSTS_BY_AUTHOR_SLUG_INDEX,
-  QUERY_POSTS_BY_AUTHOR_SLUG_ARCHIVE,
-  QUERY_POSTS_BY_AUTHOR_SLUG,
-  QUERY_POSTS_BY_CATEGORY_ID_INDEX,
-  QUERY_POSTS_BY_CATEGORY_ID_ARCHIVE,
-  QUERY_POSTS_BY_CATEGORY_ID,
-  QUERY_POST_SEO_BY_SLUG,
-  QUERY_POST_PER_PAGE,
-  QUERY_DRAFT_POSTS,
-  QUERY_POSTS_BY_YEAR,
-  QUERY_POSTS_BY_MONTH,
-  QUERY_POSTS_BY_DAY,
-} from '@/data/posts';
 
 /**
  * postPathBySlug
@@ -35,213 +17,170 @@ export function postPathBySlug(slug) {
  */
 
 export async function getPostBySlug(slug) {
-  const apolloClient = getApolloClient();
-  const apiHost = new URL(process.env.WORDPRESS_GRAPHQL_ENDPOINT).host;
-
-  let postData;
-  let seoData;
-
-  try {
-    postData = await apolloClient.query({
-      query: QUERY_POST_BY_SLUG,
-      variables: {
-        slug,
-      },
-    });
-  } catch (e) {
-    console.log(
-      `[posts][getPostBySlug] Failed to query post data: ${e.message}`
-    );
-    throw e;
-  }
-
-  if (!postData?.data.post) return { post: undefined };
-
-  const post = [postData?.data.post].map(mapPostData)[0];
-
-  // If the SEO plugin is enabled, look up the data
-  // and apply it to the default settings
-
-  if (process.env.WORDPRESS_PLUGIN_SEO === true) {
-    try {
-      seoData = await apolloClient.query({
-        query: QUERY_POST_SEO_BY_SLUG,
-        variables: {
-          slug,
-        },
-      });
-    } catch (e) {
-      console.log(
-        `[posts][getPostBySlug] Failed to query SEO plugin: ${e.message}`
-      );
-      console.log(
-        'Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.'
-      );
-      throw e;
-    }
-
-    const { seo = {} } = seoData?.data?.post || {};
-
-    post.metaTitle = seo.title;
-    post.metaDescription = seo.metaDesc;
-    post.readingTime = seo.readingTime;
-
-    // The SEO plugin by default includes a canonical link, but we don't want to use that
-    // because it includes the WordPress host, not the site host. We manage the canonical
-    // link along with the other metadata, but explicitly check if there's a custom one
-    // in here by looking for the API's host in the provided canonical link
-
-    if (seo.canonical && !seo.canonical.includes(apiHost)) {
-      post.canonical = seo.canonical;
-    }
-
-    post.og = {
-      author: seo.opengraphAuthor,
-      description: seo.opengraphDescription,
-      image: seo.opengraphImage,
-      modifiedTime: seo.opengraphModifiedTime,
-      publishedTime: seo.opengraphPublishedTime,
-      publisher: seo.opengraphPublisher,
-      title: seo.opengraphTitle,
-      type: seo.opengraphType,
-    };
-
-    post.article = {
-      author: post.og.author,
-      modifiedTime: post.og.modifiedTime,
-      publishedTime: post.og.publishedTime,
-      publisher: post.og.publisher,
-    };
-
-    post.robots = {
-      nofollow: seo.metaRobotsNofollow,
-      noindex: seo.metaRobotsNoindex,
-    };
-
-    post.twitter = {
-      description: seo.twitterDescription,
-      image: seo.twitterImage,
-      title: seo.twitterTitle,
-    };
-  }
-
-  return {
-    post,
-  };
+  return getPostBySlugREST(slug);
 }
 
 /**
  * getAllPosts
  */
 
-const allPostsIncludesTypes = {
-  all: QUERY_ALL_POSTS,
-  archive: QUERY_ALL_POSTS_ARCHIVE,
-  index: QUERY_ALL_POSTS_INDEX,
-};
-
 export async function getAllPosts(options = {}) {
-  const { queryIncludes = 'index' } = options;
+  try {
+    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?per_page=100&_embed`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
+    });
 
-  const apolloClient = getApolloClient();
+    if (!response.ok) {
+      console.error(`[getAllPosts] HTTP error ${response.status}`);
+      return { posts: [] };
+    }
 
-  const data = await apolloClient.query({
-    query: allPostsIncludesTypes[queryIncludes],
-  });
-
-  const posts = data?.data.posts.edges.map(({ node = {} }) => node);
-
-  return {
-    posts: Array.isArray(posts) && posts.map(mapPostData),
-  };
+    const data = await response.json();
+    
+    const posts = data.map(post => ({
+      id: post.id,
+      databaseId: post.id,
+      title: post.title.rendered,
+      slug: post.slug,
+      date: post.date,
+      modified: post.modified,
+      excerpt: post.excerpt?.rendered,
+      author: post._embedded?.author?.[0] ? {
+        name: post._embedded.author[0].name,
+        slug: post._embedded.author[0].slug,
+        avatar: {
+          url: post._embedded.author[0].avatar_urls?.[96] || ''
+        }
+      } : null,
+      categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
+        id: cat.id,
+        databaseId: cat.id,
+        name: cat.name,
+        slug: cat.slug
+      })) || [],
+      featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+        sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
+      } : null,
+      isSticky: post.sticky
+    }));
+    
+    return { posts };
+  } catch (error) {
+    console.error('[getAllPosts] Error:', error);
+    return { posts: [] };
+  }
 }
 
 /**
  * getPostsByAuthorSlug
  */
 
-const postsByAuthorSlugIncludesTypes = {
-  all: QUERY_POSTS_BY_AUTHOR_SLUG,
-  archive: QUERY_POSTS_BY_AUTHOR_SLUG_ARCHIVE,
-  index: QUERY_POSTS_BY_AUTHOR_SLUG_INDEX,
-};
-
 export async function getPostsByAuthorSlug({ slug, ...options }) {
-  const { queryIncludes = 'index' } = options;
-
-  const apolloClient = getApolloClient();
-
-  let postData;
-
   try {
-    postData = await apolloClient.query({
-      query: postsByAuthorSlugIncludesTypes[queryIncludes],
-      variables: {
-        slug,
+    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?author_name=${slug}&per_page=100&_embed`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
     });
-  } catch (e) {
-    console.log(
-      `[posts][getPostsByAuthorSlug] Failed to query post data: ${e.message}`
-    );
-    throw e;
+
+    if (!response.ok) {
+      console.error(`[getPostsByAuthorSlug] HTTP error ${response.status}`);
+      return { posts: [] };
+    }
+
+    const data = await response.json();
+    
+    const posts = data.map(post => ({
+      id: post.id,
+      databaseId: post.id,
+      title: post.title.rendered,
+      slug: post.slug,
+      date: post.date,
+      modified: post.modified,
+      excerpt: post.excerpt?.rendered,
+      author: post._embedded?.author?.[0] ? {
+        name: post._embedded.author[0].name,
+        slug: post._embedded.author[0].slug,
+        avatar: {
+          url: post._embedded.author[0].avatar_urls?.[96] || ''
+        }
+      } : null,
+      categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
+        id: cat.id,
+        databaseId: cat.id,
+        name: cat.name,
+        slug: cat.slug
+      })) || [],
+      featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+        sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
+      } : null,
+      isSticky: post.sticky
+    }));
+    
+    return { posts };
+  } catch (error) {
+    console.error(`[getPostsByAuthorSlug] Failed to query post data: ${error.message}`);
+    return { posts: [] };
   }
-
-  const posts = postData?.data.posts.edges.map(({ node = {} }) => node);
-
-  return {
-    posts: Array.isArray(posts) && posts.map(mapPostData),
-  };
 }
 
 /**
  * getPostsByCategoryId
  */
 
-const postsByCategoryIdIncludesTypes = {
-  all: QUERY_POSTS_BY_CATEGORY_ID,
-  archive: QUERY_POSTS_BY_CATEGORY_ID_ARCHIVE,
-  index: QUERY_POSTS_BY_CATEGORY_ID_INDEX,
-};
-
 export async function getPostsByCategoryId({ categoryId, ...options }) {
-  const { queryIncludes = 'index' } = options;
-
-  const apolloClient = getApolloClient();
-
-  let postData;
-
   try {
-    postData = await apolloClient.query({
-      query: postsByCategoryIdIncludesTypes[queryIncludes],
-      variables: {
-        categoryId,
+    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?categories=${categoryId}&per_page=100&_embed`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
     });
-  } catch (e) {
-    console.log(
-      `[posts][getPostsByCategoryId] Failed to query post data: ${e.message}`
-    );
-    throw e;
+
+    if (!response.ok) {
+      console.error(`[getPostsByCategoryId] HTTP error ${response.status}`);
+      return { posts: [] };
+    }
+
+    const data = await response.json();
+    
+    const posts = data.map(post => ({
+      id: post.id,
+      databaseId: post.id,
+      title: post.title.rendered,
+      slug: post.slug,
+      date: post.date,
+      modified: post.modified,
+      excerpt: post.excerpt?.rendered,
+      author: post._embedded?.author?.[0] ? {
+        name: post._embedded.author[0].name,
+        slug: post._embedded.author[0].slug,
+        avatar: {
+          url: post._embedded.author[0].avatar_urls?.[96] || ''
+        }
+      } : null,
+      categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
+        id: cat.id,
+        databaseId: cat.id,
+        name: cat.name,
+        slug: cat.slug
+      })) || [],
+      featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+        sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
+      } : null,
+      isSticky: post.sticky
+    }));
+    
+    return { posts };
+  } catch (error) {
+    console.error(`[getPostsByCategoryId] Failed to query post data: ${error.message}`);
+    console.error(`[getRecentPosts] Error:`, error);
+    return { posts: [] };
   }
-
-  const posts = postData?.data.posts.edges.map(({ node = {} }) => node);
-
-  return {
-    posts: Array.isArray(posts) && posts.map(mapPostData),
-  };
-}
-
-/**
- * getRecentPosts
- */
-
-export async function getRecentPosts({ count, ...options }) {
-  const { posts } = await getAllPosts(options);
-  const sorted = sortObjectsByDate(posts);
-  return {
-    posts: sorted.slice(0, count),
-  };
 }
 
 /**
@@ -326,31 +265,45 @@ export async function getRelatedPosts(categories, postId, count = 5) {
   if (!Array.isArray(categories) || categories.length === 0) return;
 
   let related = {
-    category: categories && categories.shift(),
+    category: categories[0],
   };
 
   if (related.category) {
-    const { posts } = await getPostsByCategoryId({
-      categoryId: related.category.databaseId,
-      queryIncludes: 'archive',
-    });
+    try {
+      const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?categories=${related.category.databaseId}&exclude=${postId}&per_page=${count}&_embed`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+        },
+      });
 
-    const filtered = posts.filter(({ postId: id }) => id !== postId);
-    const sorted = sortObjectsByDate(filtered);
+      if (!response.ok) {
+        console.error(`[getRelatedPosts] HTTP error ${response.status}`);
+        return { category: related.category, posts: [] };
+      }
 
-    related.posts = sorted.map((post) => ({
-      title: post.title,
-      slug: post.slug,
-    }));
-  }
-
-  if (!Array.isArray(related.posts) || related.posts.length === 0) {
-    const relatedPosts = await getRelatedPosts(categories, postId, count);
-    related = relatedPosts || related;
-  }
-
-  if (Array.isArray(related.posts) && related.posts.length > count) {
-    return related.posts.slice(0, count);
+      const data = await response.json();
+      
+      related.posts = data.map(post => ({
+        title: post.title.rendered,
+        slug: post.slug
+      }));
+      
+      // If we don't have enough posts from first category, try next category
+      if (related.posts.length < count && categories.length > 1) {
+        const nextCategories = [...categories.slice(1)];
+        const moreRelated = await getRelatedPosts(nextCategories, postId, count - related.posts.length);
+        
+        if (moreRelated && Array.isArray(moreRelated.posts)) {
+          related.posts = [...related.posts, ...moreRelated.posts].slice(0, count);
+        }
+      }
+      
+      return related;
+    } catch (error) {
+      console.error(`[getRelatedPosts] Error:`, error);
+      return { category: related.category, posts: [] };
+    }
   }
 
   return related;
@@ -378,16 +331,23 @@ export async function getPostsPerPage() {
   }
 
   try {
-    const apolloClient = getApolloClient();
-
-    const { data } = await apolloClient.query({
-      query: QUERY_POST_PER_PAGE,
+    const response = await fetch(`${API_URL}/wp-json/wp/v2/settings`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
     });
 
-    return Number(data.allSettings.readingSettingsPostsPerPage);
-  } catch (e) {
-    console.log(`Failed to query post per page data: ${e.message}`);
-    throw e;
+    if (!response.ok) {
+      console.error(`[getPostsPerPage] HTTP error ${response.status}`);
+      return 10; // Default to 10 if we can't get the setting
+    }
+
+    const data = await response.json();
+    return Number(data.posts_per_page) || 10;
+  } catch (error) {
+    console.error(`[getPostsPerPage] Failed to query post per page: ${error.message}`);
+    return 10; // Default to 10 in case of errors
   }
 }
 
@@ -438,52 +398,101 @@ export async function getPaginatedPosts({ currentPage = 1, ...options } = {}) {
  * getDraftPosts
  */
 export async function getDraftPosts(options = {}) {
-  const { queryIncludes = 'index' } = options;
-
-  const apolloClient = getApolloClient();
-
   try {
-    const data = await apolloClient.query({
-      query: QUERY_DRAFT_POSTS,
+    // Note: WordPress REST API typically requires proper authentication
+    // to access draft posts, which is challenging from a client-side app.
+    // This is a limited implementation, and in a production environment,
+    // you would likely need to use a server-side proxy or authentication.
+    
+    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?status=draft&per_page=100&_embed`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
     });
 
-    const posts = data?.data.posts.edges.map(({ node = {} }) => node);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch draft posts: ${response.status}`);
+    }
 
-    return {
-      posts: Array.isArray(posts) && posts.map(mapPostData),
-    };
-  } catch (e) {
-    console.log(
-      `[posts][getDraftPosts] Failed to query draft posts data: ${e.message}`
-    );
-    throw e;
+    const data = await response.json();
+    
+    const posts = data.map(post => ({
+      id: post.id,
+      databaseId: post.id,
+      title: post.title.rendered || 'Untitled Draft',
+      slug: post.slug,
+      date: post.date,
+      modified: post.modified,
+      excerpt: post.excerpt?.rendered,
+      author: post._embedded?.author?.[0] ? {
+        name: post._embedded.author[0].name,
+        slug: post._embedded.author[0].slug
+      } : null,
+      categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug
+      })) || [],
+      featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+        sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
+      } : null,
+    }));
+
+    return { posts };
+  } catch (error) {
+    console.error(`[getDraftPosts] Failed to query draft posts data: ${error.message}`);
+    return { posts: [] };
   }
 }
 
 /**
  * getPostsByYear
  */
-export async function getPostsByYear({ year }) {
-  const apolloClient = getApolloClient();
-
+export async function getPostsByYear({ year } = {}) {
   try {
-    const data = await apolloClient.query({
-      query: QUERY_POSTS_BY_YEAR,
-      variables: {
-        year: parseInt(year),
+    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?after=${year}-01-01T00:00:00&before=${parseInt(year) + 1}-01-01T00:00:00&per_page=100&_embed`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
     });
 
-    const posts = data?.data.posts.edges.map(({ node = {} }) => node);
+    if (!response.ok) {
+      console.error(`[getPostsByYear] HTTP error ${response.status}`);
+      return { posts: [] };
+    }
 
-    return {
-      posts: Array.isArray(posts) && posts.map(mapPostData),
-    };
-  } catch (e) {
-    console.log(
-      `[posts][getPostsByYear] Failed to query posts by year: ${e.message}`
-    );
-    throw e;
+    const data = await response.json();
+    
+    const posts = data.map(post => ({
+      id: post.id,
+      title: post.title.rendered,
+      slug: post.slug,
+      date: post.date,
+      content: post.content.rendered,
+      excerpt: post.excerpt?.rendered,
+      author: post._embedded?.author?.[0] ? {
+        name: post._embedded.author[0].name,
+        slug: post._embedded.author[0].slug,
+        avatar: {
+          url: post._embedded.author[0].avatar_urls?.[96] || ''
+        }
+      } : null,
+      categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug,
+      })) || [],
+      featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+        sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
+      } : null,
+    }));
+
+    return { posts };
+  } catch (error) {
+    console.error(`[getPostsByYear] Error fetching posts for year ${year}:`, error);
+    return { posts: [] };
   }
 }
 
@@ -491,27 +500,56 @@ export async function getPostsByYear({ year }) {
  * getPostsByMonth
  */
 export async function getPostsByMonth({ year, month }) {
-  const apolloClient = getApolloClient();
-
   try {
-    const data = await apolloClient.query({
-      query: QUERY_POSTS_BY_MONTH,
-      variables: {
-        year: parseInt(year),
-        month: parseInt(month),
+    // Construct a date range for the month
+    const startDate = `${year}-${month.padStart(2, '0')}-01T00:00:00`;
+    const lastDay = new Date(year, month, 0).getDate(); // Get last day of month
+    const endDate = `${year}-${month.padStart(2, '0')}-${lastDay}T23:59:59`;
+    
+    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?after=${startDate}&before=${endDate}&per_page=100&_embed`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
     });
 
-    const posts = data?.data.posts.edges.map(({ node = {} }) => node);
+    if (!response.ok) {
+      console.error(`[getPostsByMonth] HTTP error ${response.status}`);
+      return { posts: [] };
+    }
 
-    return {
-      posts: Array.isArray(posts) && posts.map(mapPostData),
-    };
-  } catch (e) {
-    console.log(
-      `[posts][getPostsByMonth] Failed to query posts by month: ${e.message}`
-    );
-    throw e;
+    const data = await response.json();
+    
+    const posts = data.map(post => ({
+      id: post.id,
+      databaseId: post.id,
+      title: post.title.rendered,
+      slug: post.slug,
+      date: post.date,
+      modified: post.modified,
+      excerpt: post.excerpt?.rendered,
+      author: post._embedded?.author?.[0] ? {
+        name: post._embedded.author[0].name,
+        slug: post._embedded.author[0].slug,
+        avatar: {
+          url: post._embedded.author[0].avatar_urls?.[96] || ''
+        }
+      } : null,
+      categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
+        id: cat.id,
+        databaseId: cat.id,
+        name: cat.name,
+        slug: cat.slug
+      })) || [],
+      featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+        sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
+      } : null,
+    }));
+    
+    return { posts };
+  } catch (error) {
+    console.error(`[getPostsByMonth] Error fetching posts for ${year}/${month}:`, error);
+    return { posts: [] };
   }
 }
 
@@ -519,28 +557,55 @@ export async function getPostsByMonth({ year, month }) {
  * getPostsByDay
  */
 export async function getPostsByDay({ year, month, day }) {
-  const apolloClient = getApolloClient();
-
   try {
-    const data = await apolloClient.query({
-      query: QUERY_POSTS_BY_DAY,
-      variables: {
-        year: parseInt(year),
-        month: parseInt(month),
-        day: parseInt(day),
+    // Format dates for API query
+    const startDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T00:00:00`;
+    const endDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T23:59:59`;
+    
+    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?after=${startDate}&before=${endDate}&per_page=100&_embed`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
     });
 
-    const posts = data?.data.posts.edges.map(({ node = {} }) => node);
+    if (!response.ok) {
+      console.error(`[getPostsByDay] HTTP error ${response.status}`);
+      return { posts: [] };
+    }
 
-    return {
-      posts: Array.isArray(posts) && posts.map(mapPostData),
-    };
-  } catch (e) {
-    console.log(
-      `[posts][getPostsByDay] Failed to query posts by day: ${e.message}`
-    );
-    throw e;
+    const data = await response.json();
+    
+    const posts = data.map(post => ({
+      id: post.id,
+      databaseId: post.id,
+      title: post.title.rendered,
+      slug: post.slug,
+      date: post.date,
+      modified: post.modified,
+      excerpt: post.excerpt?.rendered,
+      author: post._embedded?.author?.[0] ? {
+        name: post._embedded.author[0].name,
+        slug: post._embedded.author[0].slug,
+        avatar: {
+          url: post._embedded.author[0].avatar_urls?.[96] || ''
+        }
+      } : null,
+      categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
+        id: cat.id,
+        databaseId: cat.id,
+        name: cat.name,
+        slug: cat.slug
+      })) || [],
+      featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+        sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
+      } : null,
+    }));
+    
+    return { posts };
+  } catch (error) {
+    console.error(`[getPostsByDay] Error fetching posts for ${year}/${month}/${day}:`, error);
+    return { posts: [] };
   }
 }
 
@@ -549,14 +614,222 @@ export async function getPostsByDay({ year, month, day }) {
  * Gets all years that have posts
  */
 export async function getYearArchives() {
-  const { posts } = await getAllPosts({
-    queryIncludes: 'index',
-  });
+  try {
+    const response = await fetch(`${API_URL}/wp-json/wp/v2/archives`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
+    });
 
-  // Get unique years from post dates
-  const years = [
-    ...new Set(posts.map((post) => new Date(post.date).getFullYear())),
-  ].sort((a, b) => b - a); // Sort descending
+    if (!response.ok) {
+      console.error(`[getYearArchives] HTTP error ${response.status}`);
+      return getDefaultYears();
+    }
 
-  return years;
+    const data = await response.json();
+    
+    if (Array.isArray(data.years)) {
+      return data.years.map(year => parseInt(year, 10));
+    }
+    
+    // If API doesn't return years, use fallback
+    return getDefaultYears();
+  } catch (error) {
+    console.error('[getYearArchives] Error:', error);
+    return getDefaultYears();
+  }
+}
+
+function getDefaultYears() {
+  const currentYear = new Date().getFullYear();
+  // Return last 5 years as default
+  return [currentYear, currentYear-1, currentYear-2];
+}
+
+/**
+ * getPostBySlugREST
+ */
+export async function getPostBySlugREST(slug) {
+  try {
+    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?slug=${slug}&_embed`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`[getPostBySlugREST] HTTP error ${response.status}`);
+      return { post: undefined };
+    }
+
+    const data = await response.json();
+    
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error(`[getPostBySlugREST] No post found with slug ${slug}`);
+      return { post: undefined };
+    }
+    
+    const post = data[0];
+    
+    return {
+      post: {
+        id: post.id,
+        databaseId: post.id,
+        title: post.title.rendered,
+        slug: post.slug,
+        date: post.date,
+        modified: post.modified,
+        content: post.content.rendered,
+        excerpt: post.excerpt?.rendered,
+        author: post._embedded?.author?.[0] ? {
+          name: post._embedded.author[0].name,
+          slug: post._embedded.author[0].slug,
+          avatar: {
+            url: post._embedded.author[0].avatar_urls?.[96] || ''
+          }
+        } : null,
+        categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
+          id: cat.id,
+          databaseId: cat.id,
+          name: cat.name,
+          slug: cat.slug
+        })) || [],
+        featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+          sourceUrl: post._embedded['wp:featuredmedia'][0].source_url,
+          mediaDetails: {
+            height: post._embedded['wp:featuredmedia'][0].media_details?.height,
+            width: post._embedded['wp:featuredmedia'][0].media_details?.width
+          }
+        } : null,
+        isSticky: post.sticky
+      }
+    };
+  } catch (error) {
+    console.error(`[getPostBySlugREST] Error fetching post with slug ${slug}:`, error);
+    return { post: undefined };
+  }
+}
+
+/**
+ * getPostsAndPagination
+ */
+export async function getPostsAndPagination({
+  page = 1,
+  perPage = 20,
+  categoryId = null,
+  authorSlug = null
+} = {}) {
+  try {
+    // Build query parameters
+    let queryParams = `per_page=${perPage}&page=${page}&_embed=true`;
+    
+    // Add category filter if provided
+    if (categoryId) {
+      queryParams += `&categories=${categoryId}`;
+    }
+    
+    // Add author filter if provided
+    if (authorSlug) {
+      // First get the author ID from the slug
+      let authorId = null;
+      try {
+        const authorsResponse = await fetch(
+          `${API_URL}/wp-json/wp/v2/users?slug=${authorSlug}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+            },
+          }
+        );
+        
+        if (authorsResponse.ok) {
+          const authorsData = await authorsResponse.json();
+          if (authorsData.length > 0) {
+            authorId = authorsData[0].id;
+          }
+        }
+      } catch (error) {
+        console.error('[getPostsAndPagination] Error fetching author:', error);
+      }
+      
+      // Add author filter if we found an ID
+      if (authorId) {
+        queryParams += `&author=${authorId}`;
+      }
+    }
+    
+    // Fetch posts with the built query
+    const response = await fetch(
+      `${API_URL}/wp-json/wp/v2/posts?${queryParams}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+        },
+      }
+    );
+    
+    if (!response.ok) {
+      console.error(`[getPostsAndPagination] HTTP error ${response.status}`);
+      return { posts: [], pagination: { currentPage: 1, pagesCount: 1 } };
+    }
+    
+    // Extract pagination info from headers
+    const totalPosts = parseInt(response.headers.get('x-wp-total') || '0');
+    const totalPages = parseInt(response.headers.get('x-wp-totalpages') || '1');
+    
+    // Get the posts data
+    const data = await response.json();
+    
+    // Map the response to the expected format
+    const posts = data.map(post => ({
+      id: post.id,
+      databaseId: post.id,
+      title: post.title.rendered || '',
+      slug: post.slug || '',
+      date: post.date || '',
+      modified: post.modified || '',
+      excerpt: post.excerpt?.rendered || '',
+      author: post._embedded?.author?.[0] ? {
+        name: post._embedded.author[0].name || '',
+        slug: post._embedded.author[0].slug || '',
+        avatar: {
+          url: post._embedded.author[0].avatar_urls?.[96] || ''
+        }
+      } : null,
+      categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
+        id: cat.id,
+        databaseId: cat.id,
+        name: cat.name || '',
+        slug: cat.slug || ''
+      })) || [],
+      featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+        sourceUrl: post._embedded['wp:featuredmedia'][0].source_url || null
+      } : null,
+    }));
+    
+    return { 
+      posts,
+      pagination: {
+        currentPage: page,
+        pagesCount: totalPages,
+        postsCount: totalPosts,
+        postsPerPage: perPage
+      }
+    };
+  } catch (error) {
+    console.error('[getPostsAndPagination] Error:', error);
+    return { 
+      posts: [], 
+      pagination: { 
+        currentPage: 1, 
+        pagesCount: 1,
+        postsCount: 0,
+        postsPerPage: perPage
+      } 
+    };
+  }
 }

@@ -59,7 +59,7 @@ const Metadata = ({
       )}
       {date && (
         <li>
-          <time pubdate="pubdate" dateTime={date}>
+          <time datetime={date}>
             {formatDate(date)}
           </time>
         </li>

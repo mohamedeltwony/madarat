@@ -1,55 +1,7 @@
-import { gql } from '@apollo/client';
+// This file no longer depends on GraphQL and is provided as a stub
+// for backward compatibility with the codebase.
 
-export const QUERY_ALL_USERS = gql`
-  query AllUsers {
-    users(first: 10000) {
-      edges {
-        node {
-          avatar {
-            height
-            width
-            url
-          }
-          description
-          id
-          name
-          roles {
-            nodes {
-              name
-            }
-          }
-          slug
-        }
-      }
-    }
-  }
-`;
-
-export const QUERY_ALL_USERS_SEO = gql`
-  query AllUsersSeo {
-    users(first: 10000) {
-      edges {
-        node {
-          id
-          seo {
-            metaDesc
-            metaRobotsNofollow
-            metaRobotsNoindex
-            title
-            social {
-              youTube
-              wikipedia
-              twitter
-              soundCloud
-              pinterest
-              mySpace
-              linkedIn
-              instagram
-              facebook
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+// Define dummy query constants for backward compatibility
+export const QUERY_ALL_USERS = "DUMMY_QUERY";
+export const QUERY_USER_BY_SLUG = "DUMMY_QUERY";
+export const QUERY_ALL_USERS_SEO = "DUMMY_QUERY";

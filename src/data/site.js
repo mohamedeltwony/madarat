@@ -1,60 +1,8 @@
-import { gql } from '@apollo/client';
+// This file no longer depends on GraphQL and is provided as a stub
+// for backward compatibility with the codebase.
 
-export const QUERY_SITE_DATA = gql`
-  query SiteData {
-    generalSettings {
-      description
-      language
-      title
-    }
-  }
-`;
+// Define a dummy QUERY_SITE_DATA constant for compatibility
+export const QUERY_SITE_DATA = "DUMMY_QUERY";
 
-export const QUERY_SEO_DATA = gql`
-  query SeoData {
-    seo {
-      webmaster {
-        yandexVerify
-        msVerify
-        googleVerify
-        baiduVerify
-      }
-      social {
-        youTube {
-          url
-        }
-        wikipedia {
-          url
-        }
-        twitter {
-          username
-          cardType
-        }
-        pinterest {
-          metaTag
-          url
-        }
-        mySpace {
-          url
-        }
-        linkedIn {
-          url
-        }
-        instagram {
-          url
-        }
-        facebook {
-          url
-          defaultImage {
-            altText
-            sourceUrl
-            mediaDetails {
-              height
-              width
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+// Define a dummy QUERY_SEO_DATA constant for compatibility
+export const QUERY_SEO_DATA = "DUMMY_QUERY";

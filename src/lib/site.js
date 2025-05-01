@@ -1,323 +1,147 @@
-import { getApolloClient } from '@/lib/apollo-client';
-
+import { getSiteMetadataREST } from '@/lib/rest-api';
 import { decodeHtmlEntities, removeExtraSpaces } from '@/lib/util';
-
-import { QUERY_SITE_DATA, QUERY_SEO_DATA } from '@/data/site';
 
 /**
  * getSiteMetadata
  */
 
 export async function getSiteMetadata() {
-  const apolloClient = getApolloClient();
+  return getSiteMetadataREST();
+}
 
-  let siteData;
-  let seoData;
+/**
+ * Default metadata values
+ */
 
-  try {
-    siteData = await apolloClient.query({
-      query: QUERY_SITE_DATA,
-    });
-  } catch (e) {
-    console.log(
-      `[site][getSiteMetadata] Failed to query site data: ${e.message}`
-    );
-    throw e;
-  }
+export const defaultMetadata = {
+  title: 'مدارات الكون',
+  siteTitle: 'مدارات الكون',
+  description: 'موقع السفر والرحلات الأول في الوطن العربي',
+};
 
-  const { generalSettings } = siteData?.data || {};
-  let { title, description, language } = generalSettings;
+/**
+ * constructMetadata
+ */
 
-  const settings = {
+export function constructMetadata(source = {}) {
+  const { title, description, ...rest } = source;
+
+  return {
+    title: removeExtraSpaces(decodeHtmlEntities(title)) || defaultMetadata.title,
+    description: removeExtraSpaces(decodeHtmlEntities(description)) || defaultMetadata.description,
+    ...rest,
+  };
+}
+
+export function helmetSettingsFromMetadata(metadata = {}) {
+  const { title, description, canonical, robots, og, twitter } = metadata;
+
+  return {
     title,
-    siteTitle: title,
     description,
+    ...(canonical && {
+      link: [
+        {
+          rel: 'canonical',
+          href: canonical,
+        },
+      ],
+    }),
+    ...(robots && {
+      meta: [
+        {
+          name: 'robots',
+          content: robots,
+        },
+      ],
+    }),
+    ...(og && {
+      meta: [
+        {
+          property: 'og:title',
+          content: og.title || title,
+        },
+        {
+          property: 'og:description',
+          content: og.description || description,
+        },
+        {
+          property: 'og:type',
+          content: og.type,
+        },
+        {
+          property: 'og:url',
+          content: og.url,
+        },
+        {
+          property: 'og:site_name',
+          content: og.siteName,
+        },
+        {
+          property: 'og:image',
+          content: og.image?.url,
+        },
+      ],
+    }),
+    ...(twitter && {
+      meta: [
+        {
+          name: 'twitter:card',
+          content: twitter.card,
+        },
+        {
+          name: 'twitter:creator',
+          content: twitter.creator,
+        },
+        {
+          name: 'twitter:description',
+          content: twitter.description || description,
+        },
+        {
+          name: 'twitter:title',
+          content: twitter.title || title,
+        },
+      ],
+    }),
   };
-
-  // It looks like the value of `language` when US English is set
-  // in WordPress is empty or "", meaning, we have to infer that
-  // if there's no value, it's English. On the other hand, if there
-  // is a code, we need to grab the 2char version of it to use ofr
-  // the HTML lang attribute
-
-  if (!language || language === '') {
-    settings.language = 'en';
-  } else {
-    settings.language = language.split('_')[0];
-  }
-
-  // If the SEO plugin is enabled, look up the data
-  // and apply it to the default settings
-
-  if (process.env.WORDPRESS_PLUGIN_SEO === true) {
-    try {
-      seoData = await apolloClient.query({
-        query: QUERY_SEO_DATA,
-      });
-    } catch (e) {
-      console.log(
-        `[site][getSiteMetadata] Failed to query SEO plugin: ${e.message}`
-      );
-      console.log(
-        'Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.'
-      );
-      throw e;
-    }
-
-    const { webmaster, social } = seoData?.data?.seo || {};
-
-    if (social) {
-      settings.social = {};
-
-      Object.keys(social).forEach((key) => {
-        const { url } = social[key];
-        if (!url || key === '__typename') return;
-        settings.social[key] = url;
-      });
-    }
-
-    if (webmaster) {
-      settings.webmaster = {};
-
-      Object.keys(webmaster).forEach((key) => {
-        if (!webmaster[key] || key === '__typename') return;
-        settings.webmaster[key] = webmaster[key];
-      });
-    }
-
-    if (social.twitter) {
-      settings.twitter = {
-        username: social.twitter.username,
-        cardType: social.twitter.cardType,
-      };
-
-      settings.social.twitter = {
-        url: `https://twitter.com/${settings.twitter.username}`,
-      };
-    }
-  }
-
-  settings.title = decodeHtmlEntities(settings.title);
-
-  return settings;
 }
 
 /**
- * constructHelmetData
+ * constructPageMetadata
  */
 
-export function constructPageMetadata(
-  defaultMetadata = {},
-  pageMetadata = {},
-  options = {}
-) {
-  const { router = {}, homepage = '' } = options;
-  const { asPath } = router;
+export function constructPageMetadata(defaultMetadata = {}, pageMetadata = {}, options = {}) {
+  const { title, description } = pageMetadata;
+  const url = options.router?.asPath;
+  const pathname = options.router?.pathname;
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  
+  const isHome = pathname === '/' || pathname === '/[[...slug]]';
+  let pageTitle = title || defaultMetadata.title;
+  
+  if (!isHome && defaultMetadata.siteTitle) {
+    pageTitle = `${pageTitle} - ${defaultMetadata.siteTitle}`;
+  }
 
-  const url = `${homepage}${asPath}`;
-  const pathname = new URL(url).pathname;
-  const canonical = pageMetadata.canonical || `${homepage}${pathname}`;
-
-  const metadata = {
-    canonical,
+  return {
+    canonical: pageMetadata.canonical || (url && `${options.homepage || basePath}${url}`),
+    description: description || defaultMetadata.description,
     og: {
-      url,
+      description: pageMetadata.og?.description || description || defaultMetadata.og?.description,
+      image: pageMetadata.og?.image || defaultMetadata.og?.image,
+      title: pageMetadata.og?.title || pageTitle,
+      type: pageMetadata.og?.type || 'website',
+      url: pageMetadata.og?.url || (url && `${options.homepage || basePath}${url}`),
+      siteName: pageMetadata.og?.siteName || defaultMetadata.siteTitle,
     },
-    twitter: {},
-  };
-
-  // Static Properties
-  // Loop through top level metadata properties that rely on a non-object value
-
-  const staticProperties = ['description', 'language', 'title'];
-
-  staticProperties.forEach((property) => {
-    const value =
-      typeof pageMetadata[property] !== 'undefined'
-        ? pageMetadata[property]
-        : defaultMetadata[property];
-
-    if (typeof value === 'undefined') return;
-
-    metadata[property] = value;
-  });
-
-  // Open Graph Properties
-  // Loop through Open Graph properties that rely on a non-object value
-
-  if (pageMetadata.og) {
-    const ogProperties = [
-      'description',
-      'imageUrl',
-      'imageHeight',
-      'imageSecureUrl',
-      'imageWidth',
-      'title',
-      'type',
-    ];
-
-    ogProperties.forEach((property) => {
-      const pageOg = pageMetadata.og?.[property];
-      const pageStatic = pageMetadata[property];
-      const defaultOg = defaultMetadata.og?.[property];
-      const defaultStatic = defaultMetadata[property];
-      const value = pageOg || pageStatic || defaultOg || defaultStatic;
-
-      if (typeof value === 'undefined') return;
-
-      metadata.og[property] = value;
-    });
-  }
-
-  // Twitter Properties
-  // Loop through Twitter properties that rely on a non-object value
-
-  if (pageMetadata.twitter) {
-    const twitterProperties = [
-      'cardType',
-      'description',
-      'imageUrl',
-      'title',
-      'username',
-    ];
-
-    twitterProperties.forEach((property) => {
-      const pageTwitter = pageMetadata.twitter?.[property];
-      const pageOg = metadata.og[property];
-      const value = pageTwitter || pageOg;
-
-      if (typeof value === 'undefined') return;
-
-      metadata.twitter[property] = value;
-    });
-  }
-
-  // Article Properties
-  // Loop through article properties that rely on a non-object value
-
-  if (metadata.og.type === 'article' && pageMetadata.article) {
-    metadata.article = {};
-
-    const articleProperties = [
-      'author',
-      'modifiedTime',
-      'publishedTime',
-      'publisher',
-    ];
-
-    articleProperties.forEach((property) => {
-      const value = pageMetadata.article[property];
-
-      if (typeof value === 'undefined') return;
-
-      metadata.article[property] = value;
-    });
-  }
-
-  return metadata;
-}
-
-/**
- * helmetSettingsFromMetadata
- */
-
-export function helmetSettingsFromMetadata(metadata = {}, options = {}) {
-  const { link = [], meta = [], setTitle = true } = options;
-
-  const sanitizedDescription = removeExtraSpaces(metadata.description);
-
-  const settings = {
-    htmlAttributes: {
-      lang: metadata.language,
+    robots: pageMetadata.robots || null,
+    title: pageTitle,
+    twitter: {
+      card: pageMetadata.twitter?.card || 'summary_large_image',
+      creator: pageMetadata.twitter?.creator || '@madaratalkon',
+      description: pageMetadata.twitter?.description || description || defaultMetadata.twitter?.description,
+      image: pageMetadata.twitter?.image || defaultMetadata.twitter?.image,
+      title: pageMetadata.twitter?.title || pageTitle,
     },
   };
-
-  if (setTitle) {
-    settings.title = metadata.title;
-  }
-
-  settings.link = [
-    ...link,
-    {
-      rel: 'canonical',
-      href: metadata.canonical,
-    },
-  ].filter(({ href } = {}) => !!href);
-
-  settings.meta = [
-    ...meta,
-    {
-      name: 'description',
-      content: sanitizedDescription,
-    },
-    {
-      property: 'og:title',
-      content: metadata.og?.title || metadata.title,
-    },
-    {
-      property: 'og:description',
-      content: metadata.og?.description || sanitizedDescription,
-    },
-    {
-      property: 'og:url',
-      content: metadata.og?.url,
-    },
-    {
-      property: 'og:image',
-      content: metadata.og?.imageUrl,
-    },
-    {
-      property: 'og:image:secure_url',
-      content: metadata.og?.imageSecureUrl,
-    },
-    {
-      property: 'og:image:width',
-      content: metadata.og?.imageWidth,
-    },
-    {
-      property: 'og:image:height',
-      content: metadata.og?.imageHeight,
-    },
-    {
-      property: 'og:type',
-      content: metadata.og?.type || 'website',
-    },
-    {
-      property: 'og:site_name',
-      content: metadata.siteTitle,
-    },
-    {
-      property: 'twitter:title',
-      content: metadata.twitter?.title || metadata.og?.title || metadata.title,
-    },
-    {
-      property: 'twitter:description',
-      content:
-        metadata.twitter?.description ||
-        metadata.og?.description ||
-        sanitizedDescription,
-    },
-    {
-      property: 'twitter:image',
-      content: metadata.twitter?.imageUrl || metadata.og?.imageUrl,
-    },
-    {
-      property: 'twitter:site',
-      content: metadata.twitter?.username && `@${metadata.twitter.username}`,
-    },
-    {
-      property: 'twitter:card',
-      content: metadata.twitter?.cardType,
-    },
-    {
-      property: 'article:modified_time',
-      content: metadata.article?.modifiedTime,
-    },
-    {
-      property: 'article:published_time',
-      content: metadata.article?.publishedTime,
-    },
-  ].filter(({ content } = {}) => !!content);
-
-  return settings;
 }

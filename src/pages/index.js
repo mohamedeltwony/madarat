@@ -1,9 +1,6 @@
-import { getPaginatedPosts, getYearArchives } from '@/lib/posts'; // Combined post imports
 import { WebsiteJsonLd } from '@/lib/json-ld';
 import useSite from '@/hooks/use-site';
-import { getAllAuthors } from '@/lib/users';
-import { getSiteMetadata } from '@/lib/site'; // Import site metadata fetcher
-import { getAllMenus } from '@/lib/menus'; // Import menu fetcher
+import { getSiteMetadataREST } from '@/lib/rest-api';
 
 import Layout from '@/components/Layout';
 import Hero from '@/components/Hero';
@@ -31,7 +28,7 @@ export default function Home({
   archives = [],
 }) {
   const { metadata = {} } = useSite();
-  const { title } = metadata;
+  const { title = 'مدارات الكون', description = 'موقع مدارات الكون' } = metadata;
   const [showForm, setShowForm] = useState(false);
 
   const handleShowForm = () => {
@@ -40,20 +37,32 @@ export default function Home({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    alert('شكراً لك! سنتواصل معك قريباً.');
+    const formData = new FormData(e.target);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+    };
+
+    console.log('Form data submitted:', data);
+    // Here you'd typically send this data to your backend
+    // For now, we'll just close the form
     setShowForm(false);
+    alert('شكراً لك! سنتواصل معك قريباً');
   };
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
-        <title>مدارات | الصفحة الرئيسية</title>
+        <title>{title} - موقع السفر والرحلات الأول في الوطن العربي</title>
+        <meta name="description" content={description} />
         <meta
-          name="description"
-          content="موقع مدارات - منصة للمحتوى العربي المميز"
+          property="og:title"
+          content={`${title} - موقع السفر والرحلات الأول في الوطن العربي`}
         />
-        <link rel="icon" href="/favicon.ico" />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/Madarat-logo-768x238.png" />
       </Head>
 
       <Layout>
@@ -69,8 +78,13 @@ export default function Home({
         />
 
         {/* Offer Trips Section */}
-        <Section style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%)' }}>
-          <Container>
+        <Section style={{ 
+          background: 'linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%)',
+          padding: '2rem 0', 
+          width: '100%',
+          maxWidth: '100%' 
+        }}>
+          <Container style={{ maxWidth: '1400px', width: '100%' }}>
             <OfferTrips />
           </Container>
         </Section>
@@ -298,21 +312,23 @@ export default function Home({
 }
 
 export async function getStaticProps() {
-  // Fetch layout data (metadata) concurrently with page data
-  // Removed getAllMenus() as menus are not used on the homepage layout (assuming)
-  const { metadata } = await getSiteMetadata(); // Fetch metadata needed by Layout
-
   try {
-    console.log('Starting to fetch destinations...');
+    // Fetch site metadata
+    const metadata = await getSiteMetadataREST() || { 
+      title: 'مدارات الكون',
+      siteTitle: 'مدارات الكون',
+      description: 'موقع مدارات الكون'
+    }; 
 
+    // Fetch destinations with REST API
+    console.log('Starting to fetch destinations...');
     const response = await fetch(
       'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
       {
         headers: {
-          Accept: 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
         },
-        next: { revalidate: 60 }, // Revalidate every 60 seconds
       }
     );
 
@@ -320,13 +336,11 @@ export async function getStaticProps() {
       console.error('Failed to fetch destinations:', {
         status: response.status,
         statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries()),
       });
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const destinations = await response.json();
-    console.log('Raw destinations data:', destinations);
 
     if (!Array.isArray(destinations)) {
       console.error('Destinations data is not an array:', destinations);
@@ -337,54 +351,100 @@ export async function getStaticProps() {
       id: dest.id,
       title: dest.name,
       description: dest.description || '',
-      image: dest.thumbnail?.file
-        ? `https://madaratalkon.com/wp-content/uploads/${dest.thumbnail.file}`
-        : null,
+      image: dest._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
       link: dest.link,
       slug: dest.slug,
       tripCount: dest.trip_count || 0,
     }));
 
-    console.log('Formatted destinations:', formattedDestinations);
-
-    // Fetch posts data with error handling
+    // Fetch posts with REST API
     let posts = [];
     let pagination = null;
     try {
-      const postsData = await getPaginatedPosts({
-        queryIncludes: 'archive',
-      });
-      posts = postsData?.posts || [];
-      pagination = postsData?.pagination || null;
+      const postsResponse = await fetch(
+        'https://madaratalkon.com/wp-json/wp/v2/posts?_embed&per_page=20',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+          },
+        }
+      );
+      
+      if (!postsResponse.ok) {
+        throw new Error(`Failed to fetch posts: ${postsResponse.status}`);
+      }
+      
+      const postsData = await postsResponse.json();
+      const totalPages = parseInt(postsResponse.headers.get('x-wp-totalpages') || '1');
+      
+      posts = postsData.map(post => ({
+        id: post.id,
+        title: post.title.rendered,
+        slug: post.slug,
+        date: post.date,
+        excerpt: post.excerpt.rendered,
+        author: post._embedded?.author?.[0] ? {
+          name: post._embedded.author[0].name,
+          avatar: { url: post._embedded.author[0].avatar_urls?.[96] || '' }
+        } : null,
+        categories: post._embedded?.['wp:term']?.[0] || [],
+        featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
+          sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
+        } : null
+      }));
+      
+      pagination = {
+        currentPage: 1,
+        pagesCount: totalPages
+      };
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
 
-    // Get featured authors with error handling
+    // Get featured authors
     let featuredAuthors = [];
     try {
-      const { authors } = await getAllAuthors();
-      featuredAuthors = authors?.slice(0, 5) || [];
+      const authorsResponse = await fetch(
+        'https://madaratalkon.com/wp-json/wp/v2/users?per_page=5',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+          },
+        }
+      );
+      
+      if (!authorsResponse.ok) {
+        throw new Error(`Failed to fetch authors: ${authorsResponse.status}`);
+      }
+      
+      const authorsData = await authorsResponse.json();
+      
+      featuredAuthors = authorsData.map(author => ({
+        id: author.id,
+        name: author.name,
+        slug: author.slug,
+        avatar: { url: author.avatar_urls?.[96] || '' }
+      }));
     } catch (error) {
       console.error('Error fetching authors:', error);
     }
 
-    // Get archive years with error handling
+    // Get archive years
     let archives = [];
     try {
-      const { years } = await getYearArchives();
-      archives = years || [];
+      // This endpoint might need a custom REST API endpoint in WordPress
+      // For now, we'll use the years from the current date
+      const currentYear = new Date().getFullYear();
+      archives = Array.from({ length: 5 }, (_, i) => (currentYear - i).toString());
     } catch (error) {
-      console.error('Error fetching archives:', error);
+      console.error('Error generating archives:', error);
     }
-
-    // Sanitize metadata to remove undefined values
-    const sanitizedMetadata = JSON.parse(JSON.stringify(metadata || {}));
 
     return {
       props: {
-        metadata: sanitizedMetadata, // Pass sanitized metadata
-        // menus prop removed
+        metadata,
         destinations: formattedDestinations,
         posts,
         pagination,
@@ -395,12 +455,13 @@ export async function getStaticProps() {
     };
   } catch (error) {
     console.error('Error in getStaticProps:', error);
-    // Sanitize metadata even in error case if it was fetched *before* returning
-    const sanitizedMetadataOnError = JSON.parse(JSON.stringify(metadata || {}));
     return {
       props: {
-        metadata: sanitizedMetadataOnError, // Pass sanitized metadata
-        // menus prop removed
+        metadata: { 
+          title: 'مدارات الكون',
+          siteTitle: 'مدارات الكون',
+          description: 'موقع مدارات الكون'
+        },
         destinations: [],
         posts: [],
         pagination: null,

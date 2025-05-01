@@ -1,28 +1,5 @@
-import { gql } from '@apollo/client';
+// This file no longer depends on GraphQL and is provided as a stub
+// for backward compatibility with the codebase.
 
-export const QUERY_ALL_MENUS = gql`
-  query AllMenus {
-    menus {
-      edges {
-        node {
-          id
-          menuId
-          name
-          locations
-          menuItems {
-            edges {
-              node {
-                id
-                parentId
-                label
-                path
-                target
-                title
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+// Define dummy query constants for backward compatibility
+export const QUERY_ALL_MENUS = "DUMMY_QUERY";

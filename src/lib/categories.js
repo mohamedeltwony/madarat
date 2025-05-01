@@ -1,10 +1,4 @@
-import { getApolloClient } from '@/lib/apollo-client';
-
-import {
-  QUERY_ALL_CATEGORIES,
-  QUERY_CATEGORY_BY_SLUG,
-  QUERY_CATEGORY_SEO_BY_SLUG,
-} from '@/data/categories';
+import { getCategoriesREST } from '@/lib/rest-api';
 
 /**
  * categoryPathBySlug
@@ -19,17 +13,35 @@ export function categoryPathBySlug(slug) {
  */
 
 export async function getAllCategories() {
-  const apolloClient = getApolloClient();
+  try {
+    const response = await fetch('https://madaratalkon.com/wp-json/wp/v2/categories', {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
+    });
 
-  const data = await apolloClient.query({
-    query: QUERY_ALL_CATEGORIES,
-  });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch categories: ${response.status}`);
+    }
 
-  const categories = data?.data.categories.edges.map(({ node = {} }) => node);
+    const data = await response.json();
+    
+    const categories = data.map(category => ({
+      id: category.id,
+      databaseId: category.id,
+      name: category.name || '',
+      slug: category.slug || '',
+      count: category.count || 0,
+      description: category.description || '',
+      parent: category.parent || null
+    }));
 
-  return {
-    categories,
-  };
+    return { categories };
+  } catch (error) {
+    console.error('[getAllCategories] Error:', error);
+    return { categories: [] };
+  }
 }
 
 /**
@@ -37,98 +49,42 @@ export async function getAllCategories() {
  */
 
 export async function getCategoryBySlug(slug) {
-  const apolloClient = getApolloClient();
-  const apiHost = new URL(process.env.WORDPRESS_GRAPHQL_ENDPOINT).host;
-
-  let categoryData;
-  let seoData;
-
   try {
-    categoryData = await apolloClient.query({
-      query: QUERY_CATEGORY_BY_SLUG,
-      variables: {
-        slug,
+    const response = await fetch(`https://madaratalkon.com/wp-json/wp/v2/categories?slug=${slug}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
     });
-  } catch (e) {
-    console.log(
-      `[categories][getCategoryBySlug] Failed to query category data: ${e.message}`
-    );
-    throw e;
-  }
 
-  if (!categoryData?.data.category) return { category: undefined };
-
-  const category = mapCategoryData(categoryData?.data.category);
-
-  // If the SEO plugin is enabled, look up the data
-  // and apply it to the default settings
-
-  if (process.env.WORDPRESS_PLUGIN_SEO === true) {
-    try {
-      seoData = await apolloClient.query({
-        query: QUERY_CATEGORY_SEO_BY_SLUG,
-        variables: {
-          slug,
-        },
-      });
-    } catch (e) {
-      console.log(
-        `[categories][getCategoryBySlug] Failed to query SEO plugin: ${e.message}`
-      );
-      console.log(
-        'Is the SEO Plugin installed? If not, disable WORDPRESS_PLUGIN_SEO in next.config.js.'
-      );
-      throw e;
+    if (!response.ok) {
+      throw new Error(`Failed to fetch category: ${response.status}`);
     }
 
-    const { seo = {} } = seoData?.data?.category || {};
-
-    category.title = seo.title;
-    category.description = seo.metaDesc;
-
-    // The SEO plugin by default includes a canonical link, but we don't want to use that
-    // because it includes the WordPress host, not the site host. We manage the canonical
-    // link along with the other metadata, but explicitly check if there's a custom one
-    // in here by looking for the API's host in the provided canonical link
-
-    if (seo.canonical && !seo.canonical.includes(apiHost)) {
-      category.canonical = seo.canonical;
+    const data = await response.json();
+    
+    if (data.length === 0) {
+      return { category: undefined };
     }
-
-    category.og = {
-      author: seo.opengraphAuthor,
-      description: seo.opengraphDescription,
-      image: seo.opengraphImage,
-      modifiedTime: seo.opengraphModifiedTime,
-      publishedTime: seo.opengraphPublishedTime,
-      publisher: seo.opengraphPublisher,
-      title: seo.opengraphTitle,
-      type: seo.opengraphType,
+    
+    const category = {
+      id: data[0].id,
+      databaseId: data[0].id,
+      name: data[0].name || '',
+      slug: data[0].slug || '',
+      count: data[0].count || 0,
+      description: data[0].description || '',
+      seo: {
+        title: data[0].name,
+        metaDesc: data[0].description || `Browse all posts in ${data[0].name}`
+      }
     };
 
-    category.article = {
-      author: category.og.author,
-      modifiedTime: category.og.modifiedTime,
-      publishedTime: category.og.publishedTime,
-      publisher: category.og.publisher,
-    };
-
-    category.robots = {
-      nofollow: seo.metaRobotsNofollow,
-      noindex: seo.metaRobotsNoindex,
-    };
-
-    category.twitter = {
-      description: seo.twitterDescription,
-      image: seo.twitterImage,
-      title: seo.twitterTitle,
-    };
+    return { category };
+  } catch (error) {
+    console.error(`[getCategoryBySlug] Error fetching category with slug ${slug}:`, error);
+    return { category: undefined };
   }
-
-  return {
-    category,
-  };
 }
 
 /**

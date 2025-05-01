@@ -1,37 +1,9 @@
-import { gql } from '@apollo/client';
+/**
+ * This file no longer depends on GraphQL and is provided as a stub
+ * for backward compatibility with the codebase.
+ */
 
-export const GET_TRIPS = gql`
-  query GetTrips {
-    trips {
-      nodes {
-        id
-        title
-        slug
-        excerpt
-        featuredImage {
-          node {
-            sourceUrl
-            mediaDetails {
-              sizes {
-                sourceUrl
-                width
-                height
-              }
-            }
-          }
-        }
-        tripSettings {
-          duration {
-            days
-            nights
-            durationType
-          }
-          price {
-            amount
-            currency
-          }
-        }
-      }
-    }
-  }
-`;
+// Define dummy query constants for backward compatibility
+export const GET_TRIPS = "DUMMY_QUERY"; 
+
+// You can add other query constants here if needed
