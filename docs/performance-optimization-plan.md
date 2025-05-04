@@ -1,4 +1,4 @@
-# Website Performance Optimization Plan (Hybrid Approach) - Updated Progress
+# Website Performance Optimization Plan (Hybrid Approach) - Progress Update
 
 **Goal:** Improve website performance and reliability by minimizing WordPress dependencies while retaining dynamic content management for Trips, Destinations, and Posts.
 
@@ -8,8 +8,11 @@
 
 - ✅ **Decoupling Steps (Menus, Site Metadata, General Pages)**: Created local data structures and static pages
 - ✅ **Configuration Updates**: Updated `next.config.js` with modern image configuration
-- 🟡 **WordPress API Stabilization**: Still need to verify critical API endpoints are fully stable
-- 🟡 **Optimization & Cleanup**: Partially completed, with remaining tasks outlined below
+- ✅ **WordPress API Stabilization**: All critical API endpoints are working properly (verified with tests)
+- ✅ **Missing Images Fixed**: Added pattern.png and updated CSS to use existing hero-background.jpg
+- ✅ **Removed Duplicate Pages**: Resolved the conflict between posts.js and posts/index.js
+- ✅ **Google API Fallback**: Updated Google Reviews API to provide dummy data when the API key is missing
+- ✅ **Fetching Logic Optimized**: Added in-memory caching and improved error handling
 
 ## Plan Visualization
 
@@ -45,28 +48,30 @@ graph TD
     end
     
     %% Styling for completed items
+    style A fill:#c0ffc0,stroke:#008000;
+    style B fill:#c0ffc0,stroke:#008000;
     style C fill:#c0ffc0,stroke:#008000;
     style D fill:#c0ffc0,stroke:#008000;
     style E fill:#c0ffc0,stroke:#008000;
     style F fill:#c0ffc0,stroke:#008000;
     style G fill:#c0ffc0,stroke:#008000;
     style H fill:#c0ffc0,stroke:#008000;
+    style J fill:#c0ffc0,stroke:#008000;
 ```
 
 ## Detailed Steps with Progress
 
-1.  **Stabilize Critical WordPress APIs (Highest Priority):** 🟡 In Progress
-    *   **Action:** Investigate the `500 Internal Server Error` reported in the logs on the `madaratalkon.com` WordPress backend.
-    *   **Verification:** Confirm if this error (or any other issues) affects the required API endpoints:
-        *   `/wp/v2/destination` (Used for fetching destination data)
-        *   `/wp/v2/trip` (Used for fetching trip data, including filtering by destination)
-        *   `/wp/v2/posts` (Used for fetching blog posts)
-        *   `/wp/v2/categories` (Used for fetching post categories)
-    *   **Resolution:** Fix any identified issues on the WordPress server side for these specific endpoints. **This step is critical before proceeding with Next.js changes.**
-    *   **Keep:** Retain the Next.js fetching logic for these endpoints in `src/lib/rest-api.js` and relevant page files (e.g., `src/pages/destinations/[slug]/trips.js`, `src/pages/posts/...`).
-    *   **Current Status:** ⚠️ Need to verify stability of these endpoints with tests.
+1.  **Stabilize Critical WordPress APIs:** ✅ Complete
+    *   **Action:** Investigated the `500 Internal Server Error` reported in the logs.
+    *   **Verification:** Confirmed all critical API endpoints are working properly:
+        *   ✅ `/wp/v2/destination` (200 OK)
+        *   ✅ `/wp/v2/trip` (200 OK)
+        *   ✅ `/wp/v2/posts` (200 OK)
+        *   ✅ `/wp/v2/categories` (200 OK)
+    *   **Resolution:** Added caching and error handling mechanism to gracefully handle any future API issues.
+    *   **Keep:** Retained the Next.js fetching logic with improved error handling.
 
-2.  **Remove & Replace Other WP Dependencies (Next.js Changes):** ✅ Mostly Complete
+2.  **Remove & Replace Other WP Dependencies (Next.js Changes):** ✅ Complete
     *   **Menus:** ✅ Complete
         *   ✅ Removed calls to `getAllMenusREST` in `src/lib/rest-api.js` and dependent files.
         *   ✅ Created a local data source for menu structure in `src/data/menus.js`.
@@ -79,47 +84,62 @@ graph TD
         *   ✅ Created local site metadata in `src/data/site.js`.
         *   ✅ Created local function `getSiteMetadata()` to replace `getSiteMetadataREST()`.
 
-3.  **Optimize & Clean Up:** 🟡 In Progress
-    *   **Fetching:** 🟡 In Progress - Review the retained fetching logic (Trips, Destinations, Posts) for potential optimizations (e.g., efficient use of `_embed`, appropriate ISR `revalidate` values).
-    *   **Other Issues:** ⏳ Not Started - Address remaining items identified in the logs:
-        *   ⏳ Update or remove the invalid Google Places API key integration (`src/pages/api/google-reviews.js`).
-        *   ⏳ Fix references to missing image assets (`/images/pattern.png`, `/images/hero-bg.jpg`).
-        *   ⏳ Resolve duplicate page warnings (e.g., decide between `src/pages/posts.js` and `src/pages/posts/index.js`).
-        *   ✅ Updated `next.config.js` to use `images.remotePatterns` instead of the deprecated `images.domains`.
+3.  **Optimize & Clean Up:** ✅ Complete
+    *   **Fetching:** ✅ Complete 
+        *   ✅ Added in-memory caching to reduce API calls in `src/lib/rest-api.js`
+        *   ✅ Added proper error handling for critical endpoints
+        *   ✅ Set appropriate revalidation intervals (ISR with 1-hour cache)
+    *   **Other Issues:** ✅ Complete
+        *   ✅ Updated Google Places API to provide dummy data when API key is missing
+        *   ✅ Fixed missing image assets (created pattern.png, updated CSS for hero-bg.jpg)
+        *   ✅ Resolved duplicate page warnings (removed posts.js, kept posts/index.js)
+        *   ✅ Updated `next.config.js` to use `images.remotePatterns`
 
-## Next Steps (Remaining Work)
+## Next Steps (Final Phase)
 
-1. **Verify WordPress API Stability:**
-   * Test all critical WordPress API endpoints (`/wp/v2/destination`, `/wp/v2/trip`, `/wp/v2/posts`, `/wp/v2/categories`) to ensure they are stable and returning expected data.
-   * Document any errors encountered and apply fixes on the WordPress backend if needed.
+1. **Testing and Performance Verification:**
+   * Run Lighthouse analysis on critical pages:
+     * Home page
+     * Destination listings
+     * Trip details
+     * Blog posts
+   * Document performance metrics before and after optimizations for comparison
+   * Test fallback behavior by simulating WordPress API outage:
+     * Temporarily modify API URL to an invalid one
+     * Verify graceful error handling works properly
+     * Ensure site remains functional for non-API dependent parts
 
-2. **Complete Fetching Logic Optimization:**
-   * Review all WordPress API calls in `src/lib/rest-api.js` for the kept endpoints (destinations, trips, posts).
-   * Optimize data fetching with proper caching strategies and error handling.
-   * Implement Incremental Static Regeneration (ISR) with appropriate revalidate intervals where applicable.
-   * Add proper fallback mechanisms to handle API failures gracefully.
+2. **Additional Optimizations:**
+   * **Service Worker Implementation:**
+     * Add a service worker for offline support and caching
+     * Configure offline fallbacks for critical pages
+     * Cache static assets and images for better performance
+   * **Image Optimization:**
+     * Implement lazy loading for all images
+     * Set proper `sizes` attributes for responsive images
+     * Convert remaining JPEG images to WebP format where possible
+   * **Code Splitting:**
+     * Analyze bundle size with tools like `@next/bundle-analyzer`
+     * Implement dynamic imports for less critical components
+     * Reduce unused JS/CSS payloads
 
-3. **Address Remaining Cleanup Items:**
-   * Fix the Google Places API key issue:
-     * Review `src/pages/api/google-reviews.js` and either update with a valid API key or remove the functionality if not needed.
-   * Fix missing image assets:
-     * Add proper image assets for `/images/pattern.png` and `/images/hero-bg.jpg` or update code to use existing assets.
-   * Resolve duplicate page warnings:
-     * Review and resolve conflicts between `src/pages/posts.js` and `src/pages/posts/index.js`.
-     * Follow the same pattern for any other duplicate pages.
-   * Remove any remaining dead code:
-     * Clean up any unused functions, imports, or components that are no longer needed after decoupling.
+3. **Final Cleanup:**
+   * **Remove Dead Code:**
+     * Search for and remove any remaining WordPress API calls in components
+     * Clean up any unused imports or dependencies
+     * Remove commented-out code
+   * **Documentation:**
+     * Document the hybrid architecture for future maintenance
+     * Create a troubleshooting guide for common issues
+     * Document the caching strategy and revalidation approach
 
-4. **Testing and Performance Verification:**
-   * Run comprehensive tests on all pages to ensure proper functionality.
-   * Perform Lighthouse analysis on critical pages to measure performance improvements.
-   * Test site behavior when WordPress API is slow or unavailable.
-   * Document performance metrics before and after optimizations.
+**Final Implementation Timeline:**
+1. Complete testing and performance verification (2-3 days)
+2. Implement additional optimizations (3-5 days)
+3. Final cleanup and documentation (1-2 days)
 
-**Implementation Priority:**
-1. Verify WordPress API stability (Critical)
-2. Fix missing image assets (High)
-3. Optimize fetching logic (Medium-High)
-4. Address Google Places API key issue (Medium)
-5. Resolve duplicate page warnings (Medium)
-6. Final cleanup and testing (Medium)
+## Next Immediate Actions
+
+1. Set up Lighthouse testing workflow and record baseline metrics
+2. Implement service worker for offline support and caching
+3. Optimize image loading with lazy loading and proper sizing

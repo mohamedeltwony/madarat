@@ -1,6 +1,10 @@
 @import 'styles/settings/__settings';
 
 .image {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  
   div {
     overflow: hidden;
     margin: 0;
@@ -14,5 +18,86 @@
     &:last-child {
       margin-top: 0;
     }
+  }
+  
+  img {
+    transition: opacity 0.3s ease;
+    display: block;
+    object-fit: cover;
+  }
+  
+  &.loaded {
+    .placeholder {
+      display: none;
+    }
+  }
+  
+  &.error {
+    img {
+      display: none;
+    }
+  }
+}
+
+.featuredImageImg {
+  position: relative;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.placeholder {
+  background-color: #f0f0f0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -150px;
+    height: 100%;
+    width: 150px;
+    background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+    animation: shimmer 2s infinite;
+  }
+}
+
+.shimmer {
+  width: 100%;
+  height: 100%;
+}
+
+.errorPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8f8;
+  border: 1px dashed #ccc;
+  color: #888;
+  font-size: 0.875rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1rem;
+  text-align: center;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-150px);
+  }
+  100% {
+    transform: translateX(100%);
   }
 }

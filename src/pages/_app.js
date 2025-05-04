@@ -33,6 +33,19 @@ function App({ Component, pageProps = {} }) {
     // Set RTL direction
     document.documentElement.dir = 'rtl';
     document.documentElement.lang = 'ar';
+    
+    // Register service worker
+    if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch(error => {
+            console.error('Service Worker registration failed:', error);
+          });
+      });
+    }
   }, []);
 
   // Helper function to get cookie value by name (wrapped in useCallback)
