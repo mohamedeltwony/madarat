@@ -1,47 +1,22 @@
-import { getApolloClient } from 'lib/apollo-client';
-import { getTopLevelPages } from 'lib/pages';
-import { QUERY_ALL_MENUS } from 'data/menus';
+import { getTopLevelPages } from '@/lib/pages';
 
 export const MENU_LOCATION_NAVIGATION_DEFAULT = 'DEFAULT_NAVIGATION';
-
-/**
- * getAllMenus
- */
-
-export async function getAllMenus() {
-  const apolloClient = getApolloClient();
-
-  const data = await apolloClient.query({
-    query: QUERY_ALL_MENUS,
-  });
-
-  const menus = data?.data.menus.edges.map(mapMenuData);
-
-  const defaultNavigation = createMenuFromPages({
-    locations: [MENU_LOCATION_NAVIGATION_DEFAULT],
-    pages: await getTopLevelPages({
-      queryIncludes: 'index',
-    }),
-  });
-
-  menus.push(defaultNavigation);
-
-  return {
-    menus,
-  };
-}
 
 /**
  * mapMenuData
  */
 
 export function mapMenuData(menu = {}) {
-  const { node } = menu;
-  const data = { ...node };
+  if (!menu) {
+    return undefined;
+  }
 
-  data.menuItems = data.menuItems.edges.map(({ node }) => {
-    return { ...node };
-  });
+  const { node } = menu;
+  const data = { ...menu };
+
+  if (node) {
+    data.menuItems = data.menuItems || node.menuItems;
+  }
 
   return data;
 }
@@ -94,21 +69,30 @@ export const parseHierarchicalMenu = (
 };
 
 /**
+ * mapMenuLocation
+ */
+
+export function mapMenuLocation(menu) {
+  return menu.locations?.includes('PRIMARY') || menu.locations?.includes('MAIN_MENU')
+    ? 'PRIMARY_MENU'
+    : menu.locations?.includes('FOOTER') || menu.locations?.includes('FOOTER_MENU')
+    ? 'FOOTER_MENU'
+    : undefined;
+}
+
+/**
  * findMenuByLocation
  */
 
 export function findMenuByLocation(menus, location) {
-  if (typeof location !== 'string') {
-    throw new Error(
-      'Failed to find menu by location - location is not a string.'
-    );
+  if (!Array.isArray(menus) || !menus.length) {
+    return undefined;
   }
-
-  const menu = menus.find(({ locations }) => {
-    return locations
-      .map((loc) => loc.toUpperCase())
-      .includes(location.toUpperCase());
+  
+  return menus.find((menu) => {
+    return menu.locations?.includes(location) ||
+      // Map different location format strings to support various plugins
+      (location === 'PRIMARY_MENU' && (menu.locations?.includes('PRIMARY') || menu.locations?.includes('MAIN_MENU'))) ||
+      (location === 'FOOTER_MENU' && (menu.locations?.includes('FOOTER') || menu.locations?.includes('FOOTER_MENU')));
   });
-
-  return menu && parseHierarchicalMenu(menu.menuItems);
 }

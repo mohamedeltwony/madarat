@@ -128,15 +128,16 @@ export async function getStaticProps() {
     // Get all categories
     const { categories = [] } = await getAllCategories();
 
-    // Get site metadata
-    const metadata = await getSiteMetadataREST() || { 
+    // Get site metadata from local data instead of API call
+    const { siteMetadata } = await import('@/data/site');
+    const metadata = siteMetadata || { 
       title: 'مدارات الكون',
       siteTitle: 'مدارات الكون',
       description: 'موقع مدارات الكون'
     };
 
-    // Get menus
-    const { menus = [] } = await getAllMenusREST();
+    // Use local menu data instead of API call
+    const menus = [];
 
     return {
       props: {
@@ -146,7 +147,8 @@ export async function getStaticProps() {
         metadata,
         menus
       },
-      revalidate: 60
+      // Increase revalidation period for better performance
+      revalidate: 3600 // Revalidate every hour
     };
   } catch (error) {
     console.error('Error in getStaticProps', error);
@@ -167,7 +169,8 @@ export async function getStaticProps() {
         },
         menus: []
       },
-      revalidate: 60
+      // Even with errors, revalidate after a shorter period
+      revalidate: 300 // Try again in 5 minutes if there was an error
     };
   }
 } 

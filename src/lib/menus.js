@@ -1,15 +1,6 @@
-import { getAllMenusREST } from '@/lib/rest-api';
 import { getTopLevelPages } from '@/lib/pages';
 
 export const MENU_LOCATION_NAVIGATION_DEFAULT = 'DEFAULT_NAVIGATION';
-
-/**
- * getAllMenus
- */
-
-export async function getAllMenus() {
-  return getAllMenusREST();
-}
 
 /**
  * mapMenuData

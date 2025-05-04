@@ -1,0 +1,47 @@
+/* Custom selectors for Splide elements */
+.destinationsCarousel :global(.splide__pagination) {
+  bottom: -2rem !important;
+}
+
+.destinationsCarousel :global(.splide__pagination__page) {
+  background: rgba(255, 255, 255, 0.3) !important;
+  opacity: 1 !important;
+  transition: all 0.3s ease !important;
+}
+
+.destinationsCarousel :global(.splide__pagination__page.is-active) {
+  background: var(--color-primary) !important;
+  transform: scale(1.5) !important;
+  box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.5) !important;
+}
+
+.destinationsCarousel :global(.splide__arrow) {
+  background: rgba(255, 255, 255, 0.3) !important;
+  opacity: 0.7 !important;
+  transition: all 0.3s ease !important;
+  width: 3em !important;
+  height: 3em !important;
+}
+
+.destinationsCarousel :global(.splide__arrow:hover) {
+  background: var(--color-primary) !important;
+  opacity: 1 !important;
+  transform: scale(1.1) !important;
+}
+
+.destinationsCarousel :global(.splide__arrow svg) {
+  fill: white !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)) !important;
+}
+
+.destinationsCarousel :global(.splide__track) {
+  overflow: visible !important;
+}
+
+/* Mobile styling */
+@media (max-width: 768px) {
+  .destinationsCarousel :global(.splide__arrow) {
+    width: 2.5em !important;
+    height: 2.5em !important;
+  }
+} 

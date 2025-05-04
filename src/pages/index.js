@@ -19,6 +19,7 @@ import UIStyles from '@/components/UI/UI.module.scss';
 import React, { useState } from 'react';
 import Head from 'next/head';
 import OfferTrips from '@/components/OfferTrips';
+import GoogleReviewsSection from '@/components/GoogleReviewsSection';
 
 export default function Home({
   posts = [],
@@ -101,6 +102,9 @@ export default function Home({
             )}
           </Container>
         </Section>
+
+        {/* Google Reviews Section */}
+        <GoogleReviewsSection />
 
         {posts.length > 0 && (
           <>
@@ -323,7 +327,7 @@ export async function getStaticProps() {
     // Fetch destinations with REST API
     console.log('Starting to fetch destinations...');
     const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
+      'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100&_embed',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -351,10 +355,13 @@ export async function getStaticProps() {
       id: dest.id,
       title: dest.name,
       description: dest.description || '',
-      image: dest._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
+      image: dest.thumbnail?.sizes?.full?.source_url || 
+             dest.thumbnail?.source_url || 
+             dest._embedded?.['wp:featuredmedia']?.[0]?.source_url || 
+             '/images/placeholder.jpg',
       link: dest.link,
       slug: dest.slug,
-      tripCount: dest.trip_count || 0,
+      tripCount: dest.count || 0,
     }));
 
     // Fetch posts with REST API

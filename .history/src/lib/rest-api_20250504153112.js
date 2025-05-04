@@ -5,55 +5,15 @@
 
 const API_URL = 'https://madaratalkon.com/wp-json';
 
-// In-memory cache to reduce API calls
-const CACHE = {
-  data: {},
-  timestamp: {},
-  TTL: 10 * 60 * 1000, // 10 minutes default TTL
-};
-
-/**
- * Simple in-memory cache mechanism to reduce API calls
- */
-function getFromCache(key) {
-  const data = CACHE.data[key];
-  const timestamp = CACHE.timestamp[key] || 0;
-  const now = Date.now();
-  
-  // Return cached data if it's not expired
-  if (data && now - timestamp < CACHE.TTL) {
-    console.log(`[CACHE] Using cached data for ${key}`);
-    return data;
-  }
-  
-  return null;
-}
-
-function saveToCache(key, data) {
-  CACHE.data[key] = data;
-  CACHE.timestamp[key] = Date.now();
-}
-
 /**
  * Fetches data from WordPress REST API
  * @param {string} endpoint - The REST API endpoint
  * @param {Object} params - Query parameters
- * @param {Object} options - Additional options like useCache, ttl
  * @returns {Promise<Object>} - The API response
  */
-export async function fetchAPI(endpoint, params = {}, options = {}) {
-  const { useCache = true, ttl = CACHE.TTL } = options;
+export async function fetchAPI(endpoint, params = {}) {
   const queryParams = new URLSearchParams(params).toString();
   const url = `${API_URL}${endpoint}${queryParams ? `?${queryParams}` : ''}`;
-  
-  // Generate cache key based on URL
-  const cacheKey = `api_${url}`;
-  
-  // Try to get from cache if enabled
-  if (useCache) {
-    const cachedData = getFromCache(cacheKey);
-    if (cachedData) return cachedData;
-  }
   
   try {
     const response = await fetch(url, {
@@ -61,34 +21,15 @@ export async function fetchAPI(endpoint, params = {}, options = {}) {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
-      // Add timeout for fetch
-      signal: AbortSignal.timeout(10000), // 10 second timeout
     });
 
     if (!response.ok) {
       throw new Error(`REST API error: ${response.status} ${response.statusText}`);
     }
 
-    const data = await response.json();
-    
-    // Save to cache if caching is enabled
-    if (useCache) {
-      saveToCache(cacheKey, data);
-    }
-    
-    return data;
+    return await response.json();
   } catch (error) {
     console.error(`[REST API] Error fetching from ${url}:`, error);
-    
-    // For critical endpoints, we should return an empty response rather than throwing
-    // This helps the UI to gracefully handle API failures
-    if (endpoint.includes('/wp/v2/trip') || 
-        endpoint.includes('/wp/v2/destination') || 
-        endpoint.includes('/wp/v2/posts')) {
-      console.warn(`[REST API] Returning empty data for ${endpoint} due to error`);
-      return endpoint.includes('posts') ? [] : {};
-    }
-    
     throw error;
   }
 }
@@ -115,7 +56,7 @@ export async function getSiteMetadataREST() {
   } catch (error) {
     console.error('[getSiteMetadataREST] Error:', error);
     
-    // Return default values if API fails - using local site data
+    // Return default values if API fails
     return {
       title: 'مدارات الكون',
       siteTitle: 'مدارات الكون',

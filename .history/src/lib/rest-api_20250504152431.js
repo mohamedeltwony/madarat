@@ -5,55 +5,15 @@
 
 const API_URL = 'https://madaratalkon.com/wp-json';
 
-// In-memory cache to reduce API calls
-const CACHE = {
-  data: {},
-  timestamp: {},
-  TTL: 10 * 60 * 1000, // 10 minutes default TTL
-};
-
-/**
- * Simple in-memory cache mechanism to reduce API calls
- */
-function getFromCache(key) {
-  const data = CACHE.data[key];
-  const timestamp = CACHE.timestamp[key] || 0;
-  const now = Date.now();
-  
-  // Return cached data if it's not expired
-  if (data && now - timestamp < CACHE.TTL) {
-    console.log(`[CACHE] Using cached data for ${key}`);
-    return data;
-  }
-  
-  return null;
-}
-
-function saveToCache(key, data) {
-  CACHE.data[key] = data;
-  CACHE.timestamp[key] = Date.now();
-}
-
 /**
  * Fetches data from WordPress REST API
  * @param {string} endpoint - The REST API endpoint
  * @param {Object} params - Query parameters
- * @param {Object} options - Additional options like useCache, ttl
  * @returns {Promise<Object>} - The API response
  */
-export async function fetchAPI(endpoint, params = {}, options = {}) {
-  const { useCache = true, ttl = CACHE.TTL } = options;
+export async function fetchAPI(endpoint, params = {}) {
   const queryParams = new URLSearchParams(params).toString();
   const url = `${API_URL}${endpoint}${queryParams ? `?${queryParams}` : ''}`;
-  
-  // Generate cache key based on URL
-  const cacheKey = `api_${url}`;
-  
-  // Try to get from cache if enabled
-  if (useCache) {
-    const cachedData = getFromCache(cacheKey);
-    if (cachedData) return cachedData;
-  }
   
   try {
     const response = await fetch(url, {
@@ -61,34 +21,15 @@ export async function fetchAPI(endpoint, params = {}, options = {}) {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
-      // Add timeout for fetch
-      signal: AbortSignal.timeout(10000), // 10 second timeout
     });
 
     if (!response.ok) {
       throw new Error(`REST API error: ${response.status} ${response.statusText}`);
     }
 
-    const data = await response.json();
-    
-    // Save to cache if caching is enabled
-    if (useCache) {
-      saveToCache(cacheKey, data);
-    }
-    
-    return data;
+    return await response.json();
   } catch (error) {
     console.error(`[REST API] Error fetching from ${url}:`, error);
-    
-    // For critical endpoints, we should return an empty response rather than throwing
-    // This helps the UI to gracefully handle API failures
-    if (endpoint.includes('/wp/v2/trip') || 
-        endpoint.includes('/wp/v2/destination') || 
-        endpoint.includes('/wp/v2/posts')) {
-      console.warn(`[REST API] Returning empty data for ${endpoint} due to error`);
-      return endpoint.includes('posts') ? [] : {};
-    }
-    
     throw error;
   }
 }
@@ -115,7 +56,7 @@ export async function getSiteMetadataREST() {
   } catch (error) {
     console.error('[getSiteMetadataREST] Error:', error);
     
-    // Return default values if API fails - using local site data
+    // Return default values if API fails
     return {
       title: 'مدارات الكون',
       siteTitle: 'مدارات الكون',
@@ -126,6 +67,43 @@ export async function getSiteMetadataREST() {
         instagram: 'https://instagram.com/madaratalkon'
       }
     };
+  }
+}
+
+/**
+ * Gets all pages
+ */
+export async function getAllPagesREST() {
+  try {
+    const data = await fetchAPI('/wp/v2/pages', { 
+      per_page: 100,
+      _embed: true 
+    });
+    
+    const pages = data.map(page => ({
+      id: page.id,
+      title: page.title.rendered,
+      slug: page.slug,
+      uri: page.link.replace('https://madaratalkon.com', ''),
+      content: page.content.rendered,
+      excerpt: page.excerpt?.rendered,
+      featuredImage: page._embedded?.['wp:featuredmedia']?.[0] ? {
+        sourceUrl: page._embedded['wp:featuredmedia'][0].source_url
+      } : null,
+      menuOrder: page.menu_order || 0,
+      parent: page.parent ? {
+        node: {
+          id: page.parent,
+          uri: `/pages/${page.parent}`
+        }
+      } : null,
+      children: []
+    }));
+
+    return { pages };
+  } catch (error) {
+    console.error('[getAllPagesREST] Error:', error);
+    return { pages: [] };
   }
 }
 
@@ -324,3 +302,48 @@ export async function getTripsREST() {
     return { trips: [] };
   }
 }
+
+/**
+ * Gets page by URI
+ */
+export async function getPageByUriREST(uri) {
+  try {
+    // Clean the URI to get the path portion
+    const path = uri.startsWith('/') ? uri.substring(1) : uri;
+    const slug = path.endsWith('/') ? path.slice(0, -1) : path;
+    
+    // First try to fetch by slug
+    const pages = await fetchAPI('/wp/v2/pages', { 
+      slug,
+      _embed: true 
+    });
+    
+    if (pages.length > 0) {
+      const page = pages[0];
+      
+      return {
+        page: {
+          id: page.id,
+          title: page.title.rendered,
+          slug: page.slug,
+          uri: page.link.replace('https://madaratalkon.com', ''),
+          content: page.content.rendered,
+          excerpt: page.excerpt?.rendered,
+          featuredImage: page._embedded?.['wp:featuredmedia']?.[0] ? {
+            sourceUrl: page._embedded['wp:featuredmedia'][0].source_url
+          } : null,
+          // Add ancestors data if available
+          ancestors: page.parent ? [{
+            uri: `/pages/${page.parent}`,
+            title: `Parent Page ${page.parent}`
+          }] : []
+        }
+      };
+    }
+    
+    return { page: undefined };
+  } catch (error) {
+    console.error(`[getPageByUriREST] Error fetching page with URI ${uri}:`, error);
+    return { page: undefined };
+  }
+} 
