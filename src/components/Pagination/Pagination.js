@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FiChevronRight } from 'react-icons/fi';
+import { FiChevronRight } from '@/components/icons';
 import styles from './Pagination.module.scss';
 
 const Pagination = ({ currentPage = 1, pagesCount, basePath }) => {

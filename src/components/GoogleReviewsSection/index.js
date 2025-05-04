@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styles from './GoogleReviewsSection.module.scss';
-import { FaStar, FaStarHalfAlt, FaRegStar, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaStar, FaStarHalfAlt, FaRegStar, FaChevronLeft, FaChevronRight } from '@/components/icons';
 import Image from 'next/legacy/image';
 import Container from '@/components/Container';
 

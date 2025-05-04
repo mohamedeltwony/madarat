@@ -3,6 +3,14 @@ import { getTopLevelPages } from '@/lib/pages';
 export const MENU_LOCATION_NAVIGATION_DEFAULT = 'DEFAULT_NAVIGATION';
 
 /**
+ * getAllMenus - stub implementation for compatibility
+ */
+export async function getAllMenus() {
+  console.warn('[getAllMenus] This function is deprecated and returns empty menus.');
+  return { menus: [] };
+}
+
+/**
  * mapMenuData
  */
 

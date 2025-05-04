@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import SparkleButton from '@/components/UI/SparkleButton';
+import { FaChevronLeft, FaChevronRight } from '@/components/icons';
+import { SparkleButton } from '@/components/UI';
 import styles from './StickyLeadForm.module.scss';
 
 const StickyLeadForm = () => {

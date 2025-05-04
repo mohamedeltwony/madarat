@@ -10,11 +10,11 @@ import { getSiteMetadataREST, getAllMenusREST } from '@/lib/rest-api';
 
 import Layout from '@/components/Layout';
 import Main from '@/components/Main';
-import Archive from '@/components/Archive';
+// import Archive from '@/components/Archive'; // Not used
 import Container from '@/components/Container';
 import MorphPosts from '@/components/MorphPosts';
 import FeaturedImage from '@/components/FeaturedImage';
-import Post from '@/components/Post';
+// import Post from '@/components/Post'; // Not used
 import Pagination from '@/components/Pagination';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -24,7 +24,9 @@ export default function Posts({ posts, pagination, categories, metadata, menus }
   const router = useRouter();
   const { asPath } = router;
 
-  const { category, query = '' } = router?.query;
+  // Safely access router.query properties
+  const category = router && router.query ? router.query.category : undefined;
+  const query = router && router.query ? router.query.query || '' : '';
 
   // // Ensure we're using the same posts from props that were provided
   // // during static site generation

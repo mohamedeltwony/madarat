@@ -1,6 +1,7 @@
 import { WebsiteJsonLd } from '@/lib/json-ld';
 import useSite from '@/hooks/use-site';
 import { getSiteMetadataREST } from '@/lib/rest-api';
+import dynamic from 'next/dynamic';
 
 import Layout from '@/components/Layout';
 import Hero from '@/components/Hero';
@@ -8,18 +9,31 @@ import Section from '@/components/Section';
 import Container from '@/components/Container';
 import PostCard from '@/components/PostCard';
 import BentoPosts from '@/components/BentoPosts';
-import BentoDestinations from '@/components/BentoDestinations';
 import MorphPosts from '@/components/MorphPosts';
 import Pagination from '@/components/Pagination';
 import Link from 'next/link';
 import Image from 'next/legacy/image';
-import SparkleButton from '@/components/UI/SparkleButton';
+import { SparkleButton } from '@/components/UI';
 import styles from '@/styles/pages/Home.module.scss';
 import UIStyles from '@/components/UI/UI.module.scss';
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Head from 'next/head';
-import OfferTrips from '@/components/OfferTrips';
-import GoogleReviewsSection from '@/components/GoogleReviewsSection';
+
+// Dynamic imports for heavy components
+const BentoDestinations = dynamic(() => import('@/components/BentoDestinations'), {
+  loading: () => <div className={styles.loadingContainer}>جاري تحميل الوجهات...</div>,
+  ssr: true
+});
+
+const OfferTrips = dynamic(() => import('@/components/OfferTrips'), {
+  loading: () => <div className={styles.loadingContainer}>جاري تحميل الرحلات...</div>,
+  ssr: true
+});
+
+const GoogleReviewsSection = dynamic(() => import('@/components/GoogleReviewsSection'), {
+  loading: () => <div className={styles.loadingContainer}>جاري تحميل التقييمات...</div>,
+  ssr: false // Client-side render only to reduce initial load
+});
 
 export default function Home({
   posts = [],

@@ -324,3 +324,27 @@ export async function getTripsREST() {
     return { trips: [] };
   }
 }
+
+/**
+ * Gets all pages (stub implementation for compatibility)
+ */
+export async function getAllPagesREST() {
+  console.warn('[getAllPagesREST] This function is deprecated and returns dummy data.');
+  return { pages: [] };
+}
+
+/**
+ * Gets page by URI (stub implementation for compatibility)
+ */
+export async function getPageByUriREST() {
+  console.warn('[getPageByUriREST] This function is deprecated and returns dummy data.');
+  return { page: null };
+}
+
+/**
+ * Gets all menus (stub implementation for compatibility)
+ */
+export async function getAllMenusREST() {
+  console.warn('[getAllMenusREST] This function is deprecated and returns dummy data.');
+  return { menus: [] };
+}

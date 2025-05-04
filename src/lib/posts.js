@@ -833,3 +833,20 @@ export async function getPostsAndPagination({
     };
   }
 }
+
+/**
+ * getRecentPosts - compatibility implementation
+ */
+export async function getRecentPosts({ count = 5 } = {}) {
+  try {
+    const { posts } = await getAllPosts();
+    const recentPosts = posts
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, count);
+    
+    return { posts: recentPosts };
+  } catch (error) {
+    console.error('[getRecentPosts] Error:', error);
+    return { posts: [] };
+  }
+}

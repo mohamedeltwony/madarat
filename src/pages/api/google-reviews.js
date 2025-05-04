@@ -33,8 +33,10 @@ const dummyReviews = [
 
 export default async function handler(req, res) {
   try {
-    // Check if we have cached data
+    // Define a consistent cache key
     const cacheKey = 'google_reviews_data';
+    
+    // Check if we have cached data
     const cachedData = cache.get(cacheKey);
     
     if (cachedData) {
@@ -115,6 +117,9 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Error fetching Google reviews:', error);
     console.log('Returning dummy reviews data due to error.');
+    
+    // Use the same cache key as above
+    const cacheKey = 'google_reviews_data';
     
     const dummyData = {
       reviews: dummyReviews,
