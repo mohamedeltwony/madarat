@@ -3,11 +3,14 @@ import NodeCache from 'node-cache';
 // Create a cache with a TTL of 1 hour (3600 seconds)
 const cache = new NodeCache({ stdTTL: 3600 });
 
+// Base64 encoded simple avatar image - ensures we always have a valid placeholder
+const PLACEHOLDER_AVATAR = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFEklEQVR4nO1ZXWhcRRT+dld3kyattOmKVRQrNbZGUx+kVsSKGlFEBBERH0TwRRQRfPBREUFFfPBJ8Ad88cUfUETEH8SnollFWmurpDVtYtJNmt1sNsnO/czDN3Nzk7vZ3exu7iIi+cJw986dM3PO+c6ZMzObwH/4dyPSg/fKAPYCeBXAThk7C+AtAF8AqOm1MsBhAOr/HB8BGOzl5j8G0Oi0+WMAqZ6pATgMoNZm8/XxYU8QABa32XjrONgTBACjTuYbHcapnt/8dQDfAfgBwAyAGwB8BWBLp8XGu0BgkfRYCWAPgDEAn3VasAQR/E8BXJKxkwCuBnAjgNsBvAzgx6ACpqFsWgHwg7iCnf98CL1rHVpjDYBBiQ9vnJHxxUQi8YuEUmUi5ZfyC3n/CyyQbgQwnkwmT+Xz+T9HR0ebiUQCPuI45vu+n8vlvBMnTizJ/HQQnQE2bLqMjXQ6nZucnPRHRkbMyMiImZiYMOl0uinzNABfnz17dplzeZ5ntRh4EsBpAF8DuM0eCJRA0sSwZVzCtxsbG2smJyctADMyMmLu379vJicnfY4Vi0VzcHBQA6gDsIuLi2pkZETJ+lrW+1LW/FrG3upIQMTMfC9J+b7vbWxsdCSg1+t6fn7eanwZwBkA9wEoEAEU6THx3DnJTRZAioJKJTCXTqe9bDZrK5WK2d7eVtvb2/b69et2YWHBVCoVUyqVbLVafURCEVXZZBZAQ8SWJB7bx8iTRDMIgVMjIyP1gYEBe/r0aXvkyBFbLBZtLpez29vbplwuK5KxQjZBBGYliJdkDonYBzxPyaFW0NUlg6QlG/kDAwP26tWrdmtry25ubiohYvL5vM1kMrZQKBghYebm5iiBVW7+MIBnAbwCYExy/Yrsj1J4OkgdOCf+tQAq4+PjPv1dKBTs5uamBaBkU7ZYLGYHB1W5XDZnzpwx4nqFYkrG3wTwDYD3AXyroA7INPoLwFoXErhfEoKam5tTruRZEJeWlpSQUScxBICrALwJ4CJv7BC4BBLZXrfQY1xbW7PuJbW+vk4XqnK5bG/dumVu3brll0olm8lkfLnD2JbJALitl2VMiXv8paUlK5mnnJgZGRlR7Ie4Kd0uZqDrQDbscy8EaoBBu7KyopeXlw0zztbWlhkbGzOXL1/Wi4uLNpvN+mfOnDFXrlzRU1NT/vz8vJmc9P3BQb9er3d9D9wmFY7U4cOHm4VC4T/jrjO3t7cdZTc2NtSpU6cUtaAkJhzwHhjvlgBdpDY2NvyNjQ2/A4G6a3xZrN1xFbqt7wnwt0e1WjXVatUvl8tWUqO9d+9eR/OOIldXV+3Vq1ftpUuX7IULF5z62TUBpkO9Xjf1el2tr6/rer3uNRoNX0m2pBro2dnZpriuIURUoVBQYtQX6fFEGAJ3GmPM+Pj4Y5VK5VGW49u3b9NddH9TgpTJ+QqA5wB8IK3fLgBfAvgIwGsAHgRwrKOQIGASExMTD2xsbDwwPT39qNRsA6Ak8XJNmo5jEqCjIQkk5E6hxZc5AK9JYJ/gRmlvMQTgWbENJANMI1O2Wq1aKV72ypUrtXQ6XZV8Xw/TyPCiYr93izQqOfFpV9vC/RDISJCNSTI4Jq5yIU3MpEshcVTcPSxtX0fsZNPK4VLyfXQRQ4Z9/XnZ9HvJZDJ/9uzZP6TH/0NuVh/A/0+tLrDZDU74DoBfO/zmviiWYcCenr/0TshNuB//6R/EHwPAC5qwRUu/AAAAAElFTkSuQmCC';
+
 // Dummy reviews data for fallback when API key is not available
 const dummyReviews = [
   {
     author_name: "محمد السيد",
-    profile_photo_url: "https://via.placeholder.com/50",
+    profile_photo_url: PLACEHOLDER_AVATAR,
     rating: 5,
     relative_time_description: "قبل شهر",
     text: "تجربة رائعة مع مدارات الكون! الرحلة كانت منظمة بشكل ممتاز والخدمات فاقت توقعاتي. سأتعامل معهم مرة أخرى بالتأكيد.",
@@ -15,7 +18,7 @@ const dummyReviews = [
   },
   {
     author_name: "فاطمة أحمد",
-    profile_photo_url: "https://via.placeholder.com/50",
+    profile_photo_url: PLACEHOLDER_AVATAR,
     rating: 5,
     relative_time_description: "قبل أسبوعين",
     text: "فريق عمل محترف ومتعاون. ساعدوني في تنظيم رحلة عائلية مميزة بأفضل الأسعار. أنصح بالتعامل معهم.",
@@ -23,7 +26,7 @@ const dummyReviews = [
   },
   {
     author_name: "أحمد محمود",
-    profile_photo_url: "https://via.placeholder.com/50",
+    profile_photo_url: PLACEHOLDER_AVATAR,
     rating: 4,
     relative_time_description: "قبل 3 أشهر",
     text: "خدمة جيدة وأسعار معقولة. استمتعت برحلتي إلى تركيا مع مدارات الكون.",

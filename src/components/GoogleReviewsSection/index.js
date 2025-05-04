@@ -4,6 +4,14 @@ import { FaStar, FaStarHalfAlt, FaRegStar, FaChevronLeft, FaChevronRight } from 
 import Image from 'next/legacy/image';
 import Container from '@/components/Container';
 
+// Default placeholder for avatar in case of error
+const DEFAULT_AVATAR = '/images/placeholder-avatar.png';
+
+// Helper to check if a URL is a data URL
+const isDataUrl = (url) => {
+  return url && url.startsWith('data:');
+};
+
 const GoogleReviewsSection = () => {
   const [reviewsData, setReviewsData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -138,18 +146,32 @@ const GoogleReviewsSection = () => {
           <div className={styles.reviewCard}>
             <div className={styles.reviewHeader}>
               <div className={styles.reviewerInfo}>
-                {currentReview.profile_photo_url && (
-                  <div className={styles.reviewerAvatar}>
+                <div className={styles.reviewerAvatar}>
+                  {isDataUrl(currentReview.profile_photo_url) ? (
+                    // Render data URL as a regular img tag
+                    <img 
+                      src={currentReview.profile_photo_url}
+                      alt={currentReview.author_name}
+                      width={48}
+                      height={48}
+                      className={styles.avatarImage}
+                    />
+                  ) : (
+                    // Use next/image for regular URLs
                     <Image 
-                      src={currentReview.profile_photo_url} 
+                      src={currentReview.profile_photo_url || DEFAULT_AVATAR}
                       alt={currentReview.author_name}
                       width={48}
                       height={48}
                       layout="fixed"
                       className={styles.avatarImage}
+                      onError={(e) => {
+                        // If image fails to load, use the default avatar
+                        e.target.src = DEFAULT_AVATAR;
+                      }}
                     />
-                  </div>
-                )}
+                  )}
+                </div>
                 <div className={styles.reviewerDetails}>
                   <h3 className={styles.reviewerName}>{currentReview.author_name}</h3>
                   <div className={styles.reviewDate}>

@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 
 import styles from './Image.module.scss';
 
+// Default placeholder image to show on errors
+const DEFAULT_PLACEHOLDER = '/images/image-placeholder.png';
+
 const Image = ({
   children,
   className,
@@ -18,6 +21,7 @@ const Image = ({
   const imageClassName = new ClassName(styles.image);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [imageSrc, setImageSrc] = useState(src);
 
   imageClassName.addIf(className, className);
   imageClassName.addIf(isLoaded, styles.loaded);
@@ -27,6 +31,7 @@ const Image = ({
   useEffect(() => {
     setIsLoaded(false);
     setIsError(false);
+    setImageSrc(src);
   }, [src]);
 
   const handleLoad = () => {
@@ -35,46 +40,41 @@ const Image = ({
 
   const handleError = () => {
     setIsError(true);
+    // Try to use a default placeholder
+    setImageSrc(DEFAULT_PLACEHOLDER);
     console.error(`Failed to load image: ${src}`);
   };
 
   return (
-    <figure className={imageClassName.toString()}>
-      <div className={styles.featuredImageImg}>
-        {!isLoaded && !isError && (
-          <div className={styles.placeholder} style={{ width, height }}>
-            {/* Show shimmer effect while loading */}
-            <div className={styles.shimmer}></div>
+    <div className={imageClassName.toString()}>
+      {!isError && (
+        <>
+          <div className={styles.placeholder}>
+            <div className={styles.shimmer} />
           </div>
-        )}
-        <img
-          width={width}
-          height={height}
-          src={src}
-          alt={alt || ''}
-          srcSet={srcSet}
-          sizes={sizes}
-          loading={priority ? 'eager' : 'lazy'} // Use lazy loading for non-priority images
-          decoding="async" // Async decoding for better performance
-          onLoad={handleLoad}
-          onError={handleError}
-          style={{ opacity: isLoaded ? 1 : 0 }} // Fade in when loaded
-        />
-        {isError && (
-          <div className={styles.errorPlaceholder}>
-            <span>Unable to load image</span>
-          </div>
-        )}
-      </div>
-      {children && <figcaption>{children}</figcaption>}
-      {dangerouslySetInnerHTML && (
-        <figcaption
-          dangerouslySetInnerHTML={{
-            __html: dangerouslySetInnerHTML,
-          }}
-        />
+          <img
+            src={imageSrc}
+            alt={alt}
+            width={width}
+            height={height}
+            srcSet={srcSet}
+            sizes={sizes}
+            onLoad={handleLoad}
+            onError={handleError}
+            loading={priority ? 'eager' : 'lazy'}
+          />
+        </>
       )}
-    </figure>
+      {isError && (
+        <div className={styles.errorPlaceholder}>
+          {alt || 'Image could not be loaded'}
+        </div>
+      )}
+      {children}
+      {dangerouslySetInnerHTML && (
+        <div dangerouslySetInnerHTML={dangerouslySetInnerHTML} />
+      )}
+    </div>
   );
 };
 
