@@ -2,262 +2,417 @@
 @use '../../styles/settings/__settings' as *;
 @import 'styles/settings/_typography';
 
+// Variables
+$transition-speed: 0.3s;
+$primary-color: $color-primary;
+$secondary-color: color.adjust($color-primary, $lightness: 10%);
+$border-radius: 16px;
+$box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
+// Hero Section
 .heroSection {
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url('/images/hero-background.jpg') center/cover;
-  padding: 4rem 0;
+  position: relative;
+  background-position: center;
+  background-size: cover;
+  padding: 6rem 0;
   color: white;
   text-align: center;
-}
-
-.heroContent {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.tripTitle {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.tripMeta {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  font-size: 1.2rem;
-  opacity: 0.9;
-
-  .duration,
-  .price {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+  margin-bottom: 2rem;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+    z-index: 1;
+    pointer-events: none;
   }
-
-  .price {
-    color: #4caf50;
-    font-weight: 600;
+  
+  .heroContent {
+    position: relative;
+    z-index: 2;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .tripTitle {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    
+    @media (max-width: 768px) {
+      font-size: 2.2rem;
+    }
+  }
+  
+  .tripMeta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    
+    .metaItem {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 0.7rem 1.5rem;
+      border-radius: 30px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      
+      .metaIcon {
+        font-size: 1.2rem;
+        color: $primary-color;
+      }
+      
+      span {
+        font-weight: 500;
+      }
+    }
   }
 }
 
-.tripContent {
+// Section styling
+.sectionTitle {
+  margin-bottom: 2.5rem;
+  position: relative;
+  text-align: center;
+  
+  h2 {
+    font-size: 2.2rem;
+    color: $primary-color;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: $primary-color;
+      border-radius: 3px;
+    }
+  }
+}
+
+// Overview Section
+.overviewSection {
   padding: 4rem 0;
-}
-
-.tripImage {
-  width: 100%;
-  height: 500px;
-  margin-bottom: 3rem;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-  .image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-.placeholderImage {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.1);
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 1.2rem;
-}
-
-.tripDetails {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 3rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.description {
-  h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    color: $color-primary;
-  }
-
-  :global(p) {
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-  }
-
-  :global(img) {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 1.5rem 0;
-  }
-}
-
-.tripInfo {
-  .infoCard {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    padding: 2rem;
-    position: sticky;
-    top: 2rem;
-    margin-bottom: 2rem;
-
-    h3 {
-      font-size: 1.4rem;
-      margin-bottom: 1.5rem;
-      color: $color-primary;
+  background-color: #fff;
+  
+  .overviewContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
     }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-
-      li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        strong {
-          color: $color-primary;
-        }
-
-        span {
-          font-weight: 500;
-        }
+    
+    .overviewDescription {
+      :global(p) {
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+        font-size: 1.1rem;
+      }
+      
+      :global(strong), :global(b) {
+        color: $primary-color;
       }
     }
-  }
-
-  .costInfo {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    padding: 2rem;
-
-    .costSection {
-      margin-bottom: 2rem;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
+    
+    .highlights {
+      background: #f9f9f9;
+      padding: 2rem;
+      border-radius: $border-radius;
+      box-shadow: $box-shadow;
+      
       h3 {
-        font-size: 1.4rem;
-        margin-bottom: 1rem;
-        color: $color-primary;
+        margin-bottom: 1.5rem;
+        color: $primary-color;
+        font-size: 1.5rem;
+        text-align: center;
       }
-
-      p {
-        margin-bottom: 0.5rem;
-        line-height: 1.6;
+      
+      .highlightsGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1.5rem;
+        
+        .highlightItem {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          padding: 1rem;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          transition: transform $transition-speed;
+          
+          &:hover {
+            transform: translateY(-5px);
+          }
+          
+          .highlightIcon {
+            font-size: 1.8rem;
+            color: $primary-color;
+            margin-bottom: 0.8rem;
+          }
+          
+          span {
+            font-size: 0.95rem;
+            font-weight: 500;
+          }
+        }
       }
     }
   }
 }
 
+// Content Sections
+.contentSection {
+  padding: 4rem 0;
+  
+  &:nth-child(odd) {
+    background-color: #f9f9f9;
+  }
+}
+
+// Itinerary Section
 .itinerarySection {
-  margin-top: 4rem;
-
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: $color-primary;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  
+  .accordionContainer {
+    max-width: 900px;
+    margin: 0 auto;
   }
+}
 
-  .itineraryList {
-    display: grid;
-    gap: 2rem;
-  }
-
-  .itineraryDay {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    padding: 2rem;
-
-    h3 {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      color: $color-primary;
+// Accordion Styling
+.accordionItem {
+  background: white;
+  border-radius: $border-radius;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  
+  &.open {
+    .accordionHeader {
+      background-color: $primary-color;
+      color: white;
+      
+      .accordionIcon {
+        background: white;
+        color: $primary-color;
+      }
     }
-
-    p {
-      margin-bottom: 0.5rem;
+  }
+  
+  .accordionHeader {
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    transition: background-color $transition-speed;
+    
+    &:hover {
+      background-color: rgba($primary-color, 0.1);
+    }
+    
+    h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .accordionIcon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: rgba($primary-color, 0.1);
+      border-radius: 50%;
+      transition: all $transition-speed;
+    }
+  }
+  
+  .accordionContent {
+    padding: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    
+    :global(p) {
+      margin-bottom: 1rem;
       line-height: 1.6;
+    }
+    
+    :global(ul), :global(ol) {
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
     }
   }
 }
 
+// Cost Section
+.costSection {
+  background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+  
+  .costColumns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+    
+    .costColumn {
+      background: white;
+      border-radius: $border-radius;
+      overflow: hidden;
+      box-shadow: $box-shadow;
+      
+      .costHeader {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: $primary-color;
+        color: white;
+        padding: 1.2rem 2rem;
+        
+        .costIcon {
+          font-size: 1.5rem;
+        }
+        
+        h3 {
+          margin: 0;
+          font-size: 1.3rem;
+        }
+      }
+      
+      &:nth-child(2) .costHeader {
+        background: $secondary-color;
+      }
+      
+      .costContent {
+        padding: 2rem;
+        
+        :global(p), :global(br) {
+          margin-bottom: 0.75rem;
+        }
+        
+        :global(ul) {
+          list-style-type: disc;
+          padding-left: 1.5rem;
+          
+          :global(li) {
+            margin-bottom: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// FAQ Section
 .faqSection {
-  margin-top: 4rem;
-
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: $color-primary;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  
+  .accordionContainer {
+    max-width: 900px;
+    margin: 0 auto;
   }
+}
 
-  .faqList {
-    display: grid;
-    gap: 2rem;
+// Sticky CTA
+.stickyCta {
+  position: fixed;
+  bottom: -80px;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1rem 0;
+  z-index: 100;
+  transition: bottom $transition-speed;
+  
+  &.visible {
+    bottom: 0;
   }
-
-  .faqItem {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    padding: 2rem;
-
-    h3 {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      color: $color-primary;
+  
+  .stickyCtaContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1rem;
     }
-
-    p {
-      margin-bottom: 0.5rem;
-      line-height: 1.6;
+    
+    .ctaTripInfo {
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: $primary-color;
+      }
+      
+      .ctaMeta {
+        display: flex;
+        gap: 1.5rem;
+        
+        .ctaPrice {
+          font-weight: 600;
+          color: $primary-color;
+        }
+      }
+    }
+    
+    .ctaButton {
+      background: $primary-color;
+      color: white;
+      padding: 0.8rem 2rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all $transition-speed;
+      
+      &:hover {
+        background: $secondary-color;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
     }
   }
 }
 
+// Error state
 .error {
   text-align: center;
-  padding: 2rem;
-  color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.1);
-  border-radius: 16px;
-  margin: 2rem 0;
-
+  padding: 5rem 0;
+  
   h2 {
-    font-size: 1.8rem;
+    font-size: 2rem;
+    color: $primary-color;
     margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    color: #666;
   }
 }

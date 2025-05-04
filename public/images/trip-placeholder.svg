@@ -1,0 +1,70 @@
+<svg 
+  width="1200" 
+  height="800" 
+  viewBox="0 0 1200 800" 
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <pattern 
+      id="trip-pattern" 
+      patternUnits="userSpaceOnUse" 
+      width="60" 
+      height="60" 
+      patternTransform="rotate(45)"
+    >
+      <path 
+        d="M0 0h60v60H0z" 
+        fill="#f0f4f8" 
+      />
+      <path 
+        d="M30 10v50M10 30h50" 
+        stroke="#e1e8ed" 
+        strokeWidth="2"
+      />
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="800" fill="url(#trip-pattern)" />
+  
+  <!-- Dark overlay -->
+  <rect 
+    width="1200" 
+    height="800" 
+    fill="#2c5282" 
+    fillOpacity="0.85"
+  />
+  
+  <!-- Header text -->
+  <text 
+    x="50%" 
+    y="45%" 
+    font-family="Arial, sans-serif" 
+    font-size="48"
+    font-weight="bold"
+    fill="#ffffff" 
+    text-anchor="middle"
+  >
+    مدارات الكون
+  </text>
+  
+  <!-- Tagline -->
+  <text 
+    x="50%" 
+    y="55%" 
+    font-family="Arial, sans-serif" 
+    font-size="24"
+    fill="#ffffff" 
+    text-anchor="middle"
+    opacity="0.8"
+  >
+    رحلة سياحية
+  </text>
+  
+  <!-- Simple icons suggesting travel -->
+  <g fill="#ffffff" opacity="0.3">
+    <path d="M300,650 l50,-30 l50,30 l-20,-40 l40,-20 h-45 l-25,-45 l-25,45 h-45 l40,20 z" />
+    <path d="M900,650 l50,-30 l50,30 l-20,-40 l40,-20 h-45 l-25,-45 l-25,45 h-45 l40,20 z" />
+    <path d="M600,200 l50,-30 l50,30 l-20,-40 l40,-20 h-45 l-25,-45 l-25,45 h-45 l40,20 z" />
+  </g>
+</svg> 

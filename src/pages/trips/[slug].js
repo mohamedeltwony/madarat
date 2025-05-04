@@ -1,12 +1,70 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import Image from 'next/legacy/image';
+import { FaCalendarAlt, FaMapMarkerAlt, FaMoneyBillWave, FaGlobe, FaPlane, FaBed, FaUtensils, FaCheck, FaTimes, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import Layout from '../../components/Layout';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import Meta from '../../components/Meta';
 import styles from '../../styles/pages/SingleTrip.module.scss';
 
+// Helper component for accordion sections
+const AccordionItem = ({ title, content, defaultOpen = false }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div className={`${styles.accordionItem} ${isOpen ? styles.open : ''}`}>
+      <div 
+        className={styles.accordionHeader} 
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <h3>{title}</h3>
+        <span className={styles.accordionIcon}>
+          {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+        </span>
+      </div>
+      {isOpen && (
+        <div className={styles.accordionContent}>
+          <div dangerouslySetInnerHTML={{ __html: content }} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Helper to extract countries from trip description
+const extractCountries = (description) => {
+  const countries = [
+    'ايطاليا', 'فرنسا', 'المانيا', 'هولندا', 'اسبانيا', 'البوسنة', 
+    'تركيا', 'روسيا', 'بولندا', 'جورجيا', 'المملكة المتحدة', 'بريطانيا',
+    'لندن', 'باريس', 'روما', 'البندقية', 'برلين', 'أمستردام', 'مدريد',
+    'سراييفو', 'اسطنبول', 'موسكو', 'وارسو', 'تبليسي', 'سكتلندا'
+  ];
+  
+  const foundCountries = [];
+  const descriptionText = description.replace(/<[^>]*>/g, '').toLowerCase();
+  
+  countries.forEach(country => {
+    if (descriptionText.includes(country.toLowerCase())) {
+      foundCountries.push(country);
+    }
+  });
+  
+  return [...new Set(foundCountries)]; // Remove duplicates
+};
+
 export default function SingleTrip({ trip }) {
+  const [sticky, setSticky] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setSticky(window.scrollY > 500);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
   if (!trip) {
     return (
       <Layout>
@@ -22,6 +80,18 @@ export default function SingleTrip({ trip }) {
     );
   }
 
+  const hasItineraries = trip.itineraries && trip.itineraries.length > 0;
+  const hasFaqs = trip.faqs && trip.faqs.length > 0;
+  
+  // Extract highlights from description
+  const countries = extractCountries(trip.description);
+  
+  // Get featured image URL
+  const featuredImageUrl = trip.featured_image?.sizes?.large?.source_url || 
+    trip._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+    trip.featured_media_url ||
+    '/images/trip-placeholder.svg';
+
   return (
     <Layout>
       <Head>
@@ -29,139 +99,171 @@ export default function SingleTrip({ trip }) {
         <Meta title={trip.title} description={trip.description} />
       </Head>
 
-      <Section className={styles.heroSection}>
+      {/* Hero Section with Background Image */}
+      <section className={styles.heroSection} style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url(${featuredImageUrl})`
+      }}>
         <Container>
           <div className={styles.heroContent}>
             <h1 className={styles.tripTitle}>{trip.title}</h1>
             <div className={styles.tripMeta}>
-              <span className={styles.duration}>
-                {trip.duration?.days || 0}{' '}
-                {trip.duration?.duration_unit || 'يوم'}
-              </span>
-              <span className={styles.price}>
-                {trip.wp_travel_engine_setting_trip_actual_price ||
-                  trip.price ||
-                  'السعر غير متوفر'}{' '}
-                {trip.currency?.code || 'SAR'}
-              </span>
+              <div className={styles.metaItem}>
+                <FaCalendarAlt className={styles.metaIcon} />
+                <span>{trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</span>
+              </div>
+              <div className={styles.metaItem}>
+                <FaMoneyBillWave className={styles.metaIcon} />
+                <span>{trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'السعر غير متوفر'} {trip.currency?.code || 'SAR'}</span>
+              </div>
+              {trip.destination && (
+                <div className={styles.metaItem}>
+                  <FaMapMarkerAlt className={styles.metaIcon} />
+                  <span>{trip.destination.title}</span>
+                </div>
+              )}
             </div>
           </div>
         </Container>
-      </Section>
+      </section>
 
-      <Section className={styles.tripContent}>
+      {/* Trip Overview Section */}
+      <Section className={styles.overviewSection}>
         <Container>
-          <div className={styles.tripImage}>
-            {trip.featured_image?.sizes?.large?.source_url ? (
-              <img
-                src={trip.featured_image.sizes.large.source_url}
-                alt={trip.title}
-                className={styles.image}
-              />
-            ) : trip._embedded?.['wp:featuredmedia']?.[0]?.source_url ? (
-              <img
-                src={trip._embedded['wp:featuredmedia'][0].source_url}
-                alt={trip.title}
-                className={styles.image}
-              />
-            ) : trip.featured_media_url ? (
-              <img
-                src={trip.featured_media_url}
-                alt={trip.title}
-                className={styles.image}
-              />
-            ) : (
-              <div className={styles.placeholderImage}>لا توجد صورة</div>
-            )}
+          <div className={styles.sectionTitle}>
+            <h2>نظرة عامة على الرحلة</h2>
           </div>
-
-          <div className={styles.tripDetails}>
-            <div className={styles.description}>
-              <h2>وصف الرحلة</h2>
+          
+          <div className={styles.overviewContent}>
+            <div className={styles.overviewDescription}>
               <div dangerouslySetInnerHTML={{ __html: trip.description }} />
             </div>
-
-            <div className={styles.tripInfo}>
-              <div className={styles.infoCard}>
-                <h3>معلومات الرحلة</h3>
-                <ul>
-                  <li>
-                    <strong>المدة:</strong>
-                    <span>
-                      {trip.duration?.days || 0}{' '}
-                      {trip.duration?.duration_unit || 'يوم'}
-                    </span>
-                  </li>
-                  <li>
-                    <strong>السعر:</strong>
-                    <span>
-                      {trip.wp_travel_engine_setting_trip_actual_price ||
-                        trip.price ||
-                        'غير متوفر'}{' '}
-                      {trip.currency?.code || 'SAR'}
-                    </span>
-                  </li>
-                  {trip.destination && (
-                    <li>
-                      <strong>الوجهة:</strong>
-                      <span>{trip.destination.title}</span>
-                    </li>
-                  )}
-                </ul>
-              </div>
-
-              <div className={styles.costInfo}>
-                <div className={styles.costSection}>
-                  <h3>يشمل السعر</h3>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: trip.cost_includes.replace(/\r\n/g, '<br>'),
-                    }}
-                  />
+            
+            <div className={styles.highlights}>
+              <h3>أبرز المعالم</h3>
+              <div className={styles.highlightsGrid}>
+                {countries.map((country, idx) => (
+                  <div key={idx} className={styles.highlightItem}>
+                    <FaGlobe className={styles.highlightIcon} />
+                    <span>{country}</span>
+                  </div>
+                ))}
+                <div className={styles.highlightItem}>
+                  <FaPlane className={styles.highlightIcon} />
+                  <span>رحلة {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</span>
                 </div>
-                <div className={styles.costSection}>
-                  <h3>لا يشمل السعر</h3>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: trip.cost_excludes.replace(/\r\n/g, '<br>'),
-                    }}
-                  />
+                <div className={styles.highlightItem}>
+                  <FaBed className={styles.highlightIcon} />
+                  <span>إقامة فندقية</span>
+                </div>
+                <div className={styles.highlightItem}>
+                  <FaUtensils className={styles.highlightIcon} />
+                  <span>وجبات فاخرة</span>
                 </div>
               </div>
             </div>
           </div>
-
-          {trip.itineraries && trip.itineraries.length > 0 && (
-            <div className={styles.itinerarySection}>
-              <h2>برنامج الرحلة</h2>
-              <div className={styles.itineraryList}>
-                {trip.itineraries.map((day, index) => (
-                  <div key={index} className={styles.itineraryDay}>
-                    <h3>
-                      اليوم {index + 1}: {day.title}
-                    </h3>
-                    <div dangerouslySetInnerHTML={{ __html: day.content }} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {trip.faqs && trip.faqs.length > 0 && (
-            <div className={styles.faqSection}>
-              <h2>الأسئلة الشائعة</h2>
-              <div className={styles.faqList}>
-                {trip.faqs.map((faq, index) => (
-                  <div key={index} className={styles.faqItem}>
-                    <h3>{faq.title}</h3>
-                    <div dangerouslySetInnerHTML={{ __html: faq.content }} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </Container>
       </Section>
+
+      {/* Itinerary Section with Accordion */}
+      {hasItineraries && (
+        <Section className={`${styles.contentSection} ${styles.itinerarySection}`}>
+          <Container>
+            <div className={styles.sectionTitle}>
+              <h2>برنامج الرحلة</h2>
+            </div>
+            
+            <div className={styles.accordionContainer}>
+              {trip.itineraries.map((day, index) => (
+                <AccordionItem 
+                  key={index} 
+                  title={`اليوم ${index + 1}: ${day.title}`} 
+                  content={day.content}
+                  defaultOpen={index === 0} // Open first day by default
+                />
+              ))}
+            </div>
+          </Container>
+        </Section>
+      )}
+
+      {/* Cost Information Section */}
+      <Section className={`${styles.contentSection} ${styles.costSection}`}>
+        <Container>
+          <div className={styles.sectionTitle}>
+            <h2>تفاصيل التكلفة</h2>
+          </div>
+          
+          <div className={styles.costColumns}>
+            <div className={styles.costColumn}>
+              <div className={styles.costHeader}>
+                <FaCheck className={styles.costIcon} />
+                <h3>السعر يشمل</h3>
+              </div>
+              <div className={styles.costContent}>
+                <div dangerouslySetInnerHTML={{ 
+                  __html: trip.cost_includes ? 
+                    trip.cost_includes.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>') : 
+                    '<p>لم يتم تحديد ما يشمل السعر</p>' 
+                }} />
+              </div>
+            </div>
+            
+            <div className={styles.costColumn}>
+              <div className={styles.costHeader}>
+                <FaTimes className={styles.costIcon} />
+                <h3>السعر لا يشمل</h3>
+              </div>
+              <div className={styles.costContent}>
+                <div dangerouslySetInnerHTML={{ 
+                  __html: trip.cost_excludes ? 
+                    trip.cost_excludes.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>') : 
+                    '<p>لم يتم تحديد ما لا يشمل السعر</p>' 
+                }} />
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* FAQ Section with Accordion */}
+      {hasFaqs && (
+        <Section className={`${styles.contentSection} ${styles.faqSection}`}>
+          <Container>
+            <div className={styles.sectionTitle}>
+              <h2>الأسئلة الشائعة</h2>
+            </div>
+            
+            <div className={styles.accordionContainer}>
+              {trip.faqs.map((faq, index) => (
+                <AccordionItem 
+                  key={index} 
+                  title={faq.title} 
+                  content={faq.content}
+                />
+              ))}
+            </div>
+          </Container>
+        </Section>
+      )}
+
+      {/* Sticky CTA */}
+      <div className={`${styles.stickyCta} ${sticky ? styles.visible : ''}`}>
+        <Container>
+          <div className={styles.stickyCtaContent}>
+            <div className={styles.ctaTripInfo}>
+              <h3>{trip.title}</h3>
+              <div className={styles.ctaMeta}>
+                <span>{trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</span>
+                <span className={styles.ctaPrice}>
+                  {trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'السعر غير متوفر'} {trip.currency?.code || 'SAR'}
+                </span>
+              </div>
+            </div>
+            <a href="#" className={styles.ctaButton}>احجز الآن</a>
+          </div>
+        </Container>
+      </div>
     </Layout>
   );
 }
