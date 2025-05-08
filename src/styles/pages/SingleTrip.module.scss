@@ -5,9 +5,15 @@
 // Variables
 $transition-speed: 0.3s;
 $primary-color: $color-primary;
-$secondary-color: color.adjust($color-primary, $lightness: 10%);
+$secondary-color: $color-secondary;
 $border-radius: 16px;
 $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
+// RTL list style fixes
+:global(ul), :global(ol) {
+  padding-right: 1.5rem;
+  padding-left: 0;
+}
 
 // Hero Section
 .heroSection {
@@ -26,7 +32,7 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+    background: linear-gradient(to bottom, rgba($color-primary, 0.7) 0%, rgba($color-primary, 0.9) 100%);
     z-index: 1;
     pointer-events: none;
   }
@@ -63,10 +69,25 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       border-radius: 30px;
       backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all $transition-speed;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px);
+      }
       
       .metaIcon {
         font-size: 1.2rem;
-        color: $primary-color;
+        color: $color-secondary;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        padding: 0.4rem;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
       span {
@@ -84,7 +105,7 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   
   h2 {
     font-size: 2.2rem;
-    color: $primary-color;
+    color: $color-primary;
     margin-bottom: 0.5rem;
     display: inline-block;
     position: relative;
@@ -97,81 +118,176 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       transform: translateX(-50%);
       width: 80px;
       height: 3px;
-      background: $primary-color;
+      background: $color-secondary;
       border-radius: 3px;
     }
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: rgba($color-primary, 0.1);
+    border-radius: 50%;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
   }
 }
 
 // Overview Section
 .overviewSection {
-  padding: 4rem 0;
+  padding: 4rem 0 0;
   background-color: #fff;
   
   .overviewContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .overviewDescription {
+    text-align: right;
+    
+    :global(p) {
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      font-size: 1.1rem;
+    }
+    
+    :global(strong), :global(b) {
+      color: $color-primary;
+    }
+  }
+}
+
+// Full-width highlights section styling
+.highlightsWrapper {
+  width: 100%;
+  margin: 0;
+  padding: 2rem 0;
+  position: relative;
+  background: rgba($color-secondary, 0.03);
+  border-top: 1px solid rgba($color-secondary, 0.1);
+  border-bottom: 1px solid rgba($color-secondary, 0.1);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  
+  h3 {
+    text-align: center;
+    color: $color-secondary;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    
+    &::before, &::after {
+      content: '•';
+      display: inline-block;
+      margin: 0 0.8rem;
+      color: rgba($color-secondary, 0.4);
+      
+      @media (max-width: 768px) {
+        margin: 0 0.4rem;
+      }
+    }
+  }
+  
+  .highlightsGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.2rem;
+    padding: 0 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
     
     @media (max-width: 992px) {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
     }
     
-    .overviewDescription {
-      :global(p) {
-        margin-bottom: 1.5rem;
-        line-height: 1.7;
-        font-size: 1.1rem;
-      }
-      
-      :global(strong), :global(b) {
-        color: $primary-color;
-      }
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      padding: 0 1rem;
     }
     
-    .highlights {
-      background: #f9f9f9;
-      padding: 2rem;
-      border-radius: $border-radius;
-      box-shadow: $box-shadow;
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .highlightItem {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 1.2rem 1rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: all $transition-speed;
+      border: 1px solid rgba($color-secondary, 0.08);
+      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
       
-      h3 {
-        margin-bottom: 1.5rem;
-        color: $primary-color;
-        font-size: 1.5rem;
-        text-align: center;
+      @for $i from 1 through 10 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{$i * 0.1}s;
+        }
       }
       
-      .highlightsGrid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 1.5rem;
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @media (max-width: 768px) {
+        padding: 1rem 0.8rem;
+      }
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($color-secondary, 0.12);
+        border-color: rgba($color-secondary, 0.2);
+      }
+      
+      .highlightIcon {
+        font-size: 1.4rem;
+        color: $color-secondary;
+        margin-bottom: 0.8rem;
+        background: rgba($color-primary, 0.03);
+        padding: 0.6rem;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         
-        .highlightItem {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          padding: 1rem;
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-          transition: transform $transition-speed;
-          
-          &:hover {
-            transform: translateY(-5px);
-          }
-          
-          .highlightIcon {
-            font-size: 1.8rem;
-            color: $primary-color;
-            margin-bottom: 0.8rem;
-          }
-          
-          span {
-            font-size: 0.95rem;
-            font-weight: 500;
-          }
+        @media (max-width: 768px) {
+          font-size: 1.2rem;
+          width: 36px;
+          height: 36px;
+          padding: 0.5rem;
+          margin-bottom: 0.5rem;
+        }
+      }
+      
+      span {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: $text-color;
+        
+        @media (max-width: 768px) {
+          font-size: 0.8rem;
         }
       }
     }
@@ -189,7 +305,7 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 
 // Itinerary Section
 .itinerarySection {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, rgba($color-primary, 0.03) 0%, rgba($color-primary, 0.1) 100%);
   
   .accordionContainer {
     max-width: 900px;
@@ -204,15 +320,18 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   margin-bottom: 1rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  border: 1px solid rgba($color-primary, 0.1);
   
   &.open {
     .accordionHeader {
-      background-color: $primary-color;
+      background-color: $color-primary;
       color: white;
+      border-bottom: 2px solid $color-secondary;
       
       .accordionIcon {
         background: white;
-        color: $primary-color;
+        color: $color-primary;
+        border: 2px solid $color-primary;
       }
     }
   }
@@ -224,10 +343,14 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     align-items: center;
     cursor: pointer;
     background-color: white;
-    transition: background-color $transition-speed;
+    transition: all $transition-speed;
+    border-right: 3px solid transparent;
+    border-left: none;
+    text-align: right;
     
     &:hover {
-      background-color: rgba($primary-color, 0.1);
+      background-color: rgba($color-primary, 0.05);
+      border-right-color: $color-secondary;
     }
     
     h3 {
@@ -242,15 +365,19 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       justify-content: center;
       width: 30px;
       height: 30px;
-      background: rgba($primary-color, 0.1);
+      background: rgba($color-primary, 0.05);
       border-radius: 50%;
       transition: all $transition-speed;
+      color: $color-secondary;
+      margin-right: auto;
+      margin-left: 0;
     }
   }
   
   .accordionContent {
     padding: 2rem;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: right;
     
     :global(p) {
       margin-bottom: 1rem;
@@ -258,7 +385,8 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
     
     :global(ul), :global(ol) {
-      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      padding-left: 0;
       margin-bottom: 1.5rem;
     }
   }
@@ -266,7 +394,7 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 
 // Cost Section
 .costSection {
-  background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+  background: linear-gradient(135deg, rgba($color-secondary, 0.05) 0%, rgba($color-secondary, 0.15) 100%);
   
   .costColumns {
     display: grid;
@@ -289,26 +417,32 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         display: flex;
         align-items: center;
         gap: 1rem;
-        background: $primary-color;
+        background: $color-primary;
         color: white;
         padding: 1.2rem 2rem;
+        text-align: right;
         
         .costIcon {
           font-size: 1.5rem;
+          order: 1;
+          margin-right: 0;
+          margin-left: 1rem;
         }
         
         h3 {
           margin: 0;
           font-size: 1.3rem;
+          order: 0;
         }
       }
       
       &:nth-child(2) .costHeader {
-        background: $secondary-color;
+        background: $color-secondary;
       }
       
       .costContent {
         padding: 2rem;
+        text-align: right;
         
         :global(p), :global(br) {
           margin-bottom: 0.75rem;
@@ -316,7 +450,8 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         
         :global(ul) {
           list-style-type: disc;
-          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+          padding-left: 0;
           
           :global(li) {
             margin-bottom: 0.5rem;
@@ -329,7 +464,7 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 
 // FAQ Section
 .faqSection {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, rgba($color-primary, 0.03) 0%, rgba($color-primary, 0.1) 100%);
   
   .accordionContainer {
     max-width: 900px;
@@ -364,10 +499,12 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
     
     .ctaTripInfo {
+      text-align: right;
+      
       h3 {
         font-size: 1.2rem;
         margin-bottom: 0.5rem;
-        color: $primary-color;
+        color: $color-primary;
       }
       
       .ctaMeta {
@@ -376,13 +513,13 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         
         .ctaPrice {
           font-weight: 600;
-          color: $primary-color;
+          color: $color-secondary;
         }
       }
     }
     
     .ctaButton {
-      background: $primary-color;
+      background: $color-secondary;
       color: white;
       padding: 0.8rem 2rem;
       border-radius: 30px;
@@ -390,11 +527,19 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       font-size: 1.1rem;
       text-decoration: none;
       transition: all $transition-speed;
+      box-shadow: 0 4px 10px rgba($color-secondary, 0.3);
+      border: 2px solid transparent;
       
       &:hover {
-        background: $secondary-color;
+        background: darken($color-secondary, 10%);
         transform: translateY(-3px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 6px 12px rgba($color-secondary, 0.4);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      
+      &:active {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba($color-secondary, 0.3);
       }
     }
   }
@@ -407,7 +552,7 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   
   h2 {
     font-size: 2rem;
-    color: $primary-color;
+    color: $color-primary;
     margin-bottom: 1rem;
   }
   
