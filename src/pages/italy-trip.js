@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router'; // Import useRouter
@@ -11,6 +11,7 @@ const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
 import styles from '@/styles/pages/LondonScotland.module.scss'; // Keep using the same styles for cloning
 // Removed getSiteMetadata import as it's no longer fetched here
 import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though unused in getStaticProps
+import { sendPartialFormData, debounce } from '@/utils/form-helpers';
 
 // Removed SVG Icon imports
 
@@ -44,6 +45,38 @@ export default function ItalyTrip() {
   const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
   const [isPhoneValid, setIsPhoneValid] = useState(true); // Track phone validity, assume valid initially
   const [isLoading, setIsLoading] = useState(false); // Add loading state
+
+  // Create a reference to the debounced function
+  const debouncedPartialSubmitRef = useRef(null);
+  
+  // Initialize the debounced function on component mount
+  useEffect(() => {
+    debouncedPartialSubmitRef.current = debounce((currentFormData, fieldName) => {
+      const queryParams = new URLSearchParams(
+        typeof window !== 'undefined' ? window.location.search : ''
+      );
+      
+      const clientData = {
+        utm_source: queryParams.get('utm_source'),
+        utm_medium: queryParams.get('utm_medium'),
+        utm_campaign: queryParams.get('utm_campaign'),
+        utm_term: queryParams.get('utm_term'),
+        utm_content: queryParams.get('utm_content'),
+        screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
+        fbc: getCookie('_fbc'),
+        fbp: getCookie('_fbp'),
+      };
+      
+      sendPartialFormData(
+        currentFormData,
+        'italy-trip',
+        'Italy Trip Form',
+        clientData,
+        fieldName,
+        2000
+      );
+    }, 2000); // 2 second debounce time
+  }, []);
 
   // Helper function to send events to the backend API (Keep original logic)
   const sendFbEvent = async (eventName, data, eventId = null) => {
@@ -98,14 +131,17 @@ export default function ItalyTrip() {
     const { name, value } = e.target;
     let currentPhoneValid = isPhoneValid;
 
-    setFormData((prevData) => ({
-      ...prevData,
+    // Update form data state
+    const updatedFormData = {
+      ...formData,
       [name]: value,
-    }));
+    };
+    
+    setFormData(updatedFormData);
 
     if (name === 'phone') {
       setPhoneTouched(true);
-      // Updated phone validation regex to be consistent with cruise and schengen pages
+      // Phone validation logic
       const phoneRegex = /^(0|5|966)([0-9]{8,12})$/;
       currentPhoneValid = phoneRegex.test(value);
       setIsPhoneValid(currentPhoneValid);
@@ -123,7 +159,7 @@ export default function ItalyTrip() {
       if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('track', 'InitiateCheckout', {}, { eventID: eventId });
       }
-      sendFbEvent('InitiateCheckout', { ...formData, [name]: value }, eventId);
+      sendFbEvent('InitiateCheckout', { ...updatedFormData, [name]: value }, eventId);
     } else if (!formStarted && name === 'phone' && currentPhoneValid) {
       setFormStarted(true);
       const eventId = crypto.randomUUID();
@@ -131,7 +167,7 @@ export default function ItalyTrip() {
       if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('track', 'InitiateCheckout', {}, { eventID: eventId });
       }
-      sendFbEvent('InitiateCheckout', { ...formData, [name]: value }, eventId);
+      sendFbEvent('InitiateCheckout', { ...updatedFormData, [name]: value }, eventId);
     } else if (
       !formStarted &&
       ['name', 'phone', 'email'].includes(name) &&
@@ -143,15 +179,18 @@ export default function ItalyTrip() {
       if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('track', 'InitiateCheckout', {}, { eventID: eventId });
       }
-      sendFbEvent('InitiateCheckout', { ...formData, [name]: value }, eventId);
+      sendFbEvent('InitiateCheckout', { ...updatedFormData, [name]: value }, eventId);
     }
 
-    if (!isPhoneValid && formData.phone.trim() !== '') {
-      alert(
-        'يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام.'
-      );
-      setIsLoading(false);
-      return;
+    // Send partial form data to Zapier if we have meaningful data
+    if ((name === 'name' && value.trim().length > 2) || 
+        (name === 'email' && value.trim().length > 5) ||
+        (name === 'phone' && value.trim().length > 5)) {
+      
+      // Use the debounced function to avoid too many requests
+      if (debouncedPartialSubmitRef.current) {
+        debouncedPartialSubmitRef.current(updatedFormData, name);
+      }
     }
   };
 
