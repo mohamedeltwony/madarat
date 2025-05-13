@@ -3,7 +3,13 @@ import Image from '@/components/Image';
 
 import styles from './FeaturedImage.module.scss';
 
-const FeaturedImage = ({ className, alt, priority = false, aboveTheFold = false, ...rest }) => {
+const FeaturedImage = ({
+  className,
+  alt,
+  priority = false,
+  aboveTheFold = false,
+  ...rest
+}) => {
   const featuredImageClassName = new ClassName(styles.featuredImage);
 
   featuredImageClassName.addIf(className, className);
@@ -13,11 +19,11 @@ const FeaturedImage = ({ className, alt, priority = false, aboveTheFold = false,
   const shouldPrioritize = priority || aboveTheFold;
 
   return (
-    <Image 
-      className={featuredImageClassName} 
-      alt={alt} 
+    <Image
+      className={featuredImageClassName}
+      alt={alt}
       priority={shouldPrioritize}
-      {...rest} 
+      {...rest}
     />
   );
 };

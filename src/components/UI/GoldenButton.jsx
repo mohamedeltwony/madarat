@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
 
-const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }) => {
+const GoldenButton = ({ text = 'تواصل مع مستشارك السياحي' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
 
@@ -11,11 +11,15 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isOpen && buttonRef.current && !buttonRef.current.contains(event.target)) {
+      if (
+        isOpen &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -26,10 +30,10 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
     <div
       style={{
         position: 'relative',
-        display: 'inline-block'
+        display: 'inline-block',
       }}
     >
-      <button 
+      <button
         ref={buttonRef}
         onClick={toggleDropdown}
         style={{
@@ -50,19 +54,19 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
           zIndex: 1,
           WebkitAppearance: 'none',
           MozAppearance: 'none',
-          appearance: 'none'
+          appearance: 'none',
         }}
       >
         {/* Button text */}
         <span
           style={{
             position: 'relative',
-            zIndex: 3
+            zIndex: 3,
           }}
         >
           {text}
         </span>
-        
+
         {/* Border container */}
         <div
           style={{
@@ -70,7 +74,7 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
             inset: '-2px',
             borderRadius: '32px',
             zIndex: -1,
-            overflow: 'hidden'
+            overflow: 'hidden',
           }}
         >
           {/* Animated golden border */}
@@ -78,12 +82,13 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
+              background:
+                'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
               backgroundSize: '300% 300%',
-              animation: 'goldenGlow 6s linear infinite'
+              animation: 'goldenGlow 6s linear infinite',
             }}
           />
-          
+
           {/* Dark inner background */}
           <div
             style={{
@@ -91,12 +96,12 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
               inset: '2px',
               borderRadius: '28px',
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              zIndex: 0
+              zIndex: 0,
             }}
           />
         </div>
       </button>
-      
+
       {/* Dropdown menu */}
       {isOpen && (
         <div
@@ -111,11 +116,11 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
             borderRadius: '15px',
             overflow: 'hidden',
             zIndex: 100,
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            border: '1px solid rgba(255, 255, 255, 0.1)',
           }}
         >
           {/* Call option */}
-          <a 
+          <a
             href="tel:+966123456789"
             style={{
               display: 'flex',
@@ -123,7 +128,7 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
               padding: '12px 15px',
               color: 'white',
               textDecoration: 'none',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
             }}
           >
             <div style={{ marginLeft: '12px' }}>
@@ -131,9 +136,9 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
             </div>
             <span>إتصل في مستشارك</span>
           </a>
-          
+
           {/* Booking option */}
-          <a 
+          <a
             href="/booking"
             style={{
               display: 'flex',
@@ -141,7 +146,7 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
               padding: '12px 15px',
               color: 'white',
               textDecoration: 'none',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
             }}
           >
             <div style={{ marginLeft: '12px' }}>
@@ -149,16 +154,16 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
             </div>
             <span>للحجز سجل رقمك</span>
           </a>
-          
+
           {/* Feedback option */}
-          <a 
+          <a
             href="/feedback"
             style={{
               display: 'flex',
               alignItems: 'center',
               padding: '12px 15px',
               color: 'white',
-              textDecoration: 'none'
+              textDecoration: 'none',
             }}
           >
             <div style={{ marginLeft: '12px' }}>
@@ -172,13 +177,19 @@ const GoldenButton = ({ text = "تواصل مع مستشارك السياحي" }
       {/* Animation keyframes */}
       <style jsx>{`
         @keyframes goldenGlow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
         }
       `}</style>
     </div>
   );
 };
 
-export default GoldenButton; 
+export default GoldenButton;

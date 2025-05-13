@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 
 export function formatDate(date, pattern = 'PPP') {
   if (!date) return '';
-  
+
   try {
     const dateObj = new Date(date);
     if (dateObj.toString() === 'Invalid Date') {

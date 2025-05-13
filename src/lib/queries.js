@@ -4,6 +4,6 @@
  */
 
 // Define dummy query constants for backward compatibility
-export const GET_TRIPS = "DUMMY_QUERY"; 
+export const GET_TRIPS = 'DUMMY_QUERY';
 
 // You can add other query constants here if needed

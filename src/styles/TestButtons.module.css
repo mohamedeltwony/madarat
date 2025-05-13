@@ -118,12 +118,12 @@
   .grid {
     grid-template-columns: 1fr;
   }
-  
+
   .main {
     padding: 2rem 0;
   }
-  
+
   .buttonWithLabel {
     min-width: 200px;
   }
-} 
+}

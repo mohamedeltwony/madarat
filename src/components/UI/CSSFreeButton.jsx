@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 
-const CSSFreeButton = ({ text = "زر بدون CSS", onClick }) => {
+const CSSFreeButton = ({ text = 'زر بدون CSS', onClick }) => {
   // Button container ref
   const containerRef = useRef(null);
-  
+
   // Add keyframes for animation
   useEffect(() => {
     // Check if style element already exists
@@ -20,7 +20,7 @@ const CSSFreeButton = ({ text = "زر بدون CSS", onClick }) => {
       `;
       // Append style to document head
       document.head.appendChild(style);
-      
+
       // Clean up
       return () => {
         const existingStyle = document.getElementById('css-free-button-style');
@@ -30,9 +30,9 @@ const CSSFreeButton = ({ text = "زر بدون CSS", onClick }) => {
       };
     }
   }, []);
-  
+
   return (
-    <div 
+    <div
       ref={containerRef}
       onClick={onClick}
       style={{
@@ -43,7 +43,7 @@ const CSSFreeButton = ({ text = "زر بدون CSS", onClick }) => {
         border: 'none',
         background: 'none',
         backgroundColor: 'transparent',
-        cursor: 'pointer'
+        cursor: 'pointer',
       }}
     >
       {/* Parent container with no styling */}
@@ -55,7 +55,7 @@ const CSSFreeButton = ({ text = "زر بدون CSS", onClick }) => {
           borderRadius: '30px',
           cursor: 'pointer',
           background: 'transparent',
-          backgroundColor: 'transparent'
+          backgroundColor: 'transparent',
         }}
       >
         {/* Text content */}
@@ -66,12 +66,12 @@ const CSSFreeButton = ({ text = "زر بدون CSS", onClick }) => {
             fontSize: '16px',
             fontWeight: 600,
             color: 'white',
-            zIndex: 3
+            zIndex: 3,
           }}
         >
           {text}
         </span>
-        
+
         {/* Border container */}
         <div
           style={{
@@ -82,7 +82,7 @@ const CSSFreeButton = ({ text = "زر بدون CSS", onClick }) => {
             bottom: -2,
             borderRadius: '32px',
             zIndex: 0,
-            overflow: 'hidden'
+            overflow: 'hidden',
           }}
         >
           {/* Animated gold border */}
@@ -93,12 +93,13 @@ const CSSFreeButton = ({ text = "زر بدون CSS", onClick }) => {
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
+              background:
+                'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
               backgroundSize: '300% 300%',
-              animation: 'cssFreeButtonGlow 6s linear infinite'
+              animation: 'cssFreeButtonGlow 6s linear infinite',
             }}
           />
-          
+
           {/* Dark inner background with low opacity */}
           <div
             style={{
@@ -108,7 +109,7 @@ const CSSFreeButton = ({ text = "زر بدون CSS", onClick }) => {
               right: 2,
               bottom: 2,
               borderRadius: '28px',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)'
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
             }}
           />
         </div>
@@ -117,4 +118,4 @@ const CSSFreeButton = ({ text = "زر بدون CSS", onClick }) => {
   );
 };
 
-export default CSSFreeButton; 
+export default CSSFreeButton;

@@ -1,2 +1,2 @@
 import BorderButton from './BorderButton.jsx';
-export default BorderButton; 
+export default BorderButton;

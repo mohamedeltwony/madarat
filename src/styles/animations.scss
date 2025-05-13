@@ -17,7 +17,7 @@
 @mixin animated-border($border-radius: 14px, $animation-duration: 7s) {
   position: relative;
   overflow: hidden;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -27,7 +27,14 @@
     z-index: 3;
     border: 2px solid transparent;
     box-sizing: border-box;
-    background: linear-gradient(270deg, rgba(2,78,76,1), #ffffff, rgba(2,78,76,0.7), #ffffff, rgba(2,78,76,1));
+    background: linear-gradient(
+      270deg,
+      rgba(2, 78, 76, 1),
+      #ffffff,
+      rgba(2, 78, 76, 0.7),
+      #ffffff,
+      rgba(2, 78, 76, 1)
+    );
     background-size: 400% 400%;
     animation: borderColorAnim $animation-duration ease-in-out infinite;
     -webkit-mask:
@@ -42,4 +49,4 @@
 .my-button {
   @include animated-border(20px, 5s);
 }
-*/ 
+*/

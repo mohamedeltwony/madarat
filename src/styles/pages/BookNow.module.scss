@@ -20,7 +20,7 @@ $text-color-light: #707070;
   overflow: hidden;
   padding-top: 80px; // Add padding for header
   margin-bottom: 0;
-  
+
   @media (max-width: 768px) {
     height: 400px;
     padding-top: 60px; // Less padding on mobile
@@ -56,7 +56,7 @@ $text-color-light: #707070;
   font-weight: 700;
   margin-bottom: 1.5rem;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  
+
   @media (max-width: 768px) {
     font-size: 2.5rem;
   }
@@ -68,7 +68,7 @@ $text-color-light: #707070;
   opacity: 0.9;
   max-width: 600px;
   margin: 0 auto;
-  
+
   @media (max-width: 768px) {
     font-size: 1.2rem;
   }
@@ -84,7 +84,11 @@ $text-color-light: #707070;
   position: relative;
   z-index: 5;
   padding: 0 1rem 6rem;
-  background: linear-gradient(135deg, rgba(16, 76, 68, 0.03) 0%, rgba(16, 76, 68, 0.07) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(16, 76, 68, 0.03) 0%,
+    rgba(16, 76, 68, 0.07) 100%
+  );
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,7 +105,7 @@ $text-color-light: #707070;
 .formWrapper {
   width: 100%;
   margin-top: -90px; // Position the form card up into the hero section
-  
+
   @media (max-width: 768px) {
     margin-top: -50px;
   }
@@ -114,12 +118,14 @@ $text-color-light: #707070;
   padding: 2.5rem;
   overflow: hidden;
   position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
   &:hover {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   }
-  
+
   @media (max-width: 768px) {
     padding: 1.5rem;
   }
@@ -135,7 +141,7 @@ $text-color-light: #707070;
   font-weight: 600;
   color: $primary-color;
   margin-bottom: 1rem;
-  
+
   @media (max-width: 768px) {
     font-size: 1.5rem;
   }
@@ -172,16 +178,18 @@ $text-color-light: #707070;
   background-color: #f8f9fa;
   border: 1px solid rgba($primary-color, 0.15);
   border-radius: 12px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
   color: $text-color;
   height: 60px;
   outline: none;
-  
+
   &:focus {
     border-color: $primary-color;
     box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
   }
-  
+
   &:not(:placeholder-shown) + .formLabel,
   &:focus + .formLabel {
     transform: translateY(-2.2rem) scale(0.85);
@@ -215,7 +223,7 @@ $text-color-light: #707070;
   .phoneInput {
     display: flex;
     align-items: center;
-    
+
     &::before {
       content: '+966';
       position: absolute;
@@ -226,7 +234,7 @@ $text-color-light: #707070;
       color: $primary-color;
       font-weight: 500;
     }
-    
+
     .formInput {
       padding-left: 4.5rem;
     }
@@ -242,25 +250,27 @@ $text-color-light: #707070;
   font-size: 1.125rem;
   border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
   margin-top: 1rem;
   line-height: 1.5;
   text-align: center;
-  
+
   &:hover {
     background-color: $primary-color-dark;
     transform: translateY(-2px);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
-  
+
   &:disabled {
     background-color: #1c7066; // Lighter version of primary
     cursor: not-allowed;
   }
-  
+
   @media (max-width: 768px) {
     font-size: 1rem;
     padding: 1rem;
@@ -273,7 +283,7 @@ $text-color-light: #707070;
   padding: 1rem;
   margin-bottom: 1.5rem;
   border-radius: 8px;
-  
+
   span {
     color: #ef4444;
     font-size: 0.9rem;
@@ -292,7 +302,7 @@ $text-color-light: #707070;
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  
+
   @media (max-width: 768px) {
     font-size: 1.3rem;
   }
@@ -302,7 +312,7 @@ $text-color-light: #707070;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
@@ -315,11 +325,11 @@ $text-color-light: #707070;
   padding: 1rem;
   border-radius: 12px;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
     background-color: rgba($primary-color, 0.03);
   }
-  
+
   @media (max-width: 768px) {
     padding: 0.75rem;
   }
@@ -335,7 +345,7 @@ $text-color-light: #707070;
   align-items: center;
   justify-content: center;
   color: $primary-color;
-  
+
   @media (max-width: 768px) {
     width: 40px;
     height: 40px;
@@ -351,7 +361,7 @@ $text-color-light: #707070;
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  
+
   @media (max-width: 768px) {
     font-size: 1rem;
   }
@@ -361,7 +371,7 @@ $text-color-light: #707070;
   color: $text-color;
   font-size: 0.95rem;
   line-height: 1.5;
-  
+
   @media (max-width: 768px) {
     font-size: 0.9rem;
   }
@@ -377,7 +387,7 @@ $text-color-light: #707070;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
+
   @media (max-width: 768px) {
     padding: 2rem 1.5rem;
   }
@@ -393,7 +403,7 @@ $text-color-light: #707070;
   font-weight: 700;
   color: $primary-color;
   margin-bottom: 1rem;
-  
+
   @media (max-width: 768px) {
     font-size: 1.5rem;
   }
@@ -415,7 +425,7 @@ $text-color-light: #707070;
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
     background-color: $primary-color-dark;
   }
@@ -425,7 +435,7 @@ $text-color-light: #707070;
   .bookNowContainer {
     padding: 4rem 1rem;
   }
-  
+
   .formCard {
     padding: 2rem;
   }
@@ -436,38 +446,38 @@ $text-color-light: #707070;
     padding: 3rem 1rem;
     margin-top: -50px;
   }
-  
+
   .formCard {
     padding: 1.5rem;
   }
-  
+
   .formTitle {
     font-size: 1.5rem;
   }
-  
+
   .featuresTitle {
     font-size: 1.3rem;
   }
-  
+
   .featureItem {
     padding: 0.75rem;
   }
-  
+
   .featureIcon {
     width: 40px;
     height: 40px;
   }
-  
+
   .featureTitle {
     font-size: 1rem;
   }
-  
+
   .featureDescription {
     font-size: 0.9rem;
   }
-  
+
   .bookingSubmitButton {
     font-size: 1rem;
     padding: 1rem;
   }
-} 
+}

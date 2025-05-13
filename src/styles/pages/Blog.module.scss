@@ -18,11 +18,11 @@ $brand-gold: #cc9c64;
   text-align: center;
   color: white;
   overflow: hidden;
-  
+
   @media (max-width: 768px) {
     height: 350px;
   }
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -64,7 +64,7 @@ $brand-gold: #cc9c64;
   padding: 0 20px;
   direction: rtl;
   font-family: 'Cairo', sans-serif;
-  
+
   h1 {
     font-size: 3.5rem;
     margin-bottom: 20px;
@@ -72,12 +72,12 @@ $brand-gold: #cc9c64;
     font-weight: 700;
     animation: fadeInDown 1s ease-out;
     font-family: 'Cairo', sans-serif;
-    
+
     @media (max-width: 768px) {
       font-size: 2.5rem;
     }
   }
-  
+
   p {
     font-size: 1.4rem;
     max-width: 700px;
@@ -85,7 +85,7 @@ $brand-gold: #cc9c64;
     color: rgba(255, 255, 255, 0.9);
     animation: fadeInUp 1s ease-out 0.3s both;
     font-family: 'Cairo', sans-serif;
-    
+
     @media (max-width: 768px) {
       font-size: 1.2rem;
     }
@@ -148,7 +148,7 @@ $brand-gold: #cc9c64;
   text-decoration: none;
   display: flex;
   align-items: center;
-  
+
   &:hover {
     color: $brand-gold;
   }
@@ -175,12 +175,12 @@ $brand-gold: #cc9c64;
   padding: 0 20px;
   direction: rtl;
   font-family: 'Cairo', sans-serif;
-  
+
   @media (max-width: 768px) {
     margin-bottom: 60px;
     padding: 0 15px;
   }
-  
+
   @media (max-width: 576px) {
     margin-bottom: 40px;
   }
@@ -196,12 +196,12 @@ $brand-gold: #cc9c64;
   margin-right: auto;
   color: #555;
   line-height: 1.8;
-  
+
   @media (max-width: 768px) {
     font-size: 1.1rem;
     margin-bottom: 30px;
   }
-  
+
   @media (max-width: 576px) {
     font-size: 1rem;
     margin-bottom: 25px;
@@ -226,7 +226,7 @@ $brand-gold: #cc9c64;
   color: $color-gray-700;
   position: relative;
   padding-bottom: 1.5rem;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -264,7 +264,7 @@ $brand-gold: #cc9c64;
   position: relative;
   display: flex;
   flex-direction: column;
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
@@ -275,7 +275,7 @@ $brand-gold: #cc9c64;
   grid-column: span 8;
   grid-row: span 2;
   padding: 0;
-  
+
   @media (max-width: 992px) {
     grid-column: span 12;
   }
@@ -287,7 +287,11 @@ $brand-gold: #cc9c64;
   left: 0;
   right: 0;
   padding: 2rem;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
   color: white;
   z-index: 2;
 }
@@ -309,11 +313,11 @@ $brand-gold: #cc9c64;
 
 .sidePost {
   grid-column: span 4;
-  
+
   @media (max-width: 992px) {
     grid-column: span 6;
   }
-  
+
   @media (max-width: 768px) {
     grid-column: span 12;
   }
@@ -343,7 +347,7 @@ $brand-gold: #cc9c64;
   font-weight: 500;
   margin-bottom: 1rem;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
     background-color: $brand-gold;
   }
@@ -358,7 +362,7 @@ $brand-gold: #cc9c64;
   text-align: center;
   position: relative;
   overflow: hidden;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -402,7 +406,7 @@ $brand-gold: #cc9c64;
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
-  
+
   &:hover {
     background-color: darken($brand-gold, 10%);
     transform: translateY(-3px);
@@ -422,7 +426,7 @@ $brand-gold: #cc9c64;
   margin-bottom: 2rem;
   color: $brand-primary;
   position: relative;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -440,11 +444,11 @@ $brand-gold: #cc9c64;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
   }
@@ -460,11 +464,11 @@ $brand-gold: #cc9c64;
   color: $color-gray-800;
   display: flex;
   flex-direction: column;
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    
+
     .categoryCardTitle {
       color: $brand-gold;
     }
@@ -476,14 +480,14 @@ $brand-gold: #cc9c64;
   background-color: $brand-primary;
   position: relative;
   overflow: hidden;
-  
+
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
   }
-  
+
   &:hover img {
     transform: scale(1.1);
   }
@@ -506,4 +510,4 @@ $brand-gold: #cc9c64;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   margin-top: 0.5rem;
-} 
+}

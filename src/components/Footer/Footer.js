@@ -1,5 +1,10 @@
 import Link from 'next/link';
-import { FaPhone, FaWhatsapp, FaMapMarkerAlt, FaEnvelope } from 'react-icons/fa';
+import {
+  FaPhone,
+  FaWhatsapp,
+  FaMapMarkerAlt,
+  FaEnvelope,
+} from 'react-icons/fa';
 
 import useSite from '@/hooks/use-site';
 import { postPathBySlug } from '@/lib/posts';
@@ -30,30 +35,42 @@ const Footer = () => {
                 نقدم لك دليلاً شاملاً للسفر والسياحة، من التخطيط للرحلة إلى أفضل
                 الأماكن للزيارة والإقامة.
               </p>
-              
+
               <div className={styles.contactInfo}>
                 <div className={styles.contactItem}>
                   <FaPhone className={styles.contactIcon} />
-                  <a href="tel:920034019" className={styles.contactLink}>920034019</a>
+                  <a href="tel:920034019" className={styles.contactLink}>
+                    920034019
+                  </a>
                 </div>
                 <div className={styles.contactItem}>
                   <FaWhatsapp className={styles.contactIcon} />
-                  <a href="https://wa.me/966920034019" className={styles.contactLink} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href="https://wa.me/966920034019"
+                    className={styles.contactLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     تواصل عبر واتساب
                   </a>
                 </div>
                 <div className={styles.contactItem}>
                   <FaEnvelope className={styles.contactIcon} />
-                  <a href="mailto:info@madaratalkon.com" className={styles.contactLink}>
+                  <a
+                    href="mailto:info@madaratalkon.com"
+                    className={styles.contactLink}
+                  >
                     info@madaratalkon.com
                   </a>
                 </div>
                 <div className={styles.contactItem}>
                   <FaMapMarkerAlt className={styles.contactIcon} />
-                  <span className={styles.address}>الرياض، المملكة العربية السعودية</span>
+                  <span className={styles.address}>
+                    الرياض، المملكة العربية السعودية
+                  </span>
                 </div>
               </div>
-              
+
               <div className={styles.footerSocial}>
                 <a
                   href="https://facebook.com"
@@ -181,10 +198,10 @@ const Footer = () => {
 
       <Section className={styles.footerLegal}>
         <Container>
-          <img 
-            src="/images/مدارات.png" 
-            alt="مدارات الكون" 
-            className={styles.footerImage} 
+          <img
+            src="/images/مدارات.png"
+            alt="مدارات الكون"
+            className={styles.footerImage}
           />
           <div className={styles.footerBottom}>
             <p className={styles.copyright}>

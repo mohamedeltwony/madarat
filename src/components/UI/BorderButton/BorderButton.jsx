@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
 
-const BorderButton = ({ text = "تواصل مع مستشارك السياحي" }) => {
+const BorderButton = ({ text = 'تواصل مع مستشارك السياحي' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
 
@@ -11,11 +11,15 @@ const BorderButton = ({ text = "تواصل مع مستشارك السياحي" }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isOpen && buttonRef.current && !buttonRef.current.contains(event.target)) {
+      if (
+        isOpen &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -25,7 +29,7 @@ const BorderButton = ({ text = "تواصل مع مستشارك السياحي" }
   // Core container style
   const containerStyle = {
     position: 'relative',
-    display: 'inline-block'
+    display: 'inline-block',
   };
 
   // Button style with NO background
@@ -46,13 +50,13 @@ const BorderButton = ({ text = "تواصل مع مستشارك السياحي" }
     zIndex: 1,
     WebkitAppearance: 'none',
     MozAppearance: 'none',
-    appearance: 'none'
+    appearance: 'none',
   };
 
   // Button text style
   const textStyle = {
     position: 'relative',
-    zIndex: 3
+    zIndex: 3,
   };
 
   // Border container style
@@ -64,7 +68,7 @@ const BorderButton = ({ text = "تواصل مع مستشارك السياحي" }
     bottom: '-2px',
     borderRadius: '32px',
     zIndex: -1,
-    overflow: 'hidden'
+    overflow: 'hidden',
   };
 
   // Animated border style
@@ -74,9 +78,10 @@ const BorderButton = ({ text = "تواصل مع مستشارك السياحي" }
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
+    background:
+      'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
     backgroundSize: '300% 300%',
-    animation: 'borderGlow 6s linear infinite'
+    animation: 'borderGlow 6s linear infinite',
   };
 
   // Inner background style
@@ -88,7 +93,7 @@ const BorderButton = ({ text = "تواصل مع مستشارك السياحي" }
     bottom: '2px',
     borderRadius: '28px',
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    zIndex: 0
+    zIndex: 0,
   };
 
   // Dropdown style
@@ -103,7 +108,7 @@ const BorderButton = ({ text = "تواصل مع مستشارك السياحي" }
     borderRadius: '15px',
     overflow: 'hidden',
     zIndex: 100,
-    border: '1px solid rgba(255, 255, 255, 0.1)'
+    border: '1px solid rgba(255, 255, 255, 0.1)',
   };
 
   // Dropdown item style
@@ -113,42 +118,36 @@ const BorderButton = ({ text = "تواصل مع مستشارك السياحي" }
     padding: '12px 15px',
     color: 'white',
     textDecoration: 'none',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
   };
 
   // Last item without border
   const lastItemStyle = {
     ...itemStyle,
-    borderBottom: 'none'
+    borderBottom: 'none',
   };
 
   // Icon wrapper style
   const iconWrapperStyle = {
-    marginLeft: '12px'
+    marginLeft: '12px',
   };
 
   // Icon color style
   const iconStyle = {
-    color: '#ffd700'
+    color: '#ffd700',
   };
 
   return (
     <div style={containerStyle}>
-      <button 
-        ref={buttonRef}
-        onClick={toggleDropdown}
-        style={buttonStyle}
-      >
-        <span style={textStyle}>
-          {text}
-        </span>
-        
+      <button ref={buttonRef} onClick={toggleDropdown} style={buttonStyle}>
+        <span style={textStyle}>{text}</span>
+
         <div style={borderContainerStyle}>
           <div style={animatedBorderStyle}></div>
           <div style={innerBackgroundStyle}></div>
         </div>
       </button>
-      
+
       {isOpen && (
         <div style={dropdownStyle}>
           <a href="tel:+966123456789" style={itemStyle}>
@@ -174,13 +173,19 @@ const BorderButton = ({ text = "تواصل مع مستشارك السياحي" }
 
       <style jsx>{`
         @keyframes borderGlow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
         }
       `}</style>
     </div>
   );
 };
 
-export default BorderButton; 
+export default BorderButton;

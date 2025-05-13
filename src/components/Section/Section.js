@@ -2,15 +2,15 @@ import ClassName from '@/models/classname';
 
 import styles from './Section.module.scss';
 
-const Section = ({ 
-  children, 
-  className, 
-  withPadding, 
-  smallPadding, 
-  contentSection, 
+const Section = ({
+  children,
+  className,
+  withPadding,
+  smallPadding,
+  contentSection,
   heroSection,
   pageSection,
-  ...rest 
+  ...rest
 }) => {
   const sectionClassName = new ClassName(styles.section);
 
@@ -31,7 +31,11 @@ const Section = ({
     sectionClassName.add(styles.pageSection);
   }
 
-  return <section className={sectionClassName.toString()} {...rest}>{children}</section>;
+  return (
+    <section className={sectionClassName.toString()} {...rest}>
+      {children}
+    </section>
+  );
 };
 
 export default Section;

@@ -1,46 +1,46 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
 
-const IframeDropdownButton = ({ 
-  text = "زر الإطار مع قائمة", 
+const IframeDropdownButton = ({
+  text = 'زر الإطار مع قائمة',
   width = 200,
-  height = 50
+  height = 50,
 }) => {
   const iframeRef = useRef(null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  
+
   // Dropdown items
   const dropdownItems = [
     {
-      text: "إتصل في مستشارك",
-      href: "tel:+966123456789",
-      icon: <FaPhoneAlt style={{ color: '#ffd700' }} />
+      text: 'إتصل في مستشارك',
+      href: 'tel:+966123456789',
+      icon: <FaPhoneAlt style={{ color: '#ffd700' }} />,
     },
     {
-      text: "للحجز سجل رقمك",
-      href: "/booking",
-      icon: <FaUserTie style={{ color: '#ffd700' }} />
+      text: 'للحجز سجل رقمك',
+      href: '/booking',
+      icon: <FaUserTie style={{ color: '#ffd700' }} />,
     },
     {
-      text: "شكوى أو ملاحظات",
-      href: "/feedback",
-      icon: <FaCommentDots style={{ color: '#ffd700' }} />
-    }
+      text: 'شكوى أو ملاحظات',
+      href: '/feedback',
+      icon: <FaCommentDots style={{ color: '#ffd700' }} />,
+    },
   ];
-  
+
   // Handle iframe load event
   const handleIframeLoad = () => {
     setIframeLoaded(true);
   };
-  
+
   // Apply content to iframe once it's loaded
   useEffect(() => {
     if (!iframeLoaded || !iframeRef.current) return;
-    
+
     const iframe = iframeRef.current;
     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    
+
     // Create completely isolated HTML with its own styles
     const html = `
       <!DOCTYPE html>
@@ -130,14 +130,13 @@ const IframeDropdownButton = ({
         </body>
       </html>
     `;
-    
+
     // Write content to iframe
     iframeDoc.open();
     iframeDoc.write(html);
     iframeDoc.close();
-    
   }, [iframeLoaded, text]);
-  
+
   // Toggle dropdown when button is clicked
   useEffect(() => {
     const handleMessage = (event) => {
@@ -145,15 +144,15 @@ const IframeDropdownButton = ({
         setIsOpen(!isOpen);
       }
     };
-    
+
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   }, [isOpen]);
-  
+
   // Close dropdown when clicking outside
   useEffect(() => {
     if (!isOpen) return;
-    
+
     const handleClickOutside = (event) => {
       const iframe = iframeRef.current;
       if (
@@ -165,11 +164,11 @@ const IframeDropdownButton = ({
         setIsOpen(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
-  
+
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
       <iframe
@@ -184,11 +183,11 @@ const IframeDropdownButton = ({
           backgroundColor: 'transparent',
           background: 'transparent',
           border: 'none',
-          overflow: 'hidden'
+          overflow: 'hidden',
         }}
         title="Button iframe"
       />
-      
+
       {/* Dropdown menu */}
       {isOpen && (
         <div
@@ -204,7 +203,7 @@ const IframeDropdownButton = ({
             borderRadius: '15px',
             overflow: 'hidden',
             zIndex: 100,
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            border: '1px solid rgba(255, 255, 255, 0.1)',
           }}
         >
           {dropdownItems.map((item, index) => (
@@ -217,12 +216,13 @@ const IframeDropdownButton = ({
                 padding: '12px 15px',
                 color: 'white',
                 textDecoration: 'none',
-                borderBottom: index < dropdownItems.length - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                borderBottom:
+                  index < dropdownItems.length - 1
+                    ? '1px solid rgba(255, 255, 255, 0.1)'
+                    : 'none',
               }}
             >
-              <div style={{ marginLeft: '12px' }}>
-                {item.icon}
-              </div>
+              <div style={{ marginLeft: '12px' }}>{item.icon}</div>
               <span>{item.text}</span>
             </a>
           ))}
@@ -232,4 +232,4 @@ const IframeDropdownButton = ({
   );
 };
 
-export default IframeDropdownButton; 
+export default IframeDropdownButton;

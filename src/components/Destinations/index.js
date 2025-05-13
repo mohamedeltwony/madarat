@@ -47,7 +47,7 @@ const destinations = [
     slug: 'bosnia',
     image: '/images/destinations/bosnia.jpg',
     tripCount: 4,
-  }
+  },
 ];
 
 const Destinations = () => {
@@ -59,10 +59,7 @@ const Destinations = () => {
       </div>
       <div className={styles.destinationsGrid}>
         {destinations.map((destination) => (
-          <Link 
-            href={`/destinations/${destination.slug}`}
-            key={destination.id}
-          >
+          <Link href={`/destinations/${destination.slug}`} key={destination.id}>
             <div className={styles.destinationImageWrapper}>
               <div className={styles.destinationImage}>
                 <Image
@@ -78,7 +75,8 @@ const Destinations = () => {
             <div className={styles.destinationInfo}>
               <h3>{destination.name}</h3>
               <span>
-                {destination.tripCount} {destination.tripCount > 1 ? 'رحلات' : 'رحلة'}
+                {destination.tripCount}{' '}
+                {destination.tripCount > 1 ? 'رحلات' : 'رحلة'}
               </span>
             </div>
           </Link>
@@ -87,15 +85,15 @@ const Destinations = () => {
       <div className={styles.viewAllContainer}>
         <Link href="/destinations" className={styles.viewAllButton}>
           عرض جميع الوجهات
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 24 24" 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
             fill="currentColor"
           >
-            <path 
-              fillRule="evenodd" 
-              d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z" 
-              clipRule="evenodd" 
+            <path
+              fillRule="evenodd"
+              d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z"
+              clipRule="evenodd"
             />
           </svg>
         </Link>
@@ -104,4 +102,4 @@ const Destinations = () => {
   );
 };
 
-export default Destinations; 
+export default Destinations;

@@ -20,11 +20,12 @@ export const sendPartialFormData = async (
 ) => {
   try {
     // Don't send if no meaningful data yet
-    if (!formData || (
-      !formData.name?.trim() && 
-      !formData.phone?.trim() && 
-      !formData.email?.trim()
-    )) {
+    if (
+      !formData ||
+      (!formData.name?.trim() &&
+        !formData.phone?.trim() &&
+        !formData.email?.trim())
+    ) {
       return { success: false, reason: 'No meaningful data to send yet' };
     }
 
@@ -41,7 +42,7 @@ export const sendPartialFormData = async (
       date: now.toLocaleDateString(),
       time: now.toLocaleTimeString(),
       externalId: crypto.randomUUID(),
-      ...clientData
+      ...clientData,
     };
 
     console.log('Sending partial data:', partialPayload);
@@ -79,4 +80,4 @@ export const debounce = (func, wait) => {
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
-}; 
+};

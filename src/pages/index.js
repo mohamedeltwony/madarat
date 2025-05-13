@@ -20,20 +20,32 @@ import React, { useState, Suspense } from 'react';
 import Head from 'next/head';
 
 // Dynamic imports for heavy components
-const BentoDestinations = dynamic(() => import('@/components/BentoDestinations'), {
-  loading: () => <div className={styles.loadingContainer}>جاري تحميل الوجهات...</div>,
-  ssr: true
-});
+const BentoDestinations = dynamic(
+  () => import('@/components/BentoDestinations'),
+  {
+    loading: () => (
+      <div className={styles.loadingContainer}>جاري تحميل الوجهات...</div>
+    ),
+    ssr: true,
+  }
+);
 
 const OfferTrips = dynamic(() => import('@/components/OfferTrips'), {
-  loading: () => <div className={styles.loadingContainer}>جاري تحميل الرحلات...</div>,
-  ssr: true
+  loading: () => (
+    <div className={styles.loadingContainer}>جاري تحميل الرحلات...</div>
+  ),
+  ssr: true,
 });
 
-const GoogleReviewsSection = dynamic(() => import('@/components/GoogleReviewsSection'), {
-  loading: () => <div className={styles.loadingContainer}>جاري تحميل التقييمات...</div>,
-  ssr: false // Client-side render only to reduce initial load
-});
+const GoogleReviewsSection = dynamic(
+  () => import('@/components/GoogleReviewsSection'),
+  {
+    loading: () => (
+      <div className={styles.loadingContainer}>جاري تحميل التقييمات...</div>
+    ),
+    ssr: false, // Client-side render only to reduce initial load
+  }
+);
 
 export default function Home({
   posts = [],
@@ -43,7 +55,8 @@ export default function Home({
   archives = [],
 }) {
   const { metadata = {} } = useSite();
-  const { title = 'مدارات الكون', description = 'موقع مدارات الكون' } = metadata;
+  const { title = 'مدارات الكون', description = 'موقع مدارات الكون' } =
+    metadata;
   const [showForm, setShowForm] = useState(false);
 
   const handleShowForm = () => {
@@ -93,11 +106,13 @@ export default function Home({
         />
 
         {/* Offer Trips Section */}
-        <Section style={{ 
-          padding: '2rem 0', 
-          width: '100%',
-          maxWidth: '100%' 
-        }}>
+        <Section
+          style={{
+            padding: '2rem 0',
+            width: '100%',
+            maxWidth: '100%',
+          }}
+        >
           <Container style={{ maxWidth: '1400px', width: '100%' }}>
             <OfferTrips />
           </Container>
@@ -198,11 +213,11 @@ export default function Home({
 export async function getStaticProps() {
   try {
     // Fetch site metadata
-    const metadata = await getSiteMetadataREST() || { 
+    const metadata = (await getSiteMetadataREST()) || {
       title: 'مدارات الكون',
       siteTitle: 'مدارات الكون',
-      description: 'موقع مدارات الكون'
-    }; 
+      description: 'موقع مدارات الكون',
+    };
 
     // Fetch destinations with REST API
     console.log('Starting to fetch destinations...');
@@ -211,7 +226,8 @@ export async function getStaticProps() {
       {
         headers: {
           'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+          'User-Agent':
+            'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
         },
       }
     );
@@ -235,10 +251,11 @@ export async function getStaticProps() {
       id: dest.id,
       title: dest.name,
       description: dest.description || '',
-      image: dest.thumbnail?.sizes?.full?.source_url || 
-             dest.thumbnail?.source_url || 
-             dest._embedded?.['wp:featuredmedia']?.[0]?.source_url || 
-             '/images/placeholder.jpg',
+      image:
+        dest.thumbnail?.sizes?.full?.source_url ||
+        dest.thumbnail?.source_url ||
+        dest._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+        '/images/placeholder.jpg',
       link: dest.link,
       slug: dest.slug,
       tripCount: dest.count || 0,
@@ -253,37 +270,44 @@ export async function getStaticProps() {
         {
           headers: {
             'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+            'User-Agent':
+              'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
           },
         }
       );
-      
+
       if (!postsResponse.ok) {
         throw new Error(`Failed to fetch posts: ${postsResponse.status}`);
       }
-      
+
       const postsData = await postsResponse.json();
-      const totalPages = parseInt(postsResponse.headers.get('x-wp-totalpages') || '1');
-      
-      posts = postsData.map(post => ({
+      const totalPages = parseInt(
+        postsResponse.headers.get('x-wp-totalpages') || '1'
+      );
+
+      posts = postsData.map((post) => ({
         id: post.id,
         title: post.title.rendered,
         slug: post.slug,
         date: post.date,
         excerpt: post.excerpt.rendered,
-        author: post._embedded?.author?.[0] ? {
-          name: post._embedded.author[0].name,
-          avatar: { url: post._embedded.author[0].avatar_urls?.[96] || '' }
-        } : null,
+        author: post._embedded?.author?.[0]
+          ? {
+              name: post._embedded.author[0].name,
+              avatar: { url: post._embedded.author[0].avatar_urls?.[96] || '' },
+            }
+          : null,
         categories: post._embedded?.['wp:term']?.[0] || [],
-        featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
-          sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
-        } : null
+        featuredImage: post._embedded?.['wp:featuredmedia']?.[0]
+          ? {
+              sourceUrl: post._embedded['wp:featuredmedia'][0].source_url,
+            }
+          : null,
       }));
-      
+
       pagination = {
         currentPage: 1,
-        pagesCount: totalPages
+        pagesCount: totalPages,
       };
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -297,22 +321,23 @@ export async function getStaticProps() {
         {
           headers: {
             'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+            'User-Agent':
+              'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
           },
         }
       );
-      
+
       if (!authorsResponse.ok) {
         throw new Error(`Failed to fetch authors: ${authorsResponse.status}`);
       }
-      
+
       const authorsData = await authorsResponse.json();
-      
-      featuredAuthors = authorsData.map(author => ({
+
+      featuredAuthors = authorsData.map((author) => ({
         id: author.id,
         name: author.name,
         slug: author.slug,
-        avatar: { url: author.avatar_urls?.[96] || '' }
+        avatar: { url: author.avatar_urls?.[96] || '' },
       }));
     } catch (error) {
       console.error('Error fetching authors:', error);
@@ -324,7 +349,9 @@ export async function getStaticProps() {
       // This endpoint might need a custom REST API endpoint in WordPress
       // For now, we'll use the years from the current date
       const currentYear = new Date().getFullYear();
-      archives = Array.from({ length: 5 }, (_, i) => (currentYear - i).toString());
+      archives = Array.from({ length: 5 }, (_, i) =>
+        (currentYear - i).toString()
+      );
     } catch (error) {
       console.error('Error generating archives:', error);
     }
@@ -344,10 +371,10 @@ export async function getStaticProps() {
     console.error('Error in getStaticProps:', error);
     return {
       props: {
-        metadata: { 
+        metadata: {
           title: 'مدارات الكون',
           siteTitle: 'مدارات الكون',
-          description: 'موقع مدارات الكون'
+          description: 'موقع مدارات الكون',
         },
         destinations: [],
         posts: [],

@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import styles from './GoogleReviewsSection.module.scss';
-import { FaStar, FaStarHalfAlt, FaRegStar, FaChevronLeft, FaChevronRight } from '@/components/icons';
+import {
+  FaStar,
+  FaStarHalfAlt,
+  FaRegStar,
+  FaChevronLeft,
+  FaChevronRight,
+} from '@/components/icons';
 import Image from 'next/legacy/image';
 import Container from '@/components/Container';
 
@@ -22,11 +28,11 @@ const GoogleReviewsSection = () => {
     const fetchReviews = async () => {
       try {
         const response = await fetch('/api/google-reviews');
-        
+
         if (!response.ok) {
           throw new Error(`Failed to fetch reviews: ${response.status}`);
         }
-        
+
         const data = await response.json();
         setReviewsData(data);
         setLoading(false);
@@ -36,7 +42,7 @@ const GoogleReviewsSection = () => {
         setLoading(false);
       }
     };
-    
+
     fetchReviews();
   }, []);
 
@@ -45,23 +51,23 @@ const GoogleReviewsSection = () => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
-    
+
     // Add full stars
     for (let i = 0; i < fullStars; i++) {
       stars.push(<FaStar key={`full-${i}`} className={styles.star} />);
     }
-    
+
     // Add half star if needed
     if (hasHalfStar) {
       stars.push(<FaStarHalfAlt key="half" className={styles.star} />);
     }
-    
+
     // Add empty stars
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
     for (let i = 0; i < emptyStars; i++) {
       stars.push(<FaRegStar key={`empty-${i}`} className={styles.star} />);
     }
-    
+
     return stars;
   };
 
@@ -71,14 +77,14 @@ const GoogleReviewsSection = () => {
     return date.toLocaleDateString('ar-EG', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
   // Function to navigate to the next review
   const nextReview = () => {
     if (reviewsData && reviewsData.reviews.length > 0) {
-      setActiveIndex((prevIndex) => 
+      setActiveIndex((prevIndex) =>
         prevIndex === reviewsData.reviews.length - 1 ? 0 : prevIndex + 1
       );
     }
@@ -87,7 +93,7 @@ const GoogleReviewsSection = () => {
   // Function to navigate to the previous review
   const prevReview = () => {
     if (reviewsData && reviewsData.reviews.length > 0) {
-      setActiveIndex((prevIndex) => 
+      setActiveIndex((prevIndex) =>
         prevIndex === 0 ? reviewsData.reviews.length - 1 : prevIndex - 1
       );
     }
@@ -105,12 +111,18 @@ const GoogleReviewsSection = () => {
   if (error) {
     return (
       <div className={styles.errorContainer}>
-        <p>عذراً، حدث خطأ أثناء تحميل التقييمات. يرجى المحاولة مرة أخرى لاحقاً.</p>
+        <p>
+          عذراً، حدث خطأ أثناء تحميل التقييمات. يرجى المحاولة مرة أخرى لاحقاً.
+        </p>
       </div>
     );
   }
 
-  if (!reviewsData || !reviewsData.reviews || reviewsData.reviews.length === 0) {
+  if (
+    !reviewsData ||
+    !reviewsData.reviews ||
+    reviewsData.reviews.length === 0
+  ) {
     return null;
   }
 
@@ -123,7 +135,9 @@ const GoogleReviewsSection = () => {
           <h2 className={styles.sectionTitle}>آراء عملائنا</h2>
           <div className={styles.ratingOverview}>
             <div className={styles.averageRating}>
-              <span className={styles.ratingValue}>{reviewsData.averageRating.toFixed(1)}</span>
+              <span className={styles.ratingValue}>
+                {reviewsData.averageRating.toFixed(1)}
+              </span>
               <div className={styles.starsContainer}>
                 {renderStars(reviewsData.averageRating)}
               </div>
@@ -135,7 +149,7 @@ const GoogleReviewsSection = () => {
         </div>
 
         <div className={styles.reviewsCarousel}>
-          <button 
+          <button
             className={`${styles.carouselButton} ${styles.prevButton}`}
             onClick={prevReview}
             aria-label="Previous review"
@@ -149,7 +163,7 @@ const GoogleReviewsSection = () => {
                 <div className={styles.reviewerAvatar}>
                   {isDataUrl(currentReview.profile_photo_url) ? (
                     // Render data URL as a regular img tag
-                    <img 
+                    <img
                       src={currentReview.profile_photo_url}
                       alt={currentReview.author_name}
                       width={48}
@@ -158,7 +172,7 @@ const GoogleReviewsSection = () => {
                     />
                   ) : (
                     // Use next/image for regular URLs
-                    <Image 
+                    <Image
                       src={currentReview.profile_photo_url || DEFAULT_AVATAR}
                       alt={currentReview.author_name}
                       width={48}
@@ -173,7 +187,9 @@ const GoogleReviewsSection = () => {
                   )}
                 </div>
                 <div className={styles.reviewerDetails}>
-                  <h3 className={styles.reviewerName}>{currentReview.author_name}</h3>
+                  <h3 className={styles.reviewerName}>
+                    {currentReview.author_name}
+                  </h3>
                   <div className={styles.reviewDate}>
                     {formatReviewTime(currentReview.time)}
                   </div>
@@ -188,7 +204,7 @@ const GoogleReviewsSection = () => {
             </div>
           </div>
 
-          <button 
+          <button
             className={`${styles.carouselButton} ${styles.nextButton}`}
             onClick={nextReview}
             aria-label="Next review"
@@ -209,17 +225,17 @@ const GoogleReviewsSection = () => {
         </div>
 
         <div className={styles.googleBadge}>
-          <a 
-            href="https://search.google.com/local/reviews" 
-            target="_blank" 
+          <a
+            href="https://search.google.com/local/reviews"
+            target="_blank"
             rel="noopener noreferrer"
             className={styles.googleLink}
           >
-            <Image 
-              src="/images/google-logo.png" 
-              alt="Google" 
-              width={20} 
-              height={20} 
+            <Image
+              src="/images/google-logo.png"
+              alt="Google"
+              width={20}
+              height={20}
               layout="fixed"
             />
             <span>اقرأ المزيد من التقييمات على Google</span>

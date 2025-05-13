@@ -10,12 +10,12 @@ $accent-color: $color-secondary; // Gold accent color
   max-width: var(--container-width);
   margin: 0 auto;
   padding: 3rem 1.5rem;
-  
+
   @media (max-width: 992px) {
     padding: 2rem 1.5rem;
     gap: 2rem;
   }
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 1.5rem 1rem;
@@ -26,7 +26,7 @@ $accent-color: $color-secondary; // Gold accent color
   flex: 1;
   min-width: 0; // Prevents flex item from overflowing
   max-width: $content-max-width;
-  
+
   @media (max-width: 768px) {
     max-width: 100%;
   }
@@ -36,12 +36,12 @@ $accent-color: $color-secondary; // Gold accent color
   font-size: 1.125rem;
   line-height: 1.8;
   color: $color-gray-800;
-  
+
   // Typography improvements
   > * + * {
     margin-top: 1.75rem;
   }
-  
+
   h2 {
     font-size: 2rem;
     font-weight: 700;
@@ -50,7 +50,7 @@ $accent-color: $color-secondary; // Gold accent color
     color: $color-gray-900;
     position: relative;
     padding-right: 1rem;
-    
+
     &::before {
       content: '';
       position: absolute;
@@ -62,7 +62,7 @@ $accent-color: $color-secondary; // Gold accent color
       border-radius: 2px;
     }
   }
-  
+
   h3 {
     font-size: 1.5rem;
     font-weight: 600;
@@ -70,7 +70,7 @@ $accent-color: $color-secondary; // Gold accent color
     margin-bottom: 1.25rem;
     color: $color-gray-900;
   }
-  
+
   h4 {
     font-size: 1.25rem;
     font-weight: 600;
@@ -78,23 +78,24 @@ $accent-color: $color-secondary; // Gold accent color
     margin-bottom: 1rem;
     color: $color-gray-900;
   }
-  
+
   p {
     margin-bottom: 1.75rem;
     letter-spacing: 0.01em;
   }
-  
+
   // Lists styling
-  ul, ol {
+  ul,
+  ol {
     padding-right: 1.5rem;
     margin-bottom: 1.75rem;
-    
+
     li {
       margin-bottom: 0.75rem;
       position: relative;
     }
   }
-  
+
   // Blockquote styling
   blockquote {
     border-right: 4px solid $accent-color;
@@ -104,11 +105,11 @@ $accent-color: $color-secondary; // Gold accent color
     border-radius: 4px;
     font-style: italic;
     color: $color-gray-800;
-    
+
     p {
       margin-bottom: 0;
     }
-    
+
     cite {
       display: block;
       margin-top: 1rem;
@@ -117,7 +118,7 @@ $accent-color: $color-secondary; // Gold accent color
       font-style: normal;
     }
   }
-  
+
   // Image styling
   img {
     max-width: 100%;
@@ -125,18 +126,20 @@ $accent-color: $color-secondary; // Gold accent color
     border-radius: 12px;
     margin: 2rem 0;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+
     &:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
   }
-  
+
   // Figure and caption
   figure {
     margin: 2rem 0;
-    
+
     figcaption {
       margin-top: 0.5rem;
       font-size: 0.9rem;
@@ -144,41 +147,44 @@ $accent-color: $color-secondary; // Gold accent color
       text-align: center;
     }
   }
-  
+
   // Links
   a {
     color: $color-primary;
     text-decoration: none;
     border-bottom: 1px solid rgba($color-primary, 0.3);
-    transition: color 0.2s ease, border-color 0.2s ease;
-    
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
+
     &:hover {
       color: $accent-color;
       border-color: $accent-color;
     }
   }
-  
+
   // Tables
   table {
     width: 100%;
     border-collapse: collapse;
     margin: 2rem 0;
-    
-    th, td {
+
+    th,
+    td {
       border: 1px solid $color-gray-300;
       padding: 0.75rem;
     }
-    
+
     th {
       background-color: $color-gray-100;
       font-weight: 600;
     }
-    
+
     tr:nth-child(even) {
       background-color: $color-gray-50;
     }
   }
-  
+
   // Code blocks
   pre {
     background: $color-gray-900;
@@ -187,39 +193,44 @@ $accent-color: $color-secondary; // Gold accent color
     border-radius: 8px;
     overflow-x: auto;
     margin: 2rem 0;
-    
+
     code {
       background: transparent;
       padding: 0;
       border-radius: 0;
     }
   }
-  
+
   code {
     background: $color-gray-100;
     padding: 0.2rem 0.4rem;
     border-radius: 4px;
     font-size: 0.9em;
   }
-  
+
   @media (max-width: 768px) {
     font-size: 1.05rem;
-    
+
     h2 {
       font-size: 1.6rem;
     }
-    
+
     h3 {
       font-size: 1.35rem;
     }
-    
+
     h4 {
       font-size: 1.15rem;
     }
   }
-  
+
   // Add any specific post content styling needed
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     scroll-margin-top: 100px; // Ensure smooth scrolling to headings
   }
 }
@@ -233,17 +244,17 @@ $accent-color: $color-secondary; // Gold accent color
   padding: 1.5rem;
   background-color: $color-gray-50;
   border-radius: 12px;
-  
+
   .shareText {
     font-weight: 600;
     color: $color-gray-800;
     margin-left: 0.5rem;
   }
-  
+
   .shareButtons {
     display: flex;
     gap: 0.75rem;
-    
+
     .shareButton {
       display: flex;
       align-items: center;
@@ -256,33 +267,33 @@ $accent-color: $color-secondary; // Gold accent color
       transition: all 0.2s ease;
       border: none;
       cursor: pointer;
-      
+
       &:hover {
         transform: translateY(-3px);
       }
-      
+
       &.twitter {
-        background-color: #1DA1F2;
+        background-color: #1da1f2;
         color: white;
       }
-      
+
       &.facebook {
-        background-color: #1877F2;
+        background-color: #1877f2;
         color: white;
       }
-      
+
       &.linkedin {
-        background-color: #0077B5;
+        background-color: #0077b5;
         color: white;
       }
-      
+
       &.whatsapp {
-        background-color: #25D366;
+        background-color: #25d366;
         color: white;
       }
     }
   }
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
@@ -298,54 +309,54 @@ $accent-color: $color-secondary; // Gold accent color
   background-color: #f8f9fa;
   border-radius: 12px;
   margin: 3rem 0;
-  
+
   .authorImage {
     width: 80px;
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
   }
-  
+
   .authorInfo {
     flex: 1;
-    
+
     .authorName {
       font-size: 1.25rem;
       font-weight: 700;
       color: $color-gray-900;
       margin-bottom: 0.5rem;
     }
-    
+
     .authorBio {
       color: $color-gray-700;
       font-size: 0.95rem;
       margin-bottom: 1rem;
     }
-    
+
     .authorSocial {
       display: flex;
       gap: 1rem;
-      
+
       a {
         color: $color-gray-600;
         transition: color 0.2s ease;
-        
+
         &:hover {
           color: $accent-color;
         }
       }
     }
   }
-  
+
   @media (max-width: 576px) {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    
+
     .authorImage {
       margin-bottom: 1rem;
     }
-    
+
     .authorSocial {
       justify-content: center;
     }
@@ -367,7 +378,7 @@ $accent-color: $color-secondary; // Gold accent color
 // Related posts section
 .relatedPosts {
   margin-top: 3rem;
-  
+
   h3 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -376,7 +387,7 @@ $accent-color: $color-secondary; // Gold accent color
     position: relative;
     padding-right: 1rem;
     display: inline-block;
-    
+
     &::before {
       content: '';
       position: absolute;
@@ -388,18 +399,18 @@ $accent-color: $color-secondary; // Gold accent color
       border-radius: 2px;
     }
   }
-  
+
   .relatedGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
-    
+
     @media (max-width: 576px) {
       grid-template-columns: 1fr;
       gap: 1.25rem;
     }
   }
-  
+
   .relatedItem {
     display: flex;
     flex-direction: column;
@@ -407,26 +418,28 @@ $accent-color: $color-secondary; // Gold accent color
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+
     &:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
-    
+
     .relatedImage {
       width: 100%;
       height: 160px;
       object-fit: cover;
     }
-    
+
     .relatedContent {
       padding: 1.25rem;
       flex: 1;
       display: flex;
       flex-direction: column;
     }
-    
+
     .relatedTitle {
       font-size: 1.1rem;
       font-weight: 600;
@@ -437,17 +450,17 @@ $accent-color: $color-secondary; // Gold accent color
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      
+
       a {
         color: inherit;
         text-decoration: none;
-        
+
         &:hover {
           color: $color-primary;
         }
       }
     }
-    
+
     .relatedExcerpt {
       color: $color-gray-700;
       font-size: 0.9rem;
@@ -458,14 +471,14 @@ $accent-color: $color-secondary; // Gold accent color
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-    
+
     .relatedMeta {
       margin-top: auto;
       color: $color-gray-600;
       font-size: 0.85rem;
     }
   }
-  
+
   // List style for older related posts section
   span {
     font-size: 1.2rem;
@@ -491,7 +504,7 @@ $accent-color: $color-secondary; // Gold accent color
       margin: 0.75rem 0;
       position: relative;
       padding-right: 1.25rem;
-      
+
       &::before {
         content: '';
         position: absolute;
@@ -521,7 +534,7 @@ $accent-color: $color-secondary; // Gold accent color
   .postLayout {
     flex-direction: column;
   }
-  
+
   .content {
     font-size: 1.05rem;
   }

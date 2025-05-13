@@ -7,7 +7,12 @@ import BorderButton from './BorderButton/BorderButton';
 import AnimatedBorderButton from './AnimatedBorderButton';
 
 // Re-export these components
-export { HomepageStyleButton, HeaderGoldButton, BorderButton, AnimatedBorderButton };
+export {
+  HomepageStyleButton,
+  HeaderGoldButton,
+  BorderButton,
+  AnimatedBorderButton,
+};
 
 // Lazy load SparkleButton component
 const SparkleButtonLazy = lazy(() => import('./SparkleButton'));
@@ -16,10 +21,7 @@ const SparkleButtonLazy = lazy(() => import('./SparkleButton'));
 const SparkleButtonFallback = (props) => {
   const { children, className, ...rest } = props;
   return (
-    <button 
-      className={className || ''} 
-      {...rest}
-    >
+    <button className={className || ''} {...rest}>
       {children}
     </button>
   );
@@ -32,4 +34,4 @@ export const SparkleButton = (props) => (
   </Suspense>
 );
 
-// Export any other UI components here 
+// Export any other UI components here

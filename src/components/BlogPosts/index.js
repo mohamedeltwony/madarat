@@ -7,7 +7,17 @@ import styles from './BlogPosts.module.scss';
 
 // SVG Icons as components
 const CalendarIcon = () => (
-  <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    stroke="currentColor"
+    fill="none"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    height="1em"
+    width="1em"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
     <line x1="16" y1="2" x2="16" y2="6"></line>
     <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -16,20 +26,50 @@ const CalendarIcon = () => (
 );
 
 const UserIcon = () => (
-  <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    stroke="currentColor"
+    fill="none"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    height="1em"
+    width="1em"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
     <circle cx="12" cy="7" r="4"></circle>
   </svg>
 );
 
 const CategoryIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-    <path fillRule="evenodd" d="M5.25 2.25a3 3 0 00-3 3v4.318a3 3 0 00.879 2.121l9.58 9.581c.92.92 2.39.92 3.31 0l4.431-4.43a2.25 2.25 0 000-3.181l-9.58-9.58a3 3 0 00-2.12-.879H5.25zM6.375 7.5a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" clipRule="evenodd" />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    width="18"
+    height="18"
+  >
+    <path
+      fillRule="evenodd"
+      d="M5.25 2.25a3 3 0 00-3 3v4.318a3 3 0 00.879 2.121l9.58 9.581c.92.92 2.39.92 3.31 0l4.431-4.43a2.25 2.25 0 000-3.181l-9.58-9.58a3 3 0 00-2.12-.879H5.25zM6.375 7.5a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z"
+      clipRule="evenodd"
+    />
   </svg>
 );
 
 const ArrowRightIcon = () => (
-  <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    stroke="currentColor"
+    fill="none"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    height="1em"
+    width="1em"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <line x1="5" y1="12" x2="19" y2="12"></line>
     <polyline points="12 5 19 12 12 19"></polyline>
   </svg>
@@ -44,12 +84,14 @@ const BlogPosts = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://madaratalkon.com/wp-json/wp/v2/posts');
-        
+        const response = await fetch(
+          'https://madaratalkon.com/wp-json/wp/v2/posts'
+        );
+
         if (!response.ok) {
           throw new Error(`Error fetching posts: ${response.status}`);
         }
-        
+
         const data = await response.json();
         setPosts(data);
         setLoading(false);
@@ -68,7 +110,7 @@ const BlogPosts = () => {
     // Extract the slug from the URL
     const urlParts = url.split('/');
     // Remove empty strings from the end
-    const filteredParts = urlParts.filter(part => part !== '');
+    const filteredParts = urlParts.filter((part) => part !== '');
     // Get the last part which should be the slug
     return filteredParts[filteredParts.length - 1];
   };
@@ -99,9 +141,16 @@ const BlogPosts = () => {
     // Remove HTML tags
     const textContent = html.replace(/<\/?[^>]+(>|$)/g, '');
     // Decode HTML entities
-    const decoded = textContent.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, "'");
+    const decoded = textContent
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'");
     // Truncate if needed
-    return decoded.length > maxLength ? decoded.substring(0, maxLength) + '...' : decoded;
+    return decoded.length > maxLength
+      ? decoded.substring(0, maxLength) + '...'
+      : decoded;
   };
 
   if (loading) {
@@ -143,16 +192,20 @@ const BlogPosts = () => {
       <div className={styles.postsGrid}>
         {posts.map((post) => (
           <div key={post.id} className={styles.gridItem}>
-            <Link href={`/posts/${getSlugFromUrl(post.link)}`} passHref className={styles.postCard}>
+            <Link
+              href={`/posts/${getSlugFromUrl(post.link)}`}
+              passHref
+              className={styles.postCard}
+            >
               <div className={styles.postImageContainer}>
                 {post.yoast_head_json?.og_image?.[0]?.url ? (
-                  <div 
-                    className={styles.postImage} 
+                  <div
+                    className={styles.postImage}
                     style={{
                       backgroundImage: `url('${post.yoast_head_json.og_image[0].url}')`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
-                      height: '100%'
+                      height: '100%',
                     }}
                   />
                 ) : (
@@ -166,14 +219,21 @@ const BlogPosts = () => {
                 </span>
               </div>
               <div className={styles.postContent}>
-                <h3 className={styles.postTitle} dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                <h3
+                  className={styles.postTitle}
+                  dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                />
                 <div className={styles.postMeta}>
                   <span className={styles.postDate}>
-                    <span className={styles.dateIcon}><CalendarIcon /></span>
+                    <span className={styles.dateIcon}>
+                      <CalendarIcon />
+                    </span>
                     {formatDate(post.date)}
                   </span>
                   <span className={styles.postAuthor}>
-                    <span className={styles.authorIcon}><UserIcon /></span>
+                    <span className={styles.authorIcon}>
+                      <UserIcon />
+                    </span>
                     مدارات الكون
                   </span>
                 </div>
@@ -194,11 +254,13 @@ const BlogPosts = () => {
       <div className={styles.viewAllContainer}>
         <Link href="/posts" className={styles.viewAllButton}>
           عرض جميع المقالات
-          <span className={styles.buttonIcon}><ArrowRightIcon /></span>
+          <span className={styles.buttonIcon}>
+            <ArrowRightIcon />
+          </span>
         </Link>
       </div>
     </div>
   );
 };
 
-export default BlogPosts; 
+export default BlogPosts;

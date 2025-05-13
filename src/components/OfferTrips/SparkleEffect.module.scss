@@ -22,7 +22,8 @@
 }
 
 @keyframes glimmer {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 2px rgba(204, 156, 100, 0.4));
   }
   50% {
@@ -39,7 +40,7 @@
   z-index: 3;
   pointer-events: none;
   overflow: hidden;
-  
+
   svg {
     position: absolute;
     animation: sparkle 1.5s ease-in-out infinite;
@@ -60,4 +61,4 @@
     transform: scale(0) rotate(360deg);
     opacity: 0;
   }
-} 
+}

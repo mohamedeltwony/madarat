@@ -16,14 +16,14 @@ export default async function handler(req, res) {
       process.env.ZAPIER_PARTIAL_WEBHOOK_URL ||
       process.env.ZAPIER_WEBHOOK_URL ||
       'https://hooks.zapier.com/hooks/catch/18799879/2ns1zxk/';
-    
+
     console.log('Using Zapier partial webhook URL:', zapierPartialWebhookUrl);
 
     // Add metadata to identify this as a partial submission
     const enhancedData = {
       ...req.body,
       is_partial: true,
-      partial_timestamp: new Date().toISOString()
+      partial_timestamp: new Date().toISOString(),
     };
 
     try {
@@ -39,8 +39,11 @@ export default async function handler(req, res) {
       if (jsonResponse.ok) {
         // JSON format worked
         const responseData = await jsonResponse.text();
-        console.log('Zapier partial submit response status:', jsonResponse.status);
-        
+        console.log(
+          'Zapier partial submit response status:',
+          jsonResponse.status
+        );
+
         return res.status(jsonResponse.status).json({
           status: jsonResponse.status,
           success: true,
@@ -49,7 +52,10 @@ export default async function handler(req, res) {
           timestamp: new Date().toISOString(),
         });
       } else {
-        console.error('Partial submission failed with status:', jsonResponse.status);
+        console.error(
+          'Partial submission failed with status:',
+          jsonResponse.status
+        );
         // Return success anyway to not disrupt the user experience
         return res.status(200).json({
           status: jsonResponse.status,
@@ -79,4 +85,4 @@ export default async function handler(req, res) {
       timestamp: new Date().toISOString(),
     });
   }
-} 
+}

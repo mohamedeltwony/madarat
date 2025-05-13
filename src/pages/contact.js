@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { 
-  FaMapMarkerAlt, 
-  FaPhone, 
-  FaWhatsapp, 
-  FaClock, 
-  FaEnvelope, 
+import {
+  FaMapMarkerAlt,
+  FaPhone,
+  FaWhatsapp,
+  FaClock,
+  FaEnvelope,
   FaPaperPlane,
   FaDirections,
   FaStar,
@@ -14,7 +14,7 @@ import {
   FaBuilding,
   FaInfoCircle,
   FaCalendar,
-  FaArrowRight
+  FaArrowRight,
 } from 'react-icons/fa';
 
 // Import layout components
@@ -28,9 +28,9 @@ const ContactPage = () => {
     email: '',
     phone: '',
     subject: '',
-    message: ''
+    message: '',
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
@@ -38,19 +38,19 @@ const ContactPage = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       // Here you would send the data to your backend
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       // Simulate successful submission
       setSubmitStatus('success');
       setFormData({
@@ -58,7 +58,7 @@ const ContactPage = () => {
         email: '',
         phone: '',
         subject: '',
-        message: ''
+        message: '',
       });
     } catch (error) {
       console.error('Error submitting message:', error);
@@ -78,7 +78,10 @@ const ContactPage = () => {
     <>
       <Head>
         <title>تواصل معنا | مدارات الكون للسفر والسياحة</title>
-        <meta name="description" content="تواصل مع فريق مدارات الكون للسياحة والسفر واحصل على المساعدة في تخطيط رحلتك المثالية." />
+        <meta
+          name="description"
+          content="تواصل مع فريق مدارات الكون للسياحة والسفر واحصل على المساعدة في تخطيط رحلتك المثالية."
+        />
       </Head>
 
       {/* Header */}
@@ -101,10 +104,16 @@ const ContactPage = () => {
               <li key={crumb.id} className={styles.breadcrumbItem}>
                 {crumb.uri ? (
                   <Link href={crumb.uri} className={styles.breadcrumbLink}>
-                    {index === 0 ? <FaHome className={styles.homeIcon} /> : crumb.title}
+                    {index === 0 ? (
+                      <FaHome className={styles.homeIcon} />
+                    ) : (
+                      crumb.title
+                    )}
                   </Link>
                 ) : (
-                  <span className={styles.breadcrumbCurrent}>{crumb.title}</span>
+                  <span className={styles.breadcrumbCurrent}>
+                    {crumb.title}
+                  </span>
                 )}
                 {index < breadcrumbs.length - 1 && (
                   <span className={styles.breadcrumbSeparator}>/</span>
@@ -119,7 +128,9 @@ const ContactPage = () => {
       <div className={styles.bentoContainer}>
         <div className={styles.bentoIntro}>
           <h2>شركة مدارات الكون للسفر والسياحة</h2>
-          <p>نسعد بتواصلك معنا في أي وقت للاستفسار عن برامجنا السياحية أو للحجز</p>
+          <p>
+            نسعد بتواصلك معنا في أي وقت للاستفسار عن برامجنا السياحية أو للحجز
+          </p>
         </div>
 
         {/* Rating Box - Feature Box */}
@@ -135,7 +146,9 @@ const ContactPage = () => {
                 <FaStar />
               </div>
             </div>
-            <p className={styles.reviewsCount}>تقييم رائع من 279 عميل على Google</p>
+            <p className={styles.reviewsCount}>
+              تقييم رائع من 279 عميل على Google
+            </p>
           </div>
         </div>
 
@@ -147,7 +160,9 @@ const ContactPage = () => {
             </div>
             <div className={styles.callDetails}>
               <h3>اتصل بنا</h3>
-              <a href="tel:+966112137000" className={styles.phoneLink}>112137000</a>
+              <a href="tel:+966112137000" className={styles.phoneLink}>
+                112137000
+              </a>
             </div>
           </div>
         </div>
@@ -160,7 +175,12 @@ const ContactPage = () => {
             </div>
             <div className={styles.callDetails}>
               <h3>راسلنا واتساب</h3>
-              <a href="https://wa.me/966557011015" target="_blank" rel="noopener noreferrer" className={styles.whatsappLink}>
+              <a
+                href="https://wa.me/966557011015"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.whatsappLink}
+              >
                 واتساب <FaArrowRight className={styles.arrowIcon} />
               </a>
             </div>
@@ -175,7 +195,12 @@ const ContactPage = () => {
             </div>
             <div className={styles.directionsDetails}>
               <h3>احصل على الاتجاهات</h3>
-              <a href="https://www.google.com/maps/place/Madarat+Alkon+tourism+-+شركة+مدارات+الكون+للسفر+و+السياحة%E2%80%AD/@24.8082875,46.6191728,17z" target="_blank" rel="noopener noreferrer" className={styles.directionsLink}>
+              <a
+                href="https://www.google.com/maps/place/Madarat+Alkon+tourism+-+شركة+مدارات+الكون+للسفر+و+السياحة%E2%80%AD/@24.8082875,46.6191728,17z"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.directionsLink}
+              >
                 خرائط جوجل <FaArrowRight className={styles.arrowIcon} />
               </a>
             </div>
@@ -189,7 +214,9 @@ const ContactPage = () => {
             <h3>العنوان</h3>
           </div>
           <div className={styles.boxContent}>
-            <p className={styles.addressText}>طريق أنس بن مالك، الملقا، الرياض 13521، المملكة العربية السعودية</p>
+            <p className={styles.addressText}>
+              طريق أنس بن مالك، الملقا، الرياض 13521، المملكة العربية السعودية
+            </p>
             <p className={styles.locationName}>Al-Malqa Rihana Boulevard</p>
           </div>
         </div>
@@ -241,13 +268,13 @@ const ContactPage = () => {
             <h3>موقعنا</h3>
           </div>
           <div className={styles.mapWrapper}>
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3622.4914371055103!2d46.616998800000004!3d24.808287500000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2ee5c8fd8844ab%3A0x99a435db09f7b6d4!2sMadarat%20Alkon%20tourism%20-%20%D8%B4%D8%B1%D9%83%D8%A9%20%D9%85%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%A7%D9%84%D9%83%D9%88%D9%86%20%D9%84%D9%84%D8%B3%D9%81%D8%B1%20%D9%88%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9%E2%80%AD!5e0!3m2!1sen!2sus!4v1685536163350!5m2!1sen!2sus" 
-              width="100%" 
-              height="100%" 
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3622.4914371055103!2d46.616998800000004!3d24.808287500000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2ee5c8fd8844ab%3A0x99a435db09f7b6d4!2sMadarat%20Alkon%20tourism%20-%20%D8%B4%D8%B1%D9%83%D8%A9%20%D9%85%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%A7%D9%84%D9%83%D9%88%D9%86%20%D9%84%D9%84%D8%B3%D9%81%D8%B1%20%D9%88%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9%E2%80%AD!5e0!3m2!1sen!2sus!4v1685536163350!5m2!1sen!2sus"
+              width="100%"
+              height="100%"
               style={{ border: 0 }}
-              allowFullScreen="" 
-              loading="lazy" 
+              allowFullScreen=""
+              loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               title="موقع مدارات الكون للسياحة"
             ></iframe>
@@ -260,7 +287,7 @@ const ContactPage = () => {
             <FaEnvelope className={styles.boxIcon} />
             <h3>أرسل لنا رسالة</h3>
           </div>
-          
+
           {submitStatus === 'success' ? (
             <div className={styles.thankYou}>
               <div className={styles.thankYouIcon}>
@@ -268,7 +295,7 @@ const ContactPage = () => {
               </div>
               <h3>شكراً لك!</h3>
               <p>تم استلام رسالتك بنجاح وسنقوم بالرد عليك في أقرب وقت ممكن.</p>
-              <button 
+              <button
                 className={styles.newMessageBtn}
                 onClick={() => setSubmitStatus(null)}
               >
@@ -277,87 +304,93 @@ const ContactPage = () => {
             </div>
           ) : (
             <div className={styles.boxContent}>
-              <p className={styles.formIntro}>يمكنك إرسال استفسارك وسنقوم بالرد عليك في أقرب وقت ممكن</p>
+              <p className={styles.formIntro}>
+                يمكنك إرسال استفسارك وسنقوم بالرد عليك في أقرب وقت ممكن
+              </p>
               <form className={styles.contactForm} onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>
                   <label htmlFor="name">الاسم الكامل</label>
-                  <input 
-                    type="text" 
-                    id="name" 
-                    name="name" 
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required 
-                    placeholder="أدخل اسمك الكامل" 
+                    required
+                    placeholder="أدخل اسمك الكامل"
                     className={styles.formInput}
                   />
                 </div>
-                
+
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
                     <label htmlFor="email">البريد الإلكتروني</label>
-                    <input 
-                      type="email" 
-                      id="email" 
-                      name="email" 
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      required 
-                      placeholder="example@email.com" 
+                      required
+                      placeholder="example@email.com"
                       className={styles.formInput}
                     />
                   </div>
-                  
+
                   <div className={styles.formGroup}>
                     <label htmlFor="phone">رقم الجوال</label>
-                    <input 
-                      type="tel" 
-                      id="phone" 
-                      name="phone" 
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      required 
-                      placeholder="05xxxxxxxx" 
+                      required
+                      placeholder="05xxxxxxxx"
                       className={styles.formInput}
                     />
                   </div>
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="subject">الموضوع</label>
-                  <input 
-                    type="text" 
-                    id="subject" 
-                    name="subject" 
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    required 
-                    placeholder="موضوع الرسالة" 
+                    required
+                    placeholder="موضوع الرسالة"
                     className={styles.formInput}
                   />
                 </div>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="message">الرسالة</label>
-                  <textarea 
-                    id="message" 
-                    name="message" 
-                    rows={5} 
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={5}
                     value={formData.message}
                     onChange={handleChange}
-                    required 
+                    required
                     placeholder="اكتب رسالتك هنا..."
                     className={styles.formTextarea}
                   ></textarea>
                 </div>
-                
+
                 {submitStatus === 'error' && (
                   <div className={styles.errorMessage}>
                     حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.
                   </div>
                 )}
-                
-                <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+
+                <button
+                  type="submit"
+                  className={styles.submitButton}
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? 'جاري الإرسال...' : 'إرسال الرسالة'}
                 </button>
               </form>
@@ -372,4 +405,4 @@ const ContactPage = () => {
   );
 };
 
-export default ContactPage; 
+export default ContactPage;

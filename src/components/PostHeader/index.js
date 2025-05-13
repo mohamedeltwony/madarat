@@ -4,29 +4,33 @@ import styles from './PostHeader.module.scss';
 import { categoryPathBySlug } from 'lib/categories';
 import { formatDate } from 'lib/datetime';
 
-const PostHeader = ({ title, featuredImage, categories, author, date, useHeroLayout = true }) => {
+const PostHeader = ({
+  title,
+  featuredImage,
+  categories,
+  author,
+  date,
+  useHeroLayout = true,
+}) => {
   const scrollToContent = () => {
     window.scrollTo({
       top: window.innerHeight - 80,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   };
 
   // Format the date for display
   const formattedDate = formatDate(date);
-  
+
   // Hero layout (full-screen header with image background)
   if (useHeroLayout && featuredImage) {
     return (
       <div className={styles.postHeader}>
         <div className={styles.heroHeader}>
           <div className={styles.featuredImageWrapper}>
-            <img 
-              src={featuredImage.sourceUrl} 
-              alt={title} 
-            />
+            <img src={featuredImage.sourceUrl} alt={title} />
           </div>
-          
+
           <div className={styles.heroContent}>
             {categories?.length > 0 && (
               <div className={styles.categories}>
@@ -48,28 +52,31 @@ const PostHeader = ({ title, featuredImage, categories, author, date, useHeroLay
               {author && (
                 <div className={styles.authorWrapper}>
                   {author.avatar?.url && (
-                    <img 
-                      src={author.avatar.url} 
+                    <img
+                      src={author.avatar.url}
                       alt={author.name}
                       className={styles.authorImage}
                     />
                   )}
                   <div className={styles.authorInfo}>
                     <div className={styles.authorLabel}>كتب بواسطة</div>
-                    <Link href={`/author/${author?.slug}`} className={styles.authorName}>
+                    <Link
+                      href={`/author/${author?.slug}`}
+                      className={styles.authorName}
+                    >
                       {author?.name}
                     </Link>
                   </div>
                 </div>
               )}
-              
+
               <div className={styles.dateItem}>
                 <div className={styles.dateLabel}>تم النشر في</div>
                 <div className={styles.dateValue}>{formattedDate}</div>
               </div>
             </div>
           </div>
-          
+
           <div className={styles.scrollDown} onClick={scrollToContent}>
             <FaChevronDown />
           </div>
@@ -102,7 +109,8 @@ const PostHeader = ({ title, featuredImage, categories, author, date, useHeroLay
           <div className={styles.meta}>
             {author && (
               <span className={styles.author}>
-                كتب بواسطة <Link href={`/author/${author?.slug}`}>{author?.name}</Link>
+                كتب بواسطة{' '}
+                <Link href={`/author/${author?.slug}`}>{author?.name}</Link>
               </span>
             )}
             <span className={styles.date}>{formattedDate}</span>
@@ -111,10 +119,7 @@ const PostHeader = ({ title, featuredImage, categories, author, date, useHeroLay
 
         {featuredImage && (
           <div className={styles.featuredImage}>
-            <img 
-              src={featuredImage.sourceUrl} 
-              alt={title} 
-            />
+            <img src={featuredImage.sourceUrl} alt={title} />
           </div>
         )}
       </div>
@@ -123,4 +128,3 @@ const PostHeader = ({ title, featuredImage, categories, author, date, useHeroLay
 };
 
 export default PostHeader;
-

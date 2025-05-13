@@ -59,7 +59,7 @@ $breakpoint-large: 1200px;
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -76,7 +76,7 @@ $breakpoint-large: 1200px;
   color: $color-gray-300;
   text-decoration: none;
   transition: color 0.2s ease;
-  
+
   &:hover {
     color: white;
   }
@@ -205,24 +205,24 @@ $breakpoint-large: 1200px;
   gap: 2rem;
   padding: 2rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  
+
   .paymentIcon {
     height: 40px;
     width: auto;
     opacity: 0.8;
     transition: opacity 0.2s ease;
-    
+
     &:hover {
       opacity: 1;
     }
   }
-  
+
   .st0 {
-    fill: #FFFFFF;
+    fill: #ffffff;
   }
-  
+
   .st1 {
-    fill: #00579F;
+    fill: #00579f;
   }
 }
 
@@ -243,8 +243,11 @@ $breakpoint-large: 1200px;
   object-fit: contain;
   padding: 2rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  #__next > div > footer > section.Section_section__gjwvr.Footer_footerMenu__vNYi6{
-    padding-top: 40px;
-  }
+}
+
+#__next
+  > div
+  > footer
+  > section.Section_section__gjwvr.Footer_footerMenu__vNYi6 {
+  padding-top: 40px;
+}

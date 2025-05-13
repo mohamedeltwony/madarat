@@ -3,12 +3,12 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { 
-  FaMapMarkerAlt, 
-  FaPhone, 
-  FaWhatsapp, 
-  FaClock, 
-  FaEnvelope, 
+import {
+  FaMapMarkerAlt,
+  FaPhone,
+  FaWhatsapp,
+  FaClock,
+  FaEnvelope,
   FaPaperPlane,
   FaDirections,
   FaStar,
@@ -23,7 +23,7 @@ import {
   FaGlobe,
   FaRoute,
   FaPlane,
-  FaHeart
+  FaHeart,
 } from 'react-icons/fa';
 import styles from '@/styles/pages/About.module.scss';
 
@@ -64,10 +64,16 @@ export default function About() {
               <li key={crumb.id} className={styles.breadcrumbItem}>
                 {crumb.uri ? (
                   <Link href={crumb.uri} className={styles.breadcrumbLink}>
-                    {index === 0 ? <FaHome className={styles.homeIcon} /> : crumb.title}
+                    {index === 0 ? (
+                      <FaHome className={styles.homeIcon} />
+                    ) : (
+                      crumb.title
+                    )}
                   </Link>
                 ) : (
-                  <span className={styles.breadcrumbCurrent}>{crumb.title}</span>
+                  <span className={styles.breadcrumbCurrent}>
+                    {crumb.title}
+                  </span>
                 )}
                 {index < breadcrumbs.length - 1 && (
                   <span className={styles.breadcrumbSeparator}>/</span>
@@ -81,7 +87,7 @@ export default function About() {
       {/* Main Content */}
       <div className={styles.aboutContainer}>
         <h1 className={styles.mainTitle}>اكتشف الكون مع مدارات الكون</h1>
-        
+
         <div className={styles.bentoContainer}>
           {/* Intro Box */}
           <div className={`${styles.bentoBox} ${styles.introBox}`}>
@@ -90,56 +96,93 @@ export default function About() {
               <h3>رحــلات لا تنسى!</h3>
             </div>
           </div>
-          
+
           {/* About Box */}
           <div className={`${styles.bentoBox} ${styles.aboutBox}`}>
-            <h3><FaBuilding style={{ marginLeft: '8px' }} />من نحن</h3>
+            <h3>
+              <FaBuilding style={{ marginLeft: '8px' }} />
+              من نحن
+            </h3>
             <p>
-              مدارات الكون للسياحة والسفر هي شركة سعودية رائدة ومتميزة في مجال تنظيم الرحلات حول العالم، حيث نضع بين يديك تجربة سفر فريدة تلبي كافة احتياجاتك ورغباتك. إن شغفنا بالسياحة يدفعنا لتقديم خدمات مبتكرة، مع التركيز على أدق التفاصيل لضمان رحلة لا تُنسى.
+              مدارات الكون للسياحة والسفر هي شركة سعودية رائدة ومتميزة في مجال
+              تنظيم الرحلات حول العالم، حيث نضع بين يديك تجربة سفر فريدة تلبي
+              كافة احتياجاتك ورغباتك. إن شغفنا بالسياحة يدفعنا لتقديم خدمات
+              مبتكرة، مع التركيز على أدق التفاصيل لضمان رحلة لا تُنسى.
             </p>
             <p>
-              نحن ندرك أن السفر هو أكثر من مجرد الانتقال من مكان إلى آخر؛ إنه رحلة نحو اكتشاف الذات والتواصل مع العالم من حولنا. لذلك، نعمل بجد على تقديم خيارات متنوعة تناسب كافة الأذواق، سواء كنت تبحث عن مغامرات مثيرة، أو استرخاء على شواطئ جميلة، أو استكشاف المدن التاريخية.
+              نحن ندرك أن السفر هو أكثر من مجرد الانتقال من مكان إلى آخر؛ إنه
+              رحلة نحو اكتشاف الذات والتواصل مع العالم من حولنا. لذلك، نعمل بجد
+              على تقديم خيارات متنوعة تناسب كافة الأذواق، سواء كنت تبحث عن
+              مغامرات مثيرة، أو استرخاء على شواطئ جميلة، أو استكشاف المدن
+              التاريخية.
             </p>
           </div>
-          
+
           {/* Vision Box */}
           <div className={`${styles.bentoBox} ${styles.visionBox}`}>
-            <h3><FaEye style={{ marginLeft: '8px' }} />رؤيتنا</h3>
+            <h3>
+              <FaEye style={{ marginLeft: '8px' }} />
+              رؤيتنا
+            </h3>
             <p>
-              نسعى لأن نكون الخيار الأول في عالم السياحة والسفر، من خلال تقديم تجارب سفر مبتكرة ومخصصة تلبي تطلعات كل مسافر. نؤمن أن كل رحلة هي فرصة لاكتشاف الثقافات الجديدة والعيش لحظات استثنائية.
+              نسعى لأن نكون الخيار الأول في عالم السياحة والسفر، من خلال تقديم
+              تجارب سفر مبتكرة ومخصصة تلبي تطلعات كل مسافر. نؤمن أن كل رحلة هي
+              فرصة لاكتشاف الثقافات الجديدة والعيش لحظات استثنائية.
             </p>
           </div>
-          
+
           {/* Mission Box */}
           <div className={`${styles.bentoBox} ${styles.missionBox}`}>
-            <h3><FaCompass style={{ marginLeft: '8px' }} />مهمتنا</h3>
+            <h3>
+              <FaCompass style={{ marginLeft: '8px' }} />
+              مهمتنا
+            </h3>
             <p>
-              نحن ملتزمون بتحويل كل رحلة إلى تجربة فريدة تتجاوز توقعات عملائنا. نهدف إلى خلق لحظات مميزة لا تُنسى، بحيث تترك كل تجربة أثرًا عميقًا في قلبك. يعمل فريقنا المتخصص بشغف على ترتيب كل التفاصيل، من التخطيط إلى التنفيذ، مما يضمن لك راحة البال والاستمتاع بكل لحظة.
+              نحن ملتزمون بتحويل كل رحلة إلى تجربة فريدة تتجاوز توقعات عملائنا.
+              نهدف إلى خلق لحظات مميزة لا تُنسى، بحيث تترك كل تجربة أثرًا عميقًا
+              في قلبك. يعمل فريقنا المتخصص بشغف على ترتيب كل التفاصيل، من
+              التخطيط إلى التنفيذ، مما يضمن لك راحة البال والاستمتاع بكل لحظة.
             </p>
           </div>
-          
+
           {/* Experience Box */}
           <div className={`${styles.bentoBox} ${styles.experienceBox}`}>
-            <h3><FaUsers style={{ marginLeft: '8px' }} />خبرتنا</h3>
+            <h3>
+              <FaUsers style={{ marginLeft: '8px' }} />
+              خبرتنا
+            </h3>
             <p>
-              تمتد خبرتنا في مدارات الكون لسنوات طويلة في مجال السياحة والسفر، حيث نجمع بين المعرفة العميقة بأفضل الوجهات السياحية العالمية وفهم احتياجات المسافر العربي. فريقنا من المتخصصين يجمع بين الخبرة المحلية والدولية لتقديم تجارب سفر استثنائية تناسب جميع الأذواق والميزانيات.
+              تمتد خبرتنا في مدارات الكون لسنوات طويلة في مجال السياحة والسفر،
+              حيث نجمع بين المعرفة العميقة بأفضل الوجهات السياحية العالمية وفهم
+              احتياجات المسافر العربي. فريقنا من المتخصصين يجمع بين الخبرة
+              المحلية والدولية لتقديم تجارب سفر استثنائية تناسب جميع الأذواق
+              والميزانيات.
             </p>
           </div>
-          
+
           {/* Journey Box */}
           <div className={`${styles.bentoBox} ${styles.journeyBox}`}>
-            <h3><FaRoute style={{ marginLeft: '8px' }} />رحلتنا</h3>
+            <h3>
+              <FaRoute style={{ marginLeft: '8px' }} />
+              رحلتنا
+            </h3>
             <p>
-              مع مدارات الكون، سنفتح لك أبواباً جديدة نحو عالم من الاحتمالات اللانهائية. انضم إلينا، ودعنا نساعدك على جعل رحلتك القادمة تجربة لا تُنسى، مليئة بالذكريات الجميلة والمغامرات الرائعة التي تتجاوز حدود الخيال وتبقى محفورة في ذاكرتك للأبد.
+              مع مدارات الكون، سنفتح لك أبواباً جديدة نحو عالم من الاحتمالات
+              اللانهائية. انضم إلينا، ودعنا نساعدك على جعل رحلتك القادمة تجربة
+              لا تُنسى، مليئة بالذكريات الجميلة والمغامرات الرائعة التي تتجاوز
+              حدود الخيال وتبقى محفورة في ذاكرتك للأبد.
             </p>
           </div>
-          
+
           {/* Contact Box */}
           <div className={`${styles.bentoBox} ${styles.contactBox}`}>
             <h3>تواصل معنا</h3>
             <p>هل أنت مستعد لبدء مغامرتك القادمة؟ فريقنا في انتظارك!</p>
             <Link href="/contact" className={styles.contactButton}>
-              تواصل معنا الآن <FaArrowRight style={{ marginRight: '5px', transform: 'rotate(180deg)' }} />
+              تواصل معنا الآن{' '}
+              <FaArrowRight
+                style={{ marginRight: '5px', transform: 'rotate(180deg)' }}
+              />
             </Link>
           </div>
         </div>
@@ -149,4 +192,4 @@ export default function About() {
       <Footer />
     </>
   );
-} 
+}

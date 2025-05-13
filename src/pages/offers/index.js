@@ -14,7 +14,12 @@ import styles from '@/styles/pages/Trips.module.scss';
 const OFFERS_PER_PAGE = 20;
 const OFFER_TAG_ID = 154;
 
-export default function OffersPage({ initialTrips = [], initialPagination = {}, metadata, menus }) {
+export default function OffersPage({
+  initialTrips = [],
+  initialPagination = {},
+  metadata,
+  menus,
+}) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -28,29 +33,119 @@ export default function OffersPage({ initialTrips = [], initialPagination = {}, 
   useEffect(() => {
     const fetchOfferTrips = async () => {
       if (!router.isReady) return;
-      
+
       const page = parseInt(router.query.page) || 1;
       setCurrentPage(page);
-      
+
       // Only fetch if we don't have data for this page
       if (page !== pagination.currentPage) {
         setIsLoading(true);
         setError(null);
-        
+
         try {
-          const data = await fetchAPI('/wp/v2/trip', { 
+          const data = await fetchAPI('/wp/v2/trip', {
             page,
             per_page: OFFERS_PER_PAGE,
             _embed: true,
-            trip_tag: OFFER_TAG_ID
+            trip_tag: OFFER_TAG_ID,
           });
-          
+
           // Extract pagination data
           const totalTrips = data._paging?.total || 0;
           const totalPages = data._paging?.totalPages || 1;
-          
+
           // Safely transform the trips data
-          const offerTrips = Array.isArray(data) ? data.map(trip => {
+          const offerTrips = Array.isArray(data)
+            ? data.map((trip) => {
+                // Safely extract featuredImage - ensure it's never undefined
+                let featuredImage = null;
+                if (trip._embedded?.['wp:featuredmedia']?.[0]) {
+                  const mediaItem = trip._embedded['wp:featuredmedia'][0];
+                  featuredImage = {
+                    sourceUrl:
+                      mediaItem.source_url || '/images/placeholder.jpg',
+                    mediaDetails: {
+                      sizes: [
+                        {
+                          sourceUrl:
+                            mediaItem.source_url || '/images/placeholder.jpg',
+                          width: mediaItem.media_details?.width || 800,
+                          height: mediaItem.media_details?.height || 600,
+                        },
+                      ],
+                    },
+                  };
+                }
+
+                // Extract and format trip data
+                return {
+                  id: trip.id,
+                  title: trip.title?.rendered || 'رحلة بدون عنوان',
+                  slug: trip.slug || `trip-${trip.id}`,
+                  excerpt: trip.excerpt?.rendered || '',
+                  content: trip.content?.rendered || '',
+                  featuredImage: featuredImage,
+                  tripSettings: {
+                    duration: {
+                      days:
+                        trip.acf?.duration?.days || trip.duration?.days || 0,
+                      nights:
+                        trip.acf?.duration?.nights ||
+                        trip.duration?.nights ||
+                        0,
+                      durationType: trip.acf?.duration?.durationType || null,
+                    },
+                    price: {
+                      amount: trip.acf?.price?.amount || trip.price || 0,
+                      currency:
+                        trip.acf?.price?.currency ||
+                        trip.currency?.code ||
+                        'SAR',
+                    },
+                  },
+                };
+              })
+            : [];
+
+          setTrips(offerTrips);
+          setPagination({
+            total: totalTrips,
+            totalPages: totalPages,
+            currentPage: page,
+            perPage: OFFERS_PER_PAGE,
+          });
+        } catch (err) {
+          console.error('Error fetching offer trips:', err);
+          setError(err.toString());
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchOfferTrips();
+  }, [router.isReady, router.query.page]);
+
+  const handleRetry = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const page = parseInt(router.query.page) || 1;
+      const data = await fetchAPI('/wp/v2/trip', {
+        page,
+        per_page: OFFERS_PER_PAGE,
+        _embed: true,
+        trip_tag: OFFER_TAG_ID,
+      });
+
+      // Extract pagination data
+      const totalTrips = data._paging?.total || 0;
+      const totalPages = data._paging?.totalPages || 1;
+
+      // Safely transform the trips data
+      const offerTrips = Array.isArray(data)
+        ? data.map((trip) => {
             // Safely extract featuredImage - ensure it's never undefined
             let featuredImage = null;
             if (trip._embedded?.['wp:featuredmedia']?.[0]) {
@@ -60,15 +155,16 @@ export default function OffersPage({ initialTrips = [], initialPagination = {}, 
                 mediaDetails: {
                   sizes: [
                     {
-                      sourceUrl: mediaItem.source_url || '/images/placeholder.jpg',
+                      sourceUrl:
+                        mediaItem.source_url || '/images/placeholder.jpg',
                       width: mediaItem.media_details?.width || 800,
-                      height: mediaItem.media_details?.height || 600
-                    }
-                  ]
-                }
+                      height: mediaItem.media_details?.height || 600,
+                    },
+                  ],
+                },
               };
             }
-            
+
             // Extract and format trip data
             return {
               id: trip.id,
@@ -80,102 +176,26 @@ export default function OffersPage({ initialTrips = [], initialPagination = {}, 
               tripSettings: {
                 duration: {
                   days: trip.acf?.duration?.days || trip.duration?.days || 0,
-                  nights: trip.acf?.duration?.nights || trip.duration?.nights || 0,
-                  durationType: trip.acf?.duration?.durationType || null
+                  nights:
+                    trip.acf?.duration?.nights || trip.duration?.nights || 0,
+                  durationType: trip.acf?.duration?.durationType || null,
                 },
                 price: {
                   amount: trip.acf?.price?.amount || trip.price || 0,
-                  currency: trip.acf?.price?.currency || trip.currency?.code || 'SAR'
-                }
-              }
+                  currency:
+                    trip.acf?.price?.currency || trip.currency?.code || 'SAR',
+                },
+              },
             };
-          }) : [];
-          
-          setTrips(offerTrips);
-          setPagination({
-            total: totalTrips,
-            totalPages: totalPages,
-            currentPage: page,
-            perPage: OFFERS_PER_PAGE
-          });
-          
-        } catch (err) {
-          console.error("Error fetching offer trips:", err);
-          setError(err.toString());
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-    
-    fetchOfferTrips();
-  }, [router.isReady, router.query.page]);
+          })
+        : [];
 
-  const handleRetry = async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const page = parseInt(router.query.page) || 1;
-      const data = await fetchAPI('/wp/v2/trip', { 
-        page,
-        per_page: OFFERS_PER_PAGE,
-        _embed: true,
-        trip_tag: OFFER_TAG_ID
-      });
-      
-      // Extract pagination data
-      const totalTrips = data._paging?.total || 0;
-      const totalPages = data._paging?.totalPages || 1;
-      
-      // Safely transform the trips data
-      const offerTrips = Array.isArray(data) ? data.map(trip => {
-        // Safely extract featuredImage - ensure it's never undefined
-        let featuredImage = null;
-        if (trip._embedded?.['wp:featuredmedia']?.[0]) {
-          const mediaItem = trip._embedded['wp:featuredmedia'][0];
-          featuredImage = {
-            sourceUrl: mediaItem.source_url || '/images/placeholder.jpg',
-            mediaDetails: {
-              sizes: [
-                {
-                  sourceUrl: mediaItem.source_url || '/images/placeholder.jpg',
-                  width: mediaItem.media_details?.width || 800,
-                  height: mediaItem.media_details?.height || 600
-                }
-              ]
-            }
-          };
-        }
-        
-        // Extract and format trip data
-        return {
-          id: trip.id,
-          title: trip.title?.rendered || 'رحلة بدون عنوان',
-          slug: trip.slug || `trip-${trip.id}`,
-          excerpt: trip.excerpt?.rendered || '',
-          content: trip.content?.rendered || '',
-          featuredImage: featuredImage,
-          tripSettings: {
-            duration: {
-              days: trip.acf?.duration?.days || trip.duration?.days || 0,
-              nights: trip.acf?.duration?.nights || trip.duration?.nights || 0,
-              durationType: trip.acf?.duration?.durationType || null
-            },
-            price: {
-              amount: trip.acf?.price?.amount || trip.price || 0,
-              currency: trip.acf?.price?.currency || trip.currency?.code || 'SAR'
-            }
-          }
-        };
-      }) : [];
-      
       setTrips(offerTrips);
       setPagination({
         total: totalTrips,
         totalPages: totalPages,
         currentPage: page,
-        perPage: OFFERS_PER_PAGE
+        perPage: OFFERS_PER_PAGE,
       });
     } catch (err) {
       setError(err.toString());
@@ -207,10 +227,13 @@ export default function OffersPage({ initialTrips = [], initialPagination = {}, 
       </Head>
 
       {/* Hero Section with hardcoded image */}
-      <div className={styles.tripsHeroSection} style={{ 
-        backgroundImage: 'url("/images/hero-background-new.png")',
-        backgroundPosition: 'center center'
-      }}>
+      <div
+        className={styles.tripsHeroSection}
+        style={{
+          backgroundImage: 'url("/images/hero-background-new.png")',
+          backgroundPosition: 'center center',
+        }}
+      >
         <div className={styles.tripsHeroOverlay}></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className={styles.tripsHeroContent}>
@@ -218,7 +241,8 @@ export default function OffersPage({ initialTrips = [], initialPagination = {}, 
               <h1 className={styles.tripsHeroTitle}>العروض السياحية</h1>
               <p className={styles.tripsHeroDescription}>
                 اكتشف مجموعة متنوعة من العروض السياحية المميزة بأسعار تنافسية.
-                باقات سفر بخدمات متكاملة وأسعار حصرية للوجهات السياحية الأكثر شعبية.
+                باقات سفر بخدمات متكاملة وأسعار حصرية للوجهات السياحية الأكثر
+                شعبية.
               </p>
             </div>
           </div>
@@ -248,9 +272,9 @@ export default function OffersPage({ initialTrips = [], initialPagination = {}, 
         )}
 
         {!isLoading && !error && (
-          <OffersList 
-            trips={trips} 
-            pagination={pagination} 
+          <OffersList
+            trips={trips}
+            pagination={pagination}
             onPageChange={handlePageChange}
           />
         )}
@@ -262,63 +286,68 @@ export default function OffersPage({ initialTrips = [], initialPagination = {}, 
 export async function getServerSideProps(context) {
   try {
     const page = parseInt(context.query.page) || 1;
-    
+
     // Fetch offer trips with pagination
-    const data = await fetchAPI('/wp/v2/trip', { 
+    const data = await fetchAPI('/wp/v2/trip', {
       page,
       per_page: OFFERS_PER_PAGE,
       _embed: true,
-      trip_tag: OFFER_TAG_ID
+      trip_tag: OFFER_TAG_ID,
     });
-    
+
     // Extract pagination data
     const totalTrips = data._paging?.total || 0;
     const totalPages = data._paging?.totalPages || 1;
-    
+
     // Safely transform the trips data
-    const offerTrips = Array.isArray(data) ? data.map(trip => {
-      // Safely extract featuredImage - ensure it's never undefined
-      let featuredImage = null;
-      if (trip._embedded?.['wp:featuredmedia']?.[0]) {
-        const mediaItem = trip._embedded['wp:featuredmedia'][0];
-        featuredImage = {
-          sourceUrl: mediaItem.source_url || '/images/placeholder.jpg',
-          mediaDetails: {
-            sizes: [
-              {
-                sourceUrl: mediaItem.source_url || '/images/placeholder.jpg',
-                width: mediaItem.media_details?.width || 800,
-                height: mediaItem.media_details?.height || 600
-              }
-            ]
+    const offerTrips = Array.isArray(data)
+      ? data.map((trip) => {
+          // Safely extract featuredImage - ensure it's never undefined
+          let featuredImage = null;
+          if (trip._embedded?.['wp:featuredmedia']?.[0]) {
+            const mediaItem = trip._embedded['wp:featuredmedia'][0];
+            featuredImage = {
+              sourceUrl: mediaItem.source_url || '/images/placeholder.jpg',
+              mediaDetails: {
+                sizes: [
+                  {
+                    sourceUrl:
+                      mediaItem.source_url || '/images/placeholder.jpg',
+                    width: mediaItem.media_details?.width || 800,
+                    height: mediaItem.media_details?.height || 600,
+                  },
+                ],
+              },
+            };
           }
-        };
-      }
-      
-      // Extract and format trip data
-      return {
-        id: trip.id,
-        title: trip.title?.rendered || 'رحلة بدون عنوان',
-        slug: trip.slug || `trip-${trip.id}`,
-        excerpt: trip.excerpt?.rendered || '',
-        content: trip.content?.rendered || '',
-        featuredImage: featuredImage,
-        tripSettings: {
-          duration: {
-            days: trip.acf?.duration?.days || trip.duration?.days || 0,
-            nights: trip.acf?.duration?.nights || trip.duration?.nights || 0,
-            durationType: trip.acf?.duration?.durationType || null
-          },
-          price: {
-            amount: trip.acf?.price?.amount || trip.price || 0,
-            currency: trip.acf?.price?.currency || trip.currency?.code || 'SAR'
-          }
-        }
-      };
-    }) : [];
-    
+
+          // Extract and format trip data
+          return {
+            id: trip.id,
+            title: trip.title?.rendered || 'رحلة بدون عنوان',
+            slug: trip.slug || `trip-${trip.id}`,
+            excerpt: trip.excerpt?.rendered || '',
+            content: trip.content?.rendered || '',
+            featuredImage: featuredImage,
+            tripSettings: {
+              duration: {
+                days: trip.acf?.duration?.days || trip.duration?.days || 0,
+                nights:
+                  trip.acf?.duration?.nights || trip.duration?.nights || 0,
+                durationType: trip.acf?.duration?.durationType || null,
+              },
+              price: {
+                amount: trip.acf?.price?.amount || trip.price || 0,
+                currency:
+                  trip.acf?.price?.currency || trip.currency?.code || 'SAR',
+              },
+            },
+          };
+        })
+      : [];
+
     // Fetch layout data
-    const metadata = await getSiteMetadataREST(); 
+    const metadata = await getSiteMetadataREST();
     const { menus = [] } = await getAllMenusREST();
 
     return {
@@ -328,11 +357,11 @@ export async function getServerSideProps(context) {
           total: totalTrips,
           totalPages: totalPages,
           currentPage: page,
-          perPage: OFFERS_PER_PAGE
+          perPage: OFFERS_PER_PAGE,
         },
         metadata: metadata || {}, // Ensure metadata is never undefined
-        menus: menus || []
-      }
+        menus: menus || [],
+      },
     };
   } catch (error) {
     console.error('Error in getServerSideProps:', error);
@@ -343,15 +372,15 @@ export async function getServerSideProps(context) {
           total: 0,
           totalPages: 0,
           currentPage: 1,
-          perPage: OFFERS_PER_PAGE
+          perPage: OFFERS_PER_PAGE,
         },
         metadata: {
           title: 'مدارات الكون',
           siteTitle: 'مدارات الكون',
           description: 'موقع السفر والرحلات الأول في الوطن العربي',
         },
-        menus: []
-      }
+        menus: [],
+      },
     };
   }
-} 
+}

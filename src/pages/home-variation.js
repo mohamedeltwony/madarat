@@ -18,43 +18,55 @@ import React, { useState, Suspense, useEffect } from 'react';
 import Head from 'next/head';
 
 // Dynamic imports for heavy components
-const BentoDestinations = dynamic(() => import('@/components/BentoDestinations'), {
-  loading: () => <div className={styles.loadingContainer}>جاري تحميل الوجهات...</div>,
-  ssr: true
-});
+const BentoDestinations = dynamic(
+  () => import('@/components/BentoDestinations'),
+  {
+    loading: () => (
+      <div className={styles.loadingContainer}>جاري تحميل الوجهات...</div>
+    ),
+    ssr: true,
+  }
+);
 
 const OfferTrips = dynamic(() => import('@/components/OfferTrips'), {
-  loading: () => <div className={styles.loadingContainer}>جاري تحميل الرحلات...</div>,
-  ssr: true
+  loading: () => (
+    <div className={styles.loadingContainer}>جاري تحميل الرحلات...</div>
+  ),
+  ssr: true,
 });
 
-const GoogleReviewsSection = dynamic(() => import('@/components/GoogleReviewsSection'), {
-  loading: () => <div className={styles.loadingContainer}>جاري تحميل التقييمات...</div>,
-  ssr: false // Client-side render only to reduce initial load
-});
+const GoogleReviewsSection = dynamic(
+  () => import('@/components/GoogleReviewsSection'),
+  {
+    loading: () => (
+      <div className={styles.loadingContainer}>جاري تحميل التقييمات...</div>
+    ),
+    ssr: false, // Client-side render only to reduce initial load
+  }
+);
 
 // Featured destinations for the trending carousel
 const trendingDestinations = [
   {
     id: 1,
-    name: "البوسنة",
-    image: "/images/bosnia-background.webp"
+    name: 'البوسنة',
+    image: '/images/bosnia-background.webp',
   },
   {
     id: 2,
-    name: "ايطاليا",
-    image: "/images/italy-background.webp"
+    name: 'ايطاليا',
+    image: '/images/italy-background.webp',
   },
   {
     id: 3,
-    name: "أذربيجان",
-    image: "/images/azerbaijan-background.webp"
+    name: 'أذربيجان',
+    image: '/images/azerbaijan-background.webp',
   },
   {
     id: 4,
-    name: "شنغن",
-    image: "/images/schengen-background.webp"
-  }
+    name: 'شنغن',
+    image: '/images/schengen-background.webp',
+  },
 ];
 
 export default function HomeVariation({
@@ -65,27 +77,32 @@ export default function HomeVariation({
   archives = [],
   metadata = { title: 'مدارات الكون', description: 'موقع مدارات الكون' },
 }) {
-  const { title = 'مدارات الكون', description = 'موقع مدارات الكون' } = metadata;
+  const { title = 'مدارات الكون', description = 'موقع مدارات الكون' } =
+    metadata;
   const [showForm, setShowForm] = useState(false);
-  
+
   // For carousel slide control
   const [activeIndex, setActiveIndex] = useState(0);
-  
+
   // Auto advance the carousel
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((current) => (current + 1) % trendingDestinations.length);
     }, 5000);
-    
+
     return () => clearInterval(interval);
   }, []);
-  
+
   const nextSlide = () => {
     setActiveIndex((current) => (current + 1) % trendingDestinations.length);
   };
-  
+
   const prevSlide = () => {
-    setActiveIndex((current) => (current - 1 + trendingDestinations.length) % trendingDestinations.length);
+    setActiveIndex(
+      (current) =>
+        (current - 1 + trendingDestinations.length) %
+        trendingDestinations.length
+    );
   };
 
   const handleShowForm = () => {
@@ -135,15 +152,19 @@ export default function HomeVariation({
             />
             <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/80 to-transparent"></div>
           </div>
-          
+
           <div className="container mx-auto px-6 py-24 md:py-32 relative z-10">
             <div className="max-w-2xl">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                 <span className="block">اكتشف</span>
-                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">رحلتك الساحرة</span>
+                <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  رحلتك الساحرة
+                </span>
               </h1>
               <p className="text-xl text-gray-300 mb-8 max-w-lg">
-                اكتشف معنا أجمل الوجهات السياحية حول العالم. نقدم لك دليلاً شاملاً للسفر والسياحة، من التخطيط للرحلة إلى أفضل الأماكن للزيارة والإقامة.
+                اكتشف معنا أجمل الوجهات السياحية حول العالم. نقدم لك دليلاً
+                شاملاً للسفر والسياحة، من التخطيط للرحلة إلى أفضل الأماكن
+                للزيارة والإقامة.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link href="/destinations">
@@ -151,44 +172,68 @@ export default function HomeVariation({
                     استكشف الرحلات
                   </SparkleButton>
                 </Link>
-                <a href="#contact-form" className="bg-transparent hover:bg-gray-800 text-white border border-gray-400 font-bold py-6 px-8 rounded-md transition duration-300">
+                <a
+                  href="#contact-form"
+                  className="bg-transparent hover:bg-gray-800 text-white border border-gray-400 font-bold py-6 px-8 rounded-md transition duration-300"
+                >
                   تواصل معنا
                 </a>
               </div>
             </div>
           </div>
-          
+
           {/* Trending Destinations Carousel */}
           <div className="container mx-auto px-6 pb-16 relative z-10">
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-2xl font-bold text-white">الوجهات الرائجة</h3>
               <div className="flex items-center gap-2">
-                <button 
+                <button
                   onClick={prevSlide}
                   className="bg-transparent hover:bg-gray-800 text-gray-400 hover:text-white border border-gray-700 rounded-full w-10 h-10 flex items-center justify-center transition duration-300"
                 >
                   <span className="sr-only">السابق</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </button>
-                <button 
+                <button
                   onClick={nextSlide}
                   className="bg-transparent hover:bg-gray-800 text-gray-400 hover:text-white border border-gray-700 rounded-full w-10 h-10 flex items-center justify-center transition duration-300"
                 >
                   <span className="sr-only">التالي</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </button>
               </div>
             </div>
-            
+
             <div className="relative overflow-hidden">
-              <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(${activeIndex * 100}%)` }}>
+              <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(${activeIndex * 100}%)` }}
+              >
                 {trendingDestinations.map((destination, index) => (
-                  <div 
-                    key={destination.id} 
+                  <div
+                    key={destination.id}
                     className="min-w-[200px] md:min-w-[250px] lg:min-w-[300px] mx-3 flex-shrink-0 cursor-pointer group"
                   >
                     <div className="relative rounded-2xl overflow-hidden aspect-[4/3]">
@@ -199,11 +244,22 @@ export default function HomeVariation({
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent opacity-90"></div>
                       <div className="absolute bottom-0 left-0 p-6">
-                        <h4 className="text-2xl font-bold text-white mb-2">{destination.name}</h4>
+                        <h4 className="text-2xl font-bold text-white mb-2">
+                          {destination.name}
+                        </h4>
                         <div className="flex items-center text-gray-300 opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
                           <span>استكشف الوجهة</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mr-2"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
                       </div>
@@ -216,11 +272,13 @@ export default function HomeVariation({
         </section>
 
         {/* Offer Trips Section */}
-        <Section style={{ 
-          padding: '2rem 0', 
-          width: '100%',
-          maxWidth: '100%' 
-        }}>
+        <Section
+          style={{
+            padding: '2rem 0',
+            width: '100%',
+            maxWidth: '100%',
+          }}
+        >
           <Container style={{ maxWidth: '1400px', width: '100%' }}>
             <OfferTrips />
           </Container>
@@ -262,24 +320,53 @@ export default function HomeVariation({
         )}
 
         {/* Contact Form Section */}
-        <Section id="contact-form" className={styles.contactSection} style={{ backgroundColor: '#1a1a2e' }}>
+        <Section
+          id="contact-form"
+          className={styles.contactSection}
+          style={{ backgroundColor: '#1a1a2e' }}
+        >
           <Container>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
-                <h2 className="text-3xl font-bold text-white mb-4">دعنا نساعدك في تخطيط رحلتك</h2>
+                <h2 className="text-3xl font-bold text-white mb-4">
+                  دعنا نساعدك في تخطيط رحلتك
+                </h2>
                 <p className="text-gray-300 mb-6">
-                  فريقنا المتخصص جاهز لمساعدتك في تصميم رحلة فريدة تناسب احتياجاتك وميزانيتك. 
-                  املأ النموذج وسنتواصل معك في أقرب وقت ممكن.
+                  فريقنا المتخصص جاهز لمساعدتك في تصميم رحلة فريدة تناسب
+                  احتياجاتك وميزانيتك. املأ النموذج وسنتواصل معك في أقرب وقت
+                  ممكن.
                 </p>
                 <div className="flex items-center text-gray-300 mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 mr-2 text-indigo-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                    />
                   </svg>
                   <span dir="ltr">+966 123 456 789</span>
                 </div>
                 <div className="flex items-center text-gray-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 mr-2 text-indigo-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
                   </svg>
                   <span>info@madaratalkon.com</span>
                 </div>
@@ -287,39 +374,59 @@ export default function HomeVariation({
               <div className="bg-gray-800 p-8 rounded-lg shadow-xl">
                 <form className="space-y-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">الاسم الكامل</label>
-                    <input 
-                      type="text" 
-                      id="name" 
-                      name="name" 
-                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-md text-white focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50" 
-                      required 
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-300 mb-1"
+                    >
+                      الاسم الكامل
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-md text-white focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                      required
                     />
                   </div>
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-1">رقم الجوال</label>
-                    <input 
-                      type="tel" 
-                      id="phone" 
-                      name="phone" 
-                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-md text-white focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50" 
-                      required 
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium text-gray-300 mb-1"
+                    >
+                      رقم الجوال
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-md text-white focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                      required
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">البريد الإلكتروني</label>
-                    <input 
-                      type="email" 
-                      id="email" 
-                      name="email" 
-                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-md text-white focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50" 
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-300 mb-1"
+                    >
+                      البريد الإلكتروني
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-md text-white focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                     />
                   </div>
                   <div>
-                    <label htmlFor="destination" className="block text-sm font-medium text-gray-300 mb-1">الوجهة المفضلة</label>
-                    <select 
-                      id="destination" 
-                      name="destination" 
+                    <label
+                      htmlFor="destination"
+                      className="block text-sm font-medium text-gray-300 mb-1"
+                    >
+                      الوجهة المفضلة
+                    </label>
+                    <select
+                      id="destination"
+                      name="destination"
                       className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-md text-white focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                     >
                       <option value="">اختر وجهة</option>
@@ -331,8 +438,8 @@ export default function HomeVariation({
                     </select>
                   </div>
                   <div>
-                    <button 
-                      type="submit" 
+                    <button
+                      type="submit"
                       className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium rounded-md transition duration-300"
                     >
                       أرسل طلبك
@@ -351,10 +458,10 @@ export default function HomeVariation({
 export async function getStaticProps() {
   try {
     // Fetch site metadata
-    const metadata = await getSiteMetadataREST() || { 
+    const metadata = (await getSiteMetadataREST()) || {
       title: 'مدارات الكون',
       siteTitle: 'مدارات الكون',
-      description: 'موقع مدارات الكون'
+      description: 'موقع مدارات الكون',
     };
 
     // Fetch posts with REST API
@@ -366,42 +473,49 @@ export async function getStaticProps() {
         {
           headers: {
             'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+            'User-Agent':
+              'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
           },
         }
       );
-      
+
       if (!postsResponse.ok) {
         throw new Error(`Failed to fetch posts: ${postsResponse.status}`);
       }
-      
+
       const postsData = await postsResponse.json();
-      const totalPages = parseInt(postsResponse.headers.get('x-wp-totalpages') || '1');
-      
-      posts = postsData.map(post => ({
+      const totalPages = parseInt(
+        postsResponse.headers.get('x-wp-totalpages') || '1'
+      );
+
+      posts = postsData.map((post) => ({
         id: post.id,
         title: post.title.rendered,
         slug: post.slug,
         date: post.date,
         excerpt: post.excerpt.rendered,
-        author: post._embedded?.author?.[0] ? {
-          name: post._embedded.author[0].name,
-          avatar: { url: post._embedded.author[0].avatar_urls?.[96] || '' }
-        } : null,
+        author: post._embedded?.author?.[0]
+          ? {
+              name: post._embedded.author[0].name,
+              avatar: { url: post._embedded.author[0].avatar_urls?.[96] || '' },
+            }
+          : null,
         categories: post._embedded?.['wp:term']?.[0] || [],
-        featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
-          sourceUrl: post._embedded['wp:featuredmedia'][0].source_url
-        } : null
+        featuredImage: post._embedded?.['wp:featuredmedia']?.[0]
+          ? {
+              sourceUrl: post._embedded['wp:featuredmedia'][0].source_url,
+            }
+          : null,
       }));
-      
+
       pagination = {
         currentPage: 1,
-        pagesCount: totalPages
+        pagesCount: totalPages,
       };
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
-    
+
     return {
       props: {
         metadata,
@@ -415,10 +529,10 @@ export async function getStaticProps() {
     console.error('Error in getStaticProps:', error);
     return {
       props: {
-        metadata: { 
+        metadata: {
           title: 'مدارات الكون',
           siteTitle: 'مدارات الكون',
-          description: 'موقع مدارات الكون'
+          description: 'موقع مدارات الكون',
         },
         posts: [],
         pagination: null,
@@ -427,4 +541,4 @@ export async function getStaticProps() {
       revalidate: 10,
     };
   }
-} 
+}

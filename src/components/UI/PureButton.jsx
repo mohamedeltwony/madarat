@@ -1,11 +1,6 @@
 import React from 'react';
 
-const PureButton = ({ 
-  children, 
-  onClick, 
-  style = {}, 
-  ...props 
-}) => {
+const PureButton = ({ children, onClick, style = {}, ...props }) => {
   // Define base button styles that override any potential global styles
   const baseButtonStyle = {
     position: 'relative',
@@ -30,31 +25,27 @@ const PureButton = ({
     WebkitAppearance: 'none',
     MozAppearance: 'none',
     appearance: 'none',
-    ...style
+    ...style,
   };
 
   return (
     <div
       style={{
         position: 'relative',
-        display: 'inline-block'
+        display: 'inline-block',
       }}
     >
-      <button 
-        onClick={onClick}
-        style={baseButtonStyle}
-        {...props}
-      >
+      <button onClick={onClick} style={baseButtonStyle} {...props}>
         {/* Button text */}
         <span
           style={{
             position: 'relative',
-            zIndex: 3
+            zIndex: 3,
           }}
         >
           {children}
         </span>
-        
+
         {/* Border container */}
         <div
           style={{
@@ -65,7 +56,7 @@ const PureButton = ({
             bottom: '-2px',
             borderRadius: '32px',
             zIndex: -1,
-            overflow: 'hidden'
+            overflow: 'hidden',
           }}
         >
           {/* Animated golden border */}
@@ -76,12 +67,13 @@ const PureButton = ({
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
+              background:
+                'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
               backgroundSize: '300% 300%',
-              animation: 'borderAnimation 6s linear infinite'
+              animation: 'borderAnimation 6s linear infinite',
             }}
           />
-          
+
           {/* Dark inner background */}
           <div
             style={{
@@ -92,7 +84,7 @@ const PureButton = ({
               bottom: '2px',
               borderRadius: '28px',
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              zIndex: 0
+              zIndex: 0,
             }}
           />
         </div>
@@ -101,13 +93,19 @@ const PureButton = ({
       {/* Animation keyframes */}
       <style jsx>{`
         @keyframes borderAnimation {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
         }
       `}</style>
     </div>
   );
 };
 
-export default PureButton; 
+export default PureButton;

@@ -1,14 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 
-const GoldLinkButton = ({ 
-  text = "زر رابط ذهبي", 
-  href = "#",
-  target = "_self",
+const GoldLinkButton = ({
+  text = 'زر رابط ذهبي',
+  href = '#',
+  target = '_self',
   width = 200,
-  height = 50
+  height = 50,
 }) => {
   const iframeRef = useRef(null);
-  
+
   // This HTML will be inserted into the iframe - using an anchor tag instead of a button
   const buttonHTML = `
     <!DOCTYPE html>
@@ -100,21 +100,22 @@ const GoldLinkButton = ({
       </body>
     </html>
   `;
-  
+
   useEffect(() => {
     if (iframeRef.current) {
       // Write the HTML content to the iframe
       const iframe = iframeRef.current;
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      
+      const iframeDocument =
+        iframe.contentDocument || iframe.contentWindow.document;
+
       iframeDocument.open();
       iframeDocument.write(buttonHTML);
       iframeDocument.close();
     }
   }, [buttonHTML, href, target]);
-  
+
   return (
-    <iframe 
+    <iframe
       ref={iframeRef}
       style={{
         width: width,
@@ -123,7 +124,7 @@ const GoldLinkButton = ({
         overflow: 'hidden',
         background: 'transparent',
         backgroundColor: 'transparent',
-        pointerEvents: 'auto'
+        pointerEvents: 'auto',
       }}
       title="Gold Link Button"
       scrolling="no"
@@ -132,4 +133,4 @@ const GoldLinkButton = ({
   );
 };
 
-export default GoldLinkButton; 
+export default GoldLinkButton;

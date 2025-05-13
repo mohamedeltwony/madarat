@@ -1,13 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 
-const IsolatedGoldButton = ({ 
-  text = "زر ذهبي معزول", 
+const IsolatedGoldButton = ({
+  text = 'زر ذهبي معزول',
   onClick,
   width = 200,
-  height = 50
+  height = 50,
 }) => {
   const iframeRef = useRef(null);
-  
+
   // This HTML will be inserted into the iframe
   const buttonHTML = `
     <!DOCTYPE html>
@@ -105,34 +105,35 @@ const IsolatedGoldButton = ({
       </body>
     </html>
   `;
-  
+
   useEffect(() => {
     if (iframeRef.current) {
       // Write the HTML content to the iframe
       const iframe = iframeRef.current;
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      
+      const iframeDocument =
+        iframe.contentDocument || iframe.contentWindow.document;
+
       iframeDocument.open();
       iframeDocument.write(buttonHTML);
       iframeDocument.close();
-      
+
       // Add message listener for iframe communication
       const handleMessage = (event) => {
         if (event.data === 'buttonClicked' && onClick) {
           onClick();
         }
       };
-      
+
       window.addEventListener('message', handleMessage);
-      
+
       return () => {
         window.removeEventListener('message', handleMessage);
       };
     }
   }, [buttonHTML, onClick]);
-  
+
   return (
-    <iframe 
+    <iframe
       ref={iframeRef}
       style={{
         width: width,
@@ -141,7 +142,7 @@ const IsolatedGoldButton = ({
         overflow: 'hidden',
         background: 'transparent',
         backgroundColor: 'transparent',
-        pointerEvents: 'auto'
+        pointerEvents: 'auto',
       }}
       title="Gold Button"
       scrolling="no"
@@ -150,4 +151,4 @@ const IsolatedGoldButton = ({
   );
 };
 
-export default IsolatedGoldButton; 
+export default IsolatedGoldButton;

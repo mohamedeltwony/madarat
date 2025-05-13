@@ -1,15 +1,15 @@
 import React, { useRef, useEffect } from 'react';
 
-const PureBlackGoldButton = ({ 
-  text = "زر ذهبي", 
+const PureBlackGoldButton = ({
+  text = 'زر ذهبي',
   onClick,
   href = null,
-  target = "_self",
+  target = '_self',
   width = 200,
-  height = 50
+  height = 50,
 }) => {
   const iframeRef = useRef(null);
-  
+
   // This HTML will be inserted into the iframe - using absolutely no transparency
   const buttonHTML = `
     <!DOCTYPE html>
@@ -119,13 +119,14 @@ const PureBlackGoldButton = ({
       </head>
       <body>
         <div class="button-wrapper">
-          ${href 
-            ? `<a href="${href}" target="${target}" class="button-container" id="goldButton">
+          ${
+            href
+              ? `<a href="${href}" target="${target}" class="button-container" id="goldButton">
                 <div class="gold-glow"></div>
                 <div class="button-bg"></div>
                 <div class="button-text">${text}</div>
-              </a>` 
-            : `<div class="button-container" id="goldButton">
+              </a>`
+              : `<div class="button-container" id="goldButton">
                 <div class="gold-glow"></div>
                 <div class="button-bg"></div>
                 <div class="button-text">${text}</div>
@@ -144,34 +145,35 @@ const PureBlackGoldButton = ({
       </body>
     </html>
   `;
-  
+
   useEffect(() => {
     if (iframeRef.current) {
       // Write the HTML content to the iframe
       const iframe = iframeRef.current;
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      
+      const iframeDocument =
+        iframe.contentDocument || iframe.contentWindow.document;
+
       iframeDocument.open();
       iframeDocument.write(buttonHTML);
       iframeDocument.close();
-      
+
       // Add message listener for iframe communication (for onClick functionality)
       const handleMessage = (event) => {
         if (event.data === 'buttonClicked' && onClick) {
           onClick();
         }
       };
-      
+
       window.addEventListener('message', handleMessage);
-      
+
       return () => {
         window.removeEventListener('message', handleMessage);
       };
     }
   }, [buttonHTML, onClick, href]);
-  
+
   return (
-    <iframe 
+    <iframe
       ref={iframeRef}
       style={{
         width,
@@ -180,7 +182,7 @@ const PureBlackGoldButton = ({
         overflow: 'hidden',
         background: 'transparent',
         backgroundColor: 'transparent',
-        pointerEvents: 'auto'
+        pointerEvents: 'auto',
       }}
       title="Pure Black Gold Button"
       scrolling="no"
@@ -190,4 +192,4 @@ const PureBlackGoldButton = ({
   );
 };
 
-export default PureBlackGoldButton; 
+export default PureBlackGoldButton;

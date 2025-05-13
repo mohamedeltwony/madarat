@@ -1,33 +1,39 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-const OptimizedGoldDropdownButton = ({ 
-  text = "زر منسدل ذهبي", 
+const OptimizedGoldDropdownButton = ({
+  text = 'زر منسدل ذهبي',
   width = 200,
   height = 50,
   dropdownItems = [
-    { text: "خيار رقم ١", href: "#option1" },
-    { text: "خيار رقم ٢", href: "#option2" },
-    { text: "خيار رقم ٣", href: "#option3" }
-  ]
+    { text: 'خيار رقم ١', href: '#option1' },
+    { text: 'خيار رقم ٢', href: '#option2' },
+    { text: 'خيار رقم ٣', href: '#option3' },
+  ],
 }) => {
   const iframeRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  
+
   // Generate items HTML for the dropdown
-  const dropdownItemsHtml = dropdownItems.map((item, index) => {
-    return `
+  const dropdownItemsHtml = dropdownItems
+    .map((item, index) => {
+      return `
       <a href="${item.href || '#'}" 
         target="${item.target || '_self'}" 
         class="dropdown-item" 
         data-index="${index}">
-        ${item.icon ? `<span class="item-icon">${
-          typeof item.icon === 'object' ? 'Icon' : item.icon
-        }</span>` : ''}
+        ${
+          item.icon
+            ? `<span class="item-icon">${
+                typeof item.icon === 'object' ? 'Icon' : item.icon
+              }</span>`
+            : ''
+        }
         <span class="item-text">${item.text}</span>
       </a>
     `;
-  }).join('');
-  
+    })
+    .join('');
+
   // This HTML will be inserted into the iframe with specific CSS reset
   const buttonHTML = `
     <!DOCTYPE html>
@@ -98,7 +104,7 @@ const OptimizedGoldDropdownButton = ({
             right: 2px;
             bottom: 2px;
             background-color: #000000 !important;
-            border-radius: ${(height / 2) - 2}px;
+            border-radius: ${height / 2 - 2}px;
             z-index: 2;
             transition: background-color 0.3s ease;
           }
@@ -260,17 +266,18 @@ const OptimizedGoldDropdownButton = ({
       </body>
     </html>
   `;
-  
+
   useEffect(() => {
     if (iframeRef.current) {
       // Write the HTML content to the iframe
       const iframe = iframeRef.current;
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      
+      const iframeDocument =
+        iframe.contentDocument || iframe.contentWindow.document;
+
       iframeDocument.open();
       iframeDocument.write(buttonHTML);
       iframeDocument.close();
-      
+
       // Add message listener for iframe communication
       const handleMessage = (event) => {
         if (event.data?.type === 'dropdownStateChange') {
@@ -282,27 +289,27 @@ const OptimizedGoldDropdownButton = ({
           }
         }
       };
-      
+
       window.addEventListener('message', handleMessage);
-      
+
       return () => {
         window.removeEventListener('message', handleMessage);
       };
     }
   }, [buttonHTML, dropdownItems]);
-  
+
   return (
-    <iframe 
+    <iframe
       ref={iframeRef}
       style={{
         width,
-        height: isOpen ? (height + dropdownItems.length * 40 + 16) : height, // Adjust height dynamically
+        height: isOpen ? height + dropdownItems.length * 40 + 16 : height, // Adjust height dynamically
         border: 'none',
         overflow: 'visible',
         background: 'transparent',
         backgroundColor: 'transparent',
         pointerEvents: 'auto',
-        transition: 'height 0.3s ease'
+        transition: 'height 0.3s ease',
       }}
       title="Gold Dropdown Button"
       scrolling="no"
@@ -312,4 +319,4 @@ const OptimizedGoldDropdownButton = ({
   );
 };
 
-export default OptimizedGoldDropdownButton; 
+export default OptimizedGoldDropdownButton;

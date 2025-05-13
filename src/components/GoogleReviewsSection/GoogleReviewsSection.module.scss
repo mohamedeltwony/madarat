@@ -51,7 +51,7 @@
 .totalReviews {
   font-size: 1.25rem;
   color: $color-gray-500;
-  
+
   span {
     font-weight: 700;
   }
@@ -77,12 +77,12 @@
   cursor: pointer;
   transition: all 0.3s ease;
   color: $color-primary;
-  
+
   &:hover {
     background: $color-primary;
     color: white;
   }
-  
+
   &:focus {
     outline: none;
     box-shadow: 0 0 0 2px rgba($color-primary, 0.3);
@@ -162,7 +162,7 @@
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background: darken($color-gray-100, 10%);
   }
@@ -170,7 +170,7 @@
 
 .activeIndicator {
   background: $color-primary;
-  
+
   &:hover {
     background: $color-primary;
   }
@@ -188,7 +188,7 @@
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.3s ease;
-  
+
   &:hover {
     color: $color-primary;
   }
@@ -213,8 +213,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .errorContainer {
@@ -228,24 +232,24 @@
   .googleReviewsSection {
     padding: 3rem 0;
   }
-  
+
   .sectionTitle {
     font-size: 2rem;
   }
-  
+
   .reviewCard {
     padding: 1.5rem;
   }
-  
+
   .reviewHeader {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .reviewRating {
     align-self: flex-start;
   }
-  
+
   .reviewContent {
     font-size: 1rem;
   }

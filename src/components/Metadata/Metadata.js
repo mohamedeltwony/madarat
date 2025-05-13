@@ -59,9 +59,7 @@ const Metadata = ({
       )}
       {date && (
         <li>
-          <time datetime={date}>
-            {formatDate(date)}
-          </time>
+          <time datetime={date}>{formatDate(date)}</time>
         </li>
       )}
       {Array.isArray(categories) && categories[0] && (

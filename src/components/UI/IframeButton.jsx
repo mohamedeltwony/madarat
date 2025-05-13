@@ -1,26 +1,26 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-const IframeButton = ({ 
-  text = "زر الإطار", 
+const IframeButton = ({
+  text = 'زر الإطار',
   onClick,
   width = 200,
-  height = 50
+  height = 50,
 }) => {
   const iframeRef = useRef(null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
-  
+
   // Handle iframe load event
   const handleIframeLoad = () => {
     setIframeLoaded(true);
   };
-  
+
   // Apply content to iframe once it's loaded
   useEffect(() => {
     if (!iframeLoaded || !iframeRef.current) return;
-    
+
     const iframe = iframeRef.current;
     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    
+
     // Create completely isolated HTML with its own styles
     const html = `
       <!DOCTYPE html>
@@ -110,14 +110,13 @@ const IframeButton = ({
         </body>
       </html>
     `;
-    
+
     // Write content to iframe
     iframeDoc.open();
     iframeDoc.write(html);
     iframeDoc.close();
-    
   }, [iframeLoaded, text]);
-  
+
   // Listen for message from iframe
   useEffect(() => {
     const handleMessage = (event) => {
@@ -125,11 +124,11 @@ const IframeButton = ({
         onClick();
       }
     };
-    
+
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   }, [onClick]);
-  
+
   return (
     <iframe
       ref={iframeRef}
@@ -143,11 +142,11 @@ const IframeButton = ({
         backgroundColor: 'transparent',
         background: 'transparent',
         border: 'none',
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
       title="Button iframe"
     />
   );
 };
 
-export default IframeButton; 
+export default IframeButton;

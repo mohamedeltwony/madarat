@@ -1,15 +1,15 @@
 import React, { useRef, useEffect } from 'react';
 
-const OptimizedGoldButton = ({ 
-  text = "زر ذهبي", 
+const OptimizedGoldButton = ({
+  text = 'زر ذهبي',
   onClick,
   href = null,
-  target = "_self",
+  target = '_self',
   width = 200,
-  height = 50
+  height = 50,
 }) => {
   const iframeRef = useRef(null);
-  
+
   // This HTML will be inserted into the iframe with specific CSS reset
   const buttonHTML = `
     <!DOCTYPE html>
@@ -72,7 +72,7 @@ const OptimizedGoldButton = ({
             right: 2px;
             bottom: 2px;
             background-color: #000000 !important;
-            border-radius: ${(height / 2) - 2}px;
+            border-radius: ${height / 2 - 2}px;
             z-index: 2;
             transition: background-color 0.3s ease;
           }
@@ -100,13 +100,14 @@ const OptimizedGoldButton = ({
         </style>
       </head>
       <body>
-        ${href 
-          ? `<a href="${href}" target="${target}" class="button-container" id="goldButton">
+        ${
+          href
+            ? `<a href="${href}" target="${target}" class="button-container" id="goldButton">
               <div class="gold-border"></div>
               <div class="inner-background"></div>
               <div class="button-text">${text}</div>
-            </a>` 
-          : `<div class="button-container" id="goldButton">
+            </a>`
+            : `<div class="button-container" id="goldButton">
               <div class="gold-border"></div>
               <div class="inner-background"></div>
               <div class="button-text">${text}</div>
@@ -124,34 +125,35 @@ const OptimizedGoldButton = ({
       </body>
     </html>
   `;
-  
+
   useEffect(() => {
     if (iframeRef.current) {
       // Write the HTML content to the iframe
       const iframe = iframeRef.current;
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      
+      const iframeDocument =
+        iframe.contentDocument || iframe.contentWindow.document;
+
       iframeDocument.open();
       iframeDocument.write(buttonHTML);
       iframeDocument.close();
-      
+
       // Add message listener for iframe communication (for onClick functionality)
       const handleMessage = (event) => {
         if (event.data === 'buttonClicked' && onClick) {
           onClick();
         }
       };
-      
+
       window.addEventListener('message', handleMessage);
-      
+
       return () => {
         window.removeEventListener('message', handleMessage);
       };
     }
   }, [buttonHTML, onClick, href]);
-  
+
   return (
-    <iframe 
+    <iframe
       ref={iframeRef}
       style={{
         width,
@@ -160,7 +162,7 @@ const OptimizedGoldButton = ({
         overflow: 'hidden',
         background: 'transparent',
         backgroundColor: 'transparent',
-        pointerEvents: 'auto'
+        pointerEvents: 'auto',
       }}
       title="Gold Button"
       scrolling="no"
@@ -170,4 +172,4 @@ const OptimizedGoldButton = ({
   );
 };
 
-export default OptimizedGoldButton; 
+export default OptimizedGoldButton;

@@ -19,25 +19,29 @@ $glass-border: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border: 1px solid $glass-border;
-  box-shadow: 
+  box-shadow:
     0 10px 30px 0 $shadow-color,
     inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
 }
 
 @mixin futuristic-glass {
-  background: linear-gradient(135deg, rgba($primary-color, 0.15) 0%, rgba($secondary-color, 0.08) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba($primary-color, 0.15) 0%,
+    rgba($secondary-color, 0.08) 100%
+  );
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border: 1px solid rgba($primary-color, 0.2);
-  box-shadow: 
+  box-shadow:
     0 15px 40px rgba(0, 0, 0, 0.2),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  
+
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 
+    box-shadow:
       0 20px 60px rgba(0, 0, 0, 0.25),
       inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   }
@@ -57,20 +61,36 @@ $glass-border: rgba(255, 255, 255, 0.12);
 
 // Animation keyframes
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-4px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 @keyframes shine {
-  0% { background-position: -200% 0; }
-  100% { background-position: 300% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 300% 0;
+  }
 }
 
 @keyframes magicBorder {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .trips {
@@ -136,12 +156,12 @@ $glass-border: rgba(255, 255, 255, 0.12);
     padding: 1.5rem 0;
     width: 100%;
     direction: rtl;
-    
+
     @media (max-width: 1200px) {
       grid-template-columns: repeat(2, 1fr);
       gap: 1.2rem;
     }
-    
+
     @media (max-width: 640px) {
       grid-template-columns: repeat(1, 1fr);
       gap: 1.5rem;
@@ -151,7 +171,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   .gridItem {
     position: relative;
     transition: transform 0.6s ease-out;
-    
+
     &:hover {
       transform: scale(1.02);
       z-index: 5;
@@ -166,16 +186,16 @@ $glass-border: rgba(255, 255, 255, 0.12);
     color: inherit;
     text-decoration: none;
     position: relative;
-    
+
     &:hover {
       transform: translateY(-3px);
       transition: all 0.5s ease-out;
-      
+
       &::before {
         animation-duration: 8s;
       }
     }
-    
+
     &::before {
       content: '';
       position: absolute;
@@ -183,27 +203,35 @@ $glass-border: rgba(255, 255, 255, 0.12);
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(45deg, 
-        rgba($accent-color, 0) 40%, 
-        rgba($accent-color, 0.1) 50%, 
-        rgba($accent-color, 0) 60%);
+      background: linear-gradient(
+        45deg,
+        rgba($accent-color, 0) 40%,
+        rgba($accent-color, 0.1) 50%,
+        rgba($accent-color, 0) 60%
+      );
       background-size: 300% 100%;
       animation: shine 8s infinite linear;
       z-index: 1;
       pointer-events: none;
     }
-    
+
     &:hover::after {
       content: '';
       position: absolute;
       inset: 0;
       border-radius: 20px;
       padding: 2px;
-      background: linear-gradient(300deg, $primary-color, $accent-color, $secondary-color, $primary-color);
+      background: linear-gradient(
+        300deg,
+        $primary-color,
+        $accent-color,
+        $secondary-color,
+        $primary-color
+      );
       background-size: 300% 300%;
       animation: magicBorder 3s ease infinite;
-      -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
@@ -225,7 +253,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
     object-fit: cover;
     transition: transform 1s ease-out;
     filter: brightness(0.95);
-    
+
     .tripCard:hover & {
       transform: scale(1.08);
       filter: brightness(1.05) contrast(1.02);
@@ -236,7 +264,11 @@ $glass-border: rgba(255, 255, 255, 0.12);
     position: absolute;
     top: 15px;
     right: 15px;
-    background: linear-gradient(45deg, $accent-color, darken($accent-color, 10%));
+    background: linear-gradient(
+      45deg,
+      $accent-color,
+      darken($accent-color, 10%)
+    );
     color: $light-text;
     padding: 0.35rem 0.85rem;
     border-radius: 30px;
@@ -263,7 +295,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
     display: flex;
     align-items: center;
     gap: 5px;
-    
+
     .tripCard:hover & {
       background: $accent-color;
       transform: translateY(-3px);
@@ -328,7 +360,11 @@ $glass-border: rgba(255, 255, 255, 0.12);
     font-size: 1.25rem;
     font-weight: 700;
     color: $accent-color;
-    background: linear-gradient(135deg, rgba($accent-color, 0.15), rgba($accent-color, 0.05));
+    background: linear-gradient(
+      135deg,
+      rgba($accent-color, 0.15),
+      rgba($accent-color, 0.05)
+    );
     padding: 0.4rem 1rem;
     border-radius: 30px;
     display: flex;
@@ -356,11 +392,11 @@ $glass-border: rgba(255, 255, 255, 0.12);
     color: $primary-color;
     font-weight: 600;
     transition: all 0.3s ease;
-    
+
     svg {
       transition: transform 0.3s ease;
     }
-    
+
     .tripCard:hover & svg {
       transform: translateX(8px);
     }
@@ -376,7 +412,11 @@ $glass-border: rgba(255, 255, 255, 0.12);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(45deg, $primary-color, darken($primary-color, 10%));
+    background: linear-gradient(
+      45deg,
+      $primary-color,
+      darken($primary-color, 10%)
+    );
     color: $light-text;
     border: none;
     border-radius: 8px;
@@ -384,12 +424,12 @@ $glass-border: rgba(255, 255, 255, 0.12);
     font-weight: 600;
     transition: all 0.3s ease;
     cursor: pointer;
-    
+
     &:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 8px 15px rgba($primary-color, 0.4);
     }
-    
+
     &:disabled {
       background: #e2e8f0;
       color: #94a3b8;
@@ -407,16 +447,16 @@ $glass-border: rgba(255, 255, 255, 0.12);
     font-weight: 600;
     transition: all 0.3s ease;
     margin: 0 0.25rem;
-    
+
     &.active {
       background: $primary-color;
       color: $light-text;
     }
-    
+
     &:not(.active) {
       background: #e2e8f0;
       color: $text-color;
-      
+
       &:hover {
         background: #cbd5e1;
         transform: translateY(-2px);
@@ -492,7 +532,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   text-align: center;
   direction: rtl;
   overflow: hidden;
-  
+
   @media (max-width: 768px) {
     height: 400px;
   }
@@ -516,19 +556,17 @@ $glass-border: rgba(255, 255, 255, 0.12);
   z-index: 2;
 }
 
-
-
 .tripsHeroTitle {
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
   color: white;
-  
+
   @media (max-width: 768px) {
     font-size: 2.5rem;
   }
-  
+
   &::after {
     content: '';
     display: block;
@@ -547,7 +585,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   line-height: 1.6;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
   color: white;
-  
+
   @media (max-width: 768px) {
     font-size: 1rem;
   }

@@ -2,28 +2,28 @@ import React from 'react';
 import Link from 'next/link';
 import styles from './HeaderGoldButton.module.css';
 
-const HeaderGoldButton = ({ 
-  text, 
-  href, 
-  onClick, 
-  className = '', 
+const HeaderGoldButton = ({
+  text,
+  href,
+  onClick,
+  className = '',
   icon = null,
   external = false,
-  size = 'medium' // 'small', 'medium', or 'large'
+  size = 'medium', // 'small', 'medium', or 'large'
 }) => {
   // Determine size class
   const sizeClass = styles[size] || styles.medium;
-  
+
   // Combine CSS classes
   const buttonClass = `${styles.headerGoldButton} ${sizeClass} ${className}`;
-  
+
   // Handle click event
   const handleClick = (e) => {
     if (onClick) {
       onClick(e);
     }
   };
-  
+
   // Content to render inside button
   const buttonContent = (
     <>
@@ -31,11 +31,11 @@ const HeaderGoldButton = ({
       {icon && <span className={styles.buttonIcon}>{icon}</span>}
     </>
   );
-  
+
   // External link button
   if (href && external) {
     return (
-      <a 
+      <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
@@ -46,7 +46,7 @@ const HeaderGoldButton = ({
       </a>
     );
   }
-  
+
   // Internal link button
   if (href) {
     return (
@@ -55,7 +55,7 @@ const HeaderGoldButton = ({
       </Link>
     );
   }
-  
+
   // Regular button (no link)
   return (
     <button className={buttonClass} onClick={handleClick}>
@@ -64,4 +64,4 @@ const HeaderGoldButton = ({
   );
 };
 
-export default HeaderGoldButton; 
+export default HeaderGoldButton;

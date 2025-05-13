@@ -20,7 +20,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   text-decoration: none;
   position: relative;
-  
+
   // Static styling for server rendering
   &::before {
     content: '';
@@ -30,19 +30,19 @@
     border-radius: 50%;
     opacity: 0.4;
   }
-  
+
   // Animation will be applied on client side only with JS
   &.client {
     animation: bounce 1s infinite alternate;
-    
+
     &::before {
       animation: pulse 2s infinite;
     }
   }
-  
+
   &:hover {
     transform: translateY(-3px);
-    
+
     &::before {
       opacity: 0.5;
     }
@@ -50,16 +50,16 @@
 }
 
 .whatsappButton {
-  background-color: #25D366;
-  
+  background-color: #25d366;
+
   &::before {
-    background-color: #25D366;
+    background-color: #25d366;
   }
-  
+
   &:hover {
     background-color: #22c55e;
   }
-  
+
   .whatsappIcon {
     position: relative;
     z-index: 2;
@@ -69,15 +69,15 @@
 
 .callButton {
   background-color: $color-gold-500;
-  
+
   &::before {
     background-color: $color-gold-500;
   }
-  
+
   &:hover {
     background-color: darken($color-gold-500, 5%);
   }
-  
+
   .callIcon {
     position: relative;
     z-index: 2;

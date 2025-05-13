@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
 
-const UltimateDropdownButton = ({ 
-  text = "زر ذهبي منسدل", 
+const UltimateDropdownButton = ({
+  text = 'زر ذهبي منسدل',
   width = 200,
   height = 50,
   items = null,
@@ -12,49 +12,53 @@ const UltimateDropdownButton = ({
   const buttonRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  
+
   // Default dropdown items if not provided
   const dropdownItems = items || [
     {
-      text: "إتصل في مستشارك",
-      href: "tel:+966123456789",
-      icon: <FaPhoneAlt style={{ color: '#ffd700' }} />
+      text: 'إتصل في مستشارك',
+      href: 'tel:+966123456789',
+      icon: <FaPhoneAlt style={{ color: '#ffd700' }} />,
     },
     {
-      text: "للحجز سجل رقمك",
-      href: "/booking",
-      icon: <FaUserTie style={{ color: '#ffd700' }} />
+      text: 'للحجز سجل رقمك',
+      href: '/booking',
+      icon: <FaUserTie style={{ color: '#ffd700' }} />,
     },
     {
-      text: "شكوى أو ملاحظات",
-      href: "/feedback",
-      icon: <FaCommentDots style={{ color: '#ffd700' }} />
-    }
+      text: 'شكوى أو ملاحظات',
+      href: '/feedback',
+      icon: <FaCommentDots style={{ color: '#ffd700' }} />,
+    },
   ];
-  
+
   // Calculate button size based on text
   const buttonWidth = Math.max(text.length * 12 + 40, width);
-  
+
   // Handle events
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
-  
+
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
-  
+
   // Handle outside clicks to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isOpen && buttonRef.current && !buttonRef.current.contains(event.target)) {
+      if (
+        isOpen &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
-  
+
   // CSS reset styles to ensure no backgrounds
   const cssReset = {
     all: 'initial',
@@ -69,20 +73,20 @@ const UltimateDropdownButton = ({
     boxShadow: 'none',
     WebkitAppearance: 'none',
     MozAppearance: 'none',
-    appearance: 'none'
+    appearance: 'none',
   };
-  
+
   return (
     <div
       ref={buttonRef}
       style={{
         ...cssReset,
         position: 'relative',
-        display: 'inline-block'
+        display: 'inline-block',
       }}
     >
       {/* Button */}
-      <div 
+      <div
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -95,7 +99,7 @@ const UltimateDropdownButton = ({
           cursor: 'pointer',
           overflow: 'hidden',
           fontFamily: 'Cairo, sans-serif',
-          ...style
+          ...style,
         }}
         role="button"
         tabIndex={0}
@@ -112,11 +116,11 @@ const UltimateDropdownButton = ({
             bottom: 0,
             borderRadius: height / 2,
             zIndex: 0,
-            overflow: 'hidden'
+            overflow: 'hidden',
           }}
         >
           {/* Gold gradient animation */}
-          <div 
+          <div
             style={{
               ...cssReset,
               position: 'absolute',
@@ -124,13 +128,14 @@ const UltimateDropdownButton = ({
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundImage: 'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
+              backgroundImage:
+                'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
               backgroundSize: '300% 300%',
-              animation: 'ultimateDropdownGlow 6s linear infinite'
+              animation: 'ultimateDropdownGlow 6s linear infinite',
             }}
           />
         </div>
-        
+
         {/* Dark inner background */}
         <div
           style={{
@@ -140,13 +145,15 @@ const UltimateDropdownButton = ({
             left: 2,
             right: 2,
             bottom: 2,
-            borderRadius: (height / 2) - 1,
-            backgroundColor: isHovered ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.7)',
+            borderRadius: height / 2 - 1,
+            backgroundColor: isHovered
+              ? 'rgba(0, 0, 0, 0.4)'
+              : 'rgba(0, 0, 0, 0.7)',
             zIndex: 1,
-            transition: 'background-color 0.3s ease'
+            transition: 'background-color 0.3s ease',
           }}
         />
-        
+
         {/* Button text */}
         <div
           style={{
@@ -164,13 +171,13 @@ const UltimateDropdownButton = ({
             fontSize: '16px',
             zIndex: 2,
             textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-            fontFamily: 'Cairo, sans-serif'
+            fontFamily: 'Cairo, sans-serif',
           }}
         >
           {text}
         </div>
       </div>
-      
+
       {/* Dropdown menu */}
       {isOpen && (
         <div
@@ -185,7 +192,7 @@ const UltimateDropdownButton = ({
             borderRadius: '15px',
             overflow: 'hidden',
             zIndex: 100,
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            border: '1px solid rgba(255, 255, 255, 0.1)',
           }}
         >
           {dropdownItems.map((item, index) => (
@@ -198,18 +205,19 @@ const UltimateDropdownButton = ({
                 padding: '12px 15px',
                 color: 'white',
                 textDecoration: 'none',
-                borderBottom: index < dropdownItems.length - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                borderBottom:
+                  index < dropdownItems.length - 1
+                    ? '1px solid rgba(255, 255, 255, 0.1)'
+                    : 'none',
               }}
             >
-              <div style={{ marginLeft: '12px' }}>
-                {item.icon}
-              </div>
+              <div style={{ marginLeft: '12px' }}>{item.icon}</div>
               <span>{item.text}</span>
             </a>
           ))}
         </div>
       )}
-      
+
       {/* CSS animation in a style tag */}
       <style>{`
         @keyframes ultimateDropdownGlow {
@@ -222,4 +230,4 @@ const UltimateDropdownButton = ({
   );
 };
 
-export default UltimateDropdownButton; 
+export default UltimateDropdownButton;

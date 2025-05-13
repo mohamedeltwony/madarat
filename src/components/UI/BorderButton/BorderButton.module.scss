@@ -27,20 +27,23 @@ $gold-dark: #e6c200;
   transition: transform 0.3s ease;
   overflow: hidden;
   z-index: 1;
-  
-  &::before, &::after {
+
+  &::before,
+  &::after {
     display: none !important;
     content: none !important;
     background: transparent !important;
     background-color: transparent !important;
   }
-  
-  &:hover, &:active, &:focus {
+
+  &:hover,
+  &:active,
+  &:focus {
     background-color: transparent !important;
     background: transparent !important;
     transform: translateY(-3px);
   }
-  
+
   /* Button text */
   .buttonText {
     position: relative;
@@ -73,29 +76,31 @@ $gold-dark: #e6c200;
   color: white;
   text-decoration: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+
   &:last-child {
     border-bottom: none;
   }
-  
+
   &:hover {
     background-color: rgba(255, 215, 0, 0.1);
     transform: translateX(-5px);
   }
-  
+
   .iconWrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-left: 12px;
-    
+
     .icon {
       color: $gold;
       font-size: 1.1rem;
     }
   }
-  
+
   span {
     font-weight: 500;
   }
@@ -123,4 +128,4 @@ $gold-dark: #e6c200;
     opacity: 1;
     transform: translateY(0);
   }
-} 
+}

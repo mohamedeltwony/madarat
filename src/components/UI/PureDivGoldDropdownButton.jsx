@@ -1,65 +1,69 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
 
-const PureDivGoldDropdownButton = ({ 
-  text = "زر ذهبي منسدل", 
+const PureDivGoldDropdownButton = ({
+  text = 'زر ذهبي منسدل',
   width = 200,
   height = 50,
-  items = null
+  items = null,
 }) => {
   const buttonRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  
+
   // Default dropdown items if not provided
   const dropdownItems = items || [
     {
-      text: "إتصل في مستشارك",
-      href: "tel:+966123456789",
-      icon: <FaPhoneAlt style={{ color: '#ffd700' }} />
+      text: 'إتصل في مستشارك',
+      href: 'tel:+966123456789',
+      icon: <FaPhoneAlt style={{ color: '#ffd700' }} />,
     },
     {
-      text: "للحجز سجل رقمك",
-      href: "/booking",
-      icon: <FaUserTie style={{ color: '#ffd700' }} />
+      text: 'للحجز سجل رقمك',
+      href: '/booking',
+      icon: <FaUserTie style={{ color: '#ffd700' }} />,
     },
     {
-      text: "شكوى أو ملاحظات",
-      href: "/feedback",
-      icon: <FaCommentDots style={{ color: '#ffd700' }} />
-    }
+      text: 'شكوى أو ملاحظات',
+      href: '/feedback',
+      icon: <FaCommentDots style={{ color: '#ffd700' }} />,
+    },
   ];
-  
+
   // Handle events
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
-  
+
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
-  
+
   // Handle outside clicks to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isOpen && buttonRef.current && !buttonRef.current.contains(event.target)) {
+      if (
+        isOpen &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
-  
+
   return (
     <div
       ref={buttonRef}
       style={{
         position: 'relative',
-        display: 'inline-block'
+        display: 'inline-block',
       }}
     >
       {/* Button */}
-      <div 
+      <div
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -70,7 +74,7 @@ const PureDivGoldDropdownButton = ({
           height,
           cursor: 'pointer',
           overflow: 'hidden',
-          borderRadius: height / 2
+          borderRadius: height / 2,
         }}
       >
         {/* Gold animated border */}
@@ -82,13 +86,14 @@ const PureDivGoldDropdownButton = ({
             right: 0,
             bottom: 0,
             borderRadius: height / 2,
-            backgroundImage: 'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
+            backgroundImage:
+              'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
             backgroundSize: '300% 300%',
             animation: 'pureDivDropdownGlow 6s linear infinite',
-            zIndex: 0
+            zIndex: 0,
           }}
         />
-        
+
         {/* Dark inner background */}
         <div
           style={{
@@ -97,13 +102,15 @@ const PureDivGoldDropdownButton = ({
             left: 2,
             right: 2,
             bottom: 2,
-            borderRadius: (height / 2) - 1,
-            backgroundColor: isHovered ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.7)',
+            borderRadius: height / 2 - 1,
+            backgroundColor: isHovered
+              ? 'rgba(0, 0, 0, 0.4)'
+              : 'rgba(0, 0, 0, 0.7)',
             zIndex: 1,
-            transition: 'background-color 0.3s ease'
+            transition: 'background-color 0.3s ease',
           }}
         />
-        
+
         {/* Button text */}
         <div
           style={{
@@ -120,13 +127,13 @@ const PureDivGoldDropdownButton = ({
             fontSize: '16px',
             zIndex: 2,
             textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-            fontFamily: 'Arial, sans-serif'
+            fontFamily: 'Arial, sans-serif',
           }}
         >
           {text}
         </div>
       </div>
-      
+
       {/* Dropdown menu */}
       {isOpen && (
         <div
@@ -141,7 +148,7 @@ const PureDivGoldDropdownButton = ({
             borderRadius: '15px',
             overflow: 'hidden',
             zIndex: 100,
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            border: '1px solid rgba(255, 255, 255, 0.1)',
           }}
         >
           {dropdownItems.map((item, index) => (
@@ -154,18 +161,19 @@ const PureDivGoldDropdownButton = ({
                 padding: '12px 15px',
                 color: 'white',
                 textDecoration: 'none',
-                borderBottom: index < dropdownItems.length - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                borderBottom:
+                  index < dropdownItems.length - 1
+                    ? '1px solid rgba(255, 255, 255, 0.1)'
+                    : 'none',
               }}
             >
-              <div style={{ marginLeft: '12px' }}>
-                {item.icon}
-              </div>
+              <div style={{ marginLeft: '12px' }}>{item.icon}</div>
               <span>{item.text}</span>
             </a>
           ))}
         </div>
       )}
-      
+
       {/* CSS animation in a style tag */}
       <style>{`
         @keyframes pureDivDropdownGlow {
@@ -178,4 +186,4 @@ const PureDivGoldDropdownButton = ({
   );
 };
 
-export default PureDivGoldDropdownButton; 
+export default PureDivGoldDropdownButton;

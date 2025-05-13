@@ -7,7 +7,7 @@ const EnhancedGoldDropdownButton = ({
   items = [],
   className = '',
   icon = null,
-  ariaLabel = ''
+  ariaLabel = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -88,4 +88,4 @@ const EnhancedGoldDropdownButton = ({
   );
 };
 
-export default EnhancedGoldDropdownButton; 
+export default EnhancedGoldDropdownButton;

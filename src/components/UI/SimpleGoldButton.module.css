@@ -19,7 +19,8 @@
   outline: none;
 }
 
-.goldButton:hover, .goldButton:focus {
+.goldButton:hover,
+.goldButton:focus {
   background-color: #111111;
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
   text-decoration: none;
@@ -33,6 +34,6 @@
 }
 
 /* For right-to-left direction */
-[dir="rtl"] .goldButton .buttonIcon {
+[dir='rtl'] .goldButton .buttonIcon {
   transform: rotate(180deg);
-} 
+}

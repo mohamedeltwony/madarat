@@ -10,7 +10,9 @@ const TableOfContents = ({ headings }) => {
     if (!headings || headings.length === 0) return;
 
     const handleScroll = () => {
-      const headingElements = headings.map(heading => document.getElementById(heading.id));
+      const headingElements = headings.map((heading) =>
+        document.getElementById(heading.id)
+      );
       const scrollPosition = window.scrollY + 100;
 
       for (let i = headingElements.length - 1; i >= 0; i--) {
@@ -39,7 +41,7 @@ const TableOfContents = ({ headings }) => {
         behavior: 'smooth',
         block: 'start',
       });
-      
+
       // Set URL hash without jumping
       window.history.pushState(null, null, `#${id}`);
       setActiveId(id);
@@ -52,10 +54,7 @@ const TableOfContents = ({ headings }) => {
 
   return (
     <div className={styles.tocContainer}>
-      <div 
-        className={styles.tocHeader}
-        onClick={() => setIsOpen(!isOpen)}
-      >
+      <div className={styles.tocHeader} onClick={() => setIsOpen(!isOpen)}>
         <div className={styles.tocTitle}>
           <FiList className={styles.tocIcon} />
           <span>محتوي المقال</span>
@@ -71,11 +70,11 @@ const TableOfContents = ({ headings }) => {
         <nav className={styles.tocNav}>
           <ul className={styles.tocList}>
             {headings.map((heading, index) => (
-              <li 
-                key={index} 
+              <li
+                key={index}
                 className={`${styles.tocItem} ${styles[`level${heading.level}`]} ${activeId === heading.id ? styles.active : ''}`}
               >
-                <a 
+                <a
                   href={`#${heading.id}`}
                   onClick={(e) => handleClick(e, heading.id)}
                   className={styles.tocLink}
@@ -91,4 +90,4 @@ const TableOfContents = ({ headings }) => {
   );
 };
 
-export default TableOfContents; 
+export default TableOfContents;

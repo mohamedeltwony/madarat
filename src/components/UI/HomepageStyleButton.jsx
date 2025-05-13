@@ -2,30 +2,32 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './HomepageStyleButton.module.css';
 
-const HomepageStyleButton = ({ 
-  text, 
-  href, 
-  onClick, 
-  icon = null, 
+const HomepageStyleButton = ({
+  text,
+  href,
+  onClick,
+  icon = null,
   external = false,
   variant = 'default', // 'default' or 'featured'
   dropdownItems = null, // array of { label, onClick }
-  className = '' // Add support for custom className
+  className = '', // Add support for custom className
 }) => {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
-  const buttonClass = `${variant === 'featured' ? 
-    styles.featuredButton : 
-    styles.viewAllButton} ${className}`;
+  const buttonClass = `${
+    variant === 'featured' ? styles.featuredButton : styles.viewAllButton
+  } ${className}`;
 
   // Close dropdown on outside click
   useEffect(() => {
     if (!open) return;
     function handleClick(e) {
       if (
-        buttonRef.current && !buttonRef.current.contains(e.target) &&
-        dropdownRef.current && !dropdownRef.current.contains(e.target)
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target) &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target)
       ) {
         setOpen(false);
       }
@@ -59,10 +61,7 @@ const HomepageStyleButton = ({
           {buttonContent}
         </button>
         {open && (
-          <div
-            ref={dropdownRef}
-            className={styles.dropdownMenu}
-          >
+          <div ref={dropdownRef} className={styles.dropdownMenu}>
             {dropdownItems.map((item, idx) => (
               <button
                 key={idx}
@@ -84,7 +83,7 @@ const HomepageStyleButton = ({
   // If external link
   if (href && external) {
     return (
-      <a 
+      <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
@@ -95,7 +94,7 @@ const HomepageStyleButton = ({
       </a>
     );
   }
-  
+
   // If internal link
   if (href) {
     return (
@@ -104,7 +103,7 @@ const HomepageStyleButton = ({
       </Link>
     );
   }
-  
+
   // If button
   return (
     <button className={buttonClass} onClick={onClick}>
@@ -113,4 +112,4 @@ const HomepageStyleButton = ({
   );
 };
 
-export default HomepageStyleButton; 
+export default HomepageStyleButton;

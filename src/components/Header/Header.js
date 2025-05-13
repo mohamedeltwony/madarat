@@ -1,7 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FaSearch, FaChevronDown, FaBars, FaTimes, FaArrowLeft, FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
+import {
+  FaSearch,
+  FaChevronDown,
+  FaBars,
+  FaTimes,
+  FaArrowLeft,
+  FaPhoneAlt,
+  FaUserTie,
+  FaCommentDots,
+} from 'react-icons/fa';
 import Logo from '../Logo';
 import styles from './Header.module.scss';
 import LocalizedLink from '../LocalizedLink';
@@ -12,8 +21,10 @@ const Header = () => {
   const router = useRouter();
   const { pathname } = router;
   const isHomePage = pathname === '/';
-  const isTripPage = (pathname.includes('/trips/') && pathname !== '/trips') || pathname === '/book-now';
-  
+  const isTripPage =
+    (pathname.includes('/trips/') && pathname !== '/trips') ||
+    pathname === '/book-now';
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -23,21 +34,23 @@ const Header = () => {
   const inactivityTimer = useRef(null);
   const navRef = useRef(null);
   const menuButtonRef = useRef(null);
-  
+
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isMenuOpen && 
-          navRef.current && 
-          !navRef.current.contains(event.target) &&
-          menuButtonRef.current &&
-          !menuButtonRef.current.contains(event.target)) {
+      if (
+        isMenuOpen &&
+        navRef.current &&
+        !navRef.current.contains(event.target) &&
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(event.target)
+      ) {
         setIsMenuOpen(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
-    
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -48,15 +61,15 @@ const Header = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 992); // Use the same breakpoint as $breakpoint-medium
     };
-    
+
     checkMobile(); // Initial check
     window.addEventListener('resize', checkMobile);
-    
+
     return () => {
       window.removeEventListener('resize', checkMobile);
     };
   }, []);
-  
+
   // On mobile, force expanded menu
   useEffect(() => {
     if (isMobile) {
@@ -90,11 +103,13 @@ const Header = () => {
       };
       // Listen for mousemove, keydown, click on header
       const events = ['mousemove', 'keydown', 'click', 'touchstart'];
-      events.forEach(event => document.addEventListener(event, resetTimer));
+      events.forEach((event) => document.addEventListener(event, resetTimer));
       resetTimer();
       return () => {
         clearTimeout(inactivityTimer.current);
-        events.forEach(event => document.removeEventListener(event, resetTimer));
+        events.forEach((event) =>
+          document.removeEventListener(event, resetTimer)
+        );
       };
     }
   }, [isCompact, isMobile]);
@@ -106,7 +121,7 @@ const Header = () => {
     } else {
       document.body.style.overflow = 'auto';
     }
-    
+
     return () => {
       document.body.style.overflow = 'auto';
     };
@@ -140,21 +155,21 @@ const Header = () => {
   // Get CTA button dropdown items
   const getCtaDropdownItems = () => {
     return [
-      { 
-        label: "للحجز سجل رقمك",
+      {
+        label: 'للحجز سجل رقمك',
         icon: <FaUserTie size={14} />,
-        onClick: () => router.push("/book-now")
+        onClick: () => router.push('/book-now'),
       },
-      { 
-        label: "إتصل في مستشارك",
+      {
+        label: 'إتصل في مستشارك',
         icon: <FaPhoneAlt size={14} />,
-        onClick: () => window.location.href = "tel:920034019"
+        onClick: () => (window.location.href = 'tel:920034019'),
       },
-      { 
-        label: "شكوى أو ملاحظات",
+      {
+        label: 'شكوى أو ملاحظات',
         icon: <FaCommentDots size={14} />,
-        onClick: () => router.push("/feedback")
-      }
+        onClick: () => router.push('/feedback'),
+      },
     ];
   };
 
@@ -175,20 +190,20 @@ const Header = () => {
               <Logo />
             </LocalizedLink>
           </div>
-          
+
           <div className={styles.tripHeaderActions}>
             {/* Call to Action Button - only on desktop */}
             {!isMobile && (
-              <AnimatedBorderButton 
-                text="تواصل مع مستشارك السياحي" 
+              <AnimatedBorderButton
+                text="تواصل مع مستشارك السياحي"
                 variant="transparent"
                 dropdownItems={getCtaDropdownItems()}
               />
             )}
-            
-            <button 
+
+            <button
               ref={menuButtonRef}
-              className={styles.menuButton} 
+              className={styles.menuButton}
               onClick={toggleMenu}
               aria-label="Toggle navigation menu"
               style={{ marginRight: !isMobile ? '10px' : '0' }}
@@ -196,9 +211,9 @@ const Header = () => {
               {isMenuOpen ? <FaTimes /> : <FaBars />}
             </button>
           </div>
-          
+
           {/* Sidebar Navigation for Trip Pages */}
-          <div 
+          <div
             ref={navRef}
             className={`${styles.tripNav} ${isMenuOpen ? styles.active : ''}`}
           >
@@ -208,21 +223,26 @@ const Header = () => {
                   <Logo />
                 </LocalizedLink>
               </div>
-              <button 
-                className={styles.closeButton} 
+              <button
+                className={styles.closeButton}
                 onClick={toggleMenu}
                 aria-label="Close navigation menu"
               >
                 <FaTimes />
               </button>
             </div>
-            
+
             <ul className={styles.sidebarMenu}>
               {/* احجز خدمة */}
               <li className={styles.sidebarMenuItem}>
-                <LocalizedLink href="/book-now" className={styles.sidebarMenuLink}>احجز خدمة</LocalizedLink>
+                <LocalizedLink
+                  href="/book-now"
+                  className={styles.sidebarMenuLink}
+                >
+                  احجز خدمة
+                </LocalizedLink>
               </li>
-              
+
               {/* الرحلات */}
               <li className={styles.sidebarMenuItem}>
                 <div
@@ -234,16 +254,38 @@ const Header = () => {
                 </div>
                 {activeDropdown === 'trips' && (
                   <ul className={styles.sidebarSubmenu}>
-                    <li><LocalizedLink href="/trips">جميع الرحلات</LocalizedLink></li>
-                    <li><LocalizedLink href="/packages/honeymoon">رحلات شهر العسل</LocalizedLink></li>
-                    <li><LocalizedLink href="/packages/family">رحلات عائلية</LocalizedLink></li>
-                    <li><LocalizedLink href="/packages/adventure">رحلات المغامرة</LocalizedLink></li>
-                    <li><LocalizedLink href="/packages/luxury">رحلات فاخرة</LocalizedLink></li>
-                    <li><LocalizedLink href="/packages/budget">رحلات اقتصادية</LocalizedLink></li>
+                    <li>
+                      <LocalizedLink href="/trips">جميع الرحلات</LocalizedLink>
+                    </li>
+                    <li>
+                      <LocalizedLink href="/packages/honeymoon">
+                        رحلات شهر العسل
+                      </LocalizedLink>
+                    </li>
+                    <li>
+                      <LocalizedLink href="/packages/family">
+                        رحلات عائلية
+                      </LocalizedLink>
+                    </li>
+                    <li>
+                      <LocalizedLink href="/packages/adventure">
+                        رحلات المغامرة
+                      </LocalizedLink>
+                    </li>
+                    <li>
+                      <LocalizedLink href="/packages/luxury">
+                        رحلات فاخرة
+                      </LocalizedLink>
+                    </li>
+                    <li>
+                      <LocalizedLink href="/packages/budget">
+                        رحلات اقتصادية
+                      </LocalizedLink>
+                    </li>
                   </ul>
                 )}
               </li>
-              
+
               {/* الوجهات */}
               <li className={styles.sidebarMenuItem}>
                 <div
@@ -255,43 +297,78 @@ const Header = () => {
                 </div>
                 {activeDropdown === 'destinations' && (
                   <ul className={styles.sidebarSubmenu}>
-                    <li><LocalizedLink href="/destinations">جميع الوجهات</LocalizedLink></li>
-                    <li><LocalizedLink href="/destinations/europe">أوروبا</LocalizedLink></li>
-                    <li><LocalizedLink href="/destinations/middle-east">الشرق الأوسط</LocalizedLink></li>
-                    <li><LocalizedLink href="/destinations/asia">آسيا</LocalizedLink></li>
-                    <li><LocalizedLink href="/destinations/americas">الأمريكتين</LocalizedLink></li>
-                    <li><LocalizedLink href="/destinations/africa">أفريقيا</LocalizedLink></li>
+                    <li>
+                      <LocalizedLink href="/destinations">
+                        جميع الوجهات
+                      </LocalizedLink>
+                    </li>
+                    <li>
+                      <LocalizedLink href="/destinations/europe">
+                        أوروبا
+                      </LocalizedLink>
+                    </li>
+                    <li>
+                      <LocalizedLink href="/destinations/middle-east">
+                        الشرق الأوسط
+                      </LocalizedLink>
+                    </li>
+                    <li>
+                      <LocalizedLink href="/destinations/asia">
+                        آسيا
+                      </LocalizedLink>
+                    </li>
+                    <li>
+                      <LocalizedLink href="/destinations/americas">
+                        الأمريكتين
+                      </LocalizedLink>
+                    </li>
+                    <li>
+                      <LocalizedLink href="/destinations/africa">
+                        أفريقيا
+                      </LocalizedLink>
+                    </li>
                   </ul>
                 )}
               </li>
-              
+
               {/* المقالات */}
               <li className={styles.sidebarMenuItem}>
-                <LocalizedLink href="/blog" className={styles.sidebarMenuLink}>المقالات</LocalizedLink>
+                <LocalizedLink href="/blog" className={styles.sidebarMenuLink}>
+                  المقالات
+                </LocalizedLink>
               </li>
-              
+
               {/* من نحن */}
               <li className={styles.sidebarMenuItem}>
-                <LocalizedLink href="/about" className={styles.sidebarMenuLink}>من نحن</LocalizedLink>
+                <LocalizedLink href="/about" className={styles.sidebarMenuLink}>
+                  من نحن
+                </LocalizedLink>
               </li>
-              
+
               {/* تواصل معنا */}
               <li className={styles.sidebarMenuItem}>
-                <LocalizedLink href="/contact" className={styles.sidebarMenuLink}>تواصل معنا</LocalizedLink>
+                <LocalizedLink
+                  href="/contact"
+                  className={styles.sidebarMenuLink}
+                >
+                  تواصل معنا
+                </LocalizedLink>
               </li>
             </ul>
-            
+
             <div className={styles.sidebarCta}>
-              <AnimatedBorderButton 
-                text="تواصل مع مستشارك السياحي" 
+              <AnimatedBorderButton
+                text="تواصل مع مستشارك السياحي"
                 variant="gold"
                 dropdownItems={getCtaDropdownItems()}
               />
             </div>
           </div>
-          
+
           {/* Overlay */}
-          {isMenuOpen && <div className={styles.overlay} onClick={toggleMenu}></div>}
+          {isMenuOpen && (
+            <div className={styles.overlay} onClick={toggleMenu}></div>
+          )}
         </div>
       </header>
     );
@@ -300,96 +377,148 @@ const Header = () => {
   // Regular header for non-trip pages (now with transparent styling)
   return (
     <header className={headerClassName}>
-      <div className={styles.container} style={isCompact && !isMobile ? { maxWidth: 'fit-content', transition: 'max-width 0.3s' } : {}}>
+      <div
+        className={styles.container}
+        style={
+          isCompact && !isMobile
+            ? { maxWidth: 'fit-content', transition: 'max-width 0.3s' }
+            : {}
+        }
+      >
         <div className={styles.logo}>
           <LocalizedLink href="/">
             <Logo />
           </LocalizedLink>
         </div>
-        
+
         {/* Mobile Menu Button - only visible on mobile */}
-        <button 
+        <button
           ref={menuButtonRef}
-          className={styles.mobileMenuButton} 
+          className={styles.mobileMenuButton}
           onClick={toggleMenu}
           aria-label="Toggle navigation menu"
         >
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
-        
-        <nav 
+
+        <nav
           ref={navRef}
           className={`${styles.nav} ${isMenuOpen ? styles.active : ''}`}
         >
-          <ul className={styles.mainMenu} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: '0.95rem' }}>
+          <ul
+            className={styles.mainMenu}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              fontSize: '0.95rem',
+            }}
+          >
             {/* Critical items (always visible) */}
             <li className={styles.menuItem}>
-              <LocalizedLink href="/book-now" className={styles.menuLink}>احجز خدمة</LocalizedLink>
+              <LocalizedLink href="/book-now" className={styles.menuLink}>
+                احجز خدمة
+              </LocalizedLink>
             </li>
             <li className={styles.menuItem}>
-              <LocalizedLink href="/trips" className={styles.menuLink}>الرحلات</LocalizedLink>
+              <LocalizedLink href="/trips" className={styles.menuLink}>
+                الرحلات
+              </LocalizedLink>
             </li>
-            
+
             {/* Expanded menu items (visible when expanded or on mobile) */}
-            {(!isCompact || isMobile) && <>
-              <li className={styles.menuItem}>
-                <LocalizedLink href="/destinations" className={styles.menuLink}>الوجهات</LocalizedLink>
-              </li>
-              <li className={styles.menuItem}>
-                <LocalizedLink href="/blog" className={styles.menuLink}>المقالات</LocalizedLink>
-              </li>
-              <li className={styles.menuItem}>
-                <LocalizedLink href="/about" className={styles.menuLink}>من نحن</LocalizedLink>
-              </li>
-              <li className={styles.menuItem}>
-                <LocalizedLink href="/contact" className={styles.menuLink}>تواصل معنا</LocalizedLink>
-              </li>
-            </>}
-            
+            {(!isCompact || isMobile) && (
+              <>
+                <li className={styles.menuItem}>
+                  <LocalizedLink
+                    href="/destinations"
+                    className={styles.menuLink}
+                  >
+                    الوجهات
+                  </LocalizedLink>
+                </li>
+                <li className={styles.menuItem}>
+                  <LocalizedLink href="/blog" className={styles.menuLink}>
+                    المقالات
+                  </LocalizedLink>
+                </li>
+                <li className={styles.menuItem}>
+                  <LocalizedLink href="/about" className={styles.menuLink}>
+                    من نحن
+                  </LocalizedLink>
+                </li>
+                <li className={styles.menuItem}>
+                  <LocalizedLink href="/contact" className={styles.menuLink}>
+                    تواصل معنا
+                  </LocalizedLink>
+                </li>
+              </>
+            )}
+
             {/* Call to Action Button */}
             <li className={`${styles.menuItem} ${styles.ctaMenuItem}`}>
-              <AnimatedBorderButton 
-                text="تواصل مع مستشارك السياحي" 
-                variant={scrolled ? "gold" : "transparent"}
+              <AnimatedBorderButton
+                text="تواصل مع مستشارك السياحي"
+                variant={scrolled ? 'gold' : 'transparent'}
                 dropdownItems={getCtaDropdownItems()}
               />
             </li>
-            
+
             {/* Collapse header back to compact when expanded - right side, white icon - desktop only */}
             {!isCompact && !isMobile && (
-              <li style={{ marginLeft: 8, marginRight: 8, cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={toggleCompact}>
-                <FaArrowLeft 
-                  size={20} 
+              <li
+                style={{
+                  marginLeft: 8,
+                  marginRight: 8,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                onClick={toggleCompact}
+              >
+                <FaArrowLeft
+                  size={20}
                   className={`${styles.arrowIcon} ${styles.arrowIconExpanded}`}
                 />
               </li>
             )}
-            
+
             {/* Expand arrow for compact mode - left side, white icon - desktop only */}
             {isCompact && !isMobile && (
-              <li style={{ marginLeft: 8, marginRight: 8, cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={toggleCompact}>
-                <FaArrowLeft 
-                  size={20} 
+              <li
+                style={{
+                  marginLeft: 8,
+                  marginRight: 8,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                onClick={toggleCompact}
+              >
+                <FaArrowLeft
+                  size={20}
                   className={`${styles.arrowIcon} ${styles.arrowIconHint}`}
                 />
               </li>
             )}
           </ul>
         </nav>
-        
+
         {/* Mobile Menu Close Button - only visible when menu is open on mobile */}
         {isMenuOpen && (
-          <button 
-            className={styles.mobileSidebarClose} 
+          <button
+            className={styles.mobileSidebarClose}
             onClick={toggleMenu}
             aria-label="Close navigation menu"
           >
             <FaTimes />
           </button>
         )}
-        
+
         {/* Overlay */}
-        {isMenuOpen && <div className={styles.overlay} onClick={toggleMenu}></div>}
+        {isMenuOpen && (
+          <div className={styles.overlay} onClick={toggleMenu}></div>
+        )}
       </div>
     </header>
   );

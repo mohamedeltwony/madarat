@@ -8,10 +8,7 @@ export default function PageHero({ title, breadcrumb, featuredImage }) {
   const heroClassName = `${styles.heroSection}`;
 
   return (
-    <Section 
-      className={heroClassName} 
-      heroSection
-    >
+    <Section className={heroClassName} heroSection>
       <Container>
         <div className={styles.heroContent}>
           {breadcrumb && (
@@ -24,4 +21,4 @@ export default function PageHero({ title, breadcrumb, featuredImage }) {
       </Container>
     </Section>
   );
-} 
+}

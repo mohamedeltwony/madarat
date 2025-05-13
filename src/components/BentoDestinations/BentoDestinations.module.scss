@@ -20,15 +20,15 @@
   overflow: hidden;
   min-height: 300px;
   transition: opacity 0.5s ease;
-  
+
   &.loading {
     opacity: 0.6;
   }
-  
+
   &.loaded {
     opacity: 1;
   }
-  
+
   // Add enhanced subtle pattern and soft glow
   &::before {
     content: '';
@@ -37,14 +37,22 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: 
-      radial-gradient(circle at 20% 30%, rgba(204, 156, 100, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(204, 156, 100, 0.06) 0%, transparent 40%);
+    background-image:
+      radial-gradient(
+        circle at 20% 30%,
+        rgba(204, 156, 100, 0.08) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 70%,
+        rgba(204, 156, 100, 0.06) 0%,
+        transparent 40%
+      );
     z-index: 0;
     pointer-events: none;
     opacity: 0.8;
   }
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -78,7 +86,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .fadeIn {
@@ -86,8 +96,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Section Heading */
@@ -97,7 +113,7 @@
   position: relative;
   z-index: 2;
   padding: 0 1rem;
-  
+
   h2 {
     font-size: 2.5rem;
     font-weight: 700;
@@ -106,7 +122,7 @@
     position: relative;
     display: inline-block;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -120,7 +136,7 @@
       box-shadow: 0 2px 8px rgba(204, 156, 100, 0.3);
     }
   }
-  
+
   p {
     font-size: 1.2rem;
     color: var(--color-text-secondary);
@@ -143,12 +159,12 @@
   padding: 0 2rem;
   position: relative;
   z-index: 2;
-  
+
   /* Staggered animation for cards */
   & > a {
     opacity: 0;
     animation: cardFadeIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    
+
     @for $i from 1 through 12 {
       &:nth-child(#{$i}) {
         animation-delay: #{$i * 0.05}s;
@@ -180,7 +196,11 @@
 }
 
 .exploreAllButton {
-  background: linear-gradient(135deg, rgba(204, 156, 100, 0.9), rgba(179, 130, 62, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(204, 156, 100, 0.9),
+    rgba(179, 130, 62, 0.95)
+  );
   color: white;
   border: none;
   padding: 1rem 2.8rem;
@@ -189,7 +209,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 
+  box-shadow:
     0 8px 25px rgba(204, 156, 100, 0.35),
     inset 0 1px 3px rgba(255, 255, 255, 0.4);
   position: relative;
@@ -198,7 +218,7 @@
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.25);
   letter-spacing: 0.5px;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -214,22 +234,26 @@
     );
     transition: all 0.6s ease;
   }
-  
+
   &:hover {
     transform: translateY(-5px) scale(1.03);
-    box-shadow: 
+    box-shadow:
       0 12px 30px rgba(204, 156, 100, 0.5),
       inset 0 2px 6px rgba(255, 255, 255, 0.5);
-    background: linear-gradient(135deg, rgba(204, 156, 100, 0.95), rgba(179, 130, 62, 1));
-    
+    background: linear-gradient(
+      135deg,
+      rgba(204, 156, 100, 0.95),
+      rgba(179, 130, 62, 1)
+    );
+
     &::before {
       left: 100%;
     }
   }
-  
+
   &:active {
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
       0 6px 20px rgba(204, 156, 100, 0.4),
       inset 0 1px 3px rgba(255, 255, 255, 0.3);
   }
@@ -242,7 +266,7 @@
   &.animating {
     animation: pulse 0.3s ease;
   }
-  
+
   // Enhanced gold highlight border
   &::after {
     content: '';
@@ -250,15 +274,24 @@
     inset: 0;
     border-radius: 30px;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(204, 156, 100, 0.3), rgba(255, 255, 255, 0.3));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.7),
+      rgba(204, 156, 100, 0.3),
+      rgba(255, 255, 255, 0.3)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     opacity: 0.8;
     transition: opacity 0.3s ease;
   }
-  
+
   &:hover::after {
     opacity: 1;
   }
@@ -325,7 +358,7 @@
   opacity: 0;
   animation: expandGrid 0.5s forwards;
   position: relative;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -333,7 +366,8 @@
     left: 0;
     right: 0;
     height: 40px;
-    background: linear-gradient(to bottom, 
+    background: linear-gradient(
+      to bottom,
       rgba(255, 255, 255, 0),
       rgba(255, 255, 255, 0.05)
     );
@@ -370,19 +404,19 @@
   aspect-ratio: 3/2;
   height: 100%;
   min-height: 200px;
-  box-shadow: 
+  box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.15),
     inset 0 1px 3px rgba(255, 255, 255, 0.15);
 
   &:hover {
     transform: translateY(-8px) scale(1.02);
     background: rgba(255, 255, 255, 0.15);
-    box-shadow: 
+    box-shadow:
       0 20px 40px rgba(0, 0, 0, 0.2),
       inset 0 2px 5px rgba(255, 255, 255, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.25);
   }
-  
+
   // Enhanced highlight glow on hover
   &::after {
     content: '';
@@ -393,12 +427,20 @@
     transition: all 0.4s ease;
     pointer-events: none;
     z-index: 2;
-    background: radial-gradient(circle at 50% 0%, rgba(204, 156, 100, 0), rgba(204, 156, 100, 0));
+    background: radial-gradient(
+      circle at 50% 0%,
+      rgba(204, 156, 100, 0),
+      rgba(204, 156, 100, 0)
+    );
   }
-  
+
   &:hover::after {
     box-shadow: 0 0 0 2px rgba(204, 156, 100, 0.4);
-    background: radial-gradient(circle at 50% 0%, rgba(204, 156, 100, 0.12), rgba(204, 156, 100, 0) 70%);
+    background: radial-gradient(
+      circle at 50% 0%,
+      rgba(204, 156, 100, 0.12),
+      rgba(204, 156, 100, 0) 70%
+    );
   }
 
   &:hover .sparkleContainer svg {
@@ -406,10 +448,12 @@
     animation-duration: 2s;
     filter: drop-shadow(0 0 5px rgba(204, 156, 100, 0.8));
   }
-  
+
   .sparkleContainer svg {
     opacity: 0;
-    transition: opacity 0.3s ease, filter 0.3s ease;
+    transition:
+      opacity 0.3s ease,
+      filter 0.3s ease;
   }
 }
 
@@ -418,7 +462,11 @@
   top: 1rem;
   right: 1rem;
   z-index: 2;
-  background: linear-gradient(135deg, rgba(204, 156, 100, 0.85), rgba(179, 130, 62, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(204, 156, 100, 0.85),
+    rgba(179, 130, 62, 0.95)
+  );
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 50%;
@@ -429,16 +477,20 @@
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 
+  box-shadow:
     0 6px 25px rgba(204, 156, 100, 0.35),
     inset 0 2px 5px rgba(255, 255, 255, 0.4);
   transition: all 0.4s ease;
   transform: scale(1) rotate(0deg);
-  
+
   .destinationCard:hover & {
     transform: scale(1.08) translateY(-3px) rotate(5deg);
-    background: linear-gradient(135deg, rgba(204, 156, 100, 0.9), rgba(179, 130, 62, 1));
-    box-shadow: 
+    background: linear-gradient(
+      135deg,
+      rgba(204, 156, 100, 0.9),
+      rgba(179, 130, 62, 1)
+    );
+    box-shadow:
       0 8px 30px rgba(204, 156, 100, 0.5),
       inset 0 2px 8px rgba(255, 255, 255, 0.5);
   }
@@ -450,8 +502,12 @@
     border-radius: 50%;
     padding: 2px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), transparent);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
@@ -529,7 +585,7 @@
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
-  
+
   .destinationCard:hover & {
     background: linear-gradient(
       to top,
@@ -553,7 +609,7 @@
   transition: all 0.4s ease;
   position: relative;
   padding-right: 0.5rem;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -567,10 +623,10 @@
     transform: translateX(-5px);
     transition: all 0.3s ease;
   }
-  
+
   .destinationCard:hover & {
     transform: translateY(-3px);
-    
+
     &::before {
       opacity: 1;
       transform: translateX(0);
@@ -590,7 +646,7 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   transition: all 0.4s ease;
   transform: translateY(0);
-  
+
   .destinationCard:hover & {
     opacity: 1;
     transform: translateY(-2px);
@@ -690,8 +746,9 @@
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1.5rem;
   }
-  
-  .glassCircle, .glassDiamond {
+
+  .glassCircle,
+  .glassDiamond {
     opacity: 0.2 !important;
   }
 }
@@ -701,27 +758,27 @@
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     padding: 0 1.5rem;
   }
-  
+
   .tripCount {
     width: 55px;
     height: 55px;
   }
-  
+
   .countNumber {
     font-size: 1.3rem;
   }
-  
+
   .sectionHeading {
     h2 {
       font-size: 2.2rem;
     }
   }
-  
+
   .glassCircle {
     width: 150px !important;
     height: 150px !important;
   }
-  
+
   .glassDiamond {
     width: 80px !important;
     height: 80px !important;
@@ -734,19 +791,19 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
-  
+
   .sectionHeading {
     margin-bottom: 1.5rem;
-    
+
     h2 {
       font-size: 1.8rem;
-      
+
       &::after {
         width: 60px;
         height: 3px;
       }
     }
-    
+
     p {
       font-size: 1rem;
       margin-top: 1.2rem;
@@ -791,13 +848,13 @@
     padding: 0.7rem 1.8rem;
     font-size: 0.95rem;
   }
-  
+
   .spinner {
     width: 40px;
     height: 40px;
     border-width: 3px;
   }
-  
+
   .glassDecorations {
     opacity: 0.5;
   }
@@ -807,76 +864,76 @@
   .destinationsContainer {
     padding: 1.2rem 0;
   }
-  
+
   .sectionHeading {
     margin-bottom: 1.2rem;
-    
+
     h2 {
       font-size: 1.6rem;
-      
+
       &::after {
         width: 50px;
       }
     }
-    
+
     p {
       font-size: 0.9rem;
       margin-top: 1rem;
     }
   }
-  
+
   .destinationsGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     padding: 0 1rem;
   }
-  
+
   .destinationCard {
     min-height: 160px;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
-  
+
   .tripCount {
     width: 40px;
     height: 40px;
   }
-  
+
   .countNumber {
     font-size: 1rem;
   }
-  
+
   .countLabel {
     font-size: 0.6rem;
   }
-  
+
   .content {
     padding: 0.8rem;
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
   }
-  
+
   .title {
     font-size: 0.9rem;
     margin-bottom: 0.3rem;
   }
-  
+
   .description {
     display: none;
   }
-  
+
   .exploreAllButton {
     padding: 0.6rem 1.5rem;
     font-size: 0.85rem;
     border-radius: 25px;
   }
-  
+
   .spinner {
     width: 30px;
     height: 30px;
     border-width: 3px;
   }
-  
+
   .glassDecorations {
     display: none;
   }
@@ -888,15 +945,15 @@
     max-width: 280px;
     margin: 0 auto;
   }
-  
+
   .destinationCard {
     min-height: 180px;
   }
-  
+
   .destinationsContainer {
     padding: 1rem 0 1.5rem;
   }
-  
+
   .sectionHeading h2 {
     font-size: 1.4rem;
   }

@@ -2,32 +2,34 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './AnimatedBorderButton.module.scss';
 
-const AnimatedBorderButton = ({ 
-  text, 
-  href, 
-  onClick, 
-  icon = null, 
+const AnimatedBorderButton = ({
+  text,
+  href,
+  onClick,
+  icon = null,
   external = false,
   borderRadius = '20px',
   animationDuration = '7s',
   className = '',
   dropdownItems = null, // array of { label, onClick }
-  variant = 'default' // 'default', 'transparent', 'gold'
+  variant = 'default', // 'default', 'transparent', 'gold'
 }) => {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
-  
+
   // Determine button class based on variant
   const buttonClass = `${styles.button} ${styles[variant]} ${className}`;
-  
+
   // Close dropdown on outside click
   useEffect(() => {
     if (!open) return;
     function handleClick(e) {
       if (
-        buttonRef.current && !buttonRef.current.contains(e.target) &&
-        dropdownRef.current && !dropdownRef.current.contains(e.target)
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target) &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target)
       ) {
         setOpen(false);
       }
@@ -49,9 +51,9 @@ const AnimatedBorderButton = ({
     return (
       <div
         className={styles.buttonContainer}
-        style={{ 
+        style={{
           '--border-radius': borderRadius,
-          '--animation-duration': animationDuration
+          '--animation-duration': animationDuration,
         }}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
@@ -90,47 +92,47 @@ const AnimatedBorderButton = ({
   // If external link
   if (href && external) {
     return (
-      <a 
+      <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
         className={buttonClass}
         onClick={onClick}
-        style={{ 
+        style={{
           '--border-radius': borderRadius,
-          '--animation-duration': animationDuration
+          '--animation-duration': animationDuration,
         }}
       >
         {buttonContent}
       </a>
     );
   }
-  
+
   // If internal link
   if (href) {
     return (
-      <Link 
-        href={href} 
+      <Link
+        href={href}
         className={buttonClass}
         onClick={onClick}
-        style={{ 
+        style={{
           '--border-radius': borderRadius,
-          '--animation-duration': animationDuration
+          '--animation-duration': animationDuration,
         }}
       >
         {buttonContent}
       </Link>
     );
   }
-  
+
   // If button
   return (
-    <button 
+    <button
       className={buttonClass}
       onClick={onClick}
-      style={{ 
+      style={{
         '--border-radius': borderRadius,
-        '--animation-duration': animationDuration
+        '--animation-duration': animationDuration,
       }}
     >
       {buttonContent}
@@ -138,4 +140,4 @@ const AnimatedBorderButton = ({
   );
 };
 
-export default AnimatedBorderButton; 
+export default AnimatedBorderButton;

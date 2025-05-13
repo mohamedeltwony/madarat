@@ -13,7 +13,12 @@ import styles from '@/styles/pages/Trips.module.scss';
 
 const TRIPS_PER_PAGE = 20;
 
-export default function TripsPage({ initialTrips = [], initialPagination = {}, metadata, menus }) {
+export default function TripsPage({
+  initialTrips = [],
+  initialPagination = {},
+  metadata,
+  menus,
+}) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -27,46 +32,48 @@ export default function TripsPage({ initialTrips = [], initialPagination = {}, m
   useEffect(() => {
     const fetchTrips = async () => {
       if (!router.isReady) return;
-      
+
       const page = parseInt(router.query.page) || 1;
       setCurrentPage(page);
-      
+
       // Only fetch if we don't have data for this page
       if (page !== pagination.currentPage) {
         setIsLoading(true);
         setError(null);
-        
+
         try {
-          const { trips: fetchedTrips, pagination: newPagination } = await getTripsREST({
-            page,
-            perPage: TRIPS_PER_PAGE
-          });
-          
+          const { trips: fetchedTrips, pagination: newPagination } =
+            await getTripsREST({
+              page,
+              perPage: TRIPS_PER_PAGE,
+            });
+
           setTrips(fetchedTrips);
           setPagination(newPagination);
         } catch (err) {
-          console.error("Error fetching trips:", err);
+          console.error('Error fetching trips:', err);
           setError(err.toString());
         } finally {
           setIsLoading(false);
         }
       }
     };
-    
+
     fetchTrips();
   }, [router.isReady, router.query.page]);
 
   const handleRetry = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const page = parseInt(router.query.page) || 1;
-      const { trips: fetchedTrips, pagination: newPagination } = await getTripsREST({
-        page,
-        perPage: TRIPS_PER_PAGE
-      });
-      
+      const { trips: fetchedTrips, pagination: newPagination } =
+        await getTripsREST({
+          page,
+          perPage: TRIPS_PER_PAGE,
+        });
+
       setTrips(fetchedTrips);
       setPagination(newPagination);
     } catch (err) {
@@ -99,18 +106,22 @@ export default function TripsPage({ initialTrips = [], initialPagination = {}, m
       </Head>
 
       {/* Hero Section with hardcoded image */}
-      <div className={styles.tripsHeroSection} style={{ 
-        backgroundImage: 'url("/images/hero-background-new.png")',
-        backgroundPosition: 'center center'
-      }}>
+      <div
+        className={styles.tripsHeroSection}
+        style={{
+          backgroundImage: 'url("/images/hero-background-new.png")',
+          backgroundPosition: 'center center',
+        }}
+      >
         <div className={styles.tripsHeroOverlay}></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className={styles.tripsHeroContent}>
             <div className={styles.tripsHeroContentInner}>
               <h1 className={styles.tripsHeroTitle}>الرحلات السياحية</h1>
               <p className={styles.tripsHeroDescription}>
-                اكتشف مجموعة متنوعة من الرحلات السياحية المميزة إلى أجمل الوجهات حول العالم. 
-                نقدم لك تجارب سفر فريدة بأسعار تنافسية وخدمات عالية الجودة.
+                اكتشف مجموعة متنوعة من الرحلات السياحية المميزة إلى أجمل الوجهات
+                حول العالم. نقدم لك تجارب سفر فريدة بأسعار تنافسية وخدمات عالية
+                الجودة.
               </p>
             </div>
           </div>
@@ -140,9 +151,9 @@ export default function TripsPage({ initialTrips = [], initialPagination = {}, m
         )}
 
         {!isLoading && !error && (
-          <AllTrips 
-            trips={trips} 
-            pagination={pagination} 
+          <AllTrips
+            trips={trips}
+            pagination={pagination}
             onPageChange={handlePageChange}
           />
         )}
@@ -154,15 +165,15 @@ export default function TripsPage({ initialTrips = [], initialPagination = {}, m
 export async function getServerSideProps(context) {
   try {
     const page = parseInt(context.query.page) || 1;
-    
+
     // Fetch trips with pagination
     const { trips = [], pagination = {} } = await getTripsREST({
       page,
-      perPage: TRIPS_PER_PAGE
+      perPage: TRIPS_PER_PAGE,
     });
-    
+
     // Fetch layout data
-    const metadata = await getSiteMetadataREST(); 
+    const metadata = await getSiteMetadataREST();
     const { menus = [] } = await getAllMenusREST();
 
     return {
@@ -170,8 +181,8 @@ export async function getServerSideProps(context) {
         initialTrips: trips,
         initialPagination: pagination,
         metadata: metadata || {}, // Ensure metadata is never undefined
-        menus: menus || []
-      }
+        menus: menus || [],
+      },
     };
   } catch (error) {
     console.error('Error in getServerSideProps:', error);
@@ -182,15 +193,15 @@ export async function getServerSideProps(context) {
           total: 0,
           totalPages: 0,
           currentPage: 1,
-          perPage: TRIPS_PER_PAGE
+          perPage: TRIPS_PER_PAGE,
         },
         metadata: {
           title: 'مدارات الكون',
           siteTitle: 'مدارات الكون',
           description: 'موقع السفر والرحلات الأول في الوطن العربي',
         },
-        menus: []
-      }
+        menus: [],
+      },
     };
   }
 }

@@ -21,17 +21,25 @@ export default function Categories({ categories, metadata, menus }) {
         <link rel="canonical" href="https://madaratalkon.com/categories" />
       </Head>
 
-      <div className='ar'>
+      <div className="ar">
         <Container>
           <h1 className={styles.title}>فئات المقالات</h1>
-          <p className={styles.description}>استكشف مجموعة متنوعة من الموضوعات والفئات</p>
-          
+          <p className={styles.description}>
+            استكشف مجموعة متنوعة من الموضوعات والفئات
+          </p>
+
           <div className={styles.categoriesGrid}>
-            {categories.map(category => (
-              <Link href={`/posts?category=${category.slug}`} key={category.id} className={styles.categoryCard}>
+            {categories.map((category) => (
+              <Link
+                href={`/posts?category=${category.slug}`}
+                key={category.id}
+                className={styles.categoryCard}
+              >
                 <h2>{category.name}</h2>
                 <p>{category.count} مقالة</p>
-                {category.description && <p className={styles.description}>{category.description}</p>}
+                {category.description && (
+                  <p className={styles.description}>{category.description}</p>
+                )}
               </Link>
             ))}
           </div>
@@ -45,15 +53,15 @@ export async function getStaticProps() {
   try {
     // Get all categories
     const { categories = [] } = await getAllCategories();
-    
+
     // Sort by post count descending
     const sortedCategories = [...categories].sort((a, b) => b.count - a.count);
 
     // Get site metadata
-    const metadata = await getSiteMetadataREST() || { 
+    const metadata = (await getSiteMetadataREST()) || {
       title: 'مدارات الكون',
       siteTitle: 'مدارات الكون',
-      description: 'موقع مدارات الكون'
+      description: 'موقع مدارات الكون',
     };
 
     // Get menus
@@ -63,23 +71,23 @@ export async function getStaticProps() {
       props: {
         categories: sortedCategories,
         metadata,
-        menus
+        menus,
       },
-      revalidate: 60
+      revalidate: 60,
     };
   } catch (error) {
     console.error('Error in getStaticProps', error);
     return {
       props: {
         categories: [],
-        metadata: { 
+        metadata: {
           title: 'مدارات الكون',
           siteTitle: 'مدارات الكون',
-          description: 'موقع مدارات الكون'
+          description: 'موقع مدارات الكون',
         },
-        menus: []
+        menus: [],
       },
-      revalidate: 60
+      revalidate: 60,
     };
   }
-} 
+}

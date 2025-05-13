@@ -30,7 +30,8 @@ $breakpoint-large: 1200px;
   }
 
   // Style for homepage header (now the default for all headers)
-  &.homeHeader, &.transparentHeader {
+  &.homeHeader,
+  &.transparentHeader {
     background-color: transparent;
     box-shadow: none;
 
@@ -49,11 +50,11 @@ $breakpoint-large: 1200px;
       }
     }
   }
-  
+
   // Trip page header styles
   &.tripHeader {
     position: absolute; // Not fixed/sticky, just absolute for trip pages
-    
+
     .container {
       padding: 8px 16px;
       display: flex;
@@ -68,7 +69,7 @@ $breakpoint-large: 1200px;
       transition: all 0.3s ease;
       backdrop-filter: blur(3px);
     }
-    
+
     .menuButton {
       color: white;
       font-size: 1.5rem;
@@ -80,30 +81,35 @@ $breakpoint-large: 1200px;
       align-items: center;
       justify-content: center;
       transition: transform 0.2s ease;
-      
+
       &:hover {
         transform: scale(1.1);
       }
     }
   }
-  
+
   // Scrolled state styles for all headers
   &.scrolled {
     .container {
       backdrop-filter: blur(15px);
-      background-color: rgba(16, 76, 68, 0.7); // Using primary color with transparency
+      background-color: rgba(
+        16,
+        76,
+        68,
+        0.7
+      ); // Using primary color with transparency
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 45px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: all 0.3s cubic-bezier(0.4, 0.8, 0.2, 1);
     }
-    
-    .menuLink, 
+
+    .menuLink,
     .searchButton {
       color: white;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
-    
+
     .menuButton span {
       background-color: white;
     }
@@ -163,7 +169,7 @@ $breakpoint-large: 1200px;
   font-size: 1.5rem;
   cursor: pointer;
   z-index: 1510;
-  
+
   @media (max-width: $breakpoint-medium) {
     display: flex;
     align-items: center;
@@ -176,12 +182,12 @@ $breakpoint-large: 1200px;
     transition: all 0.2s ease;
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    
+
     &:hover {
       background-color: rgba(255, 255, 255, 0.2);
       transform: scale(1.05);
     }
-    
+
     &:active {
       transform: scale(0.95);
     }
@@ -230,9 +236,17 @@ $breakpoint-large: 1200px;
       left: 0;
       right: 0;
       bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.05) 0, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.05) 0, transparent 40%);
+      background:
+        radial-gradient(
+          circle at 20% 30%,
+          rgba(255, 215, 0, 0.05) 0,
+          transparent 40%
+        ),
+        radial-gradient(
+          circle at 80% 70%,
+          rgba(255, 215, 0, 0.05) 0,
+          transparent 40%
+        );
       pointer-events: none;
     }
 
@@ -240,20 +254,20 @@ $breakpoint-large: 1200px;
       right: 0;
       animation: navSparkleFadeIn 1s ease-out forwards;
     }
-    
+
     // Mobile Menu Styles
     .mainMenu {
       flex-direction: column !important;
       align-items: flex-end !important;
       gap: 1rem !important;
-      
+
       .menuItem {
         width: 100%;
         opacity: 0;
         transform: translateX(20px);
         animation: menuItemAppear 0.5s forwards;
         animation-delay: calc(0.1s * var(--item-index, 0));
-        
+
         .menuLink {
           font-size: 1.1rem;
           padding: 0.85rem 0;
@@ -263,7 +277,7 @@ $breakpoint-large: 1200px;
           text-align: right;
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
           position: relative;
-          
+
           &::after {
             content: '';
             position: absolute;
@@ -274,12 +288,12 @@ $breakpoint-large: 1200px;
             background: linear-gradient(90deg, transparent, $color-gold-500);
             transition: width 0.3s ease;
           }
-          
+
           &:hover::after {
             width: 100%;
           }
         }
-        
+
         // Mobile CTA styling
         &:last-child {
           margin-top: 1.5rem;
@@ -289,12 +303,14 @@ $breakpoint-large: 1200px;
           display: flex;
           justify-content: center;
           animation-delay: 0.6s;
-          
-          a, button, div {
+
+          a,
+          button,
+          div {
             width: 100%;
             text-align: center;
           }
-          
+
           // Add a subtle shimmer effect to CTA
           &::before {
             content: '';
@@ -303,7 +319,12 @@ $breakpoint-large: 1200px;
             left: 0;
             right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.5), transparent);
+            background: linear-gradient(
+              90deg,
+              transparent,
+              rgba(255, 215, 0, 0.5),
+              transparent
+            );
             animation: shimmer 2s infinite;
           }
         }
@@ -357,7 +378,7 @@ $breakpoint-large: 1200px;
     background: linear-gradient(135deg, #0d1728 0%, #1a2942 100%);
   }
   100% {
-    background: 
+    background:
       linear-gradient(135deg, #0d1728 0%, #1a2942 100%),
       url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='rgba(255,215,0,0.03)' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
   }
@@ -398,7 +419,7 @@ $breakpoint-large: 1200px;
   display: flex;
   flex-direction: column;
   box-shadow: -4px 0 25px rgba(0, 0, 0, 0.15);
-  
+
   &.active {
     right: 0;
   }
@@ -410,12 +431,12 @@ $breakpoint-large: 1200px;
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid $color-gray-200;
-  
+
   .logo {
     flex-grow: 1;
     text-align: center;
   }
-  
+
   .closeButton {
     background: none;
     border: none;
@@ -424,7 +445,7 @@ $breakpoint-large: 1200px;
     cursor: pointer;
     padding: 0.5rem;
     transition: color 0.2s ease;
-    
+
     &:hover {
       color: $color-secondary;
     }
@@ -433,14 +454,14 @@ $breakpoint-large: 1200px;
 
 .sidebarMenu {
   list-style: none;
-  padding:.75rem 0;
+  padding: 0.75rem 0;
   margin: 0;
   flex-grow: 1;
 }
 
 .sidebarMenuItem {
   border-bottom: 1px solid $color-gray-100;
-  
+
   &:last-child {
     border-bottom: none;
   }
@@ -455,16 +476,16 @@ $breakpoint-large: 1200px;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.2s ease;
-  
+
   &:hover {
     color: $color-secondary;
     background-color: $color-gray-50;
   }
-  
+
   &.active {
     color: $color-secondary;
     background-color: $color-gray-50;
-    
+
     .dropdownIcon {
       transform: rotate(180deg);
     }
@@ -476,10 +497,10 @@ $breakpoint-large: 1200px;
   padding: 0;
   margin: 0;
   background-color: $color-gray-50;
-  
+
   li {
     border-top: 1px solid $color-gray-100;
-    
+
     a {
       display: block;
       padding: 0.75rem 1.5rem 0.75rem 3rem;
@@ -487,7 +508,7 @@ $breakpoint-large: 1200px;
       text-decoration: none;
       font-size: 0.95rem;
       transition: all 0.2s ease;
-      
+
       &:hover {
         color: $color-secondary;
         background-color: $color-gray-100;
@@ -505,16 +526,17 @@ $breakpoint-large: 1200px;
   background-color: $color-gray-50;
   border-top: 1px solid $color-gray-100;
   text-align: center;
-  
+
   // Add some space for the button
-  a, div {
+  a,
+  div {
     width: 100%;
   }
-  
+
   // Ensure dropdown appears in the correct position
   div {
     position: relative;
-    
+
     & > div {
       left: 0;
       right: 0;
@@ -532,7 +554,7 @@ $breakpoint-large: 1200px;
   font-weight: 600;
   border-radius: 4px;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background-color: darken($color-primary, 10%);
     transform: translateY(-2px);
@@ -567,7 +589,9 @@ $breakpoint-large: 1200px;
   color: $color-gray-900; // Default color
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s ease, padding 0.3s cubic-bezier(0.4, 0.8, 0.2, 1);
+  transition:
+    color 0.2s ease,
+    padding 0.3s cubic-bezier(0.4, 0.8, 0.2, 1);
   cursor: pointer;
 
   &:hover,
@@ -625,7 +649,7 @@ $breakpoint-large: 1200px;
 
 .borderButtonWrapper {
   margin-right: 15px;
-  
+
   @media (max-width: $breakpoint-small) {
     margin-right: 10px;
   }
@@ -820,7 +844,7 @@ $breakpoint-large: 1200px;
   border-color: transparent !important;
   text-shadow: none !important;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
-  
+
   &:hover {
     background: darken($color-secondary, 5%) !important;
     transform: translateY(-2px) !important;
@@ -834,7 +858,7 @@ $breakpoint-large: 1200px;
   border-color: transparent !important;
   text-shadow: none !important;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
-  
+
   &:hover {
     background: darken($color-secondary, 5%) !important;
     transform: translateY(-2px) !important;
@@ -846,7 +870,7 @@ $breakpoint-large: 1200px;
   color: white;
   opacity: 0.8;
   transition: all 0.2s ease;
-  
+
   &:hover {
     opacity: 1;
     transform: scale(1.1);
@@ -862,7 +886,11 @@ $breakpoint-large: 1200px;
 }
 
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateX(0);
   }
   40% {
@@ -887,14 +915,14 @@ $breakpoint-large: 1200px;
     top: 0;
     background-color: transparent;
     box-shadow: none;
-    
+
     .container {
       backdrop-filter: blur(5px);
       background-color: rgba(16, 76, 68, 0.7);
       border-radius: 45px;
     }
-    
-    .menuLink, 
+
+    .menuLink,
     .searchButton,
     .menuButton span {
       color: white;
@@ -909,22 +937,24 @@ $breakpoint-large: 1200px;
   align-items: center;
   justify-content: center;
   margin-left: 0.5rem;
-  
+
   // Make sure it doesn't inherit border bottom on desktop
   border-bottom: none !important;
-  
+
   // Adjust for BorderButton which has its own container
   & > div {
     width: auto;
   }
-  
+
   @media (max-width: $breakpoint-medium) {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     width: 100%;
-    
-    a, button, div {
+
+    a,
+    button,
+    div {
       width: 100%;
       display: block;
       text-align: center;

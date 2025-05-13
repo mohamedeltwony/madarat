@@ -2,7 +2,7 @@
 
 // Futuristic color palette
 $neon-blue: #00f2ff;
-$neon-purple: #8A2BE2;
+$neon-purple: #8a2be2;
 $holographic-gold: #ffd700;
 $gold-shimmer: #f9a602;
 $gold-deep: #e6c200;
@@ -42,12 +42,15 @@ $glass-shadow: rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
-  
-  &::before, &::after {
+
+  &::before,
+  &::after {
     display: none !important;
   }
-  
-  &:hover, &.active, &.hovering {
+
+  &:hover,
+  &.active,
+  &.hovering {
     background: transparent !important;
     background-color: transparent !important;
     transform: translateY(-3px);
@@ -60,19 +63,19 @@ $glass-shadow: rgba(0, 0, 0, 0.3);
     justify-content: center;
     z-index: 3;
   }
-  
+
   .buttonText {
     position: relative;
     z-index: 3;
     letter-spacing: 0.5px;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
-  
+
   // Remove hover effect
   .hoverEffect {
     display: none !important;
   }
-  
+
   // Only keep the animated border
   .buttonBorder {
     position: absolute;
@@ -80,7 +83,7 @@ $glass-shadow: rgba(0, 0, 0, 0.3);
     border-radius: 32px;
     z-index: 0;
     overflow: hidden;
-    
+
     &::before {
       content: '';
       position: absolute;
@@ -96,7 +99,7 @@ $glass-shadow: rgba(0, 0, 0, 0.3);
       background-size: 300% 300%;
       animation: borderGlow 6s linear infinite;
     }
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -119,21 +122,22 @@ $glass-shadow: rgba(0, 0, 0, 0.3);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25),
-              0 0 15px rgba($holographic-gold, 0.3);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25),
+    0 0 15px rgba($holographic-gold, 0.3);
   z-index: 100;
   transform: translateY(-20px);
   opacity: 0;
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  
+
   &.open {
     transform: translateY(0);
     opacity: 1;
     pointer-events: auto;
   }
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -162,18 +166,18 @@ $glass-shadow: rgba(0, 0, 0, 0.3);
   text-decoration: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.3s ease;
-  
+
   &:last-child {
     border-bottom: none;
   }
-  
+
   &:hover {
     background-color: rgba($holographic-gold, 0.1);
     transform: translateX(-5px);
-    
+
     .itemIconWrapper {
       transform: scale(1.1);
-      
+
       .itemIconGlow {
         opacity: 1;
         width: 28px;
@@ -181,7 +185,7 @@ $glass-shadow: rgba(0, 0, 0, 0.3);
       }
     }
   }
-  
+
   .itemIconWrapper {
     position: relative;
     display: flex;
@@ -189,14 +193,14 @@ $glass-shadow: rgba(0, 0, 0, 0.3);
     justify-content: center;
     margin-left: 12px;
     transition: transform 0.3s ease;
-    
+
     .itemIcon {
       color: $holographic-gold;
       font-size: 1.1rem;
       position: relative;
       z-index: 2;
     }
-    
+
     .itemIconGlow {
       position: absolute;
       top: 50%;
@@ -205,13 +209,17 @@ $glass-shadow: rgba(0, 0, 0, 0.3);
       width: 0;
       height: 0;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba($holographic-gold, 0.8) 0%, rgba($holographic-gold, 0) 70%);
+      background: radial-gradient(
+        circle,
+        rgba($holographic-gold, 0.8) 0%,
+        rgba($holographic-gold, 0) 70%
+      );
       z-index: 1;
       opacity: 0;
       transition: all 0.3s ease;
     }
   }
-  
+
   span {
     font-weight: 500;
     letter-spacing: 0.5px;
@@ -250,8 +258,8 @@ $glass-shadow: rgba(0, 0, 0, 0.3);
     font-size: 0.9rem;
     padding: 0.6rem 1.2rem;
   }
-  
+
   .dropdown {
     width: 220px;
   }
-} 
+}

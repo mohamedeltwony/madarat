@@ -9,4 +9,4 @@ export default function TaxCertificateRedirect() {
   }, [router]);
 
   return null;
-} 
+}

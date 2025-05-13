@@ -5,7 +5,7 @@
  */
 export const decodeArabicUrl = (url) => {
   if (!url) return '';
-  
+
   try {
     // Decode URL-encoded Arabic characters
     return decodeURIComponent(url);
@@ -22,7 +22,8 @@ export const decodeArabicUrl = (url) => {
  */
 export const containsArabic = (text) => {
   if (!text) return false;
-  const arabicPattern = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+  const arabicPattern =
+    /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
   return arabicPattern.test(text);
 };
 
@@ -33,12 +34,12 @@ export const containsArabic = (text) => {
  */
 export const normalizeUrl = (url) => {
   if (!url) return '';
-  
+
   // If URL already contains Arabic characters, don't encode it
   if (containsArabic(url)) {
     return url;
   }
-  
+
   // Otherwise, try to decode it in case it's already encoded
   return decodeArabicUrl(url);
-}; 
+};

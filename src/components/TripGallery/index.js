@@ -4,14 +4,22 @@ import styles from './TripGallery.module.scss';
 import dynamic from 'next/dynamic';
 
 // Dynamically import icons to avoid SSR issues
-const FaEye = dynamic(() => import('react-icons/fa').then(mod => mod.FaEye), { ssr: false });
-const FaImage = dynamic(() => import('react-icons/fa').then(mod => mod.FaImage), { ssr: false });
+const FaEye = dynamic(() => import('react-icons/fa').then((mod) => mod.FaEye), {
+  ssr: false,
+});
+const FaImage = dynamic(
+  () => import('react-icons/fa').then((mod) => mod.FaImage),
+  { ssr: false }
+);
 
 // Dynamically import Lightbox component with ssr: false
-const Lightbox = dynamic(() => import('yet-another-react-lightbox').then(mod => mod.default), { 
-  ssr: false,
-  loading: () => <div>Loading...</div>
-});
+const Lightbox = dynamic(
+  () => import('yet-another-react-lightbox').then((mod) => mod.default),
+  {
+    ssr: false,
+    loading: () => <div>Loading...</div>,
+  }
+);
 
 // Load lightbox styles in a client component
 const LightboxWithStyles = ({ open, close, slides, index }) => {
@@ -19,15 +27,8 @@ const LightboxWithStyles = ({ open, close, slides, index }) => {
     // Import styles only on client side
     import('yet-another-react-lightbox/styles.css');
   }, []);
-  
-  return (
-    <Lightbox
-      open={open}
-      close={close}
-      slides={slides}
-      index={index}
-    />
-  );
+
+  return <Lightbox open={open} close={close} slides={slides} index={index} />;
 };
 
 const TripGallery = ({ gallery = [], videoUrl = null }) => {
@@ -55,12 +56,10 @@ const TripGallery = ({ gallery = [], videoUrl = null }) => {
   };
 
   // Make sure gallery is an array with valid items (strings or objects with URL)
-  const validGallery = Array.isArray(gallery) 
-    ? gallery
-        .map(normalizeGalleryItem)
-        .filter(Boolean) 
+  const validGallery = Array.isArray(gallery)
+    ? gallery.map(normalizeGalleryItem).filter(Boolean)
     : [];
-  
+
   // If there's no gallery data, don't render the component
   if (validGallery.length === 0) {
     console.log('No valid gallery items found, not rendering gallery');
@@ -75,8 +74,11 @@ const TripGallery = ({ gallery = [], videoUrl = null }) => {
 
   // Handle image load errors
   const handleImageError = (index) => {
-    console.error(`Failed to load image at index ${index}:`, index === 0 ? mainImage : smallImages[index - 1]);
-    setImageErrors(prev => ({ ...prev, [index]: true }));
+    console.error(
+      `Failed to load image at index ${index}:`,
+      index === 0 ? mainImage : smallImages[index - 1]
+    );
+    setImageErrors((prev) => ({ ...prev, [index]: true }));
   };
 
   // ImageFallback component for when images fail to load
@@ -97,7 +99,10 @@ const TripGallery = ({ gallery = [], videoUrl = null }) => {
         {mainImage && (
           <div className={styles.mainImageCol}>
             <div className={styles.galleryImageWrap}>
-              <div className={styles.imageContainer} style={{ position: 'relative', width: '100%', height: '100%' }}>
+              <div
+                className={styles.imageContainer}
+                style={{ position: 'relative', width: '100%', height: '100%' }}
+              >
                 {!imageErrors[0] ? (
                   <Image
                     src={mainImage}
@@ -113,9 +118,12 @@ const TripGallery = ({ gallery = [], videoUrl = null }) => {
                 )}
               </div>
               {isClient && !imageErrors[0] && (
-                <button 
+                <button
                   className={styles.viewButton}
-                  onClick={() => { setLightboxIndex(0); setLightboxOpen(true); }}
+                  onClick={() => {
+                    setLightboxIndex(0);
+                    setLightboxOpen(true);
+                  }}
                   aria-label="عرض الصورة في المعرض"
                 >
                   <FaEye className={styles.icon} />
@@ -130,12 +138,21 @@ const TripGallery = ({ gallery = [], videoUrl = null }) => {
           <div className={styles.smallImagesCol}>
             <div className={styles.smallImagesGrid}>
               {smallImages.map((image, index) => (
-                <div 
-                  key={`gallery-img-${index}`} 
+                <div
+                  key={`gallery-img-${index}`}
                   className={styles.smallImageContainer}
                 >
-                  <div className={`${styles.galleryImageWrap} ${index >= 2 ? styles.active : ''}`}>
-                    <div className={styles.imageContainer} style={{ position: 'relative', width: '100%', height: '100%' }}>
+                  <div
+                    className={`${styles.galleryImageWrap} ${index >= 2 ? styles.active : ''}`}
+                  >
+                    <div
+                      className={styles.imageContainer}
+                      style={{
+                        position: 'relative',
+                        width: '100%',
+                        height: '100%',
+                      }}
+                    >
                       {!imageErrors[index + 1] ? (
                         <Image
                           src={image}
@@ -152,7 +169,10 @@ const TripGallery = ({ gallery = [], videoUrl = null }) => {
                     {isClient && !imageErrors[index + 1] && (
                       <button
                         className={styles.viewButton}
-                        onClick={() => { setLightboxIndex(index + 1); setLightboxOpen(true); }}
+                        onClick={() => {
+                          setLightboxIndex(index + 1);
+                          setLightboxOpen(true);
+                        }}
                         aria-label={`عرض الصورة رقم ${index + 2} في المعرض`}
                       >
                         <FaEye className={styles.icon} />
@@ -177,4 +197,4 @@ const TripGallery = ({ gallery = [], videoUrl = null }) => {
   );
 };
 
-export default TripGallery; 
+export default TripGallery;

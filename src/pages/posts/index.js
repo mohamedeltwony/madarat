@@ -20,7 +20,13 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { sanitizeExcerpt } from '@/lib/util';
 
-export default function Posts({ posts, pagination, categories, metadata, menus }) {
+export default function Posts({
+  posts,
+  pagination,
+  categories,
+  metadata,
+  menus,
+}) {
   const router = useRouter();
   const { asPath } = router;
 
@@ -54,7 +60,7 @@ export default function Posts({ posts, pagination, categories, metadata, menus }
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch posts');
-        
+
         const { posts: fetchedPosts } = await response.json();
         setPostsList(fetchedPosts);
       } catch (err) {
@@ -69,7 +75,7 @@ export default function Posts({ posts, pagination, categories, metadata, menus }
   }, [category, query]);
 
   const categoryId = categories.find((cat) => cat.slug === category)?.id;
-  
+
   let title = metadata.title;
   let subtitle = metadata.description;
 
@@ -92,17 +98,17 @@ export default function Posts({ posts, pagination, categories, metadata, menus }
         <link rel="canonical" href="https://madaratalkon.com/posts" />
       </Head>
 
-      <div className='ar'>
+      <div className="ar">
         <Container>
           {loading && <div>جاري التحميل...</div>}
           {error && <div>{error}</div>}
-          
+
           {!loading && !error && (
             <>
-              <MorphPosts 
-                title="المقالات" 
+              <MorphPosts
+                title="المقالات"
                 desc="استكشف أحدث المقالات المميزة من مدارات الكون"
-                posts={postsList} 
+                posts={postsList}
               />
               {pagination && (
                 <Pagination
@@ -124,7 +130,7 @@ export async function getStaticProps() {
     // Get all posts
     const { posts = [], pagination = {} } = await getPostsAndPagination({
       perPage: 20,
-      page: 1
+      page: 1,
     });
 
     // Get all categories
@@ -132,10 +138,10 @@ export async function getStaticProps() {
 
     // Get site metadata from local data instead of API call
     const { siteMetadata } = await import('@/data/site');
-    const metadata = siteMetadata || { 
+    const metadata = siteMetadata || {
       title: 'مدارات الكون',
       siteTitle: 'مدارات الكون',
-      description: 'موقع مدارات الكون'
+      description: 'موقع مدارات الكون',
     };
 
     // Use local menu data instead of API call
@@ -147,32 +153,32 @@ export async function getStaticProps() {
         pagination,
         categories,
         metadata,
-        menus
+        menus,
       },
       // Increase revalidation period for better performance
-      revalidate: 3600 // Revalidate every hour
+      revalidate: 3600, // Revalidate every hour
     };
   } catch (error) {
     console.error('Error in getStaticProps', error);
     return {
       props: {
         posts: [],
-        pagination: { 
-          currentPage: 1, 
+        pagination: {
+          currentPage: 1,
           pagesCount: 1,
           postsCount: 0,
-          postsPerPage: 20
+          postsPerPage: 20,
         },
         categories: [],
-        metadata: { 
+        metadata: {
           title: 'مدارات الكون',
           siteTitle: 'مدارات الكون',
-          description: 'موقع مدارات الكون'
+          description: 'موقع مدارات الكون',
         },
-        menus: []
+        menus: [],
       },
       // Even with errors, revalidate after a shorter period
-      revalidate: 300 // Try again in 5 minutes if there was an error
+      revalidate: 300, // Try again in 5 minutes if there was an error
     };
   }
-} 
+}

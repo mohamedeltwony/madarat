@@ -8,27 +8,30 @@ export default function Offline() {
     <div className={styles.offlinePage}>
       <Head>
         <title>أنت غير متصل بالإنترنت - مدارات الكون</title>
-        <meta name="description" content="يبدو أنك غير متصل بالإنترنت. يرجى التحقق من اتصالك وإعادة المحاولة." />
+        <meta
+          name="description"
+          content="يبدو أنك غير متصل بالإنترنت. يرجى التحقق من اتصالك وإعادة المحاولة."
+        />
       </Head>
-      
+
       <div className={styles.container}>
         <div className={styles.content}>
           <h1 className={styles.title}>أنت غير متصل بالإنترنت</h1>
-          
+
           <div className={styles.illustration}>
-            <img 
-              src="/images/world-map.png" 
-              alt="World Map" 
+            <img
+              src="/images/world-map.png"
+              alt="World Map"
               className={styles.worldMap}
             />
           </div>
-          
+
           <p className={styles.message}>
             يبدو أنك غير متصل بالإنترنت حاليًا.
-            <br/>
+            <br />
             لا تقلق، لا تزال بإمكانك استكشاف الصفحات التي قمت بزيارتها من قبل.
           </p>
-          
+
           <div className={styles.suggestions}>
             <h3>يمكنك تجربة:</h3>
             <ul>
@@ -37,9 +40,9 @@ export default function Offline() {
               <li>العودة إلى الصفحة السابقة</li>
             </ul>
           </div>
-          
+
           <div className={styles.actions}>
-            <button 
+            <button
               className={styles.reloadButton}
               onClick={() => window.location.reload()}
             >
@@ -53,4 +56,4 @@ export default function Offline() {
       </div>
     </div>
   );
-} 
+}

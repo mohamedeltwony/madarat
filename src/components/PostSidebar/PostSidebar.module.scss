@@ -3,7 +3,7 @@
 .sidebar {
   width: 320px;
   position: relative;
-  
+
   @media (max-width: 768px) {
     width: 100%;
     margin-top: 3rem;
@@ -28,7 +28,7 @@
   box-shadow: 0 10px 30px rgba(12, 68, 68, 0.2);
   position: relative;
   overflow: hidden;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -41,50 +41,50 @@
     opacity: 0.1;
     pointer-events: none;
   }
-  
+
   .thumbnailWrapper {
     margin-bottom: 1.25rem;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   }
-  
+
   .thumbnail {
     width: 100%;
     height: auto;
     display: block;
     transform: scale(1);
     transition: transform 0.5s ease;
-    
+
     &:hover {
       transform: scale(1.05);
     }
   }
-  
+
   .title {
     font-size: 1.35rem;
     line-height: 1.4;
     margin-bottom: 1rem;
     font-weight: 700;
   }
-  
+
   .subtitle {
     font-size: 1rem;
     opacity: 0.9;
     margin-bottom: 1.5rem;
     line-height: 1.5;
   }
-  
+
   .ctaButtonsContainer {
     display: flex;
     gap: 1rem;
     width: 100%;
-    
+
     @media (max-width: 375px) {
       flex-direction: column;
     }
   }
-  
+
   .ctaButton {
     padding: 0.85rem;
     color: white;
@@ -100,20 +100,20 @@
     gap: 0.5rem;
     flex: 1;
     text-decoration: none;
-    
+
     &:hover {
       transform: translateY(-3px);
     }
-    
+
     &:active {
       transform: translateY(-1px);
     }
-    
+
     .ctaIcon {
       font-size: 1.25rem;
     }
   }
-  
+
   .whatsappButton {
     position: relative;
     display: flex;
@@ -126,8 +126,8 @@
     border-radius: 50%;
     box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
     position: relative;
-    background-color: #25D366;
-    
+    background-color: #25d366;
+
     // Static styling for server rendering
     &::before {
       content: '';
@@ -135,38 +135,38 @@
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      background-color: #25D366;
+      background-color: #25d366;
       opacity: 0.4;
     }
-    
+
     // Animation will be applied on client side only with JS
     &.client {
       animation: bounce 1s infinite alternate;
-      
+
       &::before {
         animation: pulse 2s infinite;
       }
     }
-    
+
     &:hover {
       background-color: #22c55e;
-      
+
       &::before {
         opacity: 0.5;
       }
     }
-    
+
     .whatsappIcon {
       position: relative;
       z-index: 2;
       transform: scale(1.2);
     }
   }
-  
+
   .callButton {
     background: #cc9c64;
     box-shadow: 0 5px 15px rgba(204, 156, 100, 0.4);
-    
+
     &:hover {
       background: darken(#cc9c64, 5%);
       box-shadow: 0 8px 20px rgba(204, 156, 100, 0.5);
@@ -204,7 +204,7 @@
   border-radius: 16px;
   padding: 1.75rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  
+
   .popularPostsTitle {
     font-size: 1.2rem;
     font-weight: 700;
@@ -213,7 +213,7 @@
     padding-bottom: 0.75rem;
     border-bottom: 2px solid $color-gray-100;
     position: relative;
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -224,16 +224,16 @@
       background-color: $color-secondary;
     }
   }
-  
+
   .popularPostsList {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    
+
     .popularPostItem {
       display: flex;
       gap: 1rem;
-      
+
       .popularPostImage {
         width: 80px;
         height: 80px;
@@ -241,11 +241,11 @@
         object-fit: cover;
         flex-shrink: 0;
       }
-      
+
       .popularPostContent {
         flex: 1;
         min-width: 0;
-        
+
         .popularPostTitle {
           font-size: 0.95rem;
           font-weight: 600;
@@ -258,21 +258,21 @@
           overflow: hidden;
           border: none;
           padding: 0;
-          
+
           a {
             color: inherit;
             text-decoration: none;
-            
+
             &:hover {
               color: $color-primary;
             }
           }
-          
+
           &::after {
             display: none;
           }
         }
-        
+
         .popularPostMeta {
           font-size: 0.8rem;
           color: $color-gray-600;

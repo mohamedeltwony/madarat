@@ -20,7 +20,7 @@
     .image {
       transform: scale(1.08);
     }
-    
+
     .title a {
       color: #104c44;
     }
@@ -174,10 +174,10 @@
 // Special styles for cards inside latestPosts section
 :global(.latestPosts) .postCard {
   background: rgba(255, 255, 255, 0.95);
-  
+
   &:hover {
     background: white;
-    
+
     .category {
       background: #cc9c64;
       color: white;

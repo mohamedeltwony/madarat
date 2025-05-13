@@ -24,7 +24,7 @@ $brand-gold: #cc9c64;
   margin-bottom: 1rem;
   position: relative;
   display: inline-block;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -43,11 +43,11 @@ $brand-gold: #cc9c64;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   margin-bottom: 3rem;
-  
+
   @media (max-width: 992px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -64,22 +64,24 @@ $brand-gold: #cc9c64;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   background-color: white;
   text-decoration: none;
   height: 100%;
-  
+
   &:hover {
     transform: translateY(-7px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    
+
     .postImage {
       transform: scale(1.05);
     }
-    
+
     .viewDetails {
       color: $brand-primary;
-      
+
       svg {
         transform: translateX(5px);
       }
@@ -139,14 +141,14 @@ $brand-gold: #cc9c64;
   gap: 1rem;
   margin-bottom: 1rem;
   color: $color-gray-600;
-  
+
   .postDate,
   .postAuthor {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: 0.85rem;
-    
+
     .dateIcon,
     .authorIcon {
       color: $brand-gold;
@@ -162,7 +164,7 @@ $brand-gold: #cc9c64;
   font-size: 0.95rem;
   line-height: 1.6;
   flex-grow: 1;
-  
+
   p {
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -188,14 +190,14 @@ $brand-gold: #cc9c64;
   font-size: 0.95rem;
   transition: all 0.3s ease;
   cursor: pointer;
-  
+
   svg {
     transition: transform 0.3s ease;
   }
-  
+
   &:hover {
     color: $brand-primary;
-    
+
     svg {
       transform: translateX(5px);
     }
@@ -220,16 +222,16 @@ $brand-gold: #cc9c64;
   transition: all 0.3s ease;
   text-decoration: none;
   box-shadow: 0 4px 15px rgba($brand-primary, 0.3);
-  
+
   .buttonIcon {
     transition: transform 0.3s ease;
   }
-  
+
   &:hover {
     background-color: darken($brand-primary, 5%);
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba($brand-primary, 0.4);
-    
+
     .buttonIcon {
       transform: translateX(5px);
     }
@@ -268,8 +270,12 @@ $brand-gold: #cc9c64;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loadingText {
@@ -282,4 +288,4 @@ $brand-gold: #cc9c64;
   color: $color-gray-700;
   font-size: 1.1rem;
   max-width: 500px;
-} 
+}

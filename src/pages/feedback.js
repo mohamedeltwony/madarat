@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import { FaEnvelope, FaPhone, FaCommentAlt, FaUser, FaPaperPlane } from 'react-icons/fa';
+import {
+  FaEnvelope,
+  FaPhone,
+  FaCommentAlt,
+  FaUser,
+  FaPaperPlane,
+} from 'react-icons/fa';
 import LocalizedLink from '../components/LocalizedLink';
 import styles from '../styles/pages/Feedback.module.scss';
 
@@ -11,9 +17,9 @@ const FeedbackPage = () => {
     phone: '',
     subject: '',
     message: '',
-    type: 'complaint' // 'complaint' or 'suggestion'
+    type: 'complaint', // 'complaint' or 'suggestion'
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
@@ -21,21 +27,21 @@ const FeedbackPage = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleTypeChange = (type) => {
     setFormData((prev) => ({
       ...prev,
-      type
+      type,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       // Here you would send the data to your backend
       // Example:
@@ -44,10 +50,10 @@ const FeedbackPage = () => {
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(formData)
       // });
-      
+
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       // Simulate successful submission
       setSubmitStatus('success');
       setFormData({
@@ -56,7 +62,7 @@ const FeedbackPage = () => {
         phone: '',
         subject: '',
         message: '',
-        type: 'complaint'
+        type: 'complaint',
       });
     } catch (error) {
       console.error('Error submitting feedback:', error);
@@ -70,13 +76,18 @@ const FeedbackPage = () => {
     <>
       <Head>
         <title>شكاوى واقتراحات | مدارات الكون</title>
-        <meta name="description" content="نرحب بشكاويكم واقتراحاتكم لتحسين خدماتنا السياحية" />
+        <meta
+          name="description"
+          content="نرحب بشكاويكم واقتراحاتكم لتحسين خدماتنا السياحية"
+        />
       </Head>
 
       <div className={styles.container}>
         <div className={styles.header}>
           <h1>شكاوى واقتراحات</h1>
-          <p>نهتم برأيك ونسعى دائماً لتطوير خدماتنا، يرجى تعبئة النموذج أدناه</p>
+          <p>
+            نهتم برأيك ونسعى دائماً لتطوير خدماتنا، يرجى تعبئة النموذج أدناه
+          </p>
         </div>
 
         <div className={styles.content}>
@@ -87,8 +98,10 @@ const FeedbackPage = () => {
                   <FaPaperPlane />
                 </div>
                 <h2>شكراً لك!</h2>
-                <p>تم استلام رسالتك بنجاح وسنقوم بالرد عليك في أقرب وقت ممكن.</p>
-                <button 
+                <p>
+                  تم استلام رسالتك بنجاح وسنقوم بالرد عليك في أقرب وقت ممكن.
+                </p>
+                <button
                   className={styles.newMessageBtn}
                   onClick={() => setSubmitStatus(null)}
                 >
@@ -128,7 +141,7 @@ const FeedbackPage = () => {
                     placeholder="أدخل اسمك الكامل"
                   />
                 </div>
-                
+
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
                     <label htmlFor="email">
@@ -144,7 +157,7 @@ const FeedbackPage = () => {
                       placeholder="example@email.com"
                     />
                   </div>
-                  
+
                   <div className={styles.formGroup}>
                     <label htmlFor="phone">
                       <FaPhone /> رقم الجوال
@@ -160,9 +173,12 @@ const FeedbackPage = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className={styles.formGroup}>
-                  <label htmlFor="subject">موضوع {formData.type === 'complaint' ? 'الشكوى' : 'الاقتراح'}</label>
+                  <label htmlFor="subject">
+                    موضوع{' '}
+                    {formData.type === 'complaint' ? 'الشكوى' : 'الاقتراح'}
+                  </label>
                   <input
                     type="text"
                     id="subject"
@@ -173,11 +189,9 @@ const FeedbackPage = () => {
                     placeholder={`أدخل موضوع ${formData.type === 'complaint' ? 'الشكوى' : 'الاقتراح'}`}
                   />
                 </div>
-                
+
                 <div className={styles.formGroup}>
-                  <label htmlFor="message">
-                    التفاصيل
-                  </label>
+                  <label htmlFor="message">التفاصيل</label>
                   <textarea
                     id="message"
                     name="message"
@@ -188,15 +202,15 @@ const FeedbackPage = () => {
                     placeholder={`يرجى كتابة تفاصيل ${formData.type === 'complaint' ? 'الشكوى' : 'الاقتراح'}`}
                   />
                 </div>
-                
+
                 {submitStatus === 'error' && (
                   <div className={styles.errorMessage}>
                     حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.
                   </div>
                 )}
-                
-                <button 
-                  type="submit" 
+
+                <button
+                  type="submit"
                   className={styles.submitButton}
                   disabled={isSubmitting}
                 >
@@ -205,12 +219,12 @@ const FeedbackPage = () => {
               </form>
             )}
           </div>
-          
+
           <div className={styles.contactInfo}>
             <div className={styles.infoCard}>
               <h3>تواصل معنا مباشرة</h3>
               <p>يمكنك التواصل معنا من خلال:</p>
-              
+
               <div className={styles.contactMethod}>
                 <FaPhone />
                 <div>
@@ -218,7 +232,7 @@ const FeedbackPage = () => {
                   <a href="tel:920034019">920034019</a>
                 </div>
               </div>
-              
+
               <div className={styles.contactMethod}>
                 <FaEnvelope />
                 <div>
@@ -226,7 +240,7 @@ const FeedbackPage = () => {
                   <a href="mailto:info@madarat.com">info@madarat.com</a>
                 </div>
               </div>
-              
+
               <div className={styles.note}>
                 <p>نحن نقدر آراءك ونعمل جاهدين على تحسين خدماتنا بشكل مستمر.</p>
                 <p>سنقوم بالرد على شكواك خلال 24 ساعة من وقت استلامها.</p>
@@ -239,4 +253,4 @@ const FeedbackPage = () => {
   );
 };
 
-export default FeedbackPage; 
+export default FeedbackPage;

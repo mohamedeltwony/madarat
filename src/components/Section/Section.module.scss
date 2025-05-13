@@ -24,7 +24,7 @@
 
 /* For content sections that need spacing */
 .contentSection {
-    padding: 3rem 0;
+  padding: 3rem 0;
 
   @media (max-width: 768px) {
     padding: 2rem 0;
@@ -34,12 +34,12 @@
 /* For hero sections */
 .heroSection {
   padding: 0;
-    }
+}
 
 /* For page sections */
 .pageSection {
   padding: 2rem 0 4rem;
-  
+
   @media (max-width: 768px) {
     padding: 1.5rem 0 3rem;
   }

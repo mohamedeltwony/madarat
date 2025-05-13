@@ -1,34 +1,34 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
 
-const GoldLinkDropdownButton = ({ 
-  text = "زر رابط منسدل", 
+const GoldLinkDropdownButton = ({
+  text = 'زر رابط منسدل',
   width = 200,
   height = 50,
-  dropdownItems = null
+  dropdownItems = null,
 }) => {
   const iframeRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  
+
   // Default dropdown items if not provided
   const items = dropdownItems || [
     {
-      text: "إتصل في مستشارك",
-      href: "tel:+966123456789",
-      icon: <FaPhoneAlt style={{ color: '#ffd700' }} />
+      text: 'إتصل في مستشارك',
+      href: 'tel:+966123456789',
+      icon: <FaPhoneAlt style={{ color: '#ffd700' }} />,
     },
     {
-      text: "للحجز سجل رقمك",
-      href: "/booking",
-      icon: <FaUserTie style={{ color: '#ffd700' }} />
+      text: 'للحجز سجل رقمك',
+      href: '/booking',
+      icon: <FaUserTie style={{ color: '#ffd700' }} />,
     },
     {
-      text: "شكوى أو ملاحظات",
-      href: "/feedback",
-      icon: <FaCommentDots style={{ color: '#ffd700' }} />
-    }
+      text: 'شكوى أو ملاحظات',
+      href: '/feedback',
+      icon: <FaCommentDots style={{ color: '#ffd700' }} />,
+    },
   ];
-  
+
   // This HTML will be inserted into the iframe
   const buttonHTML = `
     <!DOCTYPE html>
@@ -128,50 +128,53 @@ const GoldLinkDropdownButton = ({
       </body>
     </html>
   `;
-  
+
   useEffect(() => {
     if (iframeRef.current) {
       // Write the HTML content to the iframe
       const iframe = iframeRef.current;
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      
+      const iframeDocument =
+        iframe.contentDocument || iframe.contentWindow.document;
+
       iframeDocument.open();
       iframeDocument.write(buttonHTML);
       iframeDocument.close();
-      
+
       // Add message listener for iframe communication
       const handleMessage = (event) => {
         if (event.data === 'toggleDropdown') {
           setIsOpen(!isOpen);
         }
       };
-      
+
       window.addEventListener('message', handleMessage);
-      
+
       return () => {
         window.removeEventListener('message', handleMessage);
       };
     }
   }, [buttonHTML, isOpen]);
-  
+
   // Handle outside clicks to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isOpen && 
-          iframeRef.current && 
-          !iframeRef.current.contains(event.target) && 
-          !event.target.closest('.gold-link-dropdown-menu')) {
+      if (
+        isOpen &&
+        iframeRef.current &&
+        !iframeRef.current.contains(event.target) &&
+        !event.target.closest('.gold-link-dropdown-menu')
+      ) {
         setIsOpen(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
-  
+
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
-      <iframe 
+      <iframe
         ref={iframeRef}
         style={{
           width: width,
@@ -180,13 +183,13 @@ const GoldLinkDropdownButton = ({
           overflow: 'hidden',
           background: 'transparent',
           backgroundColor: 'transparent',
-          pointerEvents: 'auto'
+          pointerEvents: 'auto',
         }}
         title="Gold Dropdown Link"
         scrolling="no"
         frameBorder="0"
       />
-      
+
       {isOpen && (
         <div
           className="gold-link-dropdown-menu"
@@ -201,7 +204,7 @@ const GoldLinkDropdownButton = ({
             borderRadius: '15px',
             overflow: 'hidden',
             zIndex: 100,
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            border: '1px solid rgba(255, 255, 255, 0.1)',
           }}
         >
           {items.map((item, index) => (
@@ -214,12 +217,13 @@ const GoldLinkDropdownButton = ({
                 padding: '12px 15px',
                 color: 'white',
                 textDecoration: 'none',
-                borderBottom: index < items.length - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                borderBottom:
+                  index < items.length - 1
+                    ? '1px solid rgba(255, 255, 255, 0.1)'
+                    : 'none',
               }}
             >
-              <div style={{ marginLeft: '12px' }}>
-                {item.icon}
-              </div>
+              <div style={{ marginLeft: '12px' }}>{item.icon}</div>
               <span>{item.text}</span>
             </a>
           ))}
@@ -229,4 +233,4 @@ const GoldLinkDropdownButton = ({
   );
 };
 
-export default GoldLinkDropdownButton; 
+export default GoldLinkDropdownButton;

@@ -18,9 +18,9 @@ export default function CurrentOffers() {
         />
       </Head>
 
-      <PageHero 
-        title="العروض الحالية" 
-        breadcrumb="العروض الحالية" 
+      <PageHero
+        title="العروض الحالية"
+        breadcrumb="العروض الحالية"
         featuredImage="/images/hero-background.jpg"
       />
 
@@ -28,9 +28,10 @@ export default function CurrentOffers() {
         <Container>
           <div className={styles.contentContainer}>
             <p className={styles.pageIntro}>
-              اكتشف أحدث العروض المميزة من مدارات الكون للسياحة والسفر. نقدم لك باقات سفر متنوعة بأسعار تنافسية لوجهات مختلفة حول العالم.
+              اكتشف أحدث العروض المميزة من مدارات الكون للسياحة والسفر. نقدم لك
+              باقات سفر متنوعة بأسعار تنافسية لوجهات مختلفة حول العالم.
             </p>
-            
+
             {/* Current Offers Component */}
             <OfferTrips />
           </div>
@@ -38,4 +39,4 @@ export default function CurrentOffers() {
       </Section>
     </LegalLayout>
   );
-} 
+}

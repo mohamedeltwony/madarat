@@ -11,7 +11,7 @@ const LocalizedLink = ({ href, children, ...props }) => {
   const router = useRouter();
   const { locale } = router;
   const [decodedHref, setDecodedHref] = useState(href);
-  
+
   useEffect(() => {
     // On client-side only, try to decode the URL
     if (typeof href === 'string') {
@@ -23,31 +23,31 @@ const LocalizedLink = ({ href, children, ...props }) => {
       }
     }
   }, [href]);
-  
+
   // For client-side rendering, use the a tag with custom click handling for Arabic URLs
-  if (typeof window !== 'undefined' && typeof href === 'string' && containsArabic(decodedHref)) {
+  if (
+    typeof window !== 'undefined' &&
+    typeof href === 'string' &&
+    containsArabic(decodedHref)
+  ) {
     const handleClick = (e) => {
       e.preventDefault();
       window.location.href = decodedHref;
     };
-    
+
     return (
       <a href={decodedHref} onClick={handleClick} {...props}>
         {children}
       </a>
     );
   }
-  
+
   // For standard links or server-side rendering, use Next.js Link
   return (
-    <Link
-      href={href}
-      locale={locale}
-      {...props}
-    >
+    <Link href={href} locale={locale} {...props}>
       {children}
     </Link>
   );
 };
 
-export default LocalizedLink; 
+export default LocalizedLink;

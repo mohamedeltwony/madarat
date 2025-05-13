@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
 
-const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
+const IsolatedButton = ({ text = 'تواصل معنا', onClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
 
@@ -15,11 +15,15 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isOpen && buttonRef.current && !buttonRef.current.contains(event.target)) {
+      if (
+        isOpen &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -30,7 +34,7 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
   useEffect(() => {
     const style = document.createElement('style');
     style.id = 'isolated-button-style';
-    
+
     // Only add if not already present
     if (!document.getElementById('isolated-button-style')) {
       style.textContent = `
@@ -42,10 +46,12 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
       `;
       document.head.appendChild(style);
     }
-    
+
     return () => {
       if (document.getElementById('isolated-button-style')) {
-        document.head.removeChild(document.getElementById('isolated-button-style'));
+        document.head.removeChild(
+          document.getElementById('isolated-button-style')
+        );
       }
     };
   }, []);
@@ -57,11 +63,11 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
         display: 'inline-block',
         margin: 0,
         padding: 0,
-        background: 'none'
+        background: 'none',
       }}
     >
       {/* Custom button element to avoid inherited styles */}
-      <div 
+      <div
         ref={buttonRef}
         onClick={toggleDropdown}
         role="button"
@@ -86,7 +92,7 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
           overflow: 'hidden',
           zIndex: 1,
           textAlign: 'center',
-          userSelect: 'none'
+          userSelect: 'none',
         }}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -99,12 +105,12 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
           style={{
             position: 'relative',
             zIndex: 3,
-            pointerEvents: 'none'
+            pointerEvents: 'none',
           }}
         >
           {text}
         </span>
-        
+
         {/* Border container */}
         <div
           style={{
@@ -117,7 +123,7 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
             padding: 0,
             margin: 0,
             zIndex: -1,
-            overflow: 'hidden'
+            overflow: 'hidden',
           }}
         >
           {/* Animated gold border */}
@@ -128,14 +134,15 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
+              background:
+                'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
               backgroundSize: '300% 300%',
               animation: 'isolatedButtonGlow 6s linear infinite',
               padding: 0,
-              margin: 0
+              margin: 0,
             }}
           />
-          
+
           {/* Inner background */}
           <div
             style={{
@@ -146,12 +153,12 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
               bottom: 2,
               borderRadius: '28px',
               backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              zIndex: 0
+              zIndex: 0,
             }}
           />
         </div>
       </div>
-      
+
       {/* Dropdown menu */}
       {isOpen && !onClick && (
         <div
@@ -166,7 +173,7 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
             borderRadius: '15px',
             overflow: 'hidden',
             zIndex: 100,
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            border: '1px solid rgba(255, 255, 255, 0.1)',
           }}
         >
           <a
@@ -177,7 +184,7 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
               padding: '12px 15px',
               color: 'white',
               textDecoration: 'none',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
             }}
           >
             <div style={{ marginLeft: '12px' }}>
@@ -185,7 +192,7 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
             </div>
             <span>إتصل في مستشارك</span>
           </a>
-          
+
           <a
             href="/booking"
             style={{
@@ -194,7 +201,7 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
               padding: '12px 15px',
               color: 'white',
               textDecoration: 'none',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
             }}
           >
             <div style={{ marginLeft: '12px' }}>
@@ -202,7 +209,7 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
             </div>
             <span>للحجز سجل رقمك</span>
           </a>
-          
+
           <a
             href="/feedback"
             style={{
@@ -210,7 +217,7 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
               alignItems: 'center',
               padding: '12px 15px',
               color: 'white',
-              textDecoration: 'none'
+              textDecoration: 'none',
             }}
           >
             <div style={{ marginLeft: '12px' }}>
@@ -224,4 +231,4 @@ const IsolatedButton = ({ text = "تواصل معنا", onClick }) => {
   );
 };
 
-export default IsolatedButton; 
+export default IsolatedButton;

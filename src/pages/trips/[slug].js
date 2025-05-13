@@ -1,7 +1,19 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/legacy/image';
-import { FaCalendarAlt, FaMapMarkerAlt, FaMoneyBillWave, FaGlobe, FaPlane, FaBed, FaUtensils, FaCheck, FaTimes, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import {
+  FaCalendarAlt,
+  FaMapMarkerAlt,
+  FaMoneyBillWave,
+  FaGlobe,
+  FaPlane,
+  FaBed,
+  FaUtensils,
+  FaCheck,
+  FaTimes,
+  FaChevronDown,
+  FaChevronUp,
+} from 'react-icons/fa';
 import Layout from '../../components/Layout';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
@@ -14,8 +26,8 @@ const AccordionItem = ({ title, content, defaultOpen = false }) => {
 
   return (
     <div className={`${styles.accordionItem} ${isOpen ? styles.open : ''}`}>
-      <div 
-        className={styles.accordionHeader} 
+      <div
+        className={styles.accordionHeader}
         onClick={() => setIsOpen(!isOpen)}
       >
         <h3>{title}</h3>
@@ -35,36 +47,57 @@ const AccordionItem = ({ title, content, defaultOpen = false }) => {
 // Helper to extract countries from trip description
 const extractCountries = (description) => {
   const countries = [
-    'ايطاليا', 'فرنسا', 'المانيا', 'هولندا', 'اسبانيا', 'البوسنة', 
-    'تركيا', 'روسيا', 'بولندا', 'جورجيا', 'المملكة المتحدة', 'بريطانيا',
-    'لندن', 'باريس', 'روما', 'البندقية', 'برلين', 'أمستردام', 'مدريد',
-    'سراييفو', 'اسطنبول', 'موسكو', 'وارسو', 'تبليسي', 'سكتلندا'
+    'ايطاليا',
+    'فرنسا',
+    'المانيا',
+    'هولندا',
+    'اسبانيا',
+    'البوسنة',
+    'تركيا',
+    'روسيا',
+    'بولندا',
+    'جورجيا',
+    'المملكة المتحدة',
+    'بريطانيا',
+    'لندن',
+    'باريس',
+    'روما',
+    'البندقية',
+    'برلين',
+    'أمستردام',
+    'مدريد',
+    'سراييفو',
+    'اسطنبول',
+    'موسكو',
+    'وارسو',
+    'تبليسي',
+    'سكتلندا',
   ];
-  
+
   const foundCountries = [];
   const descriptionText = description.replace(/<[^>]*>/g, '').toLowerCase();
-  
-  countries.forEach(country => {
+
+  countries.forEach((country) => {
     if (descriptionText.includes(country.toLowerCase())) {
       foundCountries.push(country);
     }
   });
-  
+
   return [...new Set(foundCountries)]; // Remove duplicates
 };
 
 export default function SingleTrip({ trip }) {
   const [sticky, setSticky] = useState(false);
-  
+
   useEffect(() => {
     const handleScroll = () => {
       setSticky(window.scrollY > 500);
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
+
   if (!trip) {
     return (
       <Layout>
@@ -82,12 +115,13 @@ export default function SingleTrip({ trip }) {
 
   const hasItineraries = trip.itineraries && trip.itineraries.length > 0;
   const hasFaqs = trip.faqs && trip.faqs.length > 0;
-  
+
   // Extract highlights from description
   const countries = extractCountries(trip.description);
-  
+
   // Get featured image URL
-  const featuredImageUrl = trip.featured_image?.sizes?.large?.source_url || 
+  const featuredImageUrl =
+    trip.featured_image?.sizes?.large?.source_url ||
     trip._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
     trip.featured_media_url ||
     '/images/trip-placeholder.svg';
@@ -100,20 +134,31 @@ export default function SingleTrip({ trip }) {
       </Head>
 
       {/* Hero Section with Background Image */}
-      <section className={styles.heroSection} style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url(${featuredImageUrl})`
-      }}>
+      <section
+        className={styles.heroSection}
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url(${featuredImageUrl})`,
+        }}
+      >
         <Container>
           <div className={styles.heroContent}>
             <h1 className={styles.tripTitle}>{trip.title}</h1>
             <div className={styles.tripMeta}>
               <div className={styles.metaItem}>
                 <FaCalendarAlt className={styles.metaIcon} />
-                <span>{trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</span>
+                <span>
+                  {trip.duration?.days || 0}{' '}
+                  {trip.duration?.duration_unit || 'يوم'}
+                </span>
               </div>
               <div className={styles.metaItem}>
                 <FaMoneyBillWave className={styles.metaIcon} />
-                <span>{trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'السعر غير متوفر'} {trip.currency?.code || 'SAR'}</span>
+                <span>
+                  {trip.wp_travel_engine_setting_trip_actual_price ||
+                    trip.price ||
+                    'السعر غير متوفر'}{' '}
+                  {trip.currency?.code || 'SAR'}
+                </span>
               </div>
               {trip.destination && (
                 <div className={styles.metaItem}>
@@ -132,12 +177,12 @@ export default function SingleTrip({ trip }) {
           <div className={styles.sectionTitle}>
             <h2>نظرة عامة على الرحلة</h2>
           </div>
-          
+
           <div className={styles.overviewContent}>
             <div className={styles.overviewDescription}>
               <div dangerouslySetInnerHTML={{ __html: trip.description }} />
             </div>
-            
+
             <div className={styles.highlights}>
               <h3>أبرز المعالم</h3>
               <div className={styles.highlightsGrid}>
@@ -149,7 +194,10 @@ export default function SingleTrip({ trip }) {
                 ))}
                 <div className={styles.highlightItem}>
                   <FaPlane className={styles.highlightIcon} />
-                  <span>رحلة {trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</span>
+                  <span>
+                    رحلة {trip.duration?.days || 0}{' '}
+                    {trip.duration?.duration_unit || 'يوم'}
+                  </span>
                 </div>
                 <div className={styles.highlightItem}>
                   <FaBed className={styles.highlightIcon} />
@@ -167,17 +215,19 @@ export default function SingleTrip({ trip }) {
 
       {/* Itinerary Section with Accordion */}
       {hasItineraries && (
-        <Section className={`${styles.contentSection} ${styles.itinerarySection}`}>
+        <Section
+          className={`${styles.contentSection} ${styles.itinerarySection}`}
+        >
           <Container>
             <div className={styles.sectionTitle}>
               <h2>برنامج الرحلة</h2>
             </div>
-            
+
             <div className={styles.accordionContainer}>
               {trip.itineraries.map((day, index) => (
-                <AccordionItem 
-                  key={index} 
-                  title={`اليوم ${index + 1}: ${day.title}`} 
+                <AccordionItem
+                  key={index}
+                  title={`اليوم ${index + 1}: ${day.title}`}
                   content={day.content}
                   defaultOpen={index === 0} // Open first day by default
                 />
@@ -193,7 +243,7 @@ export default function SingleTrip({ trip }) {
           <div className={styles.sectionTitle}>
             <h2>تفاصيل التكلفة</h2>
           </div>
-          
+
           <div className={styles.costColumns}>
             <div className={styles.costColumn}>
               <div className={styles.costHeader}>
@@ -201,25 +251,33 @@ export default function SingleTrip({ trip }) {
                 <h3>السعر يشمل</h3>
               </div>
               <div className={styles.costContent}>
-                <div dangerouslySetInnerHTML={{ 
-                  __html: trip.cost_includes ? 
-                    trip.cost_includes.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>') : 
-                    '<p>لم يتم تحديد ما يشمل السعر</p>' 
-                }} />
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: trip.cost_includes
+                      ? trip.cost_includes
+                          .replace(/\r\n/g, '<br>')
+                          .replace(/\n/g, '<br>')
+                      : '<p>لم يتم تحديد ما يشمل السعر</p>',
+                  }}
+                />
               </div>
             </div>
-            
+
             <div className={styles.costColumn}>
               <div className={styles.costHeader}>
                 <FaTimes className={styles.costIcon} />
                 <h3>السعر لا يشمل</h3>
               </div>
               <div className={styles.costContent}>
-                <div dangerouslySetInnerHTML={{ 
-                  __html: trip.cost_excludes ? 
-                    trip.cost_excludes.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>') : 
-                    '<p>لم يتم تحديد ما لا يشمل السعر</p>' 
-                }} />
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: trip.cost_excludes
+                      ? trip.cost_excludes
+                          .replace(/\r\n/g, '<br>')
+                          .replace(/\n/g, '<br>')
+                      : '<p>لم يتم تحديد ما لا يشمل السعر</p>',
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -233,12 +291,12 @@ export default function SingleTrip({ trip }) {
             <div className={styles.sectionTitle}>
               <h2>الأسئلة الشائعة</h2>
             </div>
-            
+
             <div className={styles.accordionContainer}>
               {trip.faqs.map((faq, index) => (
-                <AccordionItem 
-                  key={index} 
-                  title={faq.title} 
+                <AccordionItem
+                  key={index}
+                  title={faq.title}
                   content={faq.content}
                 />
               ))}
@@ -254,13 +312,21 @@ export default function SingleTrip({ trip }) {
             <div className={styles.ctaTripInfo}>
               <h3>{trip.title}</h3>
               <div className={styles.ctaMeta}>
-                <span>{trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</span>
+                <span>
+                  {trip.duration?.days || 0}{' '}
+                  {trip.duration?.duration_unit || 'يوم'}
+                </span>
                 <span className={styles.ctaPrice}>
-                  {trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'السعر غير متوفر'} {trip.currency?.code || 'SAR'}
+                  {trip.wp_travel_engine_setting_trip_actual_price ||
+                    trip.price ||
+                    'السعر غير متوفر'}{' '}
+                  {trip.currency?.code || 'SAR'}
                 </span>
               </div>
             </div>
-            <a href="#" className={styles.ctaButton}>احجز الآن</a>
+            <a href="#" className={styles.ctaButton}>
+              احجز الآن
+            </a>
           </div>
         </Container>
       </div>

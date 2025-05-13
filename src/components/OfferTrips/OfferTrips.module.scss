@@ -16,25 +16,29 @@ $glass-border: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border: 1px solid $glass-border;
-  box-shadow: 
+  box-shadow:
     0 10px 30px 0 $shadow-color,
     inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
 }
 
 @mixin futuristic-glass {
-  background: linear-gradient(135deg, rgba($primary-color, 0.15) 0%, rgba($secondary-color, 0.08) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba($primary-color, 0.15) 0%,
+    rgba($secondary-color, 0.08) 100%
+  );
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border: 1px solid rgba($primary-color, 0.2);
-  box-shadow: 
+  box-shadow:
     0 15px 40px rgba(0, 0, 0, 0.2),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  
+
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 
+    box-shadow:
       0 20px 60px rgba(0, 0, 0, 0.25),
       inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   }
@@ -97,7 +101,8 @@ $glass-border: rgba(255, 255, 255, 0.12);
 }
 
 @keyframes magicSparkle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
     transform: scale(0) rotate(0deg);
   }
@@ -108,7 +113,8 @@ $glass-border: rgba(255, 255, 255, 0.12);
 }
 
 @keyframes glowPulse {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 5px rgba($accent-color, 0.5));
   }
   50% {
@@ -130,26 +136,58 @@ $glass-border: rgba(255, 255, 255, 0.12);
 
 // Add new animations for magical effects
 @keyframes sparkleRotate {
-  0% { transform: rotate(0deg) scale(0); opacity: 0; }
-  50% { transform: rotate(90deg) scale(0.8); opacity: 0.5; }
-  100% { transform: rotate(180deg) scale(0); opacity: 0; }
+  0% {
+    transform: rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(90deg) scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: rotate(180deg) scale(0);
+    opacity: 0;
+  }
 }
 
 @keyframes floatingStar {
-  0% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
-  50% { transform: translateY(-6px) rotate(90deg); opacity: 0.6; }
-  100% { transform: translateY(0) rotate(180deg); opacity: 0.2; }
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-6px) rotate(90deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(0) rotate(180deg);
+    opacity: 0.2;
+  }
 }
 
 @keyframes magicGlow {
-  0%, 100% { filter: drop-shadow(0 0 2px rgba($accent-color, 0.3)); }
-  50% { filter: drop-shadow(0 0 6px rgba($accent-color, 0.5)); }
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px rgba($accent-color, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 6px rgba($accent-color, 0.5));
+  }
 }
 
 @keyframes magicRipple {
-  0% { box-shadow: 0 0 0 0 rgba($accent-color, 0.5); transform: scale(0.8); }
-  70% { box-shadow: 0 0 0 15px rgba($accent-color, 0); transform: scale(1); }
-  100% { box-shadow: 0 0 0 0 rgba($accent-color, 0); transform: scale(0.8); }
+  0% {
+    box-shadow: 0 0 0 0 rgba($accent-color, 0.5);
+    transform: scale(0.8);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba($accent-color, 0);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba($accent-color, 0);
+    transform: scale(0.8);
+  }
 }
 
 // Component Styles
@@ -163,30 +201,39 @@ $glass-border: rgba(255, 255, 255, 0.12);
   overflow: visible;
   text-align: right;
   box-sizing: border-box;
-  
-  &::before, &::after {
+
+  &::before,
+  &::after {
     content: '';
     position: absolute;
     z-index: -1;
   }
-  
+
   &::before {
     top: -100px;
     right: -100px;
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba($accent-color, 0.2) 0%, rgba($accent-color, 0) 70%);
+    background: radial-gradient(
+      circle,
+      rgba($accent-color, 0.2) 0%,
+      rgba($accent-color, 0) 70%
+    );
     animation: pulse 5s infinite;
   }
-  
+
   &::after {
     bottom: -100px;
     left: -100px;
     width: 250px;
     height: 250px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba($primary-color, 0.15) 0%, rgba($primary-color, 0) 70%);
+    background: radial-gradient(
+      circle,
+      rgba($primary-color, 0.15) 0%,
+      rgba($primary-color, 0) 70%
+    );
     animation: pulse 7s infinite;
   }
 }
@@ -201,13 +248,18 @@ $glass-border: rgba(255, 255, 255, 0.12);
   font-size: 2.8rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(45deg, $primary-color, $accent-color, $secondary-color);
+  background: linear-gradient(
+    45deg,
+    $primary-color,
+    $accent-color,
+    $secondary-color
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
   position: relative;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -216,7 +268,12 @@ $glass-border: rgba(255, 255, 255, 0.12);
     transform: translateX(-50%);
     width: 80px;
     height: 3px;
-    background: linear-gradient(90deg, rgba($primary-color, 0), $accent-color, rgba($primary-color, 0));
+    background: linear-gradient(
+      90deg,
+      rgba($primary-color, 0),
+      $accent-color,
+      rgba($primary-color, 0)
+    );
   }
 }
 
@@ -235,17 +292,17 @@ $glass-border: rgba(255, 255, 255, 0.12);
   padding: 1.5rem 0;
   width: 100%;
   direction: rtl;
-  
+
   @media (max-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
     gap: 1.2rem;
   }
-  
+
   @media (max-width: 900px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
-  
+
   @media (max-width: 640px) {
     grid-template-columns: repeat(1, 1fr);
     gap: 1.5rem;
@@ -256,18 +313,20 @@ $glass-border: rgba(255, 255, 255, 0.12);
   position: relative;
   transition: transform 0.6s ease-out;
   box-sizing: border-box;
-  
+
   &:hover {
     transform: scale(1.02);
     z-index: 5;
-    
-    &::before, &::after {
+
+    &::before,
+    &::after {
       opacity: 0.9;
     }
   }
-  
+
   // Star animations
-  &::before, &::after {
+  &::before,
+  &::after {
     content: '';
     position: absolute;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cc9c64cc'%3E%3Cpath d='M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z'/%3E%3C/svg%3E");
@@ -278,21 +337,25 @@ $glass-border: rgba(255, 255, 255, 0.12);
     pointer-events: none;
     transition: opacity 0.5s ease;
   }
-  
+
   &::before {
     top: -8px;
     right: 15%;
     width: 22px;
     height: 22px;
-    animation: sparkleRotate 7s infinite, floatingStar 10s infinite;
+    animation:
+      sparkleRotate 7s infinite,
+      floatingStar 10s infinite;
   }
-  
+
   &::after {
     top: 20%;
     left: -5px;
     width: 15px;
     height: 15px;
-    animation: sparkleRotate 8s 0.5s infinite, floatingStar 11s 1s infinite;
+    animation:
+      sparkleRotate 8s 0.5s infinite,
+      floatingStar 11s 1s infinite;
   }
 }
 
@@ -313,16 +376,16 @@ $glass-border: rgba(255, 255, 255, 0.12);
   color: inherit;
   text-decoration: none;
   position: relative;
-  
+
   &:hover {
     transform: translateY(-3px);
     transition: all 0.5s ease-out;
-    
+
     &::before {
       animation-duration: 8s;
     }
   }
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -330,27 +393,35 @@ $glass-border: rgba(255, 255, 255, 0.12);
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, 
-      rgba($accent-color, 0) 40%, 
-      rgba($accent-color, 0.1) 50%, 
-      rgba($accent-color, 0) 60%);
+    background: linear-gradient(
+      45deg,
+      rgba($accent-color, 0) 40%,
+      rgba($accent-color, 0.1) 50%,
+      rgba($accent-color, 0) 60%
+    );
     background-size: 300% 100%;
     animation: shine 8s infinite linear;
     z-index: 1;
     pointer-events: none;
   }
-  
+
   &:hover::after {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: 20px;
     padding: 2px;
-    background: linear-gradient(300deg, $primary-color, $accent-color, $secondary-color, $primary-color);
+    background: linear-gradient(
+      300deg,
+      $primary-color,
+      $accent-color,
+      $secondary-color,
+      $primary-color
+    );
     background-size: 300% 300%;
     animation: magicBorder 3s ease infinite;
-    -webkit-mask: 
-      linear-gradient(#fff 0 0) content-box, 
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -364,7 +435,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   height: 220px;
   overflow: hidden;
   border-radius: 20px 20px 0 0;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -372,13 +443,17 @@ $glass-border: rgba(255, 255, 255, 0.12);
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at center, rgba($accent-color, 0.3) 0%, rgba($accent-color, 0) 70%);
+    background: radial-gradient(
+      circle at center,
+      rgba($accent-color, 0.3) 0%,
+      rgba($accent-color, 0) 70%
+    );
     opacity: 0;
     transition: opacity 0.5s ease;
     pointer-events: none;
     z-index: 2;
   }
-  
+
   .tripCard:hover &::after {
     opacity: 1;
     animation: magicRipple 2s infinite;
@@ -391,7 +466,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   object-fit: cover;
   transition: transform 1s ease-out;
   filter: brightness(0.95);
-  
+
   .tripCard:hover & {
     transform: scale(1.08);
     filter: brightness(1.05) contrast(1.02) saturate(1.1);
@@ -403,7 +478,11 @@ $glass-border: rgba(255, 255, 255, 0.12);
   @include flex-center;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($secondary-color, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba($primary-color, 0.1),
+    rgba($secondary-color, 0.1)
+  );
   color: rgba($text-color, 0.5);
   font-weight: 600;
 }
@@ -422,22 +501,24 @@ $glass-border: rgba(255, 255, 255, 0.12);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transform: translateY(0);
   transition: all 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-  
+
   .tripCard:hover & {
     transform: translateY(-3px) scale(1.05);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     filter: drop-shadow(0 0 8px rgba($accent-color, 0.5));
   }
-  
+
   &::after {
     content: '';
     position: absolute;
     inset: -3px;
     border-radius: 30px;
-    background: linear-gradient(45deg, 
+    background: linear-gradient(
+      45deg,
       transparent,
       rgba(255, 255, 255, 0.3),
-      transparent);
+      transparent
+    );
     animation: shine 3s infinite;
     opacity: 0.7;
     z-index: -1;
@@ -461,12 +542,13 @@ $glass-border: rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   gap: 5px;
-  
+
   .tripCard:hover & {
     background: $accent-color;
     transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3),
-                0 0 10px rgba($accent-color, 0.5);
+    box-shadow:
+      0 6px 15px rgba(0, 0, 0, 0.3),
+      0 0 10px rgba($accent-color, 0.5);
   }
 }
 
@@ -494,7 +576,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   -webkit-box-orient: vertical;
   overflow: hidden;
   transition: color 0.3s ease;
-  
+
   .tripCard:hover & {
     background: linear-gradient(45deg, $primary-color, $accent-color);
     -webkit-background-clip: text;
@@ -518,7 +600,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   align-items: center;
   justify-content: center;
   color: $primary-color;
-  
+
   .tripCard:hover & {
     color: $accent-color;
     animation: float 3s ease-in-out infinite;
@@ -540,7 +622,11 @@ $glass-border: rgba(255, 255, 255, 0.12);
   font-size: 1.25rem;
   font-weight: 700;
   color: $accent-color;
-  background: linear-gradient(135deg, rgba($accent-color, 0.15), rgba($accent-color, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba($accent-color, 0.15),
+    rgba($accent-color, 0.05)
+  );
   padding: 0.4rem 1rem;
   border-radius: 30px;
   position: relative;
@@ -548,7 +634,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   gap: 5px;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -556,17 +642,23 @@ $glass-border: rgba(255, 255, 255, 0.12);
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, 
-      rgba($accent-color, 0) 40%, 
-      rgba($accent-color, 0.15) 50%, 
-      rgba($accent-color, 0) 60%);
+    background: linear-gradient(
+      45deg,
+      rgba($accent-color, 0) 40%,
+      rgba($accent-color, 0.15) 50%,
+      rgba($accent-color, 0) 60%
+    );
     background-size: 200% 100%;
     animation: shine 4s infinite linear;
     z-index: -1;
   }
-  
+
   .tripCard:hover & {
-    background: linear-gradient(135deg, rgba($accent-color, 0.25), rgba($accent-color, 0.1));
+    background: linear-gradient(
+      135deg,
+      rgba($accent-color, 0.25),
+      rgba($accent-color, 0.1)
+    );
     box-shadow: 0 0 15px rgba($accent-color, 0.3);
     transform: scale(1.05);
   }
@@ -592,14 +684,14 @@ $glass-border: rgba(255, 255, 255, 0.12);
   color: $primary-color;
   font-weight: 600;
   transition: all 0.3s ease;
-  
+
   svg {
     transition: transform 0.3s ease;
   }
-  
+
   .tripCard:hover & {
     color: $accent-color;
-    
+
     svg {
       transform: translateX(8px);
       animation: float 2s ease-in-out infinite;
@@ -616,7 +708,11 @@ $glass-border: rgba(255, 255, 255, 0.12);
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: linear-gradient(45deg, $primary-color, darken($primary-color, 10%));
+  background: linear-gradient(
+    45deg,
+    $primary-color,
+    darken($primary-color, 10%)
+  );
   color: $light-text;
   padding: 0.9rem 2rem;
   border-radius: 50px;
@@ -624,25 +720,25 @@ $glass-border: rgba(255, 255, 255, 0.12);
   font-size: 1.1rem;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-decoration: none;
-  box-shadow: 
+  box-shadow:
     0 10px 20px rgba($primary-color, 0.3),
     inset 0 2px 0 rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
-  
+
   &:hover {
     transform: translateY(-5px) scale(1.03);
     box-shadow: 0 15px 30px rgba($primary-color, 0.4);
-    
+
     &::before {
       transform: translateX(100%);
     }
-    
+
     .buttonIcon {
       transform: translateX(3px);
     }
   }
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -659,7 +755,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
     transition: transform 0.6s ease;
     z-index: 1;
   }
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -710,7 +806,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   position: relative;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -726,7 +822,9 @@ $glass-border: rgba(255, 255, 255, 0.12);
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .errorContainer,
@@ -760,7 +858,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   .offerTripsTitle {
     font-size: 2.3rem;
   }
-  
+
   .offerTripsSubtitle {
     font-size: 1.1rem;
   }
@@ -771,39 +869,39 @@ $glass-border: rgba(255, 255, 255, 0.12);
     padding: 3rem 0.5rem;
     width: 98%;
   }
-  
+
   .offerTripsTitle {
     font-size: 2rem;
   }
-  
+
   .tripImageContainer {
     height: 180px;
   }
-  
+
   .tripContent {
     padding: 1.2rem;
   }
-  
+
   .tripTitle {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
   }
-  
+
   .priceValue {
     font-size: 1.1rem;
     padding: 0.3rem 0.7rem;
   }
-  
+
   .viewAllButton {
     padding: 0.7rem 1.5rem;
     font-size: 1rem;
   }
-  
+
   .tripFooter {
     margin-top: 1.2rem;
     padding-top: 0.8rem;
   }
-  
+
   .viewDetails {
     font-size: 0.85rem;
   }
@@ -814,44 +912,44 @@ $glass-border: rgba(255, 255, 255, 0.12);
     padding: 2.5rem 0.25rem;
     width: 100%;
   }
-  
+
   .offerTripsHeader {
     margin-bottom: 2rem;
   }
-  
+
   .offerTripsTitle {
     font-size: 1.8rem;
   }
-  
+
   .tripImageContainer {
     height: 180px;
   }
-  
+
   .tripContent {
     padding: 1.2rem;
   }
-  
+
   .tripTitle {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
   }
-  
+
   .priceValue {
     font-size: 1.1rem;
     padding: 0.3rem 0.7rem;
   }
-  
+
   .viewAllButton {
     padding: 0.7rem 1.5rem;
     font-size: 1rem;
   }
-  
+
   .tripFooter {
     margin-top: 1.2rem;
     padding-top: 0.8rem;
   }
-  
+
   .viewDetails {
     font-size: 0.85rem;
   }
-} 
+}

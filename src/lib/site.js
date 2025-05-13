@@ -27,8 +27,11 @@ export function constructMetadata(source = {}) {
   const { title, description, ...rest } = source;
 
   return {
-    title: removeExtraSpaces(decodeHtmlEntities(title)) || defaultMetadata.title,
-    description: removeExtraSpaces(decodeHtmlEntities(description)) || defaultMetadata.description,
+    title:
+      removeExtraSpaces(decodeHtmlEntities(title)) || defaultMetadata.title,
+    description:
+      removeExtraSpaces(decodeHtmlEntities(description)) ||
+      defaultMetadata.description,
     ...rest,
   };
 }
@@ -110,28 +113,39 @@ export function helmetSettingsFromMetadata(metadata = {}) {
  * constructPageMetadata
  */
 
-export function constructPageMetadata(defaultMetadata = {}, pageMetadata = {}, options = {}) {
+export function constructPageMetadata(
+  defaultMetadata = {},
+  pageMetadata = {},
+  options = {}
+) {
   const { title, description } = pageMetadata;
   const url = options.router?.asPath;
   const pathname = options.router?.pathname;
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-  
+
   const isHome = pathname === '/' || pathname === '/[[...slug]]';
   let pageTitle = title || defaultMetadata.title;
-  
+
   if (!isHome && defaultMetadata.siteTitle) {
     pageTitle = `${pageTitle} - ${defaultMetadata.siteTitle}`;
   }
 
   return {
-    canonical: pageMetadata.canonical || (url && `${options.homepage || basePath}${url}`),
+    canonical:
+      pageMetadata.canonical ||
+      (url && `${options.homepage || basePath}${url}`),
     description: description || defaultMetadata.description,
     og: {
-      description: pageMetadata.og?.description || description || defaultMetadata.og?.description,
+      description:
+        pageMetadata.og?.description ||
+        description ||
+        defaultMetadata.og?.description,
       image: pageMetadata.og?.image || defaultMetadata.og?.image,
       title: pageMetadata.og?.title || pageTitle,
       type: pageMetadata.og?.type || 'website',
-      url: pageMetadata.og?.url || (url && `${options.homepage || basePath}${url}`),
+      url:
+        pageMetadata.og?.url ||
+        (url && `${options.homepage || basePath}${url}`),
       siteName: pageMetadata.og?.siteName || defaultMetadata.siteTitle,
     },
     robots: pageMetadata.robots || null,
@@ -139,7 +153,10 @@ export function constructPageMetadata(defaultMetadata = {}, pageMetadata = {}, o
     twitter: {
       card: pageMetadata.twitter?.card || 'summary_large_image',
       creator: pageMetadata.twitter?.creator || '@madaratalkon',
-      description: pageMetadata.twitter?.description || description || defaultMetadata.twitter?.description,
+      description:
+        pageMetadata.twitter?.description ||
+        description ||
+        defaultMetadata.twitter?.description,
       image: pageMetadata.twitter?.image || defaultMetadata.twitter?.image,
       title: pageMetadata.twitter?.title || pageTitle,
     },

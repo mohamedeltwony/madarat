@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 
-const UltimateButton = ({ 
-  text = "زر ذهبي", 
+const UltimateButton = ({
+  text = 'زر ذهبي',
   onClick,
   width = 200,
   height = 50,
   style = {},
-  ...props 
+  ...props
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // Calculate button size based on text
   const buttonWidth = Math.max(text.length * 12 + 40, width);
-  
+
   // Handle events
   const handleClick = (e) => {
     if (onClick) onClick(e);
   };
-  
+
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
-  
+
   // CSS reset styles to ensure no backgrounds
   const cssReset = {
     all: 'initial',
@@ -35,9 +35,9 @@ const UltimateButton = ({
     boxShadow: 'none',
     WebkitAppearance: 'none',
     MozAppearance: 'none',
-    appearance: 'none'
+    appearance: 'none',
   };
-  
+
   return (
     <div
       onClick={handleClick}
@@ -52,7 +52,7 @@ const UltimateButton = ({
         cursor: 'pointer',
         overflow: 'hidden',
         fontFamily: 'Cairo, sans-serif',
-        ...style
+        ...style,
       }}
       role="button"
       tabIndex={0}
@@ -69,11 +69,11 @@ const UltimateButton = ({
           bottom: 0,
           borderRadius: height / 2,
           zIndex: 0,
-          overflow: 'hidden'
+          overflow: 'hidden',
         }}
       >
         {/* Gold gradient animation */}
-        <div 
+        <div
           style={{
             ...cssReset,
             position: 'absolute',
@@ -81,13 +81,14 @@ const UltimateButton = ({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundImage: 'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
+            backgroundImage:
+              'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
             backgroundSize: '300% 300%',
-            animation: 'ultimateButtonGlow 6s linear infinite'
+            animation: 'ultimateButtonGlow 6s linear infinite',
           }}
         />
       </div>
-      
+
       {/* Dark inner background */}
       <div
         style={{
@@ -97,13 +98,15 @@ const UltimateButton = ({
           left: 2,
           right: 2,
           bottom: 2,
-          borderRadius: (height / 2) - 1,
-          backgroundColor: isHovered ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.7)',
+          borderRadius: height / 2 - 1,
+          backgroundColor: isHovered
+            ? 'rgba(0, 0, 0, 0.4)'
+            : 'rgba(0, 0, 0, 0.7)',
           zIndex: 1,
-          transition: 'background-color 0.3s ease'
+          transition: 'background-color 0.3s ease',
         }}
       />
-      
+
       {/* Button text */}
       <div
         style={{
@@ -121,12 +124,12 @@ const UltimateButton = ({
           fontSize: '16px',
           zIndex: 2,
           textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-          fontFamily: 'Cairo, sans-serif'
+          fontFamily: 'Cairo, sans-serif',
         }}
       >
         {text}
       </div>
-      
+
       {/* CSS animation in a style tag */}
       <style>{`
         @keyframes ultimateButtonGlow {
@@ -139,4 +142,4 @@ const UltimateButton = ({
   );
 };
 
-export default UltimateButton; 
+export default UltimateButton;

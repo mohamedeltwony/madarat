@@ -1,28 +1,28 @@
 import React, { useState } from 'react';
 
-const ImprovedButton = ({ 
-  text = "زر ذهبي", 
+const ImprovedButton = ({
+  text = 'زر ذهبي',
   onClick,
   width = 200,
   height = 50,
   style = {},
-  ...props 
+  ...props
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // Calculate button size based on text
   const buttonWidth = Math.max(text.length * 12 + 40, width);
-  
+
   // Handle events
   const handleClick = (e) => {
     if (onClick) onClick(e);
   };
-  
+
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
-  
+
   return (
-    <div 
+    <div
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -40,7 +40,7 @@ const ImprovedButton = ({
         border: 'none !important',
         boxShadow: 'none !important',
         outline: 'none !important',
-        ...style
+        ...style,
       }}
       role="button"
       tabIndex={0}
@@ -56,13 +56,14 @@ const ImprovedButton = ({
           bottom: 0,
           borderRadius: height / 2,
           backgroundColor: 'transparent !important',
-          backgroundImage: 'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
+          backgroundImage:
+            'linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00)',
           backgroundSize: '300% 300%',
           animation: 'improvedButtonGlow 6s linear infinite',
-          zIndex: 0
+          zIndex: 0,
         }}
       />
-      
+
       {/* Dark inner background */}
       <div
         style={{
@@ -71,13 +72,15 @@ const ImprovedButton = ({
           left: 2,
           right: 2,
           bottom: 2,
-          borderRadius: (height / 2) - 1,
-          backgroundColor: isHovered ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.7)',
+          borderRadius: height / 2 - 1,
+          backgroundColor: isHovered
+            ? 'rgba(0, 0, 0, 0.4)'
+            : 'rgba(0, 0, 0, 0.7)',
           zIndex: 1,
-          transition: 'background-color 0.3s ease'
+          transition: 'background-color 0.3s ease',
         }}
       />
-      
+
       {/* Button text */}
       <div
         style={{
@@ -93,12 +96,12 @@ const ImprovedButton = ({
           fontWeight: 'bold',
           fontSize: '16px',
           zIndex: 2,
-          textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
+          textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
         }}
       >
         {text}
       </div>
-      
+
       {/* CSS animation in a style tag */}
       <style>{`
         @keyframes improvedButtonGlow {
@@ -111,4 +114,4 @@ const ImprovedButton = ({
   );
 };
 
-export default ImprovedButton; 
+export default ImprovedButton;

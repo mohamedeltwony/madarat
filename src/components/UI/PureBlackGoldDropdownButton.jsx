@@ -1,33 +1,39 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-const PureBlackGoldDropdownButton = ({ 
-  text = "زر منسدل ذهبي", 
+const PureBlackGoldDropdownButton = ({
+  text = 'زر منسدل ذهبي',
   width = 200,
   height = 50,
   dropdownItems = [
-    { text: "خيار رقم ١", href: "#option1" },
-    { text: "خيار رقم ٢", href: "#option2" },
-    { text: "خيار رقم ٣", href: "#option3" }
-  ]
+    { text: 'خيار رقم ١', href: '#option1' },
+    { text: 'خيار رقم ٢', href: '#option2' },
+    { text: 'خيار رقم ٣', href: '#option3' },
+  ],
 }) => {
   const iframeRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  
+
   // Generate items HTML for the dropdown
-  const dropdownItemsHtml = dropdownItems.map((item, index) => {
-    return `
+  const dropdownItemsHtml = dropdownItems
+    .map((item, index) => {
+      return `
       <a href="${item.href || '#'}" 
         target="${item.target || '_self'}" 
         class="dropdown-item" 
         data-index="${index}">
-        ${item.icon ? `<span class="item-icon">${
-          typeof item.icon === 'object' ? 'Icon' : item.icon
-        }</span>` : ''}
+        ${
+          item.icon
+            ? `<span class="item-icon">${
+                typeof item.icon === 'object' ? 'Icon' : item.icon
+              }</span>`
+            : ''
+        }
         <span class="item-text">${item.text}</span>
       </a>
     `;
-  }).join('');
-  
+    })
+    .join('');
+
   // This HTML will be inserted into the iframe with specific CSS reset
   const buttonHTML = `
     <!DOCTYPE html>
@@ -270,17 +276,18 @@ const PureBlackGoldDropdownButton = ({
       </body>
     </html>
   `;
-  
+
   useEffect(() => {
     if (iframeRef.current) {
       // Write the HTML content to the iframe
       const iframe = iframeRef.current;
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-      
+      const iframeDocument =
+        iframe.contentDocument || iframe.contentWindow.document;
+
       iframeDocument.open();
       iframeDocument.write(buttonHTML);
       iframeDocument.close();
-      
+
       // Add message listener for iframe communication
       const handleMessage = (event) => {
         if (event.data?.type === 'dropdownStateChange') {
@@ -292,27 +299,27 @@ const PureBlackGoldDropdownButton = ({
           }
         }
       };
-      
+
       window.addEventListener('message', handleMessage);
-      
+
       return () => {
         window.removeEventListener('message', handleMessage);
       };
     }
   }, [buttonHTML, dropdownItems]);
-  
+
   return (
-    <iframe 
+    <iframe
       ref={iframeRef}
       style={{
         width,
-        height: isOpen ? (height + dropdownItems.length * 40 + 16) : height, // Adjust height dynamically
+        height: isOpen ? height + dropdownItems.length * 40 + 16 : height, // Adjust height dynamically
         border: 'none',
         overflow: 'visible',
         background: 'transparent',
         backgroundColor: 'transparent',
         pointerEvents: 'auto',
-        transition: 'height 0.3s ease'
+        transition: 'height 0.3s ease',
       }}
       title="Pure Black Gold Dropdown Button"
       scrolling="no"
@@ -322,4 +329,4 @@ const PureBlackGoldDropdownButton = ({
   );
 };
 
-export default PureBlackGoldDropdownButton; 
+export default PureBlackGoldDropdownButton;

@@ -48,34 +48,38 @@ export default function ItalyTrip() {
 
   // Create a reference to the debounced function
   const debouncedPartialSubmitRef = useRef(null);
-  
+
   // Initialize the debounced function on component mount
   useEffect(() => {
-    debouncedPartialSubmitRef.current = debounce((currentFormData, fieldName) => {
-      const queryParams = new URLSearchParams(
-        typeof window !== 'undefined' ? window.location.search : ''
-      );
-      
-      const clientData = {
-        utm_source: queryParams.get('utm_source'),
-        utm_medium: queryParams.get('utm_medium'),
-        utm_campaign: queryParams.get('utm_campaign'),
-        utm_term: queryParams.get('utm_term'),
-        utm_content: queryParams.get('utm_content'),
-        screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
-        fbc: getCookie('_fbc'),
-        fbp: getCookie('_fbp'),
-      };
-      
-      sendPartialFormData(
-        currentFormData,
-        'italy-trip',
-        'Italy Trip Form',
-        clientData,
-        fieldName,
-        2000
-      );
-    }, 2000); // 2 second debounce time
+    debouncedPartialSubmitRef.current = debounce(
+      (currentFormData, fieldName) => {
+        const queryParams = new URLSearchParams(
+          typeof window !== 'undefined' ? window.location.search : ''
+        );
+
+        const clientData = {
+          utm_source: queryParams.get('utm_source'),
+          utm_medium: queryParams.get('utm_medium'),
+          utm_campaign: queryParams.get('utm_campaign'),
+          utm_term: queryParams.get('utm_term'),
+          utm_content: queryParams.get('utm_content'),
+          screenWidth:
+            typeof window !== 'undefined' ? window.screen.width : null,
+          fbc: getCookie('_fbc'),
+          fbp: getCookie('_fbp'),
+        };
+
+        sendPartialFormData(
+          currentFormData,
+          'italy-trip',
+          'Italy Trip Form',
+          clientData,
+          fieldName,
+          2000
+        );
+      },
+      2000
+    ); // 2 second debounce time
   }, []);
 
   // Helper function to send events to the backend API (Keep original logic)
@@ -136,7 +140,7 @@ export default function ItalyTrip() {
       ...formData,
       [name]: value,
     };
-    
+
     setFormData(updatedFormData);
 
     if (name === 'phone') {
@@ -159,7 +163,11 @@ export default function ItalyTrip() {
       if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('track', 'InitiateCheckout', {}, { eventID: eventId });
       }
-      sendFbEvent('InitiateCheckout', { ...updatedFormData, [name]: value }, eventId);
+      sendFbEvent(
+        'InitiateCheckout',
+        { ...updatedFormData, [name]: value },
+        eventId
+      );
     } else if (!formStarted && name === 'phone' && currentPhoneValid) {
       setFormStarted(true);
       const eventId = crypto.randomUUID();
@@ -167,7 +175,11 @@ export default function ItalyTrip() {
       if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('track', 'InitiateCheckout', {}, { eventID: eventId });
       }
-      sendFbEvent('InitiateCheckout', { ...updatedFormData, [name]: value }, eventId);
+      sendFbEvent(
+        'InitiateCheckout',
+        { ...updatedFormData, [name]: value },
+        eventId
+      );
     } else if (
       !formStarted &&
       ['name', 'phone', 'email'].includes(name) &&
@@ -179,14 +191,19 @@ export default function ItalyTrip() {
       if (typeof window !== 'undefined' && window.fbq) {
         window.fbq('track', 'InitiateCheckout', {}, { eventID: eventId });
       }
-      sendFbEvent('InitiateCheckout', { ...updatedFormData, [name]: value }, eventId);
+      sendFbEvent(
+        'InitiateCheckout',
+        { ...updatedFormData, [name]: value },
+        eventId
+      );
     }
 
     // Send partial form data to Zapier if we have meaningful data
-    if ((name === 'name' && value.trim().length > 2) || 
-        (name === 'email' && value.trim().length > 5) ||
-        (name === 'phone' && value.trim().length > 5)) {
-      
+    if (
+      (name === 'name' && value.trim().length > 2) ||
+      (name === 'email' && value.trim().length > 5) ||
+      (name === 'phone' && value.trim().length > 5)
+    ) {
       // Use the debounced function to avoid too many requests
       if (debouncedPartialSubmitRef.current) {
         debouncedPartialSubmitRef.current(updatedFormData, name);

@@ -6,11 +6,11 @@ const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 
 // SVG sparkle component
 const SparkleIcon = ({ size, color, style }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
     fill={color}
     style={style}
   >
@@ -24,7 +24,7 @@ const Sparkle = ({ size, color, style }) => {
     const top = random(0, 100);
     const left = random(0, 100);
     const animationDelay = `${random(0, 1000) / 100}s`;
-    
+
     return {
       ...style,
       top: `${top}%`,
@@ -32,14 +32,14 @@ const Sparkle = ({ size, color, style }) => {
       animationDelay,
     };
   });
-  
+
   return <SparkleIcon size={size} color={color} style={sparkleStyle} />;
 };
 
 // Main sparkle effect component
-const SparkleEffect = ({ active = false, color = "#cc9c64" }) => {
+const SparkleEffect = ({ active = false, color = '#cc9c64' }) => {
   const [sparkles, setSparkles] = useState([]);
-  
+
   // Generate new sparkles when active changes
   useEffect(() => {
     if (active) {
@@ -54,13 +54,13 @@ const SparkleEffect = ({ active = false, color = "#cc9c64" }) => {
       setSparkles([]);
     }
   }, [active, color]);
-  
+
   if (!active) return null;
-  
+
   return (
     <div className={styles.sparkleContainer}>
       {sparkles.map((sparkle) => (
-        <Sparkle 
+        <Sparkle
           key={sparkle.id}
           size={sparkle.size}
           color={sparkle.color}
@@ -71,4 +71,4 @@ const SparkleEffect = ({ active = false, color = "#cc9c64" }) => {
   );
 };
 
-export default SparkleEffect; 
+export default SparkleEffect;

@@ -6,7 +6,9 @@ export const MENU_LOCATION_NAVIGATION_DEFAULT = 'DEFAULT_NAVIGATION';
  * getAllMenus - stub implementation for compatibility
  */
 export async function getAllMenus() {
-  console.warn('[getAllMenus] This function is deprecated and returns empty menus.');
+  console.warn(
+    '[getAllMenus] This function is deprecated and returns empty menus.'
+  );
   return { menus: [] };
 }
 
@@ -81,11 +83,13 @@ export const parseHierarchicalMenu = (
  */
 
 export function mapMenuLocation(menu) {
-  return menu.locations?.includes('PRIMARY') || menu.locations?.includes('MAIN_MENU')
+  return menu.locations?.includes('PRIMARY') ||
+    menu.locations?.includes('MAIN_MENU')
     ? 'PRIMARY_MENU'
-    : menu.locations?.includes('FOOTER') || menu.locations?.includes('FOOTER_MENU')
-    ? 'FOOTER_MENU'
-    : undefined;
+    : menu.locations?.includes('FOOTER') ||
+        menu.locations?.includes('FOOTER_MENU')
+      ? 'FOOTER_MENU'
+      : undefined;
 }
 
 /**
@@ -96,11 +100,17 @@ export function findMenuByLocation(menus, location) {
   if (!Array.isArray(menus) || !menus.length) {
     return undefined;
   }
-  
+
   return menus.find((menu) => {
-    return menu.locations?.includes(location) ||
+    return (
+      menu.locations?.includes(location) ||
       // Map different location format strings to support various plugins
-      (location === 'PRIMARY_MENU' && (menu.locations?.includes('PRIMARY') || menu.locations?.includes('MAIN_MENU'))) ||
-      (location === 'FOOTER_MENU' && (menu.locations?.includes('FOOTER') || menu.locations?.includes('FOOTER_MENU')));
+      (location === 'PRIMARY_MENU' &&
+        (menu.locations?.includes('PRIMARY') ||
+          menu.locations?.includes('MAIN_MENU'))) ||
+      (location === 'FOOTER_MENU' &&
+        (menu.locations?.includes('FOOTER') ||
+          menu.locations?.includes('FOOTER_MENU')))
+    );
   });
 }

@@ -77,11 +77,11 @@
 }
 
 /* For RTL support */
-[dir="rtl"] .headerButton {
+[dir='rtl'] .headerButton {
   flex-direction: row-reverse;
 }
 
-[dir="rtl"] .dropdownArrow {
+[dir='rtl'] .dropdownArrow {
   margin-right: 4px;
   margin-left: 0;
 }
@@ -92,4 +92,4 @@
     padding: 10px 12px;
     font-size: 14px;
   }
-} 
+}

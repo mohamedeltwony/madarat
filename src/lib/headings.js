@@ -5,20 +5,22 @@
  */
 export function extractHeadings(html) {
   if (!html) return [];
-  
+
   try {
     // Create a DOM parser
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-    
+
     // Find all heading elements (h1, h2, h3, h4, h5, h6)
-    const headingElements = Array.from(doc.querySelectorAll('h1, h2, h3, h4, h5, h6'));
-    
+    const headingElements = Array.from(
+      doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
+    );
+
     // Extract heading information
-    return headingElements.map(heading => {
+    return headingElements.map((heading) => {
       const level = parseInt(heading.tagName.substring(1));
       const text = heading.textContent.trim();
-      
+
       // Get existing ID or generate a new one
       let id = heading.id || '';
       if (!id) {
@@ -29,7 +31,7 @@ export function extractHeadings(html) {
           .replace(/\s+/g, '_') // Replace spaces with underscores
           .replace(/-+/g, '_'); // Replace multiple dashes with a single underscore
       }
-      
+
       return { id, text, level };
     });
   } catch (error) {
@@ -45,17 +47,19 @@ export function extractHeadings(html) {
  */
 export function addHeadingIds(html) {
   if (!html) return '';
-  
+
   try {
     // Create a DOM parser
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-    
+
     // Find all heading elements (h1, h2, h3, h4, h5, h6)
-    const headingElements = Array.from(doc.querySelectorAll('h1, h2, h3, h4, h5, h6'));
-    
+    const headingElements = Array.from(
+      doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
+    );
+
     // Add IDs to headings that don't have them
-    headingElements.forEach(heading => {
+    headingElements.forEach((heading) => {
       if (!heading.id) {
         const text = heading.textContent.trim();
         // Generate an ID from the text (slugify)
@@ -64,15 +68,15 @@ export function addHeadingIds(html) {
           .replace(/[^\w\s-]/g, '') // Remove special characters
           .replace(/\s+/g, '_') // Replace spaces with underscores
           .replace(/-+/g, '_'); // Replace multiple dashes with a single underscore
-        
+
         heading.id = id;
       }
     });
-    
+
     // Return the modified HTML
     return doc.body.innerHTML;
   } catch (error) {
     console.error('Error adding heading IDs:', error);
     return html;
   }
-} 
+}

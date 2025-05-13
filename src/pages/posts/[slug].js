@@ -1,6 +1,12 @@
 import { Helmet } from 'react-helmet';
 import { useEffect, useState } from 'react';
-import { FaTwitter, FaFacebook, FaLinkedin, FaWhatsapp, FaShare } from 'react-icons/fa';
+import {
+  FaTwitter,
+  FaFacebook,
+  FaLinkedin,
+  FaWhatsapp,
+  FaShare,
+} from 'react-icons/fa';
 
 import {
   getPostBySlug,
@@ -32,7 +38,7 @@ export default function Post({ post, socialImage, related, recentPosts }) {
   const [shareUrl, setShareUrl] = useState('');
   const [headings, setHeadings] = useState([]);
   const [processedContent, setProcessedContent] = useState('');
-  
+
   const {
     title,
     metaTitle,
@@ -47,16 +53,16 @@ export default function Post({ post, socialImage, related, recentPosts }) {
   } = post;
 
   const { metadata: siteMetadata = {}, homepage } = useSite();
-  
+
   useEffect(() => {
     setShareUrl(window.location.href);
-    
+
     // Process content to add IDs to headings
     if (content) {
       try {
         const contentWithIds = addHeadingIds(content);
         setProcessedContent(contentWithIds);
-        
+
         // Extract headings for table of contents
         const extractedHeadings = extractHeadings(content);
         setHeadings(extractedHeadings);
@@ -66,7 +72,7 @@ export default function Post({ post, socialImage, related, recentPosts }) {
       }
     }
   }, [content]);
-  
+
   // Fix links after content is rendered
   useEffect(() => {
     if (processedContent) {
@@ -103,13 +109,13 @@ export default function Post({ post, socialImage, related, recentPosts }) {
   }
 
   const helmetSettings = helmetSettingsFromMetadata(metadata);
-  
+
   // Function to share on social media
   const handleShare = (platform) => {
     let shareLink = '';
     const encodedUrl = encodeURIComponent(shareUrl);
     const encodedTitle = encodeURIComponent(title);
-    
+
     switch (platform) {
       case 'twitter':
         shareLink = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
@@ -128,7 +134,7 @@ export default function Post({ post, socialImage, related, recentPosts }) {
         if (navigator.share) {
           navigator.share({
             title: title,
-            url: shareUrl
+            url: shareUrl,
           });
           return;
         }
@@ -137,7 +143,7 @@ export default function Post({ post, socialImage, related, recentPosts }) {
         alert('تم نسخ الرابط!');
         return;
     }
-    
+
     window.open(shareLink, '_blank', 'width=600,height=400');
   };
 
@@ -159,50 +165,48 @@ export default function Post({ post, socialImage, related, recentPosts }) {
         <div className={styles.postLayout}>
           <div className={styles.mainContent}>
             <Content>
-              {headings.length > 0 && (
-                <TableOfContents headings={headings} />
-              )}
-              
+              {headings.length > 0 && <TableOfContents headings={headings} />}
+
               <div
                 className={styles.content}
                 dangerouslySetInnerHTML={{
                   __html: processedContent || content,
                 }}
               />
-              
+
               {/* Social Sharing */}
               <div className={styles.socialSharing}>
                 <div className={styles.shareText}>مشاركة المقال</div>
                 <div className={styles.shareButtons}>
-                  <button 
+                  <button
                     className={`${styles.shareButton} ${styles.twitter}`}
                     onClick={() => handleShare('twitter')}
                     aria-label="Share on Twitter"
                   >
                     <FaTwitter />
                   </button>
-                  <button 
+                  <button
                     className={`${styles.shareButton} ${styles.facebook}`}
                     onClick={() => handleShare('facebook')}
                     aria-label="Share on Facebook"
                   >
                     <FaFacebook />
                   </button>
-                  <button 
+                  <button
                     className={`${styles.shareButton} ${styles.linkedin}`}
                     onClick={() => handleShare('linkedin')}
                     aria-label="Share on LinkedIn"
                   >
                     <FaLinkedin />
                   </button>
-                  <button 
+                  <button
                     className={`${styles.shareButton} ${styles.whatsapp}`}
                     onClick={() => handleShare('whatsapp')}
                     aria-label="Share on WhatsApp"
                   >
                     <FaWhatsapp />
                   </button>
-                  <button 
+                  <button
                     className={styles.shareButton}
                     onClick={() => handleShare('copy')}
                     aria-label="Copy link"
@@ -211,30 +215,50 @@ export default function Post({ post, socialImage, related, recentPosts }) {
                   </button>
                 </div>
               </div>
-              
+
               {/* Author Box */}
               {author && (
                 <div className={styles.authorBox}>
                   {author.avatar?.url ? (
-                    <img 
-                      src={author.avatar.url} 
+                    <img
+                      src={author.avatar.url}
                       alt={author.name}
                       className={styles.authorImage}
                     />
                   ) : (
-                    <div className={styles.authorImagePlaceholder}>{author.name[0]}</div>
+                    <div className={styles.authorImagePlaceholder}>
+                      {author.name[0]}
+                    </div>
                   )}
                   <div className={styles.authorInfo}>
                     <h3 className={styles.authorName}>{author.name}</h3>
-                    <p className={styles.authorBio}>كاتب ومتخصص في مجال السياحة والسفر، يقدم نصائح وإرشادات مفيدة للمسافرين العرب حول العالم.</p>
+                    <p className={styles.authorBio}>
+                      كاتب ومتخصص في مجال السياحة والسفر، يقدم نصائح وإرشادات
+                      مفيدة للمسافرين العرب حول العالم.
+                    </p>
                     <div className={styles.authorSocial}>
-                      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                      <a
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Twitter"
+                      >
                         <FaTwitter />
                       </a>
-                      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                      <a
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Facebook"
+                      >
                         <FaFacebook />
                       </a>
-                      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                      <a
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="LinkedIn"
+                      >
                         <FaLinkedin />
                       </a>
                     </div>
@@ -247,13 +271,13 @@ export default function Post({ post, socialImage, related, recentPosts }) {
               <p className={styles.postModified}>
                 آخر تحديث في {formatDate(modified)}.
               </p>
-              
+
               {/* Related Posts with Enhanced Design */}
               {Array.isArray(related?.posts) && related.posts.length > 0 && (
                 <div className={styles.relatedPosts}>
                   {related.title?.name ? (
                     <h3>
-                      المزيد من {' '}
+                      المزيد من{' '}
                       <Link href={related.title.link}>
                         {related.title.name}
                       </Link>
@@ -261,13 +285,16 @@ export default function Post({ post, socialImage, related, recentPosts }) {
                   ) : (
                     <h3>مقالات ذات صلة</h3>
                   )}
-                  
+
                   <div className={styles.relatedGrid}>
                     {related.posts.map((relatedPost) => (
-                      <div key={relatedPost.title} className={styles.relatedItem}>
+                      <div
+                        key={relatedPost.title}
+                        className={styles.relatedItem}
+                      >
                         {relatedPost.featuredImage && (
-                          <img 
-                            src={relatedPost.featuredImage.sourceUrl} 
+                          <img
+                            src={relatedPost.featuredImage.sourceUrl}
                             alt={relatedPost.title}
                             className={styles.relatedImage}
                           />
@@ -279,7 +306,7 @@ export default function Post({ post, socialImage, related, recentPosts }) {
                             </Link>
                           </h4>
                           {relatedPost.excerpt && (
-                            <div 
+                            <div
                               className={styles.relatedExcerpt}
                               dangerouslySetInnerHTML={{
                                 __html: relatedPost.excerpt,
@@ -287,8 +314,11 @@ export default function Post({ post, socialImage, related, recentPosts }) {
                             />
                           )}
                           <div className={styles.relatedMeta}>
-                            {relatedPost.date && new Date(relatedPost.date).toString() !== 'Invalid Date' ? 
-                              formatDate(relatedPost.date) : ''}
+                            {relatedPost.date &&
+                            new Date(relatedPost.date).toString() !==
+                              'Invalid Date'
+                              ? formatDate(relatedPost.date)
+                              : ''}
                           </div>
                         </div>
                       </div>
@@ -320,8 +350,8 @@ export async function getStaticProps({ params = {} } = {}) {
 
   // Get recent posts for sidebar
   const { posts: recentPosts } = await getRecentPosts({
-    count: 4, 
-    exclude: [postId]
+    count: 4,
+    exclude: [postId],
   });
 
   const props = {

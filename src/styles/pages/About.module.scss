@@ -18,11 +18,11 @@ $brand-gold: #cc9c64;
   text-align: center;
   color: white;
   overflow: hidden;
-  
+
   @media (max-width: 768px) {
     height: 350px;
   }
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -64,7 +64,7 @@ $brand-gold: #cc9c64;
   padding: 0 20px;
   direction: rtl;
   font-family: 'Cairo', sans-serif;
-  
+
   h1 {
     font-size: 3.5rem;
     margin-bottom: 20px;
@@ -72,12 +72,12 @@ $brand-gold: #cc9c64;
     font-weight: 700;
     animation: fadeInDown 1s ease-out;
     font-family: 'Cairo', sans-serif;
-    
+
     @media (max-width: 768px) {
       font-size: 2.5rem;
     }
   }
-  
+
   p {
     font-size: 1.4rem;
     max-width: 700px;
@@ -85,7 +85,7 @@ $brand-gold: #cc9c64;
     color: rgba(255, 255, 255, 0.9);
     animation: fadeInUp 1s ease-out 0.3s both;
     font-family: 'Cairo', sans-serif;
-    
+
     @media (max-width: 768px) {
       font-size: 1.2rem;
     }
@@ -148,7 +148,7 @@ $brand-gold: #cc9c64;
   text-decoration: none;
   display: flex;
   align-items: center;
-  
+
   &:hover {
     color: $brand-gold;
   }
@@ -175,12 +175,12 @@ $brand-gold: #cc9c64;
   padding: 0 20px;
   direction: rtl;
   font-family: 'Cairo', sans-serif;
-  
+
   @media (max-width: 768px) {
     margin-bottom: 60px;
     padding: 0 15px;
   }
-  
+
   @media (max-width: 576px) {
     margin-bottom: 40px;
   }
@@ -195,17 +195,17 @@ $brand-gold: #cc9c64;
   margin-bottom: 40px;
   position: relative;
   font-family: 'Cairo', sans-serif;
-  
+
   @media (max-width: 768px) {
     font-size: 2.2rem;
     margin-bottom: 35px;
   }
-  
+
   @media (max-width: 576px) {
     font-size: 1.8rem;
     margin-bottom: 30px;
   }
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -216,7 +216,7 @@ $brand-gold: #cc9c64;
     height: 4px;
     background-color: $brand-gold;
     border-radius: 2px;
-    
+
     @media (max-width: 576px) {
       width: 60px;
       height: 3px;
@@ -233,17 +233,17 @@ $brand-gold: #cc9c64;
   gap: 20px;
   direction: rtl;
   font-family: 'Cairo', sans-serif;
-  
+
   @media (max-width: 992px) {
     grid-template-columns: repeat(8, 1fr);
     gap: 15px;
   }
-  
+
   @media (max-width: 768px) {
     grid-template-columns: repeat(4, 1fr);
     gap: 15px;
   }
-  
+
   @media (max-width: 576px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
@@ -261,25 +261,25 @@ $brand-gold: #cc9c64;
   position: relative;
   height: 100%;
   padding: 25px; // Increased padding for better whitespace
-  
+
   @media (max-width: 768px) {
     padding: 20px;
   }
-  
+
   @media (max-width: 576px) {
     padding: 15px;
     border-radius: 10px;
   }
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    
+
     @media (max-width: 576px) {
       transform: translateY(-3px); // Less movement on mobile
     }
   }
-  
+
   // Common heading style for all boxes
   h3 {
     font-size: 1.5rem;
@@ -290,30 +290,30 @@ $brand-gold: #cc9c64;
     padding-bottom: 10px;
     display: flex;
     align-items: center;
-    
+
     @media (max-width: 768px) {
       font-size: 1.3rem;
       margin-bottom: 15px;
     }
-    
+
     @media (max-width: 576px) {
       font-size: 1.2rem;
       margin-bottom: 12px;
     }
-    
+
     svg {
       font-size: 1.4rem;
       transition: transform 0.3s ease;
-      
+
       @media (max-width: 768px) {
         font-size: 1.2rem;
       }
-      
+
       @media (max-width: 576px) {
         font-size: 1.1rem;
       }
     }
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -324,36 +324,36 @@ $brand-gold: #cc9c64;
       background-color: $brand-gold;
       border-radius: 2px;
       transition: width 0.3s ease;
-      
+
       @media (max-width: 576px) {
         width: 40px;
         height: 2px;
       }
     }
   }
-  
+
   &:hover h3::after {
     width: 80px; // Subtle animation on hover
-    
+
     @media (max-width: 576px) {
       width: 50px;
     }
   }
-  
+
   &:hover h3 svg {
     transform: scale(1.2);
   }
-  
+
   p {
     font-size: 1.1rem;
     line-height: 1.8;
     color: #444;
-    
+
     @media (max-width: 768px) {
       font-size: 1rem;
       line-height: 1.6;
     }
-    
+
     @media (max-width: 576px) {
       font-size: 0.95rem;
       line-height: 1.5;
@@ -372,17 +372,17 @@ $brand-gold: #cc9c64;
   border: none;
   position: relative;
   overflow: hidden;
-  
+
   @media (max-width: 768px) {
     padding: 30px 20px;
     min-height: 150px;
   }
-  
+
   @media (max-width: 576px) {
     padding: 25px 15px;
     min-height: 120px;
   }
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -394,12 +394,12 @@ $brand-gold: #cc9c64;
     background-size: 300px;
     opacity: 0.05;
     animation: floatPattern 80s linear infinite;
-    
+
     @media (max-width: 576px) {
       background-size: 200px;
     }
   }
-  
+
   h2 {
     font-size: 2.8rem;
     margin-bottom: 15px;
@@ -408,18 +408,18 @@ $brand-gold: #cc9c64;
     animation: fadeInDown 1s ease-out;
     position: relative;
     z-index: 2;
-    
+
     @media (max-width: 768px) {
       font-size: 2.2rem;
       margin-bottom: 10px;
     }
-    
+
     @media (max-width: 576px) {
       font-size: 1.8rem;
       margin-bottom: 8px;
     }
   }
-  
+
   h3 {
     font-size: 2rem;
     color: $brand-gold;
@@ -432,15 +432,15 @@ $brand-gold: #cc9c64;
     display: block;
     width: 100%;
     text-align: center;
-    
+
     @media (max-width: 768px) {
       font-size: 1.6rem;
     }
-    
+
     @media (max-width: 576px) {
       font-size: 1.4rem;
     }
-    
+
     &::after {
       display: none; // Remove underline for this heading
     }
@@ -450,23 +450,23 @@ $brand-gold: #cc9c64;
 .aboutBox {
   grid-column: span 6;
   grid-row: span 2;
-  
+
   @media (max-width: 992px) {
     grid-column: span 8;
   }
-  
+
   @media (max-width: 768px) {
     grid-column: span 4;
   }
-  
+
   @media (max-width: 576px) {
     grid-column: span 2;
   }
-  
+
   h3 {
     font-size: 1.7rem;
   }
-  
+
   // Add a subtle accent
   &::before {
     content: '';
@@ -483,19 +483,19 @@ $brand-gold: #cc9c64;
 .visionBox {
   grid-column: span 6;
   background-color: rgba(12, 68, 68, 0.03);
-  
+
   @media (max-width: 992px) {
     grid-column: span 4;
   }
-  
+
   @media (max-width: 768px) {
     grid-column: span 4;
   }
-  
+
   @media (max-width: 576px) {
     grid-column: span 2;
   }
-  
+
   // Visual indicator
   &::after {
     content: '';
@@ -513,19 +513,19 @@ $brand-gold: #cc9c64;
 .missionBox {
   grid-column: span 6;
   background-color: rgba(204, 156, 100, 0.05);
-  
+
   @media (max-width: 992px) {
     grid-column: span 4;
   }
-  
+
   @media (max-width: 768px) {
     grid-column: span 4;
   }
-  
+
   @media (max-width: 576px) {
     grid-column: span 2;
   }
-  
+
   h3 {
     &::after {
       background-color: $brand-primary;
@@ -537,21 +537,21 @@ $brand-gold: #cc9c64;
   grid-column: span 6;
   background-color: rgba(12, 76, 68, 0.02);
   border-right: 3px solid $brand-primary;
-  
+
   @media (max-width: 992px) {
     grid-column: span 4;
   }
-  
+
   @media (max-width: 768px) {
     grid-column: span 4;
   }
-  
+
   @media (max-width: 576px) {
     grid-column: span 2;
     border-right: none;
     border-top: 3px solid $brand-primary;
   }
-  
+
   h3 {
     color: $brand-secondary;
   }
@@ -561,24 +561,24 @@ $brand-gold: #cc9c64;
   grid-column: span 6;
   background-color: rgba(204, 156, 100, 0.03);
   border-left: 3px solid $brand-gold;
-  
+
   @media (max-width: 992px) {
     grid-column: span 4;
   }
-  
+
   @media (max-width: 768px) {
     grid-column: span 4;
   }
-  
+
   @media (max-width: 576px) {
     grid-column: span 2;
     border-left: none;
     border-top: 3px solid $brand-gold;
   }
-  
+
   h3 {
     color: $brand-gold;
-    
+
     &::after {
       background-color: $brand-secondary;
     }
@@ -594,15 +594,15 @@ $brand-gold: #cc9c64;
   border: none;
   position: relative;
   overflow: hidden;
-  
+
   @media (max-width: 768px) {
     padding: 30px 20px;
   }
-  
+
   @media (max-width: 576px) {
     padding: 25px 15px;
   }
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -612,7 +612,7 @@ $brand-gold: #cc9c64;
     opacity: 0.05;
     z-index: 0;
   }
-  
+
   h3 {
     font-size: 2rem;
     color: white;
@@ -620,40 +620,40 @@ $brand-gold: #cc9c64;
     font-weight: 600;
     position: relative;
     z-index: 1;
-    
+
     @media (max-width: 768px) {
       font-size: 1.8rem;
       margin-bottom: 15px;
     }
-    
+
     @media (max-width: 576px) {
       font-size: 1.6rem;
       margin-bottom: 12px;
     }
-    
+
     &::after {
       display: none;
     }
   }
-  
+
   p {
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.2rem;
     margin-bottom: 25px;
     position: relative;
     z-index: 1;
-    
+
     @media (max-width: 768px) {
       font-size: 1.1rem;
       margin-bottom: 20px;
     }
-    
+
     @media (max-width: 576px) {
       font-size: 1rem;
       margin-bottom: 15px;
     }
   }
-  
+
   .contactButton {
     display: inline-flex;
     align-items: center;
@@ -669,33 +669,33 @@ $brand-gold: #cc9c64;
     margin-top: 15px;
     position: relative;
     z-index: 1;
-    
+
     @media (max-width: 768px) {
       font-size: 1.1rem;
       padding: 10px 25px;
     }
-    
+
     @media (max-width: 576px) {
       font-size: 1rem;
       padding: 8px 20px;
     }
-    
+
     &:hover {
       background-color: darken($brand-gold, 10%);
       transform: translateY(-3px);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       animation: pulse 1s infinite;
-      
+
       @media (max-width: 576px) {
         transform: translateY(-2px);
       }
     }
-    
+
     svg {
       margin-right: 8px;
       transition: transform 0.3s ease;
     }
-    
+
     &:hover svg {
       transform: translateX(-5px) rotate(180deg);
     }
@@ -728,4 +728,4 @@ $brand-gold: #cc9c64;
   justify-content: center;
   align-items: center;
   width: 100%;
-} 
+}
