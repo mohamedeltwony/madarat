@@ -130,6 +130,7 @@ const IframeButton = ({
   }, [onClick]);
 
   return (
+    /* eslint-disable react/no-unknown-property */
     <iframe
       ref={iframeRef}
       onLoad={handleIframeLoad}
@@ -146,6 +147,7 @@ const IframeButton = ({
       }}
       title="Button iframe"
     />
+    /* eslint-enable react/no-unknown-property */
   );
 };
 

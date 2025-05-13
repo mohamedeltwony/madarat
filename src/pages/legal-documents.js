@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import LegalLayout from '@/components/LegalLayout';
 import Container from '@/components/Container';
 import Section from '@/components/Section';
@@ -136,7 +137,7 @@ export default function LegalDocuments() {
                 جميع المستندات المذكورة أعلاه سارية المفعول وتم استخراجها وفقاً
                 للأنظمة واللوائح المعمول بها في المملكة العربية السعودية. لمزيد
                 من المعلومات أو استفسارات حول المستندات القانونية، يرجى{' '}
-                <a href="/contact">الاتصال بنا</a>.
+                <Link href="/contact">الاتصال بنا</Link>.
               </p>
             </div>
           </div>

@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
+import Link from 'next/link';
 
 const SVGDropdownButton = ({ text = 'تواصل معنا' }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -218,7 +219,7 @@ const SVGDropdownButton = ({ text = 'تواصل معنا' }) => {
             <span>إتصل في مستشارك</span>
           </a>
 
-          <a
+          <Link
             href="/booking"
             style={{
               display: 'flex',
@@ -233,9 +234,9 @@ const SVGDropdownButton = ({ text = 'تواصل معنا' }) => {
               <FaUserTie style={{ color: '#ffd700' }} />
             </div>
             <span>للحجز سجل رقمك</span>
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/feedback"
             style={{
               display: 'flex',
@@ -249,7 +250,7 @@ const SVGDropdownButton = ({ text = 'تواصل معنا' }) => {
               <FaCommentDots style={{ color: '#ffd700' }} />
             </div>
             <span>شكوى أو ملاحظات</span>
-          </a>
+          </Link>
         </div>
       )}
     </div>

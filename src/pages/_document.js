@@ -39,9 +39,6 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-
-          {/* Arabic URL decoder script */}
-          <script src="/url-decoder.js" />
         </body>
       </Html>
     );

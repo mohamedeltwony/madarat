@@ -66,7 +66,7 @@ const HomepageStyleButtonsPage = () => {
 
           <div style={{ marginBottom: '30px' }}>
             <h3 style={{ color: 'white', marginBottom: '15px' }}>
-              ViewAll Button ("عرض كل الرحلات"):
+              ViewAll Button (&quot;عرض كل الرحلات&quot;):
             </h3>
             <div
               style={{
@@ -85,7 +85,7 @@ const HomepageStyleButtonsPage = () => {
 
           <div style={{ marginBottom: '30px' }}>
             <h3 style={{ color: 'white', marginBottom: '15px' }}>
-              Featured Button ("اكتشف المزيد"):
+              Featured Button (&quot;اكتشف المزيد&quot;):
             </h3>
             <div
               style={{

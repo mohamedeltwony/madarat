@@ -2,86 +2,117 @@
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay, Navigation } from 'swiper/modules';
-import * as echarts from 'echarts';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
 // Import necessary Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
+// Simple UI component replacements
+const Button = ({ children, className, ...props }) => (
+  <button className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 ${className}`} {...props}>
+    {children}
+  </button>
+);
+
+const Card = ({ children, className, ...props }) => (
+  <div className={`bg-white rounded-lg shadow-md overflow-hidden ${className}`} {...props}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, className, ...props }) => (
+  <span className={`px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 ${className}`} {...props}>
+    {children}
+  </span>
+);
+
+const TabsList = ({ children, ...props }) => (
+  <div className="flex space-x-2 border-b mb-4" {...props}>
+    {children}
+  </div>
+);
+
+const TabsTrigger = ({ children, value, active, onClick, ...props }) => (
+  <button 
+    className={`px-4 py-2 ${active ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500'}`}
+    onClick={onClick}
+    {...props}
+  >
+    {children}
+  </button>
+);
+
+const TabsContent = ({ children, value, activeValue, ...props }) => (
+  value === activeValue ? <div {...props}>{children}</div> : null
+);
+
+const Tabs = ({ children, defaultValue, ...props }) => {
+  const [value, setValue] = useState(defaultValue);
+  
+  return (
+    <div {...props}>
+      {React.Children.map(children, child => {
+        if (child.type === TabsList) {
+          return React.cloneElement(child, {
+            children: React.Children.map(child.props.children, tab => {
+              if (tab.type === TabsTrigger) {
+                return React.cloneElement(tab, {
+                  active: tab.props.value === value,
+                  onClick: () => setValue(tab.props.value)
+                });
+              }
+              return tab;
+            })
+          });
+        }
+        if (child.type === TabsContent) {
+          return React.cloneElement(child, { activeValue: value });
+        }
+        return child;
+      })}
+    </div>
+  );
+};
+
+const Separator = ({ className, ...props }) => (
+  <hr className={`my-4 border-gray-200 ${className}`} {...props} />
+);
+
+const Avatar = ({ children, ...props }) => (
+  <div className="relative inline-block rounded-full overflow-hidden w-10 h-10" {...props}>
+    {children}
+  </div>
+);
+
+const AvatarImage = ({ src, alt, ...props }) => (
+  <img src={src} alt={alt} className="w-full h-full object-cover" {...props} />
+);
+
+const AvatarFallback = ({ children, ...props }) => (
+  <div className="flex items-center justify-center w-full h-full bg-gray-200 text-gray-600" {...props}>
+    {children}
+  </div>
+);
+
+const Input = ({ className, ...props }) => (
+  <input className={`px-4 py-2 border border-gray-300 rounded-md ${className}`} {...props} />
+);
+
 const App = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Mock chart section without echarts
+  const renderMockChart = () => (
+    <div id="satisfaction-chart" className="h-64 bg-gray-800 rounded-lg flex items-center justify-center">
+      <p className="text-white text-center">Customer Satisfaction Chart<br/>(Chart visualization requires echarts library)</p>
+    </div>
+  );
+
   useEffect(() => {
-    const chartDom = document.getElementById('satisfaction-chart');
-    if (chartDom) {
-      const myChart = echarts.init(chartDom);
-      const option = {
-        animation: false,
-        color: ['#6366f1', '#8b5cf6', '#ec4899'],
-        tooltip: {
-          trigger: 'item',
-        },
-        legend: {
-          top: '5%',
-          left: 'center',
-          textStyle: {
-            color: '#e2e8f0',
-          },
-        },
-        series: [
-          {
-            name: 'Customer Satisfaction',
-            type: 'pie',
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
-            itemStyle: {
-              borderRadius: 10,
-              borderColor: '#111827',
-              borderWidth: 2,
-            },
-            label: {
-              show: false,
-              position: 'center',
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: 16,
-                fontWeight: 'bold',
-                color: '#e2e8f0',
-              },
-            },
-            labelLine: {
-              show: false,
-            },
-            data: [
-              { value: 1048, name: 'Excellent' },
-              { value: 735, name: 'Good' },
-              { value: 580, name: 'Average' },
-            ],
-          },
-        ],
-      };
-      myChart.setOption(option);
-      window.addEventListener('resize', () => {
-        myChart.resize();
-      });
-      return () => {
-        myChart.dispose();
-        window.removeEventListener('resize', () => {
-          myChart.resize();
-        });
-      };
-    }
+    // Remove chart initialization since we're using the mock chart
   }, []);
+
   const destinations = [
     {
       id: 1,

@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Container from '@/components/Container';
 import Section from '@/components/Section';
@@ -21,7 +22,7 @@ export default function RefundPolicy() {
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>سياسة الاسترداد</h1>
             <div className={styles.heroBreadcrumb}>
-              <a href="/">الرئيسية</a> / <span>سياسة الاسترداد</span>
+              <Link href="/">الرئيسية</Link> / <span>سياسة الاسترداد</span>
             </div>
           </div>
         </Container>

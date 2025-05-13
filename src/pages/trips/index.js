@@ -60,7 +60,7 @@ export default function TripsPage({
     };
 
     fetchTrips();
-  }, [router.isReady, router.query.page]);
+  }, [router.isReady, router.query.page, pagination.currentPage]);
 
   const handleRetry = async () => {
     setIsLoading(true);

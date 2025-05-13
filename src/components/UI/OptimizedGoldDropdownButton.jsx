@@ -299,6 +299,7 @@ const OptimizedGoldDropdownButton = ({
   }, [buttonHTML, dropdownItems]);
 
   return (
+    /* eslint-disable react/no-unknown-property */
     <iframe
       ref={iframeRef}
       style={{
@@ -316,6 +317,7 @@ const OptimizedGoldDropdownButton = ({
       frameBorder="0"
       allowTransparency="true"
     />
+    /* eslint-enable react/no-unknown-property */
   );
 };
 

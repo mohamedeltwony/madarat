@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
+import Link from 'next/link';
 
 const GoldenButton = ({ text = 'تواصل مع مستشارك السياحي' }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -138,7 +139,7 @@ const GoldenButton = ({ text = 'تواصل مع مستشارك السياحي' }
           </a>
 
           {/* Booking option */}
-          <a
+          <Link
             href="/booking"
             style={{
               display: 'flex',
@@ -153,10 +154,10 @@ const GoldenButton = ({ text = 'تواصل مع مستشارك السياحي' }
               <FaUserTie style={{ color: '#ffd700' }} />
             </div>
             <span>للحجز سجل رقمك</span>
-          </a>
+          </Link>
 
           {/* Feedback option */}
-          <a
+          <Link
             href="/feedback"
             style={{
               display: 'flex',
@@ -170,7 +171,7 @@ const GoldenButton = ({ text = 'تواصل مع مستشارك السياحي' }
               <FaCommentDots style={{ color: '#ffd700' }} />
             </div>
             <span>شكوى أو ملاحظات</span>
-          </a>
+          </Link>
         </div>
       )}
 

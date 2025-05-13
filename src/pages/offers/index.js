@@ -124,7 +124,7 @@ export default function OffersPage({
     };
 
     fetchOfferTrips();
-  }, [router.isReady, router.query.page]);
+  }, [router.isReady, router.query.page, pagination.currentPage]);
 
   const handleRetry = async () => {
     setIsLoading(true);

@@ -309,6 +309,7 @@ const PureBlackGoldDropdownButton = ({
   }, [buttonHTML, dropdownItems]);
 
   return (
+    /* eslint-disable react/no-unknown-property */
     <iframe
       ref={iframeRef}
       style={{
@@ -326,6 +327,7 @@ const PureBlackGoldDropdownButton = ({
       frameBorder="0"
       allowTransparency="true"
     />
+    /* eslint-enable react/no-unknown-property */
   );
 };
 

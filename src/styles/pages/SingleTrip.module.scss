@@ -9,11 +9,13 @@ $secondary-color: $color-secondary;
 $border-radius: 16px;
 $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 
-// RTL list style fixes
-:global(ul),
-:global(ol) {
-  padding-right: 1.5rem;
-  padding-left: 0;
+// RTL list style fixes - moved inside a local class
+.listStyleFix {
+  :global(ul),
+  :global(ol) {
+    padding-right: 1.5rem;
+    padding-left: 0;
+  }
 }
 
 // Hero Section

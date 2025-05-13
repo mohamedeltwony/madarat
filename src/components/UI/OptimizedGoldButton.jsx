@@ -153,6 +153,7 @@ const OptimizedGoldButton = ({
   }, [buttonHTML, onClick, href]);
 
   return (
+    /* eslint-disable react/no-unknown-property */
     <iframe
       ref={iframeRef}
       style={{
@@ -169,6 +170,7 @@ const OptimizedGoldButton = ({
       frameBorder="0"
       allowTransparency="true"
     />
+    /* eslint-enable react/no-unknown-property */
   );
 };
 

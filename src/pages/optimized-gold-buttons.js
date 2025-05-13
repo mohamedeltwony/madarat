@@ -4,6 +4,7 @@ import {
   OptimizedGoldDropdownButton,
 } from '../components/UI';
 import Head from 'next/head';
+import Link from 'next/link';
 
 const OptimizedGoldButtonsPage = () => {
   return (
@@ -175,34 +176,34 @@ const OptimizedGoldButtonsPage = () => {
                 marginTop: '20px',
               }}
             >
-              <a href="/button-test" style={{ marginBottom: '10px' }}>
+              <Link href="/button-test" style={{ marginBottom: '10px' }}>
                 <OptimizedGoldButton
                   text="All Test Buttons"
                   width={200}
                   height={50}
                 />
-              </a>
-              <a href="/isolated-gold-buttons" style={{ marginBottom: '10px' }}>
+              </Link>
+              <Link href="/isolated-gold-buttons" style={{ marginBottom: '10px' }}>
                 <OptimizedGoldButton
                   text="Isolated Buttons"
                   width={200}
                   height={50}
                 />
-              </a>
-              <a href="/gold-link-buttons" style={{ marginBottom: '10px' }}>
+              </Link>
+              <Link href="/gold-link-buttons" style={{ marginBottom: '10px' }}>
                 <OptimizedGoldButton
                   text="Link Buttons"
                   width={200}
                   height={50}
                 />
-              </a>
-              <a href="/ultimate-buttons" style={{ marginBottom: '10px' }}>
+              </Link>
+              <Link href="/ultimate-buttons" style={{ marginBottom: '10px' }}>
                 <OptimizedGoldButton
                   text="Ultimate Buttons"
                   width={200}
                   height={50}
                 />
-              </a>
+              </Link>
             </div>
           </div>
         </div>

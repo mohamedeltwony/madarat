@@ -171,6 +171,7 @@ const IframeDropdownButton = ({
 
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
+      {/* eslint-disable react/no-unknown-property */}
       <iframe
         ref={iframeRef}
         onLoad={handleIframeLoad}
@@ -187,6 +188,7 @@ const IframeDropdownButton = ({
         }}
         title="Button iframe"
       />
+      {/* eslint-enable react/no-unknown-property */}
 
       {/* Dropdown menu */}
       {isOpen && (

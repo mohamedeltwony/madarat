@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
+import Link from 'next/link';
 
 const BorderButton = ({ text = 'تواصل مع مستشارك السياحي' }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -156,18 +157,18 @@ const BorderButton = ({ text = 'تواصل مع مستشارك السياحي' }
             </div>
             <span>إتصل في مستشارك</span>
           </a>
-          <a href="/booking" style={itemStyle}>
+          <Link href="/booking" style={itemStyle}>
             <div style={iconWrapperStyle}>
               <FaUserTie style={iconStyle} />
             </div>
             <span>للحجز سجل رقمك</span>
-          </a>
-          <a href="/feedback" style={lastItemStyle}>
+          </Link>
+          <Link href="/feedback" style={lastItemStyle}>
             <div style={iconWrapperStyle}>
               <FaCommentDots style={iconStyle} />
             </div>
             <span>شكوى أو ملاحظات</span>
-          </a>
+          </Link>
         </div>
       )}
 

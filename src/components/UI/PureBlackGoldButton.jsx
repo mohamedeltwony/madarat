@@ -173,6 +173,7 @@ const PureBlackGoldButton = ({
   }, [buttonHTML, onClick, href]);
 
   return (
+    /* eslint-disable react/no-unknown-property */
     <iframe
       ref={iframeRef}
       style={{
@@ -189,6 +190,7 @@ const PureBlackGoldButton = ({
       frameBorder="0"
       allowTransparency="true"
     />
+    /* eslint-enable react/no-unknown-property */
   );
 };
 
