@@ -8,11 +8,51 @@ import Section from '@/components/Section';
 import Meta from '@/components/Meta';
 import styles from '@/styles/pages/DestinationTrips.module.scss';
 
+// Function to decode HTML entities and clean HTML
+function parseHtml(htmlString) {
+  if (!htmlString) return '';
+  
+  // Remove HTML tags first
+  const textWithEntities = htmlString.replace(/<[^>]*>?/gm, '');
+  
+  // Parse HTML entities
+  try {
+    // Client-side parsing
+    if (typeof DOMParser !== 'undefined') {
+      const parser = new DOMParser();
+      const dom = parser.parseFromString(`<!doctype html><body>${textWithEntities}`, 'text/html');
+      return dom.body.textContent || '';
+    }
+    
+    // Server-side fallback - handle common entities
+    return textWithEntities
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'")
+      .replace(/&#39;/g, "'")
+      .replace(/&#8211;/g, '-')
+      .replace(/&#8212;/g, '--')
+      .replace(/&#8230;/g, '...');
+  } catch (e) {
+    console.error('Error parsing HTML:', e);
+    return textWithEntities;
+  }
+}
+
 export default function DestinationTrips({ destination, trips = [] }) {
   const router = useRouter();
-  const [filteredTrips, setFilteredTrips] = useState(trips);
+  const [filteredTrips, setFilteredTrips] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-
+  
+  useEffect(() => {
+    // Initialize with properly parsed trips
+    if (Array.isArray(trips)) {
+      setFilteredTrips(trips);
+    }
+  }, [trips]);
+  
   useEffect(() => {
     let filtered = [...trips];
 
@@ -21,8 +61,8 @@ export default function DestinationTrips({ destination, trips = [] }) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (trip) =>
-          trip.title.toLowerCase().includes(query) ||
-          trip.description.toLowerCase().includes(query)
+          (trip.title || '').toLowerCase().includes(query) ||
+          (trip.description || '').toLowerCase().includes(query)
       );
     }
 
@@ -106,7 +146,7 @@ export default function DestinationTrips({ destination, trips = [] }) {
                       {trip.image ? (
                         <img
                           src={trip.image}
-                          alt={trip.title}
+                          alt={parseHtml(trip.title)}
                           className={styles.image}
                         />
                       ) : (
@@ -116,10 +156,10 @@ export default function DestinationTrips({ destination, trips = [] }) {
                       )}
                     </div>
                     <div className={styles.tripContent}>
-                      <h2 className={styles.tripTitle}>{trip.title}</h2>
-                      <p className={styles.tripDescription}>
-                        {trip.description}
-                      </p>
+                      <h2 className={styles.tripTitle}>{parseHtml(trip.title)}</h2>
+                      <div className={styles.tripDescription}>
+                        {parseHtml(trip.description)}
+                      </div>
                       <div className={styles.tripMeta}>
                         <span className={styles.tripDuration}>
                           {trip.duration}
