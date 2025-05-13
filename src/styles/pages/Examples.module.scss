@@ -1,0 +1,45 @@
+@import '../settings/__settings';
+
+.container {
+  max-width: 1200px;
+  margin: 80px auto 40px;
+  padding: 0 20px;
+  direction: rtl;
+}
+
+.section {
+  margin-bottom: 40px;
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #ffd700;
+    font-size: 24px;
+  }
+  
+  p {
+    margin-top: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+  }
+}
+
+.buttonExample {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin-top: 60px;
+  }
+  
+  .section {
+    padding: 20px;
+  }
+} 
