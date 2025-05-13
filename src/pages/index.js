@@ -94,6 +94,7 @@ export default function Home({
 
         {/* Offer Trips Section */}
         <Section style={{ 
+          background: 'linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%)',
           padding: '2rem 0', 
           width: '100%',
           maxWidth: '100%' 
@@ -105,6 +106,7 @@ export default function Home({
 
         <Section className={styles.destinationsSection}>
           <Container>
+            <h2 className={styles.sectionTitle}>الوجهات السياحية</h2>
             {!destinations || destinations.length === 0 ? (
               <div className={styles.noDestinations}>
                 <p>جاري تحميل الوجهات السياحية...</p>
@@ -116,23 +118,155 @@ export default function Home({
         </Section>
 
         {/* Google Reviews Section */}
-        {/* Temporarily hidden until Google Places API is provided
         <GoogleReviewsSection />
-        */}
 
         {posts.length > 0 && (
           <>
+            <Section className={styles.morphSection}>
+              <Container>
+                <h2 className={styles.sectionTitle}>Featured Stories</h2>
+                <MorphPosts posts={posts.slice(0, 3)} />
+              </Container>
+            </Section>
+
             <Section>
               <Container>
                 <h2 className={styles.sectionTitle}>Latest Stories</h2>
                 <BentoPosts posts={posts.slice(3, 9)} />
               </Container>
             </Section>
+
+            <Section className={styles.latestPosts}>
+              <Container>
+                <h2 className={styles.sectionTitle}>More Adventures</h2>
+                <ul className={styles.posts}>
+                  {posts.slice(9).map((post) => {
+                    return (
+                      <li key={post.slug}>
+                        <PostCard post={post} />
+                      </li>
+                    );
+                  })}
+                </ul>
+                {pagination && (
+                  <Pagination
+                    currentPage={pagination?.currentPage}
+                    pagesCount={pagination?.pagesCount}
+                    basePath="/posts"
+                  />
+                )}
+              </Container>
+            </Section>
           </>
         )}
 
         {/* New Features Section */}
-        {/* Removed Explore Our Site features section */}
+        <Section className={styles.featuresSection}>
+          <Container>
+            <h2 className={styles.sectionTitle}>Explore Our Site</h2>
+
+            <div className={styles.featuresGrid}>
+              {/* Archives Feature */}
+              <div className={styles.featureCard}>
+                <div className={styles.featureIcon}>
+                  <Image
+                    src="/images/icons/calendar.svg"
+                    alt="Archives Icon"
+                    width={48}
+                    height={48}
+                    layout="fixed"
+                  />
+                </div>
+                <h3>Archives</h3>
+                <p>
+                  Browse our content by date. Find articles from specific months
+                  or years.
+                </p>
+
+                <div className={styles.featureTags}>
+                  {archives.slice(0, 5).map((year) => (
+                    <Link
+                      key={year}
+                      href={`/archives/${year}`}
+                      className={styles.featureTag}
+                    >
+                      {year}
+                    </Link>
+                  ))}
+                </div>
+
+                <Link href="/archives" className={styles.featureLink}>
+                  Browse All Archives
+                </Link>
+              </div>
+
+              {/* Authors Feature */}
+              <div className={styles.featureCard}>
+                <div className={styles.featureIcon}>
+                  <Image
+                    src="/images/icons/users.svg"
+                    alt="Authors Icon"
+                    width={48}
+                    height={48}
+                    layout="fixed"
+                  />
+                </div>
+                <h3>Authors</h3>
+                <p>Discover our writers and their unique perspectives.</p>
+
+                <div className={styles.featureAuthors}>
+                  {featuredAuthors.slice(0, 3).map((author) => (
+                    <Link
+                      key={author.slug}
+                      href={`/authors/${author.slug}`}
+                      className={styles.featureAuthor}
+                    >
+                      {author.avatar && (
+                        <Image
+                          src={author.avatar.url}
+                          alt={author.name}
+                          width={40}
+                          height={40}
+                          layout="fixed"
+                          className={styles.featureAuthorAvatar}
+                        />
+                      )}
+                      <span>{author.name}</span>
+                    </Link>
+                  ))}
+                </div>
+
+                <Link href="/authors" className={styles.featureLink}>
+                  View All Authors
+                </Link>
+              </div>
+
+              {/* Advanced Search Feature */}
+              <div className={styles.featureCard}>
+                <div className={styles.featureIcon}>
+                  <Image
+                    src="/images/icons/search.svg"
+                    alt="Search Icon"
+                    width={48}
+                    height={48}
+                    layout="fixed"
+                  />
+                </div>
+                <h3>Advanced Search</h3>
+                {/* Replaced ' with &apos; */}
+                <p>
+                  Find exactly what you&apos;re looking for with our powerful
+                  search tools.
+                </p>
+                <p>Filter content by date, category, author and more.</p>
+
+                <Link href="/advanced-search" className={styles.featureLink}>
+                  Try Advanced Search
+                </Link>
+              </div>
+            </div>
+          </Container>
+        </Section>
       </Layout>
 
       {/* Lead Form Popup */}

@@ -1,0 +1,141 @@
+@import 'styles/settings/__settings';
+
+.destinationsContainer {
+  width: 100%;
+  position: relative;
+}
+
+.destinationsHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.destinationsTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: $color-primary;
+}
+
+.destinationsSubtitle {
+  font-size: 1rem;
+  color: $text-color;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.destinationsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.destinationCard {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    
+    .destinationOverlay {
+      opacity: 0.4;
+    }
+  }
+}
+
+.destinationImageWrapper {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.destinationImage {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.destinationOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6));
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.destinationInfo {
+  padding: 0.5rem 0;
+  
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: $text-color;
+  }
+  
+  span {
+    font-size: 0.9rem;
+    color: $color-primary;
+  }
+}
+
+.viewAllContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.viewAllButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: $color-primary;
+  color: #fff;
+  border-radius: 30px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    background-color: darken($color-primary, 10%);
+    
+    svg {
+      transform: translateX(3px);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .destinationsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .destinationInfo h3 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .destinationsGrid {
+    grid-template-columns: 1fr;
+  }
+} 
