@@ -13,34 +13,100 @@ $brand-gold: #cc9c64;
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 50px;
-  
+  margin-bottom: 40px;
+}
+
+.businessHeader {
   h1 {
-    font-size: 2.5rem;
-    margin-bottom: 16px;
+    font-size: 2rem;
     color: $brand-primary;
-    position: relative;
-    display: inline-block;
-    padding-bottom: 10px;
+    margin-bottom: 16px;
+    text-align: right;
+  }
+}
+
+.reviewsSection {
+  margin-bottom: 20px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  
+  .ratingNumber {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: $brand-gold;
+  }
+  
+  .stars {
+    display: flex;
+    color: $brand-gold;
+    font-size: 1rem;
     
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      right: 50%;
-      transform: translateX(50%);
-      width: 80px;
-      height: 3px;
-      background: $brand-gold;
+    svg {
+      margin-left: 2px;
     }
   }
   
-  p {
-    font-size: 1.1rem;
+  .reviewsCount {
+    font-size: 0.9rem;
     color: $color-gray-400;
-    max-width: 600px;
-    margin: 0 auto;
+  }
+}
+
+.businessType {
+  color: $color-gray-500;
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+}
+
+.businessManage {
+  color: $color-gray-500;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 15px;
+  background-color: rgba(12, 68, 68, 0.05);
+  color: $brand-primary;
+  border: 1px solid rgba(12, 68, 68, 0.1);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+  
+  svg {
+    margin-left: 8px;
+    font-size: 1rem;
+  }
+  
+  &:hover {
+    background-color: rgba(12, 68, 68, 0.1);
+    transform: translateY(-2px);
+  }
+  
+  &.callButton {
+    background-color: $brand-primary;
+    color: white;
+    font-weight: 600;
+    
+    &:hover {
+      background-color: darken($brand-primary, 5%);
+    }
   }
 }
 
@@ -50,26 +116,31 @@ $brand-gold: #cc9c64;
   gap: 40px;
   
   @media (min-width: 992px) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.5fr;
   }
 }
 
 .contactInfo {
-  grid-column: 1 / -1;
-  
   @media (min-width: 992px) {
-    grid-column: auto;
-    grid-row: span 2;
+    grid-column: 1;
   }
 }
 
-.mapContainer {
-  grid-column: 1 / -1;
+.mapAndForm {
+  @media (min-width: 992px) {
+    grid-column: 2;
+  }
   
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.mapContainer {
   h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     color: $brand-primary;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     position: relative;
     display: inline-block;
     
@@ -78,14 +149,14 @@ $brand-gold: #cc9c64;
       position: absolute;
       bottom: -5px;
       right: 0;
-      width: 60px;
+      width: 50px;
       height: 2px;
       background: $brand-gold;
     }
   }
   
   .map {
-    border-radius: 16px;
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -94,10 +165,10 @@ $brand-gold: #cc9c64;
 }
 
 .contactFormContainer {
-  grid-column: 1 / -1;
+  margin-top: 20px;
   
   h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     color: $brand-primary;
     margin-bottom: 10px;
     position: relative;
@@ -108,102 +179,96 @@ $brand-gold: #cc9c64;
       position: absolute;
       bottom: -5px;
       right: 0;
-      width: 60px;
+      width: 50px;
       height: 2px;
       background: $brand-gold;
     }
   }
   
   p {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     color: $color-gray-400;
   }
 }
 
 .infoCard {
   background-color: rgba(12, 68, 68, 0.05);
-  border-radius: 16px;
-  padding: 30px;
+  border-radius: 12px;
+  padding: 25px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   
   h2 {
     color: $brand-gold;
-    margin-bottom: 15px;
-    font-size: 1.8rem;
-  }
-}
-
-.rating {
-  display: flex;
-  align-items: center;
-  margin-bottom: 25px;
-  gap: 8px;
-  
-  span {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: $brand-gold;
-  }
-  
-  .stars {
-    color: $brand-gold;
-    margin: 0 5px;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    position: relative;
+    display: inline-block;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      right: 0;
+      width: 50px;
+      height: 2px;
+      background: $brand-gold;
+    }
   }
   
-  .reviews {
-    font-size: 0.9rem;
-    color: $color-gray-400;
+  .hoursHeading {
+    margin-top: 30px;
   }
 }
 
 .contactMethods {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 .contactMethod {
   display: flex;
-  gap: 16px;
+  gap: 15px;
   
   .icon {
     background-color: rgba(204, 156, 100, 0.1);
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: $brand-gold;
-    font-size: 1.2rem;
+    font-size: 1rem;
     flex-shrink: 0;
   }
   
   .details {
     h3 {
-      margin: 0 0 8px;
-      font-size: 1.1rem;
+      margin: 0 0 5px;
+      font-size: 1rem;
       font-weight: 600;
-      color: $color-gray-200;
+      color: $color-gray-300;
     }
     
     p {
-      margin: 0 0 8px;
+      margin: 0 0 5px;
       color: $color-gray-400;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       line-height: 1.5;
     }
     
     .subDetails {
       color: $color-gray-500;
       font-size: 0.85rem;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
     
     a {
       color: $brand-gold;
       text-decoration: none;
+      font-weight: 600;
       
       &:hover {
         text-decoration: underline;
@@ -211,7 +276,7 @@ $brand-gold: #cc9c64;
     }
     
     .phoneNumber, .whatsappNumber, .email {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       display: inline-block;
     }
@@ -224,6 +289,7 @@ $brand-gold: #cc9c64;
       border-radius: 20px;
       font-size: 0.9rem;
       transition: all 0.3s ease;
+      margin-top: 10px;
       
       &:hover {
         background-color: rgba(204, 156, 100, 0.2);
@@ -235,14 +301,14 @@ $brand-gold: #cc9c64;
 }
 
 .hours {
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .hourRow {
   display: flex;
   justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   
   &:last-child {
     border-bottom: none;
@@ -250,29 +316,30 @@ $brand-gold: #cc9c64;
   
   .day {
     color: $color-gray-300;
+    font-weight: 500;
   }
   
   .time {
     color: $color-gray-400;
-    font-weight: 500;
   }
 }
 
 .contactForm {
   background-color: rgba(12, 68, 68, 0.05);
-  border-radius: 16px;
-  padding: 30px;
+  border-radius: 12px;
+  padding: 25px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   
   .formGroup {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     
     label {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
       color: $color-gray-300;
       font-weight: 500;
+      font-size: 0.9rem;
     }
     
     input, textarea {
@@ -282,7 +349,7 @@ $brand-gold: #cc9c64;
       border: 1px solid rgba(255, 255, 255, 0.2);
       background-color: rgba(255, 255, 255, 0.05);
       color: white;
-      font-size: 1rem;
+      font-size: 0.95rem;
       
       &:focus {
         outline: none;
@@ -303,11 +370,11 @@ $brand-gold: #cc9c64;
   
   .formRow {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     
     @media (max-width: 768px) {
       flex-direction: column;
-      gap: 20px;
+      gap: 15px;
     }
     
     .formGroup {
@@ -317,7 +384,7 @@ $brand-gold: #cc9c64;
   
   .submitButton {
     width: 100%;
-    padding: 14px;
+    padding: 12px;
     border-radius: 8px;
     background: linear-gradient(90deg, #0c4444 0%, #0c4c44 50%, #cc9c64 100%);
     background-size: 200% auto;
@@ -341,30 +408,31 @@ $brand-gold: #cc9c64;
       box-shadow: none;
     }
   }
-  
-  .errorMessage {
-    color: #ff6b6b;
-    background-color: rgba(255, 107, 107, 0.1);
-    border: 1px solid rgba(255, 107, 107, 0.3);
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
+}
+
+.errorMessage {
+  color: #ff6b6b;
+  background-color: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
 }
 
 // Thank you message styles
 .thankYou {
   background-color: rgba(12, 68, 68, 0.05);
-  border-radius: 16px;
-  padding: 40px 30px;
+  border-radius: 12px;
+  padding: 30px 25px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
   
   .thankYouIcon {
-    font-size: 3rem;
+    font-size: 2.5rem;
     color: $brand-gold;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     
     svg {
       animation: fly 2s ease-in-out infinite;
@@ -372,19 +440,19 @@ $brand-gold: #cc9c64;
   }
   
   h3 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     color: $brand-gold;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
   
   p {
     color: $color-gray-300;
-    font-size: 1.1rem;
-    margin-bottom: 30px;
+    font-size: 1rem;
+    margin-bottom: 25px;
   }
   
   .newMessageBtn {
-    padding: 12px 24px;
+    padding: 10px 20px;
     border-radius: 8px;
     background-color: transparent;
     color: $brand-gold;
@@ -406,5 +474,27 @@ $brand-gold: #cc9c64;
   }
   50% {
     transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .businessHeader {
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+    
+    .actionButton {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  .content {
+    gap: 25px;
   }
 } 
