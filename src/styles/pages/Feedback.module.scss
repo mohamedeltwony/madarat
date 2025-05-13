@@ -1,0 +1,314 @@
+@import '../settings/__settings';
+
+.container {
+  max-width: 1200px;
+  margin: 100px auto 60px;
+  padding: 0 20px;
+  direction: rtl;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+  
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+    color: $color-primary;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 50%;
+      transform: translateX(50%);
+      width: 80px;
+      height: 3px;
+      background: $color-gold-500;
+    }
+  }
+  
+  p {
+    font-size: 1.1rem;
+    color: $color-gray-400;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  
+  @media (max-width: 992px) {
+    flex-direction: column;
+  }
+}
+
+.formContainer {
+  flex: 1;
+  min-width: 300px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contactInfo {
+  width: 350px;
+  
+  @media (max-width: 992px) {
+    width: 100%;
+  }
+}
+
+.infoCard {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  height: 100%;
+  
+  h3 {
+    color: $color-gold-500;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+  }
+  
+  p {
+    color: $color-gray-300;
+    margin-bottom: 25px;
+  }
+}
+
+.contactMethod {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  
+  svg {
+    color: $color-gold-500;
+    font-size: 1.5rem;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 10px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+  }
+  
+  h4 {
+    margin: 0 0 5px;
+    color: $color-gray-200;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  a {
+    color: $color-gold-500;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.note {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  
+  p {
+    font-size: 0.9rem;
+    color: $color-gray-400;
+    margin-bottom: 10px;
+  }
+}
+
+.feedbackForm {
+  .formTypeSelector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    
+    .typeButton {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.05);
+      color: $color-gray-300;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      
+      svg {
+        font-size: 1.1rem;
+      }
+      
+      &.active {
+        background-color: rgba(255, 215, 0, 0.1);
+        border-color: $color-gold-500;
+        color: $color-gold-500;
+      }
+      
+      &:hover:not(.active) {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+  
+  .formGroup {
+    margin-bottom: 20px;
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: $color-gray-300;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      svg {
+        color: $color-gold-500;
+      }
+    }
+    
+    input, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 1rem;
+      
+      &:focus {
+        outline: none;
+        border-color: $color-gold-500;
+        box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+      }
+      
+      &::placeholder {
+        color: $color-gray-500;
+      }
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+  }
+  
+  .formRow {
+    display: flex;
+    gap: 20px;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .formGroup {
+      flex: 1;
+    }
+  }
+  
+  .errorMessage {
+    color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .submitButton {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    background-color: $color-gold-500;
+    color: black;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    
+    &:hover {
+      background-color: darken($color-gold-500, 5%);
+      transform: translateY(-2px);
+    }
+    
+    &:disabled {
+      background-color: $color-gray-500;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+}
+
+.thankYou {
+  text-align: center;
+  padding: 50px 20px;
+  
+  .thankYouIcon {
+    font-size: 3rem;
+    color: $color-gold-500;
+    margin-bottom: 20px;
+    
+    svg {
+      animation: fly 2s ease-in-out infinite;
+    }
+  }
+  
+  h2 {
+    font-size: 2rem;
+    color: $color-gold-500;
+    margin-bottom: 15px;
+  }
+  
+  p {
+    color: $color-gray-300;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
+  
+  .newMessageBtn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    background-color: transparent;
+    color: $color-gold-500;
+    font-weight: 600;
+    border: 1px solid $color-gold-500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: rgba(255, 215, 0, 0.1);
+    }
+  }
+}
+
+@keyframes fly {
+  0%, 100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+} 

@@ -1,21 +1,125 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router'; // Import useRouter
-import { FaSearch, FaChevronDown } from 'react-icons/fa';
+import { useRouter } from 'next/router';
+import { FaSearch, FaChevronDown, FaBars, FaTimes, FaArrowLeft, FaPhoneAlt, FaUserTie, FaCommentDots } from 'react-icons/fa';
 import Logo from '../Logo';
 import styles from './Header.module.scss';
+import LocalizedLink from '../LocalizedLink';
+import { AnimatedBorderButton } from '../UI';
+import Image from 'next/image';
 
 const Header = () => {
-  const router = useRouter(); // Get router instance
-  const { pathname } = router; // Get current pathname
-  const isHomePage = pathname === '/'; // Check if it's the homepage
-
+  const router = useRouter();
+  const { pathname } = router;
+  const isHomePage = pathname === '/';
+  const isTripPage = (pathname.includes('/trips/') && pathname !== '/trips') || pathname === '/book-now';
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [isCompact, setIsCompact] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const inactivityTimer = useRef(null);
+  const navRef = useRef(null);
+  const menuButtonRef = useRef(null);
+  
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMenuOpen && 
+          navRef.current && 
+          !navRef.current.contains(event.target) &&
+          menuButtonRef.current &&
+          !menuButtonRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  // Check if we're on a mobile device on mount and window resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 992); // Use the same breakpoint as $breakpoint-medium
+    };
+    
+    checkMobile(); // Initial check
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+  
+  // On mobile, force expanded menu
+  useEffect(() => {
+    if (isMobile) {
+      setIsCompact(false);
+    }
+  }, [isMobile]);
+
+  // Handle scroll effect for transparent header on all pages
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Auto-collapse header after 10 seconds of inactivity when expanded (desktop only)
+  useEffect(() => {
+    if (!isCompact && !isMobile) {
+      const resetTimer = () => {
+        clearTimeout(inactivityTimer.current);
+        inactivityTimer.current = setTimeout(() => setIsCompact(true), 10000);
+      };
+      // Listen for mousemove, keydown, click on header
+      const events = ['mousemove', 'keydown', 'click', 'touchstart'];
+      events.forEach(event => document.addEventListener(event, resetTimer));
+      resetTimer();
+      return () => {
+        clearTimeout(inactivityTimer.current);
+        events.forEach(event => document.removeEventListener(event, resetTimer));
+      };
+    }
+  }, [isCompact, isMobile]);
+
+  // Prevent body scrolling when menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isMenuOpen]);
 
   const handleSearchToggle = () => {
     setIsSearchOpen(!isSearchOpen);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    // Close any open dropdowns when toggling menu
+    setActiveDropdown(null);
   };
 
   const toggleDropdown = (dropdown) => {
@@ -26,271 +130,267 @@ const Header = () => {
     }
   };
 
-  // Conditionally apply a class for homepage styling
-  const headerClassName = `${styles.header} ${isHomePage ? styles.homeHeader : ''}`;
+  const toggleCompact = () => {
+    // Only allow toggling on desktop
+    if (!isMobile) {
+      setIsCompact(!isCompact);
+    }
+  };
 
-  return (
-    <header className={headerClassName}>
-      <div className={styles.container}>
-        <div className={styles.logo}>
-          <Link href="/">
-            <Logo />
-          </Link>
-        </div>
+  // Get CTA button dropdown items
+  const getCtaDropdownItems = () => {
+    return [
+      { 
+        label: "للحجز سجل رقمك",
+        icon: <FaUserTie size={14} />,
+        onClick: () => router.push("/book-now")
+      },
+      { 
+        label: "إتصل في مستشارك",
+        icon: <FaPhoneAlt size={14} />,
+        onClick: () => window.location.href = "tel:920034019"
+      },
+      { 
+        label: "شكوى أو ملاحظات",
+        icon: <FaCommentDots size={14} />,
+        onClick: () => router.push("/feedback")
+      }
+    ];
+  };
 
-        <nav className={`${styles.nav} ${isMenuOpen ? styles.active : ''}`}>
-          <ul className={styles.mainMenu}>
-            {/* Destinations Dropdown */}
-            <li className={styles.menuItem}>
-              <div
-                className={`${styles.menuLink} ${activeDropdown === 'destinations' ? styles.active : ''}`}
-                onClick={() => toggleDropdown('destinations')}
-              >
-                <span>الوجهات</span>
-                <FaChevronDown className={styles.dropdownIcon} />
-              </div>
-              {activeDropdown === 'destinations' && (
-                <ul className={styles.dropdown}>
-                  <li>
-                    <Link href="/destinations" legacyBehavior>
-                      <a>جميع الوجهات</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/trips" legacyBehavior>
-                      <a>جميع الرحلات</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/destinations/europe" legacyBehavior>
-                      <a>أوروبا</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/destinations/middle-east" legacyBehavior>
-                      <a>الشرق الأوسط</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/destinations/asia" legacyBehavior>
-                      <a>آسيا</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/destinations/americas" legacyBehavior>
-                      <a>الأمريكتين</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/destinations/africa" legacyBehavior>
-                      <a>أفريقيا</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/destinations/oceania" legacyBehavior>
-                      <a>أوقيانوسيا</a>
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
+  // Apply appropriate classes based on page type and scroll state
+  const headerClassName = `${styles.header} \
+    ${isHomePage ? styles.homeHeader : styles.transparentHeader} \
+    ${isTripPage ? styles.tripHeader : ''} \
+    ${scrolled ? styles.scrolled : ''} \
+    ${!isCompact ? styles.expanded : ''}`;
 
-            {/* Packages Dropdown */}
-            <li className={styles.menuItem}>
-              <div
-                className={`${styles.menuLink} ${activeDropdown === 'packages' ? styles.active : ''}`}
-                onClick={() => toggleDropdown('packages')}
-              >
-                <span>الرحلات</span>
-                <FaChevronDown className={styles.dropdownIcon} />
-              </div>
-              {activeDropdown === 'packages' && (
-                <ul className={styles.dropdown}>
-                  <li>
-                    <Link href="/packages" legacyBehavior>
-                      <a>جميع الرحلات</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/packages/honeymoon" legacyBehavior>
-                      <a>رحلات شهر العسل</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/packages/family" legacyBehavior>
-                      <a>رحلات عائلية</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/packages/adventure" legacyBehavior>
-                      <a>رحلات المغامرة</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/packages/luxury" legacyBehavior>
-                      <a>رحلات فاخرة</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/packages/budget" legacyBehavior>
-                      <a>رحلات اقتصادية</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/packages/religious" legacyBehavior>
-                      <a>رحلات دينية</a>
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-
-            {/* Services Dropdown */}
-            <li className={styles.menuItem}>
-              <div
-                className={`${styles.menuLink} ${activeDropdown === 'services' ? styles.active : ''}`}
-                onClick={() => toggleDropdown('services')}
-              >
-                <span>الخدمات</span>
-                <FaChevronDown className={styles.dropdownIcon} />
-              </div>
-              {activeDropdown === 'services' && (
-                <ul className={styles.dropdown}>
-                  <li>
-                    <Link href="/services" legacyBehavior>
-                      <a>جميع الخدمات</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/services/visa" legacyBehavior>
-                      <a>خدمات التأشيرة</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/services/flights" legacyBehavior>
-                      <a>حجز الطيران</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/services/hotels" legacyBehavior>
-                      <a>حجز الفنادق</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/services/transportation" legacyBehavior>
-                      <a>خدمات النقل</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/services/cruises" legacyBehavior>
-                      <a>رحلات بحرية</a>
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-
-            {/* Blog Link */}
-            <li className={styles.menuItem}>
-              <Link href="/blog" legacyBehavior>
-                <a className={styles.menuLink}>المدونة</a>
-              </Link>
-            </li>
-
-            {/* Explore Dropdown */}
-            <li className={styles.menuItem}>
-              <div
-                className={`${styles.menuLink} ${activeDropdown === 'explore' ? styles.active : ''}`}
-                onClick={() => toggleDropdown('explore')}
-              >
-                <span>استكشف</span>
-                <FaChevronDown className={styles.dropdownIcon} />
-              </div>
-              {activeDropdown === 'explore' && (
-                <ul className={styles.dropdown}>
-                  <li>
-                    <Link href="/archives" legacyBehavior>
-                      <a>الأرشيف</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/authors" legacyBehavior>
-                      <a>الكتّاب</a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/advanced-search" legacyBehavior>
-                      <a>بحث متقدم</a>
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-
-            {/* About Link */}
-            <li className={styles.menuItem}>
-              <Link href="/about" legacyBehavior>
-                <a className={styles.menuLink}>عن الموقع</a>
-              </Link>
-            </li>
-
-            {/* Contact Link */}
-            <li className={styles.menuItem}>
-              <Link href="/contact" legacyBehavior>
-                <a className={styles.menuLink}>اتصل بنا</a>
-              </Link>
-            </li>
-          </ul>
-        </nav>
-
-        <div className={styles.headerActions}>
-          <button
-            className={styles.searchButton}
-            onClick={handleSearchToggle}
-            aria-label="بحث"
-          >
-            <FaSearch />
-            <span className="sr-only">Toggle Search</span>
-          </button>
-
-          <button
-            className={`${styles.menuButton} ${isMenuOpen ? styles.active : ''}`}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="القائمة"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-        </div>
-      </div>
-
-      {/* Search Overlay */}
-      {isSearchOpen && (
-        <div className={styles.searchOverlay}>
-          <div className={styles.searchContainer}>
-            <form
-              action="/advanced-search"
-              method="get"
-              className={styles.searchForm}
-            >
-              <input
-                type="text"
-                name="q"
-                placeholder="ابحث عن وجهات، رحلات، مقالات..."
-                className={styles.searchInput}
-                autoFocus
+  // For trip pages, use a simplified header with just logo and hamburger menu
+  if (isTripPage) {
+    return (
+      <header className={`${styles.header} ${styles.tripHeader}`}>
+        <div className={styles.container}>
+          <div className={styles.logo}>
+            <LocalizedLink href="/">
+              <Logo />
+            </LocalizedLink>
+          </div>
+          
+          <div className={styles.tripHeaderActions}>
+            {/* Call to Action Button - only on desktop */}
+            {!isMobile && (
+              <AnimatedBorderButton 
+                text="تواصل مع مستشارك السياحي" 
+                variant="transparent"
+                dropdownItems={getCtaDropdownItems()}
               />
-              <button type="submit" className={styles.searchSubmit}>
-                <FaSearch />
-              </button>
-            </form>
-            <button className={styles.closeSearch} onClick={handleSearchToggle}>
-              &times;
+            )}
+            
+            <button 
+              ref={menuButtonRef}
+              className={styles.menuButton} 
+              onClick={toggleMenu}
+              aria-label="Toggle navigation menu"
+              style={{ marginRight: !isMobile ? '10px' : '0' }}
+            >
+              {isMenuOpen ? <FaTimes /> : <FaBars />}
             </button>
           </div>
+          
+          {/* Sidebar Navigation for Trip Pages */}
+          <div 
+            ref={navRef}
+            className={`${styles.tripNav} ${isMenuOpen ? styles.active : ''}`}
+          >
+            <div className={styles.sidebarHeader}>
+              <div className={styles.logo}>
+                <LocalizedLink href="/">
+                  <Logo />
+                </LocalizedLink>
+              </div>
+              <button 
+                className={styles.closeButton} 
+                onClick={toggleMenu}
+                aria-label="Close navigation menu"
+              >
+                <FaTimes />
+              </button>
+            </div>
+            
+            <ul className={styles.sidebarMenu}>
+              {/* احجز خدمة */}
+              <li className={styles.sidebarMenuItem}>
+                <LocalizedLink href="/book-now" className={styles.sidebarMenuLink}>احجز خدمة</LocalizedLink>
+              </li>
+              
+              {/* الرحلات */}
+              <li className={styles.sidebarMenuItem}>
+                <div
+                  className={`${styles.sidebarMenuLink} ${activeDropdown === 'trips' ? styles.active : ''}`}
+                  onClick={() => toggleDropdown('trips')}
+                >
+                  <span>الرحلات</span>
+                  <FaChevronDown className={styles.dropdownIcon} />
+                </div>
+                {activeDropdown === 'trips' && (
+                  <ul className={styles.sidebarSubmenu}>
+                    <li><LocalizedLink href="/trips">جميع الرحلات</LocalizedLink></li>
+                    <li><LocalizedLink href="/packages/honeymoon">رحلات شهر العسل</LocalizedLink></li>
+                    <li><LocalizedLink href="/packages/family">رحلات عائلية</LocalizedLink></li>
+                    <li><LocalizedLink href="/packages/adventure">رحلات المغامرة</LocalizedLink></li>
+                    <li><LocalizedLink href="/packages/luxury">رحلات فاخرة</LocalizedLink></li>
+                    <li><LocalizedLink href="/packages/budget">رحلات اقتصادية</LocalizedLink></li>
+                  </ul>
+                )}
+              </li>
+              
+              {/* الوجهات */}
+              <li className={styles.sidebarMenuItem}>
+                <div
+                  className={`${styles.sidebarMenuLink} ${activeDropdown === 'destinations' ? styles.active : ''}`}
+                  onClick={() => toggleDropdown('destinations')}
+                >
+                  <span>الوجهات</span>
+                  <FaChevronDown className={styles.dropdownIcon} />
+                </div>
+                {activeDropdown === 'destinations' && (
+                  <ul className={styles.sidebarSubmenu}>
+                    <li><LocalizedLink href="/destinations">جميع الوجهات</LocalizedLink></li>
+                    <li><LocalizedLink href="/destinations/europe">أوروبا</LocalizedLink></li>
+                    <li><LocalizedLink href="/destinations/middle-east">الشرق الأوسط</LocalizedLink></li>
+                    <li><LocalizedLink href="/destinations/asia">آسيا</LocalizedLink></li>
+                    <li><LocalizedLink href="/destinations/americas">الأمريكتين</LocalizedLink></li>
+                    <li><LocalizedLink href="/destinations/africa">أفريقيا</LocalizedLink></li>
+                  </ul>
+                )}
+              </li>
+              
+              {/* المقالات */}
+              <li className={styles.sidebarMenuItem}>
+                <LocalizedLink href="/blog" className={styles.sidebarMenuLink}>المقالات</LocalizedLink>
+              </li>
+              
+              {/* من نحن */}
+              <li className={styles.sidebarMenuItem}>
+                <LocalizedLink href="/about" className={styles.sidebarMenuLink}>من نحن</LocalizedLink>
+              </li>
+              
+              {/* تواصل معنا */}
+              <li className={styles.sidebarMenuItem}>
+                <LocalizedLink href="/contact" className={styles.sidebarMenuLink}>تواصل معنا</LocalizedLink>
+              </li>
+            </ul>
+            
+            <div className={styles.sidebarCta}>
+              <AnimatedBorderButton 
+                text="تواصل مع مستشارك السياحي" 
+                variant="gold"
+                dropdownItems={getCtaDropdownItems()}
+              />
+            </div>
+          </div>
+          
+          {/* Overlay */}
+          {isMenuOpen && <div className={styles.overlay} onClick={toggleMenu}></div>}
         </div>
-      )}
+      </header>
+    );
+  }
+
+  // Regular header for non-trip pages (now with transparent styling)
+  return (
+    <header className={headerClassName}>
+      <div className={styles.container} style={isCompact && !isMobile ? { maxWidth: 'fit-content', transition: 'max-width 0.3s' } : {}}>
+        <div className={styles.logo}>
+          <LocalizedLink href="/">
+            <Logo />
+          </LocalizedLink>
+        </div>
+        
+        {/* Mobile Menu Button - only visible on mobile */}
+        <button 
+          ref={menuButtonRef}
+          className={styles.mobileMenuButton} 
+          onClick={toggleMenu}
+          aria-label="Toggle navigation menu"
+        >
+          {isMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+        
+        <nav 
+          ref={navRef}
+          className={`${styles.nav} ${isMenuOpen ? styles.active : ''}`}
+        >
+          <ul className={styles.mainMenu} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: '0.95rem' }}>
+            {/* Critical items (always visible) */}
+            <li className={styles.menuItem}>
+              <LocalizedLink href="/book-now" className={styles.menuLink}>احجز خدمة</LocalizedLink>
+            </li>
+            <li className={styles.menuItem}>
+              <LocalizedLink href="/trips" className={styles.menuLink}>الرحلات</LocalizedLink>
+            </li>
+            
+            {/* Expanded menu items (visible when expanded or on mobile) */}
+            {(!isCompact || isMobile) && <>
+              <li className={styles.menuItem}>
+                <LocalizedLink href="/destinations" className={styles.menuLink}>الوجهات</LocalizedLink>
+              </li>
+              <li className={styles.menuItem}>
+                <LocalizedLink href="/blog" className={styles.menuLink}>المقالات</LocalizedLink>
+              </li>
+              <li className={styles.menuItem}>
+                <LocalizedLink href="/about" className={styles.menuLink}>من نحن</LocalizedLink>
+              </li>
+              <li className={styles.menuItem}>
+                <LocalizedLink href="/contact" className={styles.menuLink}>تواصل معنا</LocalizedLink>
+              </li>
+            </>}
+            
+            {/* Call to Action Button */}
+            <li className={`${styles.menuItem} ${styles.ctaMenuItem}`}>
+              <AnimatedBorderButton 
+                text="تواصل مع مستشارك السياحي" 
+                variant={scrolled ? "gold" : "transparent"}
+                dropdownItems={getCtaDropdownItems()}
+              />
+            </li>
+            
+            {/* Collapse header back to compact when expanded - right side, white icon - desktop only */}
+            {!isCompact && !isMobile && (
+              <li style={{ marginLeft: 8, marginRight: 8, cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={toggleCompact}>
+                <FaArrowLeft 
+                  size={20} 
+                  className={`${styles.arrowIcon} ${styles.arrowIconExpanded}`}
+                />
+              </li>
+            )}
+            
+            {/* Expand arrow for compact mode - left side, white icon - desktop only */}
+            {isCompact && !isMobile && (
+              <li style={{ marginLeft: 8, marginRight: 8, cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={toggleCompact}>
+                <FaArrowLeft 
+                  size={20} 
+                  className={`${styles.arrowIcon} ${styles.arrowIconHint}`}
+                />
+              </li>
+            )}
+          </ul>
+        </nav>
+        
+        {/* Mobile Menu Close Button - only visible when menu is open on mobile */}
+        {isMenuOpen && (
+          <button 
+            className={styles.mobileSidebarClose} 
+            onClick={toggleMenu}
+            aria-label="Close navigation menu"
+          >
+            <FaTimes />
+          </button>
+        )}
+        
+        {/* Overlay */}
+        {isMenuOpen && <div className={styles.overlay} onClick={toggleMenu}></div>}
+      </div>
     </header>
   );
 };
