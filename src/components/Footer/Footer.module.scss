@@ -50,6 +50,42 @@ $breakpoint-large: 1200px;
   color: $color-gray-300;
 }
 
+// Contact info section
+.contactInfo {
+  margin: 1.5rem 0;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.contactIcon {
+  color: $color-gold-500;
+  font-size: 1.25rem;
+  margin-left: 0.75rem;
+  flex-shrink: 0;
+}
+
+.contactLink {
+  color: $color-gray-300;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: white;
+  }
+}
+
+.address {
+  color: $color-gray-300;
+}
+
 .footerSocial {
   display: flex;
   gap: 1rem;
@@ -161,3 +197,54 @@ $breakpoint-large: 1200px;
     }
   }
 }
+
+.payments {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  
+  .paymentIcon {
+    height: 40px;
+    width: auto;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+  
+  .st0 {
+    fill: #FFFFFF;
+  }
+  
+  .st1 {
+    fill: #00579F;
+  }
+}
+
+.footerImage {
+  display: block;
+  margin: 0 auto;
+  width: 50%; /* Make the image 50% smaller */
+  max-height: 150px;
+  object-fit: contain;
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.Footer_footerImage__7bmm8 {
+  display: block;
+  margin: 0 auto;
+  width: 50%;
+  max-height: 150px;
+  object-fit: contain;
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  #__next > div > footer > section.Section_section__gjwvr.Footer_footerMenu__vNYi6{
+    padding-top: 40px;
+  }

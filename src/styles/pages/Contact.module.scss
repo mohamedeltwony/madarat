@@ -5,77 +5,704 @@ $brand-primary: #0c4444;
 $brand-secondary: #0c4c44;
 $brand-gold: #cc9c64;
 
-.container {
-  max-width: 1200px;
-  margin: 100px auto 60px;
-  padding: 0 20px;
-  direction: rtl;
-}
-
-.header {
-  margin-bottom: 40px;
-}
-
-.businessHeader {
-  h1 {
-    font-size: 2rem;
-    color: $brand-primary;
-    margin-bottom: 16px;
-    text-align: right;
-  }
-}
-
-.reviewsSection {
-  margin-bottom: 20px;
-}
-
-.rating {
+// Hero Section
+.heroSection {
+  position: relative;
+  height: 450px;
+  background-image: url('/images/hero-background-new.jpg');
+  background-size: cover;
+  background-position: center;
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 5px;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  overflow: hidden;
   
-  .ratingNumber {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: $brand-gold;
+  @media (max-width: 768px) {
+    height: 350px;
   }
   
-  .stars {
-    display: flex;
-    color: $brand-gold;
-    font-size: 1rem;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('/images/pattern.png');
+    opacity: 0.1;
+    animation: floatPattern 60s linear infinite;
+  }
+}
+
+@keyframes floatPattern {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  25% {
+    transform: translateX(-5%) translateY(2%);
+  }
+  50% {
+    transform: translateX(-2%) translateY(5%);
+  }
+  75% {
+    transform: translateX(-7%) translateY(3%);
+  }
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(12, 68, 68, 0.7);
+  z-index: 1;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  padding: 0 20px;
+  direction: rtl;
+  font-family: 'Cairo', sans-serif;
+  
+  h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    color: white;
+    font-weight: 700;
+    animation: fadeInDown 1s ease-out;
+    font-family: 'Cairo', sans-serif;
     
-    svg {
-      margin-left: 2px;
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+  
+  p {
+    font-size: 1.4rem;
+    max-width: 700px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.9);
+    animation: fadeInUp 1s ease-out 0.3s both;
+    font-family: 'Cairo', sans-serif;
+    
+    @media (max-width: 768px) {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Breadcrumb Styles
+.breadcrumbSection {
+  background-color: rgba(12, 68, 68, 0.05);
+  padding: 15px 0;
+  margin-bottom: 30px;
+}
+
+.breadcrumbContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.breadcrumbList {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  direction: rtl;
+  font-family: 'Cairo', sans-serif;
+}
+
+.breadcrumbItem {
+  display: flex;
+  align-items: center;
+  color: #666666;
+  font-size: 0.95rem;
+}
+
+.breadcrumbLink {
+  color: #666666;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  
+  &:hover {
+    color: $brand-gold;
+  }
+}
+
+.breadcrumbCurrent {
+  color: $brand-gold;
+  font-weight: 500;
+}
+
+.breadcrumbSeparator {
+  margin: 0 8px;
+  color: #999999;
+}
+
+.homeIcon {
+  font-size: 1.1rem;
+}
+
+// Bentobox Container
+.bentoContainer {
+  max-width: 1200px;
+  margin: 0 auto 80px;
+  padding: 0 20px;
+  direction: rtl;
+  font-family: 'Cairo', sans-serif;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 0 15px;
+    margin-bottom: 60px;
+  }
+}
+
+// Bento Intro Section
+.bentoIntro {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-bottom: 20px;
+  
+  h2 {
+    font-size: 2rem;
+    color: $brand-primary;
+    margin-bottom: 10px;
+    font-family: 'Cairo', sans-serif;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    color: #555555;
+    margin: 0;
+    font-family: 'Cairo', sans-serif;
+  }
+  
+  @media (max-width: 768px) {
+    h2 {
+      font-size: 1.6rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Bento Box Base Styles
+.bentoBox {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+  height: 100%;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+}
+
+// Box Header
+.boxHeader {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  
+  h3 {
+    font-size: 1.2rem;
+    color: $brand-primary;
+    margin: 0;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+  }
+  
+  .boxIcon {
+    color: $brand-gold;
+    font-size: 1.3rem;
+    margin-left: 12px;
+  }
+}
+
+.boxContent {
+  padding: 20px;
+  height: calc(100% - 60px);
+}
+
+// Rating Box
+.ratingBox {
+  grid-column: span 1;
+  
+  .boxContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    height: 100%;
+  }
+  
+  .rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+    
+    .ratingNumber {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: $brand-gold;
+      line-height: 1;
+    }
+    
+    .stars {
+      display: flex;
+      color: $brand-gold;
+      font-size: 1.2rem;
+      margin: 10px 0;
+      
+      svg {
+        margin: 0 2px;
+      }
     }
   }
   
   .reviewsCount {
-    font-size: 0.9rem;
-    color: $color-gray-400;
+    font-size: 0.95rem;
+    color: #555555;
+    margin: 0;
   }
 }
 
-.businessType {
-  color: $color-gray-500;
-  font-size: 0.95rem;
-  margin-bottom: 5px;
+// Call and WhatsApp Boxes
+.callBox, .whatsappBox, .directionsBox {
+  grid-column: span 1;
+  background-color: white;
+  
+  @media (max-width: 992px) {
+    grid-column: span 1;
+  }
+  
+  @media (max-width: 576px) {
+    grid-column: span 1;
+  }
+  
+  .boxContent {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    height: 100%;
+  }
+  
+  .iconBox {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(204, 156, 100, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $brand-gold;
+    font-size: 1.2rem;
+    margin-left: 15px;
+    flex-shrink: 0;
+  }
+  
+  .callDetails, .directionsDetails {
+    h3 {
+      margin: 0 0 5px;
+      font-size: 1rem;
+      color: $brand-primary;
+      font-weight: 600;
+    }
+    
+    .phoneLink, .whatsappLink, .directionsLink {
+      color: $brand-gold;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+      
+      .arrowIcon {
+        margin-right: 5px;
+        font-size: 0.9rem;
+        transform: rotate(180deg);
+      }
+    }
+  }
 }
 
-.businessManage {
-  color: $color-gray-500;
-  font-size: 0.85rem;
-  font-style: italic;
+// Specific styles for each box
+.callBox {
+  .iconBox {
+    background-color: rgba(12, 68, 68, 0.05);
+    color: $brand-primary;
+  }
+  
+  .phoneLink {
+    color: #112137;
+    font-size: 1.4rem;
+  }
 }
 
-.actionButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
+.whatsappBox {
+  .iconBox {
+    background-color: rgba(37, 211, 102, 0.1);
+    color: #25D366;
+  }
 }
 
+.directionsBox {
+  .iconBox {
+    background-color: rgba(220, 135, 33, 0.1);
+    color: #DC8721;
+  }
+}
+
+// Address Box
+.addressBox {
+  grid-column: span 1;
+  
+  .boxHeader {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    
+    h3 {
+      font-size: 1.2rem;
+      color: $brand-primary;
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+    }
+    
+    .boxIcon {
+      color: $brand-gold;
+      font-size: 1.3rem;
+      margin-left: 12px;
+    }
+  }
+  
+  .boxContent {
+    padding: 15px 20px;
+  }
+  
+  .addressText {
+    margin: 0 0 10px;
+    color: #333333;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  .locationName {
+    color: #777777;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+// Hours Box
+.hoursBox {
+  grid-column: span 1;
+  
+  .boxHeader {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    
+    h3 {
+      font-size: 1.2rem;
+      color: $brand-primary;
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+    }
+    
+    .boxIcon {
+      color: $brand-gold;
+      font-size: 1.3rem;
+      margin-left: 12px;
+    }
+  }
+  
+  .boxContent {
+    padding: 15px 20px;
+  }
+  
+  .hoursGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    
+    .hourItem {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      
+      &:last-child {
+        grid-column: span 2;
+        border-bottom: none;
+      }
+      
+      .day {
+        color: $brand-primary;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      
+      .time {
+        color: #555555;
+        font-size: 0.85rem;
+      }
+    }
+  }
+}
+
+// Map Box
+.mapBox {
+  grid-column: span 2;
+  grid-row: span 2;
+  
+  @media (max-width: 992px) {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+  
+  @media (max-width: 576px) {
+    grid-column: span 1;
+  }
+  
+  .mapWrapper {
+    height: 100%;
+    min-height: 300px;
+    
+    iframe {
+      height: 100%;
+      min-height: 300px;
+    }
+  }
+}
+
+// Form Box
+.formBox {
+  grid-column: span 2;
+  grid-row: span 2;
+  
+  @media (max-width: 992px) {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+  
+  @media (max-width: 576px) {
+    grid-column: span 1;
+  }
+  
+  .formIntro {
+    margin: 0 0 15px;
+    color: #555555;
+    font-size: 0.95rem;
+  }
+  
+  .contactForm {
+    .formGroup {
+      margin-bottom: 15px;
+      
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: $brand-primary;
+        font-weight: 600;
+        font-size: 0.95rem;
+        font-family: 'Cairo', sans-serif;
+      }
+      
+      input, textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid rgba(12, 68, 68, 0.2);
+        background-color: #ffffff;
+        color: #333333;
+        font-size: 0.95rem;
+        font-family: 'Cairo', sans-serif;
+        
+        &:focus {
+          outline: none;
+          border-color: $brand-gold;
+          box-shadow: 0 0 0 2px rgba(204, 156, 100, 0.2);
+        }
+        
+        &::placeholder {
+          color: #999999;
+          font-family: 'Cairo', sans-serif;
+        }
+      }
+      
+      textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+    }
+    
+    .formRow {
+      display: flex;
+      gap: 15px;
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .formGroup {
+        flex: 1;
+      }
+    }
+    
+    .submitButton {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #0c4444 0%, #0c4c44 50%, #cc9c64 100%);
+      background-size: 200% auto;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      font-family: 'Cairo', sans-serif;
+      
+      &:hover {
+        background-position: right center;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(204, 156, 100, 0.2);
+      }
+      
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+  
+  .errorMessage {
+    color: #ff3b30;
+    background-color: rgba(255, 59, 48, 0.1);
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    font-family: 'Cairo', sans-serif;
+  }
+  
+  .thankYou {
+    padding: 30px 20px;
+    text-align: center;
+    
+    .thankYouIcon {
+      font-size: 2.5rem;
+      color: $brand-gold;
+      margin-bottom: 15px;
+      
+      svg {
+        animation: fly 2s ease-in-out infinite;
+      }
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      color: $brand-gold;
+      margin-bottom: 10px;
+      font-family: 'Cairo', sans-serif;
+    }
+    
+    p {
+      color: #333333;
+      font-size: 1rem;
+      margin-bottom: 25px;
+      font-family: 'Cairo', sans-serif;
+    }
+    
+    .newMessageBtn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      background-color: transparent;
+      color: $brand-gold;
+      font-weight: 600;
+      border: 1px solid $brand-gold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Cairo', sans-serif;
+      
+      &:hover {
+        background-color: rgba(204, 156, 100, 0.1);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// Animation
+@keyframes fly {
+  0%, 100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+// Action Buttons
 .actionButton {
   display: inline-flex;
   align-items: center;
@@ -88,6 +715,7 @@ $brand-gold: #cc9c64;
   transition: all 0.3s ease;
   text-decoration: none;
   cursor: pointer;
+  font-family: 'Cairo', sans-serif;
   
   svg {
     margin-left: 8px;
@@ -110,391 +738,18 @@ $brand-gold: #cc9c64;
   }
 }
 
-.content {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 40px;
-  
-  @media (min-width: 992px) {
-    grid-template-columns: 1fr 1.5fr;
-  }
-}
-
-.contactInfo {
-  @media (min-width: 992px) {
-    grid-column: 1;
-  }
-}
-
-.mapAndForm {
-  @media (min-width: 992px) {
-    grid-column: 2;
-  }
-  
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.mapContainer {
-  h2 {
-    font-size: 1.5rem;
-    color: $brand-primary;
-    margin-bottom: 15px;
-    position: relative;
-    display: inline-block;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      right: 0;
-      width: 50px;
-      height: 2px;
-      background: $brand-gold;
-    }
-  }
-  
-  .map {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-}
-
-.contactFormContainer {
-  margin-top: 20px;
-  
-  h2 {
-    font-size: 1.5rem;
-    color: $brand-primary;
-    margin-bottom: 10px;
-    position: relative;
-    display: inline-block;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      right: 0;
-      width: 50px;
-      height: 2px;
-      background: $brand-gold;
-    }
-  }
-  
-  p {
-    margin-bottom: 20px;
-    color: $color-gray-400;
-  }
-}
-
-.infoCard {
-  background-color: rgba(12, 68, 68, 0.05);
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  
-  h2 {
-    color: $brand-gold;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-    position: relative;
-    display: inline-block;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      right: 0;
-      width: 50px;
-      height: 2px;
-      background: $brand-gold;
-    }
-  }
-  
-  .hoursHeading {
-    margin-top: 30px;
-  }
-}
-
-.contactMethods {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.contactMethod {
-  display: flex;
-  gap: 15px;
-  
-  .icon {
-    background-color: rgba(204, 156, 100, 0.1);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $brand-gold;
-    font-size: 1rem;
-    flex-shrink: 0;
-  }
-  
-  .details {
-    h3 {
-      margin: 0 0 5px;
-      font-size: 1rem;
-      font-weight: 600;
-      color: $color-gray-300;
-    }
-    
-    p {
-      margin: 0 0 5px;
-      color: $color-gray-400;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-    
-    .subDetails {
-      color: $color-gray-500;
-      font-size: 0.85rem;
-      margin-bottom: 10px;
-    }
-    
-    a {
-      color: $brand-gold;
-      text-decoration: none;
-      font-weight: 600;
-      
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-    
-    .phoneNumber, .whatsappNumber, .email {
-      font-size: 1rem;
-      font-weight: 600;
-      display: inline-block;
-    }
-    
-    .directionButton {
-      display: inline-block;
-      background-color: rgba(204, 156, 100, 0.1);
-      color: $brand-gold;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      margin-top: 10px;
-      
-      &:hover {
-        background-color: rgba(204, 156, 100, 0.2);
-        text-decoration: none;
-        transform: translateY(-2px);
-      }
-    }
-  }
-}
-
-.hours {
-  margin-top: 15px;
-}
-
-.hourRow {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  
-  &:last-child {
-    border-bottom: none;
-  }
-  
-  .day {
-    color: $color-gray-300;
-    font-weight: 500;
-  }
-  
-  .time {
-    color: $color-gray-400;
-  }
-}
-
-.contactForm {
-  background-color: rgba(12, 68, 68, 0.05);
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  
-  .formGroup {
-    margin-bottom: 15px;
-    
-    label {
-      display: block;
-      margin-bottom: 5px;
-      color: $color-gray-300;
-      font-weight: 500;
-      font-size: 0.9rem;
-    }
-    
-    input, textarea {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background-color: rgba(255, 255, 255, 0.05);
-      color: white;
-      font-size: 0.95rem;
-      
-      &:focus {
-        outline: none;
-        border-color: $brand-gold;
-        box-shadow: 0 0 0 2px rgba(204, 156, 100, 0.2);
-      }
-      
-      &::placeholder {
-        color: $color-gray-500;
-      }
-    }
-    
-    textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-  }
-  
-  .formRow {
-    display: flex;
-    gap: 15px;
-    
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: 15px;
-    }
-    
-    .formGroup {
-      flex: 1;
-    }
-  }
-  
-  .submitButton {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    background: linear-gradient(90deg, #0c4444 0%, #0c4c44 50%, #cc9c64 100%);
-    background-size: 200% auto;
-    color: #fff;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 1rem;
-    
-    &:hover {
-      background-position: right center;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(204, 156, 100, 0.2);
-    }
-    
-    &:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-  }
-}
-
-.errorMessage {
-  color: #ff6b6b;
-  background-color: rgba(255, 107, 107, 0.1);
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  font-size: 0.9rem;
-}
-
-// Thank you message styles
-.thankYou {
-  background-color: rgba(12, 68, 68, 0.05);
-  border-radius: 12px;
-  padding: 30px 25px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: center;
-  
-  .thankYouIcon {
-    font-size: 2.5rem;
-    color: $brand-gold;
-    margin-bottom: 15px;
-    
-    svg {
-      animation: fly 2s ease-in-out infinite;
-    }
-  }
-  
-  h3 {
-    font-size: 1.5rem;
-    color: $brand-gold;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    color: $color-gray-300;
-    font-size: 1rem;
-    margin-bottom: 25px;
-  }
-  
-  .newMessageBtn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    background-color: transparent;
-    color: $brand-gold;
-    font-weight: 600;
-    border: 1px solid $brand-gold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      background-color: rgba(204, 156, 100, 0.1);
-      transform: translateY(-2px);
-    }
-  }
-}
-
-@keyframes fly {
-  0%, 100% {
-    transform: translateY(0) rotate(0);
-  }
-  50% {
-    transform: translateY(-10px) rotate(5deg);
-  }
-}
-
-// Responsive adjustments
+// Responsive adjustments for bento boxes
 @media (max-width: 768px) {
-  .businessHeader {
-    h1 {
-      font-size: 1.5rem;
-    }
+  .bentoContainer {
+    gap: 15px;
+    padding: 0 15px;
   }
   
-  .actionButtons {
-    flex-direction: column;
+  .boxHeader {
+    padding: 15px;
     
-    .actionButton {
-      width: 100%;
-      justify-content: center;
+    h2 {
+      font-size: 1.2rem;
     }
-  }
-  
-  .content {
-    gap: 25px;
   }
 } 

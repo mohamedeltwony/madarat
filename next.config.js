@@ -10,6 +10,38 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  
+  // i18n configuration for Arabic support
+  i18n: {
+    locales: ['ar', 'en'],
+    defaultLocale: 'ar',
+    localeDetection: false,
+  },
+  
+  // Rewrites for API
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://madaratalkon.com/wp-json/:path*',
+      },
+      // Add more specific rewrite for the trip endpoint
+      {
+        source: '/api/wp/v2/trip',
+        destination: 'https://madaratalkon.com/wp-json/wp/v2/trip',
+      },
+    ];
+  },
+  
+  // URL encoding settings
+  trailingSlash: false,
+  
+  // Experimental features
+  experimental: {
+    urlImports: ['https://madaratalkon.com'],
+  },
+  
+  // Image domains
   images: {
     // unoptimized: true, // Re-enable Next.js Image Optimization globally
     domains: ['madaratalkon.com', 'via.placeholder.com', 'placehold.co', 'placeholder.pics', 'placekitten.com', 'picsum.photos', 'loremflickr.com'],
@@ -116,14 +148,6 @@ const nextConfig = {
     WORDPRESS_API_URL: 'https://madaratalkon.com',
     WORDPRESS_MENU_LOCATION_NAVIGATION:
       process.env.WORDPRESS_MENU_LOCATION_NAVIGATION || 'PRIMARY',
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'https://madaratalkon.com/wp-json/:path*',
-      },
-    ];
   },
 };
 

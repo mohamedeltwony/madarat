@@ -34,8 +34,8 @@ export default function OfferTrips() {
     const fetchOfferTrips = async () => {
       try {
         setLoading(true);
-        // Fetch trips with 'offer' tag (ID 154)
-        const response = await fetch('https://madaratalkon.com/wp-json/wp/v2/trip?trip_tag=154&per_page=4&orderby=date&order=desc');
+        // Use relative URL instead of absolute URL to avoid DNS issues
+        const response = await fetch('/api/wp/v2/trip?trip_tag=154&per_page=4&orderby=date&order=desc');
         
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -47,7 +47,7 @@ export default function OfferTrips() {
         setLoading(false);
       } catch (err) {
         console.error('Error fetching offer trips:', err);
-        setError(err.message);
+        setError(err.toString()); // Convert to string to handle all error types
         setLoading(false);
       }
     };
@@ -105,8 +105,7 @@ export default function OfferTrips() {
   return (
     <div className={styles.offerTripsContainer}>
       <div className={styles.offerTripsHeader}>
-        <h2 className={styles.offerTripsTitle}>عروض وحملات مميزة</h2>
-        <p className={styles.offerTripsSubtitle}>احصل على أفضل العروض للرحلات السياحية من مدارات الكون</p>
+        <h2 className={styles.offerTripsTitle}>العروض الحالية</h2>
       </div>
 
       <div className={styles.tripsGrid}>

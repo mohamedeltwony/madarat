@@ -1,0 +1,251 @@
+@import 'styles/settings/__settings';
+@import 'styles/settings/_typography';
+
+.tripGalleryContainer {
+  width: 100%;
+  margin-bottom: 3rem;
+  direction: rtl;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.mainImageCol {
+  flex: 1 1 calc(50% - 1.5rem);
+  min-width: 300px;
+}
+
+.smallImagesCol {
+  flex: 1 1 calc(50% - 1.5rem);
+  min-width: 300px;
+  display: flex;
+  height: 100%;
+}
+
+.smallImagesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 0.75rem;
+  width: 100%;
+  height: 100%;
+}
+
+.smallImageContainer {
+  height: 100%;
+  position: relative;
+}
+
+.galleryImageWrap {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  min-height: 180px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+  }
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    
+    &::before {
+      opacity: 1;
+    }
+    
+    .viewButton,
+    .viewMoreButton,
+    .videoButton {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    
+    .imageContainer img {
+      transform: scale(1.05);
+    }
+  }
+  
+  &.active {
+    &::before {
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 1;
+    }
+    
+    .viewMoreButton,
+    .videoButton {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+}
+
+.imageContainer {
+  position: relative !important;
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  overflow: hidden;
+  
+  img {
+    transition: transform 0.5s ease;
+    object-fit: cover;
+  }
+}
+
+.imageFallback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f7f7f7;
+  color: #666;
+  text-align: center;
+  padding: 1rem;
+  
+  .fallbackIcon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+  }
+  
+  .fallbackText {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+  
+  &.mainImageFallback {
+    min-height: 300px;
+    
+    .fallbackIcon {
+      font-size: 3rem;
+    }
+    
+    .fallbackText {
+      font-size: 1rem;
+    }
+  }
+  
+  &.smallImageFallback {
+    min-height: 180px;
+  }
+}
+
+.viewButton,
+.viewMoreButton,
+.videoButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: rgba(255, 255, 255, 0.85);
+  color: #333;
+  border: none;
+  border-radius: 50px;
+  padding: 0.6rem;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  
+  &:hover {
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  
+  .icon {
+    font-size: 1.2rem;
+  }
+}
+
+.viewMoreButton,
+.videoButton {
+  width: auto;
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  
+  .icon {
+    margin-left: 0.5rem;
+    font-size: 1rem;
+  }
+}
+
+.videoButton {
+  background: rgba(0, 123, 255, 0.85);
+  color: #fff;
+  
+  &:hover {
+    background: rgb(0, 123, 255);
+  }
+  
+  .icon {
+    color: #fff;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+  
+  .mainImageCol,
+  .smallImagesCol {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+  
+  .galleryImageWrap {
+    min-height: 200px;
+  }
+  
+  .mainImageCol .galleryImageWrap {
+    min-height: 300px;
+    margin-bottom: 0.75rem;
+  }
+  
+  .smallImagesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .smallImagesGrid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  
+  .viewMoreButton,
+  .videoButton {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+  }
+} 

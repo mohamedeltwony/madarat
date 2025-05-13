@@ -1,0 +1,47 @@
+/* CSS Reset for BorderButton */
+.container,
+.button,
+.buttonText,
+.buttonInner,
+.buttonContent,
+.buttonBackground,
+[class*="button"],
+[class*="Button"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: none;
+}
+
+.container::before,
+.container::after,
+.button::before,
+.button::after,
+.buttonText::before,
+.buttonText::after,
+.buttonInner::before,
+.buttonInner::after,
+[class*="button"]::before,
+[class*="button"]::after,
+[class*="Button"]::before,
+[class*="Button"]::after {
+  display: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  content: none !important;
+}
+
+.button:hover,
+.button:active,
+.button:focus,
+[class*="button"]:hover,
+[class*="button"]:active,
+[class*="button"]:focus,
+[class*="Button"]:hover,
+[class*="Button"]:active,
+[class*="Button"]:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+} 

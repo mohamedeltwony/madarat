@@ -10,9 +10,11 @@ import { getSiteMetadata } from '../lib/site';
 import { getRecentPosts } from '../lib/posts';
 import { getCategories } from '../lib/categories';
 import NextNProgress from 'nextjs-progressbar';
+import FloatingButtons from '../components/WhatsAppButton/WhatsAppButton';
 
 import '../styles/globals.scss';
 import '../styles/wordpress.scss';
+import '../styles/global-overrides.css';
 import variables from '../styles/variables';
 
 function App({ Component, pageProps = {} }) {
@@ -77,12 +79,14 @@ function App({ Component, pageProps = {} }) {
           <SearchProvider>
             <NextNProgress height={4} color={variables.progressbarColor} />
             <Component {...pageProps} />
+            <FloatingButtons />
           </SearchProvider>
         ) : (
           <>
             {/* Render without SearchProvider for other pages (e.g., landing pages) */}
             <NextNProgress height={4} color={variables.progressbarColor} />
             <Component {...pageProps} />
+            <FloatingButtons />
           </>
         )}
       </SiteContext.Provider>

@@ -1,4 +1,6 @@
 import { Helmet } from 'react-helmet';
+import { useEffect, useState } from 'react';
+import { FaTwitter, FaFacebook, FaLinkedin, FaWhatsapp, FaShare } from 'react-icons/fa';
 
 import {
   getPostBySlug,
@@ -23,7 +25,9 @@ import Link from 'next/link';
 
 import styles from 'styles/pages/Post.module.scss';
 
-export default function Post({ post, socialImage, related }) {
+export default function Post({ post, socialImage, related, recentPosts }) {
+  const [shareUrl, setShareUrl] = useState('');
+  
   const {
     title,
     metaTitle,
@@ -38,6 +42,10 @@ export default function Post({ post, socialImage, related }) {
   } = post;
 
   const { metadata: siteMetadata = {}, homepage } = useSite();
+  
+  useEffect(() => {
+    setShareUrl(window.location.href);
+  }, []);
 
   if (!post.og) {
     post.og = {};
@@ -64,6 +72,43 @@ export default function Post({ post, socialImage, related }) {
   }
 
   const helmetSettings = helmetSettingsFromMetadata(metadata);
+  
+  // Function to share on social media
+  const handleShare = (platform) => {
+    let shareLink = '';
+    const encodedUrl = encodeURIComponent(shareUrl);
+    const encodedTitle = encodeURIComponent(title);
+    
+    switch (platform) {
+      case 'twitter':
+        shareLink = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
+        break;
+      case 'facebook':
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+        break;
+      case 'linkedin':
+        shareLink = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`;
+        break;
+      case 'whatsapp':
+        shareLink = `https://api.whatsapp.com/send?text=${encodedTitle} ${encodedUrl}`;
+        break;
+      default:
+        // Native share API if available
+        if (navigator.share) {
+          navigator.share({
+            title: title,
+            url: shareUrl
+          });
+          return;
+        }
+        // Fallback to copy to clipboard
+        navigator.clipboard.writeText(shareUrl);
+        alert('تم نسخ الرابط!');
+        return;
+    }
+    
+    window.open(shareLink, '_blank', 'width=600,height=400');
+  };
 
   return (
     <Layout>
@@ -76,6 +121,7 @@ export default function Post({ post, socialImage, related }) {
         categories={categories}
         author={author}
         date={date}
+        useHeroLayout={!!featuredImage}
       />
 
       <Container>
@@ -88,39 +134,137 @@ export default function Post({ post, socialImage, related }) {
                   __html: content,
                 }}
               />
+              
+              {/* Social Sharing */}
+              <div className={styles.socialSharing}>
+                <div className={styles.shareText}>مشاركة المقال</div>
+                <div className={styles.shareButtons}>
+                  <button 
+                    className={`${styles.shareButton} ${styles.twitter}`}
+                    onClick={() => handleShare('twitter')}
+                    aria-label="Share on Twitter"
+                  >
+                    <FaTwitter />
+                  </button>
+                  <button 
+                    className={`${styles.shareButton} ${styles.facebook}`}
+                    onClick={() => handleShare('facebook')}
+                    aria-label="Share on Facebook"
+                  >
+                    <FaFacebook />
+                  </button>
+                  <button 
+                    className={`${styles.shareButton} ${styles.linkedin}`}
+                    onClick={() => handleShare('linkedin')}
+                    aria-label="Share on LinkedIn"
+                  >
+                    <FaLinkedin />
+                  </button>
+                  <button 
+                    className={`${styles.shareButton} ${styles.whatsapp}`}
+                    onClick={() => handleShare('whatsapp')}
+                    aria-label="Share on WhatsApp"
+                  >
+                    <FaWhatsapp />
+                  </button>
+                  <button 
+                    className={styles.shareButton}
+                    onClick={() => handleShare('copy')}
+                    aria-label="Copy link"
+                  >
+                    <FaShare />
+                  </button>
+                </div>
+              </div>
+              
+              {/* Author Box */}
+              {author && (
+                <div className={styles.authorBox}>
+                  {author.avatar?.url ? (
+                    <img 
+                      src={author.avatar.url} 
+                      alt={author.name}
+                      className={styles.authorImage}
+                    />
+                  ) : (
+                    <div className={styles.authorImagePlaceholder}>{author.name[0]}</div>
+                  )}
+                  <div className={styles.authorInfo}>
+                    <h3 className={styles.authorName}>{author.name}</h3>
+                    <p className={styles.authorBio}>كاتب ومتخصص في مجال السياحة والسفر، يقدم نصائح وإرشادات مفيدة للمسافرين العرب حول العالم.</p>
+                    <div className={styles.authorSocial}>
+                      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                        <FaTwitter />
+                      </a>
+                      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                        <FaFacebook />
+                      </a>
+                      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <FaLinkedin />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
             </Content>
 
             <Section className={styles.postFooter}>
               <p className={styles.postModified}>
-                Last updated on {formatDate(modified)}.
+                آخر تحديث في {formatDate(modified)}.
               </p>
+              
+              {/* Related Posts with Enhanced Design */}
               {Array.isArray(related?.posts) && related.posts.length > 0 && (
                 <div className={styles.relatedPosts}>
                   {related.title?.name ? (
-                    <span>
-                      More from{' '}
+                    <h3>
+                      المزيد من {' '}
                       <Link href={related.title.link}>
                         {related.title.name}
                       </Link>
-                    </span>
+                    </h3>
                   ) : (
-                    <span>More Posts</span>
+                    <h3>مقالات ذات صلة</h3>
                   )}
-                  <ul>
-                    {related.posts.map((post) => (
-                      <li key={post.title}>
-                        <Link href={postPathBySlug(post.slug)}>
-                          {post.title}
-                        </Link>
-                      </li>
+                  
+                  <div className={styles.relatedGrid}>
+                    {related.posts.map((relatedPost) => (
+                      <div key={relatedPost.title} className={styles.relatedItem}>
+                        {relatedPost.featuredImage && (
+                          <img 
+                            src={relatedPost.featuredImage.sourceUrl} 
+                            alt={relatedPost.title}
+                            className={styles.relatedImage}
+                          />
+                        )}
+                        <div className={styles.relatedContent}>
+                          <h4 className={styles.relatedTitle}>
+                            <Link href={postPathBySlug(relatedPost.slug)}>
+                              {relatedPost.title}
+                            </Link>
+                          </h4>
+                          {relatedPost.excerpt && (
+                            <div 
+                              className={styles.relatedExcerpt}
+                              dangerouslySetInnerHTML={{
+                                __html: relatedPost.excerpt,
+                              }}
+                            />
+                          )}
+                          <div className={styles.relatedMeta}>
+                            {relatedPost.date && new Date(relatedPost.date).toString() !== 'Invalid Date' ? 
+                              formatDate(relatedPost.date) : ''}
+                          </div>
+                        </div>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               )}
             </Section>
           </div>
 
-          <PostSidebar post={post} />
+          <PostSidebar post={post} recentPosts={recentPosts} />
         </div>
       </Container>
     </Layout>
@@ -139,9 +283,16 @@ export async function getStaticProps({ params = {} } = {}) {
 
   const { categories, databaseId: postId } = post;
 
+  // Get recent posts for sidebar
+  const { posts: recentPosts } = await getRecentPosts({
+    count: 4, 
+    exclude: [postId]
+  });
+
   const props = {
     post,
     socialImage: `${process.env.OG_IMAGE_DIRECTORY}/${params?.slug}.png`,
+    recentPosts: Array.isArray(recentPosts) ? recentPosts : [],
   };
 
   const { category: relatedCategory, posts: relatedPosts } =

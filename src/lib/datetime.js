@@ -5,7 +5,18 @@ import { format } from 'date-fns';
  */
 
 export function formatDate(date, pattern = 'PPP') {
-  return format(new Date(date), pattern);
+  if (!date) return '';
+  
+  try {
+    const dateObj = new Date(date);
+    if (dateObj.toString() === 'Invalid Date') {
+      return '';
+    }
+    return format(dateObj, pattern);
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return '';
+  }
 }
 
 /**

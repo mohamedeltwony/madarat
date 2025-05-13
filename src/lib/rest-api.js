@@ -71,6 +71,16 @@ export async function fetchAPI(endpoint, params = {}, options = {}) {
 
     const data = await response.json();
     
+    // Extract pagination information from headers
+    const totalItems = parseInt(response.headers.get('X-WP-Total') || '0', 10);
+    const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '0', 10);
+    
+    // Add pagination metadata to the response
+    data._paging = {
+      total: totalItems,
+      totalPages: totalPages
+    };
+    
     // Save to cache if caching is enabled
     if (useCache) {
       saveToCache(cacheKey, data);
@@ -277,25 +287,44 @@ export async function getPostsByCategoryREST(categoryId) {
 
 /**
  * Gets all trips
+ * @param {Object} options - Pagination options
+ * @param {number} options.page - Page number (default: 1)
+ * @param {number} options.perPage - Items per page (default: 20)
+ * @returns {Promise<Object>} - Trips data with pagination info
  */
-export async function getTripsREST() {
+export async function getTripsREST(options = {}) {
+  const { page = 1, perPage = 20 } = options;
+  
   try {
+    // Fetch trips with pagination info in the headers
     const data = await fetchAPI('/wp/v2/trip', { 
-      per_page: 100,
+      page,
+      per_page: perPage,
       _embed: true 
     });
     
-    const trips = data.map(trip => {
+    // Extract pagination data
+    const totalTrips = data._paging?.total || 0;
+    const totalPages = data._paging?.totalPages || 1;
+    
+    // Log data for debugging
+    console.log(`[getTripsREST] Fetched ${data.length} trips, total ${totalTrips} in ${totalPages} pages`);
+    
+    // Safely transform the trips data
+    const trips = Array.isArray(data) ? data.map(trip => {
+      // Debug each trip for troubleshooting
+      console.log(`[getTripsREST] Processing trip: ${trip.id} - ${trip.title?.rendered || 'No title'}`);
+      
       // Safely extract featuredImage - ensure it's never undefined
       let featuredImage = null;
       if (trip._embedded?.['wp:featuredmedia']?.[0]) {
         const mediaItem = trip._embedded['wp:featuredmedia'][0];
         featuredImage = {
-          sourceUrl: mediaItem.source_url || null,
+          sourceUrl: mediaItem.source_url || '/images/placeholder.jpg',
           mediaDetails: {
             sizes: [
               {
-                sourceUrl: mediaItem.source_url || null,
+                sourceUrl: mediaItem.source_url || '/images/placeholder.jpg',
                 width: mediaItem.media_details?.width || 800,
                 height: mediaItem.media_details?.height || 600
               }
@@ -304,24 +333,48 @@ export async function getTripsREST() {
         };
       }
       
+      // Extract and format trip data
       return {
         id: trip.id,
-        title: trip.title.rendered || '',
-        slug: trip.slug || '',
+        title: trip.title?.rendered || 'رحلة بدون عنوان',
+        slug: trip.slug || `trip-${trip.id}`,
         excerpt: trip.excerpt?.rendered || '',
-        content: trip.content.rendered || '',
+        content: trip.content?.rendered || '',
         featuredImage: featuredImage,
         tripSettings: {
-          duration: trip.acf?.duration || { days: null, nights: null, durationType: null },
-          price: trip.acf?.price || { amount: null, currency: null }
+          duration: {
+            days: trip.acf?.duration?.days || trip.duration?.days || 0,
+            nights: trip.acf?.duration?.nights || trip.duration?.nights || 0,
+            durationType: trip.acf?.duration?.durationType || null
+          },
+          price: {
+            amount: trip.acf?.price?.amount || trip.price || 0,
+            currency: trip.acf?.price?.currency || trip.currency?.code || 'SAR'
+          }
         }
       };
-    });
+    }) : [];
 
-    return { trips };
+    return { 
+      trips,
+      pagination: {
+        total: totalTrips,
+        totalPages: totalPages,
+        currentPage: page,
+        perPage
+      }
+    };
   } catch (error) {
     console.error('[getTripsREST] Error:', error);
-    return { trips: [] };
+    return { 
+      trips: [], 
+      pagination: {
+        total: 0,
+        totalPages: 0,
+        currentPage: page,
+        perPage
+      }
+    };
   }
 }
 

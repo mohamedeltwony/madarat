@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FaPhone, FaWhatsapp, FaMapMarkerAlt, FaEnvelope } from 'react-icons/fa';
 
 import useSite from '@/hooks/use-site';
 import { postPathBySlug } from '@/lib/posts';
@@ -22,13 +23,37 @@ const Footer = () => {
       <Section className={styles.footerMenu}>
         <Container>
           <div className={styles.footerGrid}>
-            {/* Company Info */}
+            {/* Company Info and Contact */}
             <div className={styles.footerColumn}>
               <h3 className={styles.footerTitle}>مدارات الكون</h3>
               <p className={styles.footerDescription}>
                 نقدم لك دليلاً شاملاً للسفر والسياحة، من التخطيط للرحلة إلى أفضل
                 الأماكن للزيارة والإقامة.
               </p>
+              
+              <div className={styles.contactInfo}>
+                <div className={styles.contactItem}>
+                  <FaPhone className={styles.contactIcon} />
+                  <a href="tel:920034019" className={styles.contactLink}>920034019</a>
+                </div>
+                <div className={styles.contactItem}>
+                  <FaWhatsapp className={styles.contactIcon} />
+                  <a href="https://wa.me/966920034019" className={styles.contactLink} target="_blank" rel="noopener noreferrer">
+                    تواصل عبر واتساب
+                  </a>
+                </div>
+                <div className={styles.contactItem}>
+                  <FaEnvelope className={styles.contactIcon} />
+                  <a href="mailto:info@madaratalkon.com" className={styles.contactLink}>
+                    info@madaratalkon.com
+                  </a>
+                </div>
+                <div className={styles.contactItem}>
+                  <FaMapMarkerAlt className={styles.contactIcon} />
+                  <span className={styles.address}>الرياض، المملكة العربية السعودية</span>
+                </div>
+              </div>
+              
               <div className={styles.footerSocial}>
                 <a
                   href="https://facebook.com"
@@ -101,53 +126,16 @@ const Footer = () => {
 
             {/* Quick Links */}
             <div className={styles.footerColumn}>
-              <h3 className={styles.footerTitle}>روابط سريعة</h3>
+              <h3 className={styles.footerTitle}>روابط مهمة</h3>
               <ul className={styles.footerLinks}>
                 <li>
-                  <Link href="/about">عن الموقع</Link>
+                  <Link href="/current-offers">العروض الحالية</Link>
                 </li>
                 <li>
                   <Link href="/contact">اتصل بنا</Link>
                 </li>
                 <li>
-                  <Link href="/trips">الرحلات</Link>
-                </li>
-                <li>
-                  <Link href="/packages">الباقات</Link>
-                </li>
-                <li>
-                  <Link href="/services">الخدمات</Link>
-                </li>
-                <li>
-                  <Link href="/blog">المدونة</Link>
-                </li>
-                <li>
-                  <Link href="/advanced-search">بحث متقدم</Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Destinations */}
-            <div className={styles.footerColumn}>
-              <h3 className={styles.footerTitle}>الوجهات</h3>
-              <ul className={styles.footerLinks}>
-                <li>
-                  <Link href="/destinations/europe">أوروبا</Link>
-                </li>
-                <li>
-                  <Link href="/destinations/middle-east">الشرق الأوسط</Link>
-                </li>
-                <li>
-                  <Link href="/destinations/asia">آسيا</Link>
-                </li>
-                <li>
-                  <Link href="/destinations/americas">الأمريكتين</Link>
-                </li>
-                <li>
-                  <Link href="/destinations/africa">أفريقيا</Link>
-                </li>
-                <li>
-                  <Link href="/destinations/oceania">أوقيانوسيا</Link>
+                  <Link href="/about">من نحن</Link>
                 </li>
               </ul>
             </div>
@@ -169,29 +157,7 @@ const Footer = () => {
               </div>
             )}
 
-            {/* Categories */}
-            {hasRecentCategories && (
-              <div className={styles.footerColumn}>
-                <h3 className={styles.footerTitle}>التصنيفات</h3>
-                <ul className={styles.footerLinks}>
-                  {categories.slice(0, 5).map((category) => {
-                    const { id, slug, name } = category;
-                    return (
-                      <li key={id}>
-                        <Link href={categoryPathBySlug(slug)}>{name}</Link>
-                      </li>
-                    );
-                  })}
-                  <li>
-                    <Link href="/categories" className={styles.viewAllLink}>
-                      عرض جميع التصنيفات
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            )}
-
-            {/* Legal */}
+            {/* Legal & More Links */}
             <div className={styles.footerColumn}>
               <h3 className={styles.footerTitle}>معلومات قانونية</h3>
               <ul className={styles.footerLinks}>
@@ -202,14 +168,10 @@ const Footer = () => {
                   <Link href="/terms-conditions">الشروط والأحكام</Link>
                 </li>
                 <li>
-                  <Link href="/refund-policy">سياسة الاسترداد</Link>
+                  <Link href="/refund-policy">سياسة الاسترجاع</Link>
                 </li>
                 <li>
-                  {/* Replaced <a> with <Link> for internal navigation */}
-                  <Link href="/sitemap.xml">خريطة الموقع</Link>
-                </li>
-                <li>
-                  <a href="/feed.xml">RSS</a>
+                  <Link href="/legal-documents">الأوراق القانونية</Link>
                 </li>
               </ul>
             </div>
@@ -219,6 +181,11 @@ const Footer = () => {
 
       <Section className={styles.footerLegal}>
         <Container>
+          <img 
+            src="/images/مدارات.png" 
+            alt="مدارات الكون" 
+            className={styles.footerImage} 
+          />
           <div className={styles.footerBottom}>
             <p className={styles.copyright}>
               &copy; {new Date().getFullYear()} {title} - جميع الحقوق محفوظة

@@ -1,0 +1,12 @@
+<svg width="1400" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0c4c44" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#cc9c64" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="800" fill="url(#grad)"/>
+  <text x="700" y="400" font-family="Arial" font-size="60" text-anchor="middle" dominant-baseline="middle" fill="#ffffff">
+    Trip Hero Background
+  </text>
+</svg>

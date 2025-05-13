@@ -2,28 +2,45 @@
 
 .section {
   width: 100%;
+  padding: 0; /* Default with no padding */
+}
+
+/* Special classes for when padding is needed */
+.withPadding {
   padding: 4rem 0;
-  margin: 3rem 0;
 
-  &:first-child {
-    padding-top: 2rem;
-  }
-
-  &:last-child {
-    padding-bottom: 4rem;
+  @media (max-width: 768px) {
+    padding: 3rem 0;
   }
 }
 
-@media (max-width: 768px) {
-  .section {
+.smallPadding {
+  padding: 2rem 0;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem 0;
+  }
+}
+
+/* For content sections that need spacing */
+.contentSection {
     padding: 3rem 0;
 
-    &:first-child {
-      padding-top: 1.5rem;
+  @media (max-width: 768px) {
+    padding: 2rem 0;
+  }
+}
+
+/* For hero sections */
+.heroSection {
+  padding: 0;
     }
 
-    &:last-child {
-      padding-bottom: 3rem;
-    }
+/* For page sections */
+.pageSection {
+  padding: 2rem 0 4rem;
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem 0 3rem;
   }
 }

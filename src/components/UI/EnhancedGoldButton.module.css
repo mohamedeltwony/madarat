@@ -1,0 +1,84 @@
+.enhancedGoldButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  transition: all 0.3s ease;
+  position: relative;
+  
+  /* Completely opaque black background to prevent any color bleed-through */
+  background-color: #000000;
+  color: white;
+  
+  /* Clean gold border */
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  outline: none;
+}
+
+.enhancedGoldButton:hover, .enhancedGoldButton:focus {
+  background-color: #111111;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  border-color: #ffd700;
+  text-decoration: none;
+  color: #ffd700;
+}
+
+.buttonIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* For right-to-left direction */
+[dir="rtl"] .enhancedGoldButton .buttonIcon {
+  transform: rotate(180deg);
+}
+
+/* Dropdown style for dropdown buttons */
+.dropdown {
+  position: relative;
+}
+
+.dropdownContent {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 5px;
+  background-color: #000000;
+  border: 2px solid #ffd700;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  min-width: 160px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.dropdownItem {
+  display: block;
+  padding: 10px 15px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdownItem:hover {
+  background-color: #111111;
+  color: #ffd700;
+}
+
+/* Divider for dropdown items */
+.dropdownDivider {
+  height: 1px;
+  background-color: rgba(255, 215, 0, 0.3);
+  margin: 5px 0;
+} 

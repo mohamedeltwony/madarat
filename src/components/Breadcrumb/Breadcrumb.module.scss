@@ -1,0 +1,62 @@
+@import 'styles/settings/__settings';
+@import 'styles/settings/_typography';
+
+.breadcrumb {
+  margin-bottom: 1.5rem;
+  width: 100%;
+  direction: rtl;
+  display: flex;
+  justify-content: center;
+}
+
+.breadcrumbList {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  justify-content: center;
+}
+
+.breadcrumbItem {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  
+  &.active {
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
+.breadcrumbLink {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+}
+
+.breadcrumbText {
+  font-weight: 600;
+}
+
+.breadcrumbSeparator {
+  margin: 0 0.5rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 768px) {
+  .breadcrumbList {
+    flex-direction: row;
+  }
+  
+  .breadcrumbItem {
+    font-size: 0.85rem;
+  }
+} 

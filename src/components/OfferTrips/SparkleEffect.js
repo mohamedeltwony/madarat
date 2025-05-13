@@ -43,13 +43,11 @@ const SparkleEffect = ({ active = false, color = "#cc9c64" }) => {
   // Generate new sparkles when active changes
   useEffect(() => {
     if (active) {
-      // Reduced from 6 to 4 sparkles for calmer effect
+      // Create 4 sparkles
       const newSparkles = Array.from({ length: 4 }, (_, i) => ({
         id: `sparkle-${i}-${Date.now()}`,
-        // Smaller size range for more subtle sparkles
         size: `${random(6, 12)}px`,
-        // More visible but still semi-transparent color
-        color: color + (i % 2 === 0 ? 'BB' : 'AA'), // Higher opacity hex values
+        color: color + (i % 2 === 0 ? 'BB' : 'AA'), // Semi-transparent color
       }));
       setSparkles(newSparkles);
     } else {

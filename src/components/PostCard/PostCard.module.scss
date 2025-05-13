@@ -8,17 +8,21 @@
   border-radius: 1rem;
   height: 100%;
   background: var(--color-white);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 
     .image {
-      transform: scale(1.05);
+      transform: scale(1.08);
+    }
+    
+    .title a {
+      color: #104c44;
     }
   }
 }
@@ -69,15 +73,16 @@
 
 .category {
   padding: 0.25rem 0.75rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 2rem;
   font-size: 0.75rem;
-  color: var(--color-primary);
+  font-weight: 500;
+  color: #104c44;
   text-decoration: none;
   transition: all 0.2s ease;
 
   &:hover {
-    background: var(--color-primary);
+    background: #104c44;
     color: white;
   }
 }
@@ -98,9 +103,10 @@
   a {
     color: inherit;
     text-decoration: none;
+    transition: color 0.3s ease;
 
     &:hover {
-      color: var(--color-primary);
+      color: #104c44;
     }
   }
 }
@@ -120,9 +126,10 @@
   gap: 0.5rem;
   text-decoration: none;
   color: inherit;
+  transition: color 0.3s ease;
 
   &:hover {
-    color: var(--color-primary);
+    color: #104c44;
   }
 }
 
@@ -152,14 +159,28 @@
 }
 
 .postCardSticky {
-  border: solid 2px $color-primary;
-  background: rgba($color-primary, 0.05);
+  border: solid 2px #104c44;
+  background: rgba(16, 76, 68, 0.05);
 
   svg {
     position: absolute;
     top: 1.2rem;
     left: 1rem;
     font-size: 1.15em;
-    color: $color-primary;
+    color: #104c44;
+  }
+}
+
+// Special styles for cards inside latestPosts section
+:global(.latestPosts) .postCard {
+  background: rgba(255, 255, 255, 0.95);
+  
+  &:hover {
+    background: white;
+    
+    .category {
+      background: #cc9c64;
+      color: white;
+    }
   }
 }

@@ -1,0 +1,257 @@
+@import 'styles/settings/__settings';
+
+// Futuristic color palette
+$neon-blue: #00f2ff;
+$neon-purple: #8A2BE2;
+$holographic-gold: #ffd700;
+$gold-shimmer: #f9a602;
+$gold-deep: #e6c200;
+$gold-bright: #ffea00;
+
+// Glass morphism effects
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-border: rgba(255, 255, 255, 0.2);
+$glass-shadow: rgba(0, 0, 0, 0.3);
+
+.sparkleButtonContainer {
+  position: relative;
+  display: inline-block;
+}
+
+// Hide glow effect
+.glowEffect {
+  display: none !important;
+}
+
+.sparkleButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 30px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+  
+  &::before, &::after {
+    display: none !important;
+  }
+  
+  &:hover, &.active, &.hovering {
+    background: transparent !important;
+    background-color: transparent !important;
+    transform: translateY(-3px);
+  }
+
+  .buttonContent {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+  
+  .buttonText {
+    position: relative;
+    z-index: 3;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  // Remove hover effect
+  .hoverEffect {
+    display: none !important;
+  }
+  
+  // Only keep the animated border
+  .buttonBorder {
+    position: absolute;
+    inset: -2px;
+    border-radius: 32px;
+    z-index: 0;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        $holographic-gold,
+        $gold-shimmer,
+        $gold-deep,
+        $gold-bright,
+        $holographic-gold
+      );
+      background-size: 300% 300%;
+      animation: borderGlow 6s linear infinite;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 28px;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1;
+    }
+  }
+}
+
+// Dropdown menu styling
+.dropdown {
+  position: absolute;
+  top: calc(100% + 15px);
+  right: 0;
+  width: 250px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25),
+              0 0 15px rgba($holographic-gold, 0.3);
+  z-index: 100;
+  transform: translateY(-20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  &.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+      135deg,
+      $holographic-gold,
+      transparent,
+      $gold-shimmer,
+      transparent,
+      $holographic-gold
+    );
+    background-size: 400% 400%;
+    border-radius: 17px;
+    z-index: -1;
+    opacity: 0.6;
+    animation: borderGlow 6s linear infinite;
+  }
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  color: white;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background-color: rgba($holographic-gold, 0.1);
+    transform: translateX(-5px);
+    
+    .itemIconWrapper {
+      transform: scale(1.1);
+      
+      .itemIconGlow {
+        opacity: 1;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+  
+  .itemIconWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 12px;
+    transition: transform 0.3s ease;
+    
+    .itemIcon {
+      color: $holographic-gold;
+      font-size: 1.1rem;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .itemIconGlow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba($holographic-gold, 0.8) 0%, rgba($holographic-gold, 0) 70%);
+      z-index: 1;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+  }
+  
+  span {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Enhanced sparkle elements
+.sparkle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  box-shadow: 0 0 8px currentColor;
+  animation: sparkleAnimation var(--duration, 2s) ease-out forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+// Border animation
+@keyframes borderGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .sparkleButton {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+  }
+  
+  .dropdown {
+    width: 220px;
+  }
+} 
