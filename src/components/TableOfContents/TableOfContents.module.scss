@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'styles/settings/__settings' as *;
+@use 'styles/settings/_colors' as *;
 
 .tocContainer {
   background-color: white;
@@ -24,8 +26,8 @@
   &:hover {
     background: linear-gradient(
       to left,
-      darken(#0c4444, 3%),
-      darken(#0c4c44, 3%)
+      color.adjust(#0c4444, $lightness: -3%),
+      color.adjust(#0c4c44, $lightness: -3%)
     );
   }
 }

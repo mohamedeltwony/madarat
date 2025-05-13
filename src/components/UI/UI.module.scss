@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'src/styles/settings/_colors' as *;
+@use 'src/styles/settings/__settings' as *;
 
 // Local breakpoint definitions
 $breakpoint-small: 768px;
@@ -62,9 +64,9 @@ $breakpoint-large: 1200px;
     45deg,
     #cc9c64,
     // Brand gold
-    lighten(#cc9c64, 10%),
+    color.adjust(#cc9c64, $lightness: 10%),
     // Lighter gold
-    darken(#cc9c64, 10%),
+    color.adjust(#cc9c64, $lightness: -10%),
     // Darker gold
     #cc9c64 // Brand gold
   );

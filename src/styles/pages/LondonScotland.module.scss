@@ -1,4 +1,4 @@
-@import 'styles/settings/__settings';
+@use 'styles/settings/__settings' as *;
 
 // Variables for our brand colors
 $color-gold: #cc9c64;

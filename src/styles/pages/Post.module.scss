@@ -1,4 +1,4 @@
-@import 'styles/settings/__settings';
+@use 'styles/settings/__settings' as *;
 
 // Variables
 $content-max-width: 720px; // Optimal reading width

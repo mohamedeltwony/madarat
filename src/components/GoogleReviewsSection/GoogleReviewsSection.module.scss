@@ -1,4 +1,7 @@
-@import '@/styles/_variables.module.scss';
+@use 'sass:color';
+@use 'src/styles/settings/_colors' as *;
+@use 'src/styles/settings/__settings' as *;
+@use 'src/styles/_variables.module.scss' as *;
 
 .googleReviewsSection {
   padding: 4rem 0;
@@ -164,7 +167,7 @@
   transition: all 0.3s ease;
 
   &:hover {
-    background: darken($color-gray-100, 10%);
+    background: color.adjust($color-gray-100, $lightness: -10%);
   }
 }
 

@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'src/styles/settings/_colors' as *;
+@use 'src/styles/settings/__settings' as *;
 @import 'style.css';
 @import 'fonts.css';
 
@@ -123,7 +125,7 @@ a {
   transition: color 0.2s ease;
 
   &:hover {
-    color: darken($color-primary, 10%);
+    color: color.adjust($color-primary, $lightness: -10%);
   }
 }
 

@@ -1,4 +1,4 @@
-@import 'styles/settings/__settings';
+@use 'styles/settings/__settings' as *;
 
 // Variables from LondonScotland page for consistency
 $color-gold: #cc9c64;

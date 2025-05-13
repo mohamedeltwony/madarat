@@ -1,3 +1,4 @@
+@use 'sass:color';
 // Variables
 $primary-color: #0c4c44; // Brand teal color
 $accent-color: #cc9c64; // Brand gold color
@@ -491,7 +492,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   position: absolute;
   top: 15px;
   right: 15px;
-  background: linear-gradient(45deg, $accent-color, darken($accent-color, 10%));
+  background: linear-gradient(45deg, $accent-color, color.adjust($accent-color, $lightness: -10%));
   color: $light-text;
   padding: 0.35rem 0.85rem;
   border-radius: 30px;
@@ -711,7 +712,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   background: linear-gradient(
     45deg,
     $primary-color,
-    darken($primary-color, 10%)
+    color.adjust($primary-color, $lightness: -10%)
   );
   color: $light-text;
   padding: 0.9rem 2rem;

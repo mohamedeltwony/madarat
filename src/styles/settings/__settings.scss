@@ -1,10 +1,9 @@
-@import 'colors';
-@import 'display';
-@import 'typography';
-@import 'breakpoints';
+@use 'colors' as *;
+@use 'display' as *;
+@use 'typography' as *;
+@use 'breakpoints' as *;
 
-// Color variables
-$color-primary: #0c4444;
+// Additional color variables not defined in _colors.scss
 $color-secondary: #cc9c64;
 $color-success: #4caf50;
 $color-error: #f44336;
@@ -16,13 +15,5 @@ $text-color: #505050;
 $text-color-dark: #303030;
 $text-color-light: #707070;
 
-// Gray scale
-$color-gray-100: #f8f9fa;
-$color-gray-200: #e9ecef;
-$color-gray-300: #dee2e6;
-$color-gray-400: #ced4da;
-$color-gray-500: #adb5bd;
-$color-gray-600: #6c757d;
-$color-gray-700: #495057;
-$color-gray-800: #343a40;
-$color-gray-900: #212529;
+// Note: Gray scale colors are already defined in _colors.scss
+// No need to redefine them here to avoid conflicts

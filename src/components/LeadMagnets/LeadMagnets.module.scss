@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'styles/settings/__settings' as *;
+@use 'styles/settings/_colors' as *;
 
 // Local breakpoint definitions
 $breakpoint-small: 768px;
@@ -362,7 +364,7 @@ $breakpoint-large: 1200px;
     font-weight: 500;
 
     &:hover {
-      background-color: darken($color-primary, 10%);
+      background-color: color.adjust($color-primary, $lightness: -10%);
     }
   }
 }
@@ -394,7 +396,7 @@ $breakpoint-large: 1200px;
     cursor: pointer;
 
     &:hover:not(:disabled) {
-      background-color: darken($color-primary, 10%);
+      background-color: color.adjust($color-primary, $lightness: -10%);
     }
 
     &:disabled {

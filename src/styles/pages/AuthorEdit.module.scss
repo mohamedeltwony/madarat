@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'styles/settings/__settings' as *;
+@use 'styles/settings/_colors' as *;
 
 // Local breakpoint definitions
 $breakpoint-small: 768px;
@@ -73,13 +75,13 @@ $breakpoint-large: 1200px;
   &.success {
     background-color: rgba(#4caf50, 0.1);
     border: 1px solid #4caf50;
-    color: darken(#4caf50, 10%);
+    color: color.adjust(#4caf50, $lightness: -10%);
   }
 
   &.error {
     background-color: rgba(#f44336, 0.1);
     border: 1px solid #f44336;
-    color: darken(#f44336, 10%);
+    color: color.adjust(#f44336, $lightness: -10%);
   }
 }
 
@@ -145,7 +147,7 @@ $breakpoint-large: 1200px;
   text-align: center;
 
   &:hover {
-    background-color: darken($color-primary, 10%);
+    background-color: color.adjust($color-primary, $lightness: -10%);
   }
 }
 
@@ -232,7 +234,7 @@ $breakpoint-large: 1200px;
   transition: background-color 0.2s ease;
 
   &:hover:not(:disabled) {
-    background-color: darken($color-primary, 10%);
+    background-color: color.adjust($color-primary, $lightness: -10%);
   }
 
   &:disabled {

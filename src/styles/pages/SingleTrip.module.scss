@@ -1,5 +1,6 @@
 @use 'sass:color';
 @use '../../styles/settings/__settings' as *;
+@use 'styles/settings/_colors' as *;
 @import 'styles/settings/_typography';
 
 // Variables
@@ -554,7 +555,7 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       border: 2px solid transparent;
 
       &:hover {
-        background: darken($color-secondary, 10%);
+        background: color.adjust($color-secondary, $lightness: -10%);
         transform: translateY(-3px);
         box-shadow: 0 6px 12px rgba($color-secondary, 0.4);
         border-color: rgba(255, 255, 255, 0.2);
@@ -582,5 +583,450 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   p {
     font-size: 1.2rem;
     color: #666;
+  }
+}
+
+// Two Column Layout - New styles based on screenshots
+.mainContentSection {
+  padding: 2rem 0 4rem;
+  background-color: #f8f9fa;
+}
+
+.twoColumnLayout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+
+  @media (max-width: 992px) {
+    flex-direction: column-reverse;
+  }
+}
+
+.leftColumn {
+  flex: 1 1 65%;
+  min-width: 0;
+
+  @media (max-width: 992px) {
+    flex: 1 1 100%;
+  }
+}
+
+.rightColumn {
+  flex: 1 1 30%;
+  min-width: 300px;
+
+  @media (max-width: 992px) {
+    flex: 1 1 100%;
+  }
+}
+
+.contentBlock {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.blockTitle {
+  font-size: 1.5rem;
+  color: $color-primary;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 0;
+    width: 80px;
+    height: 3px;
+    background-color: $color-secondary;
+    border-radius: 2px;
+  }
+}
+
+.tripDescription {
+  :global(p) {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+
+  :global(ul), :global(ol) {
+    padding-right: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  :global(li) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Side by side services
+.servicesColumns {
+  display: flex;
+  gap: 2rem;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+  
+  .serviceColumn {
+    flex: 1;
+    
+    .blockTitle {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+// Booking Card
+.bookingCard {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 2rem;
+}
+
+.priceBox {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.priceTitle {
+  color: $color-primary;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.priceValue {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $color-primary;
+
+  span {
+    font-size: 1.2rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-right: 0.25rem;
+  }
+}
+
+.bookingDetails {
+  padding: 1.5rem;
+}
+
+.bookingFeature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  
+  .featureIcon {
+    color: $color-secondary;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  
+  span {
+    font-size: 0.9rem;
+  }
+}
+
+.daysCounter {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: rgba($color-primary, 0.05);
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin: 1.5rem 0;
+  
+  .daysIcon {
+    background-color: $color-secondary;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .daysText {
+    font-size: 0.85rem;
+    color: $color-primary;
+  }
+}
+
+.termsCheck {
+  padding: 0 1.5rem;
+  margin-bottom: 1rem;
+  
+  .checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    
+    input {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.bookingButton {
+  display: block;
+  width: calc(100% - 3rem);
+  margin: 0 1.5rem 1.5rem;
+  background-color: $color-secondary;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: color.adjust($color-secondary, $lightness: -5%);
+  }
+  
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+// Gallery Section
+.gallerySection {
+  padding: 2rem 0;
+  background-color: white;
+}
+
+// Included & Not Included
+.includedServices, .notIncludedServices {
+  :global(ul) {
+    padding-right: 0;
+    list-style: none;
+  }
+
+  :global(li) {
+    position: relative;
+    padding-right: 1.75rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+
+    &::before {
+      content: '✓';
+      position: absolute;
+      right: 0;
+      color: $color-secondary;
+      font-weight: bold;
+    }
+  }
+}
+
+.notIncludedServices {
+  :global(li)::before {
+    content: '✕';
+    color: #dc3545;
+  }
+}
+
+// Accordion Styles
+.accordionContainer {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.accordionItem {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .accordionHeader {
+    padding: 1rem;
+    background-color: #f8f8f8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    
+    &:hover {
+      background-color: #f0f0f0;
+    }
+    
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: $color-primary;
+    }
+    
+    .accordionIcon {
+      color: $color-secondary;
+    }
+  }
+  
+  .accordionContent {
+    padding: 1rem;
+    background-color: white;
+    
+    :global(p:last-child) {
+      margin-bottom: 0;
+    }
+  }
+  
+  &.open {
+    .accordionHeader {
+      background-color: rgba($color-secondary, 0.1);
+    }
+  }
+}
+
+// Booking Modal
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  backdrop-filter: blur(3px);
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  direction: rtl;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  
+  h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: $color-primary;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    transition: all 0.2s;
+    
+    &:hover {
+      color: $color-secondary;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.modalBody {
+  padding: 1.5rem;
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+  label {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: $color-primary;
+  }
+  
+  input, textarea {
+    padding: 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
+    
+    &:focus {
+      outline: none;
+      border-color: $color-secondary;
+    }
+  }
+}
+
+.formRow {
+  display: flex;
+  gap: 1rem;
+  
+  .formGroup {
+    flex: 1;
+  }
+}
+
+.formActions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  
+  .submitButton {
+    background-color: $color-secondary;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    
+    &:hover {
+      background-color: color.adjust($color-secondary, $lightness: -5%);
+      transform: translateY(-2px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
   }
 }

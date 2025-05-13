@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'styles/settings/__settings' as *;
+@use 'styles/settings/_colors' as *;
 
 .stickyFormContainer {
   position: fixed;
@@ -43,7 +45,7 @@
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: darken($color-primary, 5%);
+    background-color: color.adjust($color-primary, $lightness: -5%);
   }
 
   &:focus {

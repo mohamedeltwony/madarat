@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'styles/settings/__settings' as *;
+@use 'styles/settings/_colors' as *;
 
 .sidebar {
   width: 320px;
@@ -168,7 +170,7 @@
     box-shadow: 0 5px 15px rgba(204, 156, 100, 0.4);
 
     &:hover {
-      background: darken(#cc9c64, 5%);
+      background: color.adjust(#cc9c64, $lightness: -5%);
       box-shadow: 0 8px 20px rgba(204, 156, 100, 0.5);
     }
   }

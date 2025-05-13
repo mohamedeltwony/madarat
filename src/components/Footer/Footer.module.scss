@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'src/styles/settings/_colors' as *;
+@use 'src/styles/settings/__settings' as *;
 
 // Local breakpoint definitions
 $breakpoint-small: 768px;
@@ -155,13 +157,13 @@ $breakpoint-large: 1200px;
   margin-top: 0.5rem;
 
   &:hover {
-    color: lighten($color-primary, 10%) !important;
+    color: color.adjust($color-primary, $lightness: 10%) !important;
   }
 }
 
 .footerLegal {
   padding: 1.5rem 0;
-  background-color: darken($color-gray-900, 3%);
+  background-color: color.adjust($color-gray-900, $lightness: -3%);
 }
 
 .footerBottom {
@@ -193,7 +195,7 @@ $breakpoint-large: 1200px;
     transition: color 0.2s ease;
 
     &:hover {
-      color: lighten($color-primary, 10%);
+      color: color.adjust($color-primary, $lightness: 10%);
     }
   }
 }

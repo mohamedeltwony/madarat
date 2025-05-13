@@ -1,5 +1,6 @@
 @use 'sass:color';
-@import 'styles/settings/__settings';
+@use 'styles/settings/__settings' as *;
+@use 'styles/settings/_colors' as *;
 
 .archiveNavigation {
   border-radius: 5px;

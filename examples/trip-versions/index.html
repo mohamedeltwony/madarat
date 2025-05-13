@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطور صفحة الرحلة - مدارات الكون</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            background-color: #104c44;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        h2 {
+            color: #104c44;
+            border-bottom: 2px solid #cc9c64;
+            padding-bottom: 0.5rem;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .version-number {
+            display: inline-block;
+            background-color: #cc9c64;
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        .version-title {
+            font-size: 1.25rem;
+            margin: 0 0 1rem 0;
+        }
+        .features {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
+        }
+        .features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        .features li:last-child {
+            border-bottom: none;
+        }
+        .feature-tag {
+            display: inline-block;
+            background-color: #e9f5f3;
+            color: #104c44;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-left: 0.5rem;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #104c44;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0d3e38;
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #104c44;
+            color: #104c44;
+        }
+        .btn-outline:hover {
+            background-color: #104c44;
+            color: white;
+        }
+        .gallery-preview {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 1rem 0;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>تطور صفحة الرحلة - مدارات الكون</h1>
+            <p>استعراض لتطور تصميم وتجربة المستخدم لصفحة الرحلة الواحدة</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2><span class="version-number">v1</span> الإصدار الأولي</h2>
+            <p class="version-title">إصدار أولي مع تصميم بسيط</p>
+            
+            <ul class="features">
+                <li><span class="feature-tag">تخطيط</span> تخطيط أساسي للمعلومات</li>
+                <li><span class="feature-tag">محتوى</span> عرض بسيط لتفاصيل الرحلة</li>
+                <li><span class="feature-tag">صور</span> صورة واحدة رئيسية فقط</li>
+            </ul>
+            
+            <a href="v1-initial.js" target="_blank" class="btn">عرض الكود</a>
+        </div>
+
+        <div class="card">
+            <h2><span class="version-number">v2</span> إضافة معلومات التكلفة وبرنامج الرحلة والأسئلة الشائعة</h2>
+            <p class="version-title">تحسين المحتوى وإضافة أقسام جديدة</p>
+            
+            <ul class="features">
+                <li><span class="feature-tag">محتوى</span> إضافة تفاصيل التكلفة (ما يشمل وما لا يشمل)</li>
+                <li><span class="feature-tag">محتوى</span> إضافة برنامج الرحلة بالتفصيل</li>
+                <li><span class="feature-tag">محتوى</span> إضافة قسم الأسئلة الشائعة</li>
+            </ul>
+            
+            <a href="v2-with-cost-itinerary-faq.js" target="_blank" class="btn">عرض الكود</a>
+        </div>
+
+        <div class="card">
+            <h2><span class="version-number">v3</span> إصلاح تحذيرات React</h2>
+            <p class="version-title">تحسينات تقنية</p>
+            
+            <ul class="features">
+                <li><span class="feature-tag">تقني</span> إصلاح تحذيرات exhaustive-deps</li>
+                <li><span class="feature-tag">تقني</span> تحسين أداء مكونات React</li>
+            </ul>
+            
+            <a href="v3-fix-warnings.js" target="_blank" class="btn">عرض الكود</a>
+        </div>
+
+        <div class="card">
+            <h2><span class="version-number">v4</span> تعزيز واجهة المستخدم وتجربة المستخدم</h2>
+            <p class="version-title">إعادة تصميم كاملة للصفحة مع تحسينات في التسلسل البصري</p>
+            
+            <ul class="features">
+                <li><span class="feature-tag">تصميم</span> إعادة تصميم شاملة لكل مكونات الصفحة</li>
+                <li><span class="feature-tag">تجربة</span> إضافة مكون أكورديون للبرنامج والأسئلة الشائعة</li>
+                <li><span class="feature-tag">محتوى</span> إضافة قسم أبرز المعالم مستخرج من وصف الرحلة</li>
+                <li><span class="feature-tag">تجربة</span> إضافة شريط حجز ثابت عند التمرير</li>
+            </ul>
+            
+            <a href="v4-enhanced-ui-ux.js" target="_blank" class="btn">عرض الكود</a>
+        </div>
+
+        <div class="card">
+            <h2><span class="version-number">v5</span> إصلاح مشاكل عرض النصوص</h2>
+            <p class="version-title">تحسينات في تنسيق الكود وعرض النصوص</p>
+            
+            <ul class="features">
+                <li><span class="feature-tag">تقني</span> إصلاح عرض الرموز الخاصة في النصوص</li>
+                <li><span class="feature-tag">تنسيق</span> تحسين تنسيق الكود وإعادة هيكلته</li>
+                <li><span class="feature-tag">أداء</span> تحسينات في الأداء والتحميل</li>
+            </ul>
+            
+            <a href="v5-fix-entities.js" target="_blank" class="btn">عرض الكود</a>
+        </div>
+
+        <div class="card">
+            <h2><span class="version-number">v6</span> إضافة معرض الصور</h2>
+            <p class="version-title">إضافة معرض صور متكامل مع عرض الصور المكبرة</p>
+            
+            <img src="https://picsum.photos/800/400" alt="معرض الصور" class="gallery-preview">
+            
+            <ul class="features">
+                <li><span class="feature-tag">تجربة</span> إضافة مكون معرض الصور</li>
+                <li><span class="feature-tag">تفاعل</span> إمكانية عرض الصور في وضع ملء الشاشة</li>
+                <li><span class="feature-tag">تصميم</span> تصميم متجاوب لعرض الصور</li>
+                <li><span class="feature-tag">أداء</span> تحميل الصور بشكل متدرج وسلس</li>
+            </ul>
+            
+            <a href="v6-with-gallery.js" target="_blank" class="btn">عرض الكود</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 مدارات الكون - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+</body>
+</html> 

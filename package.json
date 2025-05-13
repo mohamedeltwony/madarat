@@ -28,9 +28,10 @@
     "date-fns": "^2.30.0",
     "dotenv": "^16.0.3",
     "fuse.js": "^6.6.2",
+    "glob": "^10.3.10",
     "he": "^1.2.0",
     "loader-utils": "^3.2.1",
-    "next": "^14.2.0",
+    "next": "^15.3.0",
     "next-cloudinary": "^6.16.0",
     "nextjs-progressbar": "^0.0.16",
     "node-cache": "^5.1.2",
@@ -47,7 +48,8 @@
     "rss": "^1.2.2",
     "sass": "^1.62.1",
     "style.css": "^1.0.3",
-    "ua-parser-js": "^2.0.3"
+    "ua-parser-js": "^2.0.3",
+    "yet-another-react-lightbox": "^3.23.1"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^14.2.0",

@@ -283,7 +283,9 @@ export async function getStaticProps({ params }) {
       // Format duration
       let durationText = 'غير محدد';
       if (trip.duration) {
-        const { days, nights, duration_unit, duration_type } = trip.duration;
+        // Safely destructure duration with defaults to prevent errors
+        const { days = 0, nights = 0, duration_unit = '', duration_type = 'days' } = trip.duration || {};
+        
         if (duration_type === 'days') {
           durationText = `${days} أيام`;
         } else if (duration_type === 'nights') {

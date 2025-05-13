@@ -27,9 +27,12 @@ const Meta = ({
     });
   }
 
+  // Ensure title is a string to avoid array rendering issue
+  const titleString = title ? String(title) : '';
+
   return (
     <Head>
-      {title && <title key="title">{title}</title>}
+      {titleString && <title key="title">{titleString}</title>}
       {description && (
         <meta name="description" content={description} key="description" />
       )}

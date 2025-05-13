@@ -1,3 +1,4 @@
+@use 'sass:color';
 @import '../settings/__settings';
 
 // Brand Colors
@@ -681,7 +682,7 @@ $brand-gold: #cc9c64;
     }
 
     &:hover {
-      background-color: darken($brand-gold, 10%);
+      background-color: color.adjust($brand-gold, $lightness: -10%);
       transform: translateY(-3px);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       animation: pulse 1s infinite;

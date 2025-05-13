@@ -1,4 +1,4 @@
-@import 'styles/settings/__settings';
+@use 'styles/settings/__settings' as *;
 
 // Futuristic color palette
 $neon-blue: #00f2ff;

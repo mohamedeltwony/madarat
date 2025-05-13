@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'styles/settings/__settings' as *;
+@use 'styles/settings/_colors' as *;
 
 // Main container
 .container {
@@ -59,7 +61,7 @@
   background: linear-gradient(
     45deg,
     $color-primary,
-    adjust-hue($color-primary, 40deg)
+    color.adjust($color-primary, $hue: 40deg)
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'styles/settings/__settings' as *;
+@use 'styles/settings/_colors' as *;
 
 // Variables for our brand colors
 $color-gold: #cc9c64;
@@ -613,15 +615,13 @@ $font-family: 'Cairo', sans-serif;
   font-weight: 700 !important;
   margin-top: 0.5rem; // Add some margin above the button
   background-color: $color-gold !important; // Ensure gold background
-  border-color: darken(
-    $color-gold,
-    10%
+  border-color: color.adjust($color-gold, $brightness: -10%
   ) !important; // Darker border for contrast
 
   // Override hover effect if needed, otherwise SparkleButton default might be fine
   &:hover {
-    background-color: darken($color-gold, 5%) !important;
-    border-color: darken($color-gold, 15%) !important;
+    background-color: color.adjust($color-gold, $lightness: -5%) !important;
+    border-color: color.adjust($color-gold, $lightness: -15%) !important;
     box-shadow: 0 5px 15px rgba($color-gold, 0.4) !important;
   }
 }

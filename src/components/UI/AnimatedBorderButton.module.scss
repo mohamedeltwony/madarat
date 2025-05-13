@@ -1,5 +1,6 @@
-@import '../../styles/animations.scss';
-@import '../../styles/settings/_colors.scss';
+@use 'sass:color';
+@use '../../styles/animations.scss' as *;
+@use '../../styles/settings/_colors.scss' as *;
 
 .buttonContainer {
   position: relative;
@@ -86,7 +87,7 @@
   color: #000000;
 
   &:hover {
-    background-color: darken(#ffd700, 5%);
+    background-color: color.adjust(#ffd700, $lightness: -5%);
     color: #000000;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
   }

@@ -1,4 +1,6 @@
-@import 'styles/settings/__settings';
+@use 'sass:color';
+@use 'styles/settings/__settings' as *;
+@use 'styles/settings/_colors' as *;
 @import 'styles/settings/_typography';
 
 // Variables
@@ -267,7 +269,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
     background: linear-gradient(
       45deg,
       $accent-color,
-      darken($accent-color, 10%)
+      color.adjust($accent-color, $lightness: -10%)
     );
     color: $light-text;
     padding: 0.35rem 0.85rem;
@@ -415,7 +417,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
     background: linear-gradient(
       45deg,
       $primary-color,
-      darken($primary-color, 10%)
+      color.adjust($primary-color, $lightness: -10%)
     );
     color: $light-text;
     border: none;
