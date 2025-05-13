@@ -12,6 +12,8 @@ import { categoryPathBySlug } from 'lib/categories';
 import { formatDate } from 'lib/datetime';
 import { ArticleJsonLd } from 'lib/json-ld';
 import { helmetSettingsFromMetadata } from 'lib/site';
+import { extractHeadings, addHeadingIds } from 'lib/headings';
+import { fixInternalLinks, processHeadingAnchors } from 'lib/fixWpLinks';
 import useSite from 'hooks/use-site';
 import usePageMetadata from 'hooks/use-page-metadata';
 
@@ -21,12 +23,15 @@ import Container from 'components/Container';
 import Content from 'components/Content';
 import PostHeader from 'components/PostHeader';
 import PostSidebar from 'components/PostSidebar';
+import TableOfContents from 'components/TableOfContents';
 import Link from 'next/link';
 
 import styles from 'styles/pages/Post.module.scss';
 
 export default function Post({ post, socialImage, related, recentPosts }) {
   const [shareUrl, setShareUrl] = useState('');
+  const [headings, setHeadings] = useState([]);
+  const [processedContent, setProcessedContent] = useState('');
   
   const {
     title,
@@ -45,7 +50,33 @@ export default function Post({ post, socialImage, related, recentPosts }) {
   
   useEffect(() => {
     setShareUrl(window.location.href);
-  }, []);
+    
+    // Process content to add IDs to headings
+    if (content) {
+      try {
+        const contentWithIds = addHeadingIds(content);
+        setProcessedContent(contentWithIds);
+        
+        // Extract headings for table of contents
+        const extractedHeadings = extractHeadings(content);
+        setHeadings(extractedHeadings);
+      } catch (error) {
+        console.error('Error processing content:', error);
+        setProcessedContent(content);
+      }
+    }
+  }, [content]);
+  
+  // Fix links after content is rendered
+  useEffect(() => {
+    if (processedContent) {
+      // Use setTimeout to ensure DOM is fully rendered
+      setTimeout(() => {
+        fixInternalLinks();
+        processHeadingAnchors();
+      }, 100);
+    }
+  }, [processedContent]);
 
   if (!post.og) {
     post.og = {};
@@ -128,10 +159,14 @@ export default function Post({ post, socialImage, related, recentPosts }) {
         <div className={styles.postLayout}>
           <div className={styles.mainContent}>
             <Content>
+              {headings.length > 0 && (
+                <TableOfContents headings={headings} />
+              )}
+              
               <div
                 className={styles.content}
                 dangerouslySetInnerHTML={{
-                  __html: content,
+                  __html: processedContent || content,
                 }}
               />
               

@@ -21,11 +21,11 @@
 
 // CTA Card
 .ctaCard {
-  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 15%) 100%);
+  background: linear-gradient(135deg, #0c4444 0%, #0c4c44 100%);
   border-radius: 16px;
   padding: 1.75rem;
   color: white;
-  box-shadow: 0 10px 30px rgba($color-primary, 0.2);
+  box-shadow: 0 10px 30px rgba(12, 68, 68, 0.2);
   position: relative;
   overflow: hidden;
   
@@ -164,12 +164,12 @@
   }
   
   .callButton {
-    background: #0066ff;
-    box-shadow: 0 5px 15px rgba(0, 102, 255, 0.4);
+    background: #cc9c64;
+    box-shadow: 0 5px 15px rgba(204, 156, 100, 0.4);
     
     &:hover {
-      background: darken(#0066ff, 5%);
-      box-shadow: 0 8px 20px rgba(0, 102, 255, 0.5);
+      background: darken(#cc9c64, 5%);
+      box-shadow: 0 8px 20px rgba(204, 156, 100, 0.5);
     }
   }
 }

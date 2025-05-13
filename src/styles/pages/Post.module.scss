@@ -521,3 +521,15 @@ $accent-color: $color-secondary; // Gold accent color
     font-size: 1.05rem;
   }
 }
+
+// Hide WordPress TOC
+:global(#ez-toc-container) {
+  display: none !important;
+}
+
+// Add any specific post content styling needed
+.content {
+  h1, h2, h3, h4, h5, h6 {
+    scroll-margin-top: 100px; // Ensure smooth scrolling to headings
+  }
+}

@@ -63,6 +63,16 @@ const BlogPosts = () => {
     fetchPosts();
   }, []);
 
+  // Helper function to extract slug from WordPress URL
+  const getSlugFromUrl = (url) => {
+    // Extract the slug from the URL
+    const urlParts = url.split('/');
+    // Remove empty strings from the end
+    const filteredParts = urlParts.filter(part => part !== '');
+    // Get the last part which should be the slug
+    return filteredParts[filteredParts.length - 1];
+  };
+
   // Helper function to clean HTML content
   const stripHtml = (html) => {
     const tmp = document.createElement('DIV');
@@ -133,7 +143,7 @@ const BlogPosts = () => {
       <div className={styles.postsGrid}>
         {posts.map((post) => (
           <div key={post.id} className={styles.gridItem}>
-            <Link href={post.link} passHref target="_blank" rel="noopener noreferrer" className={styles.postCard}>
+            <Link href={`/posts/${getSlugFromUrl(post.link)}`} passHref className={styles.postCard}>
               <div className={styles.postImageContainer}>
                 {post.yoast_head_json?.og_image?.[0]?.url ? (
                   <div 
@@ -182,10 +192,10 @@ const BlogPosts = () => {
       </div>
 
       <div className={styles.viewAllContainer}>
-        <a href="https://madaratalkon.com" target="_blank" rel="noopener noreferrer" className={styles.viewAllButton}>
+        <Link href="/posts" className={styles.viewAllButton}>
           عرض جميع المقالات
           <span className={styles.buttonIcon}><ArrowRightIcon /></span>
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 // Define API URL constant
-const API_URL = 'https://madaratalkon.com';
+const API_URL = 'https://madaratalkon.com/wp-json/wp/v2';
 
 import { updateUserAvatar } from '@/lib/users';
 import { sortObjectsByDate } from '@/lib/datetime';
@@ -17,7 +17,60 @@ export function postPathBySlug(slug) {
  */
 
 export async function getPostBySlug(slug) {
-  return getPostBySlugREST(slug);
+  try {
+    const response = await fetch(`${API_URL}/posts?slug=${slug}&_embed=1`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch post: ${response.status}`);
+    }
+    
+    const posts = await response.json();
+    
+    // The API returns an array, but we only want the first matching post
+    const post = posts.length > 0 ? posts[0] : null;
+    
+    if (!post) {
+      return { post: null };
+    }
+    
+    // Format the post data
+    return {
+      post: {
+        id: post.id,
+        title: post.title.rendered,
+        content: post.content.rendered,
+        excerpt: post.excerpt.rendered,
+        date: post.date,
+        modified: post.modified,
+        slug: post.slug,
+        featuredImage: post.featured_media ? {
+          sourceUrl: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+          altText: post._embedded?.['wp:featuredmedia']?.[0]?.alt_text || '',
+        } : null,
+        categories: post._embedded?.['wp:term']?.[0]?.map(category => ({
+          id: category.id,
+          name: category.name,
+          slug: category.slug
+        })) || [],
+        author: post._embedded?.['author']?.[0] ? {
+          id: post._embedded['author'][0].id,
+          name: post._embedded['author'][0].name,
+          slug: post._embedded['author'][0].slug,
+          avatar: {
+            url: post._embedded['author'][0].avatar_urls?.[96] || ''
+          }
+        } : null,
+        og: {
+          title: post.yoast_head_json?.og_title || post.title.rendered,
+          description: post.yoast_head_json?.og_description || post.excerpt.rendered,
+          image: post.yoast_head_json?.og_image?.[0]?.url || ''
+        }
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching post by slug:', error);
+    return { post: null };
+  }
 }
 
 /**
@@ -26,7 +79,7 @@ export async function getPostBySlug(slug) {
 
 export async function getAllPosts(options = {}) {
   try {
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?per_page=100&_embed`, {
+    const response = await fetch(`${API_URL}/posts?per_page=100&_embed`, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
@@ -80,7 +133,7 @@ export async function getAllPosts(options = {}) {
 
 export async function getPostsByAuthorSlug({ slug, ...options }) {
   try {
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?author_name=${slug}&per_page=100&_embed`, {
+    const response = await fetch(`${API_URL}/posts?author_name=${slug}&per_page=100&_embed`, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
@@ -134,7 +187,7 @@ export async function getPostsByAuthorSlug({ slug, ...options }) {
 
 export async function getPostsByCategoryId({ categoryId, ...options }) {
   try {
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?categories=${categoryId}&per_page=100&_embed`, {
+    const response = await fetch(`${API_URL}/posts?categories=${categoryId}&per_page=100&_embed`, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
@@ -261,52 +314,45 @@ export function mapPostData(post = {}) {
  * getRelatedPosts
  */
 
-export async function getRelatedPosts(categories, postId, count = 5) {
-  if (!Array.isArray(categories) || categories.length === 0) return;
-
-  let related = {
-    category: categories[0],
-  };
-
-  if (related.category) {
-    try {
-      const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?categories=${related.category.databaseId}&exclude=${postId}&per_page=${count}&_embed`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
-        },
-      });
-
-      if (!response.ok) {
-        console.error(`[getRelatedPosts] HTTP error ${response.status}`);
-        return { category: related.category, posts: [] };
-      }
-
-      const data = await response.json();
-      
-      related.posts = data.map(post => ({
-        title: post.title.rendered,
-        slug: post.slug
-      }));
-      
-      // If we don't have enough posts from first category, try next category
-      if (related.posts.length < count && categories.length > 1) {
-        const nextCategories = [...categories.slice(1)];
-        const moreRelated = await getRelatedPosts(nextCategories, postId, count - related.posts.length);
-        
-        if (moreRelated && Array.isArray(moreRelated.posts)) {
-          related.posts = [...related.posts, ...moreRelated.posts].slice(0, count);
-        }
-      }
-      
-      return related;
-    } catch (error) {
-      console.error(`[getRelatedPosts] Error:`, error);
-      return { category: related.category, posts: [] };
-    }
+export async function getRelatedPosts(categories, postId, count = 3) {
+  if (!categories || categories.length === 0) {
+    return { posts: [] };
   }
-
-  return related;
+  
+  try {
+    // Use the first category for related posts
+    const mainCategory = categories[0];
+    
+    const url = `${API_URL}/posts?categories=${mainCategory.id}&exclude=${postId}&per_page=${count}&_embed=1`;
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch related posts: ${response.status}`);
+    }
+    
+    const postsData = await response.json();
+    
+    // Format the posts data
+    const posts = postsData.map(post => ({
+      id: post.id,
+      title: post.title.rendered,
+      excerpt: post.excerpt.rendered,
+      date: post.date,
+      slug: post.slug,
+      featuredImage: post.featured_media ? {
+        sourceUrl: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+      } : null
+    }));
+    
+    return {
+      category: mainCategory,
+      posts
+    };
+  } catch (error) {
+    console.error('Error fetching related posts:', error);
+    return { posts: [] };
+  }
 }
 
 /**
@@ -331,7 +377,7 @@ export async function getPostsPerPage() {
   }
 
   try {
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/settings`, {
+    const response = await fetch(`${API_URL}/settings`, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
@@ -404,7 +450,7 @@ export async function getDraftPosts(options = {}) {
     // This is a limited implementation, and in a production environment,
     // you would likely need to use a server-side proxy or authentication.
     
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?status=draft&per_page=100&_embed`, {
+    const response = await fetch(`${API_URL}/posts?status=draft&per_page=100&_embed`, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
@@ -451,7 +497,7 @@ export async function getDraftPosts(options = {}) {
  */
 export async function getPostsByYear({ year } = {}) {
   try {
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?after=${year}-01-01T00:00:00&before=${parseInt(year) + 1}-01-01T00:00:00&per_page=100&_embed`, {
+    const response = await fetch(`${API_URL}/posts?after=${year}-01-01T00:00:00&before=${parseInt(year) + 1}-01-01T00:00:00&per_page=100&_embed`, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
@@ -506,7 +552,7 @@ export async function getPostsByMonth({ year, month }) {
     const lastDay = new Date(year, month, 0).getDate(); // Get last day of month
     const endDate = `${year}-${month.padStart(2, '0')}-${lastDay}T23:59:59`;
     
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?after=${startDate}&before=${endDate}&per_page=100&_embed`, {
+    const response = await fetch(`${API_URL}/posts?after=${startDate}&before=${endDate}&per_page=100&_embed`, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
@@ -562,7 +608,7 @@ export async function getPostsByDay({ year, month, day }) {
     const startDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T00:00:00`;
     const endDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T23:59:59`;
     
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?after=${startDate}&before=${endDate}&per_page=100&_embed`, {
+    const response = await fetch(`${API_URL}/posts?after=${startDate}&before=${endDate}&per_page=100&_embed`, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
@@ -615,7 +661,7 @@ export async function getPostsByDay({ year, month, day }) {
  */
 export async function getYearArchives() {
   try {
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/archives`, {
+    const response = await fetch(`${API_URL}/archives`, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
@@ -652,63 +698,59 @@ function getDefaultYears() {
  */
 export async function getPostBySlugREST(slug) {
   try {
-    const response = await fetch(`${API_URL}/wp-json/wp/v2/posts?slug=${slug}&_embed`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
-      },
-    });
-
+    const response = await fetch(`${API_URL}/posts?slug=${slug}&_embed=1`);
+    
     if (!response.ok) {
       console.error(`[getPostBySlugREST] HTTP error ${response.status}`);
-      return { post: undefined };
-    }
-
-    const data = await response.json();
-    
-    if (!Array.isArray(data) || data.length === 0) {
-      console.error(`[getPostBySlugREST] No post found with slug ${slug}`);
-      return { post: undefined };
+      return { post: null };
     }
     
-    const post = data[0];
+    const posts = await response.json();
     
+    // The API returns an array, but we only want the first matching post
+    const post = posts.length > 0 ? posts[0] : null;
+    
+    if (!post) {
+      return { post: null };
+    }
+    
+    // Format the post data
     return {
       post: {
         id: post.id,
-        databaseId: post.id,
         title: post.title.rendered,
-        slug: post.slug,
+        content: post.content.rendered,
+        excerpt: post.excerpt.rendered,
         date: post.date,
         modified: post.modified,
-        content: post.content.rendered,
-        excerpt: post.excerpt?.rendered,
-        author: post._embedded?.author?.[0] ? {
-          name: post._embedded.author[0].name,
-          slug: post._embedded.author[0].slug,
-          avatar: {
-            url: post._embedded.author[0].avatar_urls?.[96] || ''
-          }
+        slug: post.slug,
+        featuredImage: post.featured_media ? {
+          sourceUrl: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+          altText: post._embedded?.['wp:featuredmedia']?.[0]?.alt_text || '',
         } : null,
-        categories: post._embedded?.['wp:term']?.[0]?.map(cat => ({
-          id: cat.id,
-          databaseId: cat.id,
-          name: cat.name,
-          slug: cat.slug
+        categories: post._embedded?.['wp:term']?.[0]?.map(category => ({
+          id: category.id,
+          name: category.name,
+          slug: category.slug
         })) || [],
-        featuredImage: post._embedded?.['wp:featuredmedia']?.[0] ? {
-          sourceUrl: post._embedded['wp:featuredmedia'][0].source_url,
-          mediaDetails: {
-            height: post._embedded['wp:featuredmedia'][0].media_details?.height,
-            width: post._embedded['wp:featuredmedia'][0].media_details?.width
+        author: post._embedded?.['author']?.[0] ? {
+          id: post._embedded['author'][0].id,
+          name: post._embedded['author'][0].name,
+          slug: post._embedded['author'][0].slug,
+          avatar: {
+            url: post._embedded['author'][0].avatar_urls?.[96] || ''
           }
         } : null,
-        isSticky: post.sticky
+        og: {
+          title: post.yoast_head_json?.og_title || post.title.rendered,
+          description: post.yoast_head_json?.og_description || post.excerpt.rendered,
+          image: post.yoast_head_json?.og_image?.[0]?.url || ''
+        }
       }
     };
   } catch (error) {
-    console.error(`[getPostBySlugREST] Error fetching post with slug ${slug}:`, error);
-    return { post: undefined };
+    console.error('Error fetching post by slug:', error);
+    return { post: null };
   }
 }
 
@@ -736,7 +778,7 @@ export async function getPostsAndPagination({
       let authorId = null;
       try {
         const authorsResponse = await fetch(
-          `${API_URL}/wp-json/wp/v2/users?slug=${authorSlug}`,
+          `${API_URL}/users?slug=${authorSlug}`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -763,7 +805,7 @@ export async function getPostsAndPagination({
     
     // Fetch posts with the built query
     const response = await fetch(
-      `${API_URL}/wp-json/wp/v2/posts?${queryParams}`,
+      `${API_URL}/posts?${queryParams}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -848,5 +890,31 @@ export async function getRecentPosts({ count = 5 } = {}) {
   } catch (error) {
     console.error('[getRecentPosts] Error:', error);
     return { posts: [] };
+  }
+}
+
+/**
+ * Get all posts for generating static paths
+ * @param {number} count - Number of posts to fetch
+ * @returns {Promise<Array>} - Array of post slugs
+ */
+export async function getAllPostSlugs(count = 100) {
+  try {
+    const response = await fetch(`${API_URL}/posts?per_page=${count}&_fields=slug`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch post slugs: ${response.status}`);
+    }
+    
+    const posts = await response.json();
+    
+    return posts.map(post => ({
+      params: {
+        slug: post.slug
+      }
+    }));
+  } catch (error) {
+    console.error('Error fetching all post slugs:', error);
+    return [];
   }
 }
