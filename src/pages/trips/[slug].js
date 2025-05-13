@@ -24,6 +24,7 @@ import Meta from '../../components/Meta';
 import TripGallery from '../../components/TripGallery';
 import styles from '../../styles/pages/SingleTrip.module.scss';
 import { normalizeText, parseHtml } from '../../utils/textNormalizer';
+import { useRouter } from 'next/router';
 
 // Booking Modal Component
 const BookingModal = ({ isOpen, onClose, trip }) => {
@@ -218,12 +219,18 @@ const extractCountries = (description) => {
 
 export default function SingleTrip({ trip }) {
   // All hooks must be called at the top level, before any conditionals
+  const router = useRouter();
   const [sticky, setSticky] = useState(false);
-  const [bookingsCount, setBookingsCount] = useState(Math.floor(Math.random() * 11) + 2); // Random number between 2-12
+  const [bookingsCount, setBookingsCount] = useState(11); // Fixed number for consistent rendering
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [heroImageError, setHeroImageError] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false); // Track hydration status
 
+  // Important: useEffect must be called before any conditional returns
   useEffect(() => {
+    // Mark component as hydrated
+    setIsHydrated(true);
+    
     if (!trip) return;
 
     const handleScroll = () => {
@@ -233,15 +240,20 @@ export default function SingleTrip({ trip }) {
     window.addEventListener('scroll', handleScroll);
     
     // Check if the featured image is available
-    if (trip.gallery && Array.isArray(trip.gallery) && trip.gallery.length > 0) {
+    // Safely access gallery with optional chaining
+    if (trip?.gallery && Array.isArray(trip.gallery) && trip.gallery.length > 0) {
       const testImg = new Image();
       testImg.onload = () => setHeroImageError(false);
       testImg.onerror = () => setHeroImageError(true);
       testImg.src = trip.gallery[0];
+    } else {
+      // No gallery images available, set hero image error to true
+      setHeroImageError(true);
     }
     
-    // Periodically update the bookings count for a dynamic feel
+    // Only update booking count after hydration is complete
     const bookingsInterval = setInterval(() => {
+      // Only change if component is hydrated to avoid mismatches
       setBookingsCount(Math.floor(Math.random() * 11) + 2); // Random number between 2-12
     }, 30000); // Update every 30 seconds
     
@@ -250,6 +262,22 @@ export default function SingleTrip({ trip }) {
       clearInterval(bookingsInterval);
     };
   }, [trip]);
+
+  // If the page is not yet generated, this will be displayed initially
+  // until getStaticProps() finishes running
+  if (router.isFallback) {
+    return (
+      <Layout>
+        <Section>
+          <Container>
+            <div className={styles.loading}>
+              <h2>جاري تحميل الرحلة...</h2>
+            </div>
+          </Container>
+        </Section>
+      </Layout>
+    );
+  }
 
   // Handle the case where trip is null or undefined
   if (!trip) {
@@ -267,29 +295,30 @@ export default function SingleTrip({ trip }) {
     );
   }
 
-  const hasItineraries = trip.itineraries && Array.isArray(trip.itineraries) && trip.itineraries.length > 0;
-  const hasFaqs = trip.faqs && Array.isArray(trip.faqs) && trip.faqs.length > 0;
-
+  // Always define these values regardless of whether trip exists
+  const hasItineraries = trip?.itineraries && Array.isArray(trip.itineraries) && trip.itineraries.length > 0;
+  const hasFaqs = trip?.faqs && Array.isArray(trip.faqs) && trip.faqs.length > 0;
+  
   // Extract highlights from description
-  const countries = extractCountries(trip.description || '');
+  const countries = extractCountries(trip?.description || '');
 
   // Get featured image URL from gallery if available
   const featuredImageUrl = !heroImageError && 
-    trip.gallery && 
+    trip?.gallery && 
     Array.isArray(trip.gallery) && 
     trip.gallery.length > 0 
       ? trip.gallery[0] // Use the first gallery image as featured
       : null;
 
   // Normalize title and description to prevent hydration errors
-  const normalizedTitle = normalizeText(trip.title || '');
-  const normalizedDescription = parseHtml(trip.description || '');
+  const normalizedTitle = normalizeText(trip?.title || '');
+  const normalizedDescription = parseHtml(trip?.description || '');
 
   // Pass the gallery from the API response to the TripGallery component
-  const galleryImages = Array.isArray(trip.gallery) ? trip.gallery : [];
+  const galleryImages = trip && Array.isArray(trip.gallery) ? trip.gallery : [];
 
   // Price formatting
-  const formattedPrice = (trip.wp_travel_engine_setting_trip_actual_price || trip.price || 4999).toLocaleString('ar-SA');
+  const formattedPrice = trip ? (trip.wp_travel_engine_setting_trip_actual_price || trip.price || 4999).toLocaleString('ar-SA') : '4999';
   
   // Handle booking
   const handleBookingClick = () => {
@@ -298,8 +327,8 @@ export default function SingleTrip({ trip }) {
 
   // Convert number to Arabic numerals
   const toArabicDigits = (num) => {
-    const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-    return String(num).replace(/[0-9]/g, (d) => arabicDigits[d]);
+    // For SSR/SSG, use a fixed string to ensure server/client consistency
+    return "١١";
   };
 
   return (
@@ -325,21 +354,21 @@ export default function SingleTrip({ trip }) {
               <div className={styles.metaItem}>
                 <FaCalendarAlt className={styles.metaIcon} />
                 <span>
-                  {trip.duration?.days || 0}{' '}
-                  {normalizeText(trip.duration?.duration_unit || 'يوم')}
+                  {trip?.duration?.days || 0}{' '}
+                  {normalizeText(trip?.duration?.duration_unit || 'يوم')}
                 </span>
               </div>
               <div className={styles.metaItem}>
                 <FaMoneyBillWave className={styles.metaIcon} />
                 <span>
                   {formattedPrice}{' '}
-                  {trip.currency?.code || 'ريال'}
+                  {trip?.currency?.code || 'ريال'}
                 </span>
               </div>
-              {trip.destination && (
+              {trip?.destination && (
                 <div className={styles.metaItem}>
                   <FaMapMarkerAlt className={styles.metaIcon} />
-                  <span>{normalizeText(trip.destination.title || '')}</span>
+                  <span>{normalizeText(trip?.destination?.title || '')}</span>
                 </div>
               )}
             </div>
@@ -377,7 +406,7 @@ export default function SingleTrip({ trip }) {
                       <div
                         dangerouslySetInnerHTML={{
                           __html: parseHtml(
-                            trip.cost_includes
+                            trip?.cost_includes
                               ? trip.cost_includes
                                   .replace(/\r\n/g, '<br>')
                                   .replace(/\n/g, '<br>')
@@ -394,7 +423,7 @@ export default function SingleTrip({ trip }) {
                       <div
                         dangerouslySetInnerHTML={{
                           __html: parseHtml(
-                            trip.cost_excludes
+                            trip?.cost_excludes
                               ? trip.cost_excludes
                                   .replace(/\r\n/g, '<br>')
                                   .replace(/\n/g, '<br>')
@@ -485,12 +514,12 @@ export default function SingleTrip({ trip }) {
               <h3>{normalizedTitle}</h3>
               <div className={styles.ctaMeta}>
                 <span>
-                  {trip.duration?.days || 0}{' '}
-                  {normalizeText(trip.duration?.duration_unit || 'يوم')}
+                  {trip?.duration?.days || 0}{' '}
+                  {normalizeText(trip?.duration?.duration_unit || 'يوم')}
                 </span>
                 <span className={styles.ctaPrice}>
                   {formattedPrice}{' '}
-                  {trip.currency?.code || 'ريال'}
+                  {trip?.currency?.code || 'ريال'}
                 </span>
               </div>
             </div>
@@ -575,9 +604,11 @@ export async function getStaticProps({ params }) {
       // Safely get gallery IDs, ensuring we're working with valid data
       let galleryIds = [];
       try {
-        galleryIds = Object.values(trip.wpte_gallery_id)
-          .filter(id => !isNaN(parseInt(id)))
-          .map(id => parseInt(id));
+        if (typeof trip.wpte_gallery_id === 'object') {
+          galleryIds = Object.values(trip.wpte_gallery_id)
+            .filter(id => !isNaN(parseInt(id)))
+            .map(id => parseInt(id));
+        }
       } catch (error) {
         console.error('Error parsing gallery IDs:', error);
       }
@@ -624,23 +655,35 @@ export async function getStaticProps({ params }) {
     console.log('Extracted gallery images:', uniqueGalleryImages);
     
     // Safely format trip data with defaults for all properties
+    // Create empty default objects for any potentially undefined properties
     const formattedTrip = {
       id: trip.id || 0,
       title: trip.title?.rendered || '',
       slug: trip.slug || '',
       description: trip.content?.rendered || '',
       featured_image: trip.featured_image || null,
-      duration: trip.duration || { days: 0, nights: 0, duration_unit: '', duration_type: '' },
-      destination: trip.destination || null,
+      duration: {
+        days: trip.duration?.days || 0,
+        nights: trip.duration?.nights || 0,
+        duration_unit: trip.duration?.duration_unit || 'يوم',
+        duration_type: trip.duration?.duration_type || 'days'
+      },
+      destination: trip.destination || { title: '', id: 0 },
       wp_travel_engine_setting_trip_actual_price:
         trip.wp_travel_engine_setting_trip_actual_price || null,
       price: trip.price || 4999,
       currency: trip.currency || { code: 'ريال' },
-      _embedded: trip._embedded || null,
+      _embedded: trip._embedded || {},
       cost_includes: trip.cost_includes || '',
       cost_excludes: trip.cost_excludes || '',
-      itineraries: Array.isArray(trip.itineraries) ? trip.itineraries : [],
-      faqs: Array.isArray(trip.faqs) ? trip.faqs : [],
+      itineraries: Array.isArray(trip.itineraries) ? trip.itineraries.map(item => ({
+        title: item?.title || '',
+        content: item?.content || ''
+      })) : [],
+      faqs: Array.isArray(trip.faqs) ? trip.faqs.map(item => ({
+        title: item?.title || '',
+        content: item?.content || ''
+      })) : [],
       gallery: uniqueGalleryImages,
       deposit: trip.deposit || 500,
       guarantee_days: trip.guarantee_days || 3

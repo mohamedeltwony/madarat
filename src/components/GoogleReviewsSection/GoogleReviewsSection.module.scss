@@ -1,6 +1,6 @@
 @use 'sass:color';
-@use 'src/styles/settings/_colors' as *;
-@use 'src/styles/settings/__settings' as *;
+@use 'src/styles/settings/_colors.scss' as *;
+@use 'src/styles/settings/__settings.scss' as *;
 @use 'src/styles/_variables.module.scss' as *;
 
 .googleReviewsSection {

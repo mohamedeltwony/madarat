@@ -1,6 +1,6 @@
 @use 'sass:color';
-@use '../../styles/animations.scss' as *;
-@use '../../styles/settings/_colors.scss' as *;
+@use 'src/styles/animations.scss' as *;
+@use 'src/styles/settings/_colors.scss' as *;
 
 .buttonContainer {
   position: relative;

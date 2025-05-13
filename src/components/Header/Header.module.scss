@@ -1,7 +1,7 @@
 @use 'sass:color';
-@use 'styles/settings/__settings' as *;
-@use 'styles/settings/_colors' as *;
-@use 'styles/components/_container' as *;
+@use 'src/styles/settings/_colors.scss' as *;
+@use 'src/styles/settings/__settings.scss' as *;
+@use 'src/styles/components/_container.scss' as *;
 
 // Local breakpoint definitions
 $breakpoint-small: 768px;

@@ -52,7 +52,7 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
-export default function TripCard({ trip }) {
+export default function TripCard({ trip = {} }) {
   const { title, slug, excerpt, featuredImage, tripSettings } = trip;
 
   // Update the image URL extraction to match the new data structure
@@ -66,6 +66,11 @@ export default function TripCard({ trip }) {
   // Helper function to strip HTML from excerpt
   const stripHtml = (html) => {
     if (!html) return '';
+    if (typeof window === 'undefined') {
+      // Server-side - just use regex to strip tags
+      return html.replace(/<[^>]*>/g, '');
+    }
+    // Client-side - use DOM
     const tmp = document.createElement('DIV');
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || '';

@@ -83,6 +83,16 @@ export default function AllTrips({ trips, pagination, onPageChange }) {
   // Decode HTML entities in titles
   const decodeHTML = (html) => {
     if (!html) return '';
+    if (typeof window === 'undefined') {
+      // Server-side - use a simple regex replacement
+      return html
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'");
+    }
+    // Client-side - use DOM
     const txt = document.createElement('textarea');
     txt.innerHTML = html;
     return txt.value;

@@ -1,7 +1,7 @@
 @use 'sass:color';
-@use '../../styles/settings/__settings' as *;
-@use 'styles/settings/_colors' as *;
-@import 'styles/settings/_typography';
+@use 'src/styles/settings/_colors.scss' as *;
+@use 'src/styles/settings/__settings.scss' as *;
+@use 'src/styles/settings/_typography.scss' as *;
 
 // Variables
 $transition-speed: 0.3s;
@@ -1028,5 +1028,19 @@ $box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     &:active {
       transform: translateY(0);
     }
+  }
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: $color-primary;
   }
 }
