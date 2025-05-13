@@ -1,18 +1,18 @@
 @import '../../styles/animations.scss';
+@import '../../styles/settings/_colors.scss';
 
 .buttonContainer {
   position: relative;
   display: inline-block;
 }
 
+/* Base button styles */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   padding: 8px 16px;
-  background-color: #000000;
-  color: #ffffff;
   border: 2px solid transparent;
   border-radius: var(--border-radius, 20px);
   font-size: 16px;
@@ -42,11 +42,50 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
   }
+}
+
+/* Default variant (dark background) */
+.default {
+  background-color: #000000;
+  color: #ffffff;
   
   &:hover {
     background-color: #111111;
     color: #ffd700;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+}
+
+/* Transparent variant (for dark backgrounds) */
+.transparent {
+  background-color: rgba(0, 0, 0, 0);
+  color: #ffffff;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+  }
+  
+  &::before {
+    opacity: 0.8;
+  }
+}
+
+/* Gold variant (for light backgrounds) */
+.gold {
+  background-color: #ffd700;
+  color: #000000;
+  
+  &:hover {
+    background-color: darken(#ffd700, 5%);
+    color: #000000;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  }
+  
+  &::before {
+    background: linear-gradient(270deg, #d4af37, #ffffff, #d4af37, #ffffff, #d4af37);
+    background-size: 400% 400%;
   }
 }
 
@@ -61,17 +100,16 @@
   transform: rotate(180deg);
 }
 
+/* Base dropdown menu styles */
 .dropdownMenu {
   position: absolute;
   top: 110%;
   right: 0;
   min-width: 200px;
-  background: rgba(20, 20, 20, 0.7);
   border-radius: 18px;
-  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.10);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   z-index: 100;
   padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -89,6 +127,32 @@
       radial-gradient(circle at 70% 60%, rgba(2,78,76,0.12) 0, transparent 50%),
       radial-gradient(circle at 50% 10%, rgba(255,255,255,0.10) 0, transparent 50%);
     animation: dropdownSparkleMove 4s linear infinite;
+  }
+}
+
+/* Default dropdown styles (dark) */
+.defaultDropdown {
+  background: rgba(20, 20, 20, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Transparent dropdown styles */
+.transparentDropdown {
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+/* Gold dropdown styles */
+.goldDropdown {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  
+  &::before {
+    background:
+      radial-gradient(circle at 30% 40%, rgba(212, 175, 55, 0.18) 0, transparent 40%),
+      radial-gradient(circle at 70% 60%, rgba(212, 175, 55, 0.12) 0, transparent 50%),
+      radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.10) 0, transparent 50%);
   }
 }
 
@@ -113,10 +177,8 @@
   }
 }
 
+/* Base dropdown button styles */
 .dropdownButton {
-  background: rgba(0,0,0,0.10);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
   border-radius: 14px;
   font-size: 16px;
   padding: 10px 0;
@@ -127,9 +189,45 @@
   width: 100%;
   
   @include animated-border(14px, 7s);
+}
+
+/* Default dropdown button styles */
+.defaultDropdownButton {
+  background: rgba(0,0,0,0.10);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
   
   &:hover {
     background: rgba(2,78,76,0.12);
     color: #ffffff;
+  }
+}
+
+/* Transparent dropdown button styles */
+.transparentDropdownButton {
+  background: rgba(0,0,0,0.30);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  
+  &:hover {
+    background: rgba(255,255,255,0.1);
+    color: #ffd700;
+  }
+}
+
+/* Gold dropdown button styles */
+.goldDropdownButton {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  color: #000;
+  
+  &:hover {
+    background: rgba(212, 175, 55, 0.2);
+    color: #000;
+  }
+  
+  &::before {
+    background: linear-gradient(270deg, #d4af37, #ffffff, #d4af37, #ffffff, #d4af37);
+    background-size: 400% 400%;
   }
 } 

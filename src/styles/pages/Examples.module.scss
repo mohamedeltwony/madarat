@@ -21,6 +21,14 @@
     font-size: 24px;
   }
   
+  h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
   p {
     margin-top: 16px;
     color: rgba(255, 255, 255, 0.8);
@@ -28,10 +36,44 @@
   }
 }
 
+.variantSection {
+  margin-bottom: 25px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.variantExamples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
 .buttonExample {
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  
+  &.darkBackground {
+    background-color: #191f28;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  &.lightBackground {
+    background-color: #ffffff;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+  }
 }
 
 @media (max-width: 768px) {

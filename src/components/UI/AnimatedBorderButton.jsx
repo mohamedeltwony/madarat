@@ -11,11 +11,15 @@ const AnimatedBorderButton = ({
   borderRadius = '20px',
   animationDuration = '7s',
   className = '',
-  dropdownItems = null // array of { label, onClick }
+  dropdownItems = null, // array of { label, onClick }
+  variant = 'default' // 'default', 'transparent', 'gold'
 }) => {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
+  
+  // Determine button class based on variant
+  const buttonClass = `${styles.button} ${styles[variant]} ${className}`;
   
   // Close dropdown on outside click
   useEffect(() => {
@@ -54,7 +58,7 @@ const AnimatedBorderButton = ({
       >
         <button
           ref={buttonRef}
-          className={`${styles.button} ${className}`}
+          className={buttonClass}
           type="button"
           tabIndex={0}
         >
@@ -63,12 +67,12 @@ const AnimatedBorderButton = ({
         {open && (
           <div
             ref={dropdownRef}
-            className={styles.dropdownMenu}
+            className={`${styles.dropdownMenu} ${styles[`${variant}Dropdown`]}`}
           >
             {dropdownItems.map((item, idx) => (
               <button
                 key={idx}
-                className={styles.dropdownButton}
+                className={`${styles.dropdownButton} ${styles[`${variant}DropdownButton`]}`}
                 onClick={() => {
                   setOpen(false);
                   item.onClick && item.onClick();
@@ -90,7 +94,7 @@ const AnimatedBorderButton = ({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={`${styles.button} ${className}`}
+        className={buttonClass}
         onClick={onClick}
         style={{ 
           '--border-radius': borderRadius,
@@ -107,7 +111,7 @@ const AnimatedBorderButton = ({
     return (
       <Link 
         href={href} 
-        className={`${styles.button} ${className}`} 
+        className={buttonClass}
         onClick={onClick}
         style={{ 
           '--border-radius': borderRadius,
@@ -122,7 +126,7 @@ const AnimatedBorderButton = ({
   // If button
   return (
     <button 
-      className={`${styles.button} ${className}`} 
+      className={buttonClass}
       onClick={onClick}
       style={{ 
         '--border-radius': borderRadius,
