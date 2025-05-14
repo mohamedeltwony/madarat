@@ -7,7 +7,7 @@ $border-radius: 8px;
 $box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 $box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
 $transition-speed: 0.3s;
-$primary-color: #0078ff;
+$primary-color: $color-primary;
 $section-spacing: 2.5rem;
 
 // ======== Layout Styles ========
@@ -245,8 +245,7 @@ $section-spacing: 2.5rem;
   }
 }
 
-.viewMoreBtn,
-.watchVideoBtn {
+.viewMoreBtn {
   background: rgba(255, 255, 255, 0.9);
   color: #333;
   border: none;
@@ -267,19 +266,6 @@ $section-spacing: 2.5rem;
   
   i {
     font-size: 1.1rem;
-  }
-}
-
-.watchVideoBtn {
-  color: #fff;
-  background-color: rgba(0, 122, 255, 0.8);
-  
-  i {
-    font-size: 1.5rem;
-  }
-  
-  &:hover {
-    background-color: rgb(0, 122, 255);
   }
 }
 
@@ -433,9 +419,7 @@ $section-spacing: 2.5rem;
 
 // ======== Sidebar Content ========
 .sidebarContent {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  width: 100%;
 }
 
 // ======== Booking Card ========
@@ -444,7 +428,7 @@ $section-spacing: 2.5rem;
   border-radius: $border-radius;
   padding: 2rem;
   box-shadow: $box-shadow;
-  align-self: start;
+  width: 100%;
   position: sticky;
   top: 2rem;
   transition: box-shadow $transition-speed ease;
@@ -455,29 +439,31 @@ $section-spacing: 2.5rem;
 }
 
 .price {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   text-align: center;
   
   h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    color: $color-gray-700;
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    color: $color-gray-800;
+    font-weight: 600;
   }
 }
 
 .priceAmount {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: $primary-color;
+  color: $color-primary;
   
   span {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: $color-gray-600;
+    margin-right: 0.25rem;
   }
 }
 
 .bookingDetails {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   
   ul {
     list-style: none;
@@ -485,14 +471,15 @@ $section-spacing: 2.5rem;
     
     li {
       position: relative;
-      padding-right: 1.5rem;
-      margin-bottom: 0.75rem;
+      padding-right: 1.75rem;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
       
       &:before {
         content: "✓";
         position: absolute;
         right: 0;
-        color: $primary-color;
+        color: $color-primary;
         font-weight: bold;
       }
     }
@@ -502,68 +489,25 @@ $section-spacing: 2.5rem;
 .bookButton {
   display: block;
   width: 100%;
-  padding: 1rem;
-  background-color: $primary-color;
+  padding: 1.25rem;
+  background-color: $color-primary;
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 1.1rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color $transition-speed ease, transform $transition-speed ease;
   
   &:hover {
-    background-color: darken($primary-color, 10%);
+    background-color: darken($color-primary, 10%);
     transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba($color-primary, 0.4);
   }
-}
-
-// Additional Info Card
-.infoCard {
-  background-color: #fff;
-  border-radius: $border-radius;
-  padding: 2rem;
-  box-shadow: $box-shadow;
-  transition: box-shadow $transition-speed ease;
   
-  &:hover {
-    box-shadow: $box-shadow-hover;
+  &:active {
+    transform: translateY(-1px);
   }
-}
-
-.infoCardTitle {
-  font-size: 1.3rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid $color-gray-200;
-  color: $primary-color;
-}
-
-.infoCardContent {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.infoCardItem {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px dashed $color-gray-200;
-  
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-}
-
-.infoCardLabel {
-  font-weight: 600;
-  color: $color-gray-700;
-}
-
-.infoCardValue {
-  color: $color-gray-600;
 }
 
 // ======== Accordion Styles ========

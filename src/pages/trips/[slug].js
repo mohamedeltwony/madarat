@@ -108,13 +108,11 @@ const TripGallery = ({ images }) => {
             {gridImages.map((image, idx) => {
               // If this is the third image (index 2) and we have more than 4 total images
               const isViewMoreButton = idx === 2 && images.length > 5;
-              // If this is the last image in our grid
-              const isLastImage = idx === 3;
 
               return (
                 <div key={idx} className={styles.galleryGridItem}>
                   <div 
-                    className={`${styles.galleryImgWrap} ${(isViewMoreButton || isLastImage) ? styles.active : ''}`}
+                    className={`${styles.galleryImgWrap} ${isViewMoreButton ? styles.active : ''}`}
                     onClick={() => isViewMoreButton ? setIndex(0) : setIndex(idx + 1)}
                   >
                     <Image
@@ -130,10 +128,6 @@ const TripGallery = ({ images }) => {
                         <button className={styles.viewMoreBtn}>
                           <i className="bi bi-plus-lg"></i> View More Images
                         </button>
-                      ) : isLastImage ? (
-                        <div className={styles.watchVideoBtn}>
-                          <i className="bi bi-play-circle"></i> Watch Video
-                        </div>
                       ) : (
                         <span className={styles.viewIcon}><i className="bi bi-eye"></i></span>
                       )}
@@ -392,25 +386,6 @@ export default function SingleTrip({ trip }) {
                 >
                   حجز الآن
                 </button>
-              </div>
-
-              {/* Additional Info Card */}
-              <div className={styles.infoCard}>
-                <h3 className={styles.infoCardTitle}>معلومات إضافية</h3>
-                <div className={styles.infoCardContent}>
-                  <div className={styles.infoCardItem}>
-                    <span className={styles.infoCardLabel}>المغادرة:</span>
-                    <span className={styles.infoCardValue}>متاح طوال العام</span>
-                  </div>
-                  <div className={styles.infoCardItem}>
-                    <span className={styles.infoCardLabel}>مدة الرحلة:</span>
-                    <span className={styles.infoCardValue}>{trip.duration?.days || 0} أيام / {trip.duration?.nights || 0} ليالي</span>
-                  </div>
-                  <div className={styles.infoCardItem}>
-                    <span className={styles.infoCardLabel}>اللغات المتاحة:</span>
-                    <span className={styles.infoCardValue}>العربية، الإنجليزية</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
