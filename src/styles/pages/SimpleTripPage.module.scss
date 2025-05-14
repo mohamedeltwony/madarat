@@ -120,6 +120,10 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 // ======== Gallery Styles ========
 .galleryWrapper {
   margin-bottom: $section-spacing;
+  max-width: 1248px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
 }
 
 .galleryContainer {
@@ -289,6 +293,9 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   grid-template-columns: 2fr 1fr;
   gap: 2rem;
   position: relative;
+  max-width: 1248px;
+  margin: 0 auto;
+  padding: 0 1rem;
   
   @media (max-width: 991px) {
     grid-template-columns: 1fr;
