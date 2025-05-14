@@ -260,8 +260,7 @@ export default function SingleTrip({ trip }) {
         <Container>
           {/* Trip Gallery */}
           {trip.gallery && trip.gallery.length > 0 && (
-            <div className={styles.contentBox}>
-              <h2 className={styles.sectionTitle}>معرض الصور</h2>
+            <div className={styles.galleryWrapper}>
               <TripGallery images={trip.gallery} />
             </div>
           )}
@@ -271,15 +270,53 @@ export default function SingleTrip({ trip }) {
             <div className={styles.tripDetails}>
               {/* Trip Description */}
               <div className={styles.contentBox}>
-                <h2 className={styles.sectionTitle}>تفاصيل الرحلة</h2>
-                <div dangerouslySetInnerHTML={{ __html: description }} />
+                <h2 className={styles.sectionTitle}>نبذة عن الرحلة</h2>
+                <div className={styles.tripDescription} dangerouslySetInnerHTML={{ __html: description }} />
+              </div>
+              
+              {/* Trip Highlights */}
+              <div className={styles.contentBox}>
+                <h2 className={styles.sectionTitle}>مميزات الرحلة</h2>
+                <div className={styles.tripHighlights}>
+                  <div className={styles.highlightGrid}>
+                    <div className={styles.highlightItem}>
+                      <div className={styles.highlightIcon}>
+                        <FaCalendarAlt />
+                      </div>
+                      <div className={styles.highlightContent}>
+                        <h3>مدة الرحلة</h3>
+                        <p>{trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</p>
+                      </div>
+                    </div>
+                    <div className={styles.highlightItem}>
+                      <div className={styles.highlightIcon}>
+                        <FaMoneyBillWave />
+                      </div>
+                      <div className={styles.highlightContent}>
+                        <h3>سعر الرحلة</h3>
+                        <p>{price} {trip.currency?.code || 'ريال'}</p>
+                      </div>
+                    </div>
+                    {trip.destination && (
+                      <div className={styles.highlightItem}>
+                        <div className={styles.highlightIcon}>
+                          <FaMapMarkerAlt />
+                        </div>
+                        <div className={styles.highlightContent}>
+                          <h3>الوجهة</h3>
+                          <p>{trip.destination.title || ''}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
               
               {/* What's Included */}
               <div className={styles.twoColumns}>
                 <div className={styles.contentBox}>
                   <h2 className={styles.sectionTitle}>الخدمات المشمولة</h2>
-                  <div dangerouslySetInnerHTML={{ 
+                  <div className={styles.includedList} dangerouslySetInnerHTML={{ 
                     __html: trip.cost_includes ? 
                       trip.cost_includes.replace(/\n/g, '<br>') : 
                       '<p>لا توجد معلومات</p>' 
@@ -288,7 +325,7 @@ export default function SingleTrip({ trip }) {
                 
                 <div className={styles.contentBox}>
                   <h2 className={styles.sectionTitle}>غير مشمول</h2>
-                  <div dangerouslySetInnerHTML={{ 
+                  <div className={styles.excludedList} dangerouslySetInnerHTML={{ 
                     __html: trip.cost_excludes ? 
                       trip.cost_excludes.replace(/\n/g, '<br>') : 
                       '<p>لا توجد معلومات</p>' 
@@ -331,29 +368,50 @@ export default function SingleTrip({ trip }) {
             </div>
             
             {/* Right Column - Booking Card */}
-            <div className={styles.bookingCard}>
-              <div className={styles.price}>
-                <h3>السعر لكل شخص</h3>
-                <div className={styles.priceAmount}>
-                  {price} <span>ريال</span>
+            <div className={styles.sidebarContent}>
+              <div className={styles.bookingCard}>
+                <div className={styles.price}>
+                  <h3>السعر لكل شخص</h3>
+                  <div className={styles.priceAmount}>
+                    {price} <span>ريال</span>
+                  </div>
+                </div>
+                
+                <div className={styles.bookingDetails}>
+                  <ul>
+                    <li>تذاكر الطيران</li>
+                    <li>الإقامة الفندقية</li>
+                    <li>المواصلات</li>
+                    <li>بعض الوجبات</li>
+                  </ul>
+                </div>
+                
+                <button 
+                  className={styles.bookButton}
+                  onClick={handleBookNow}
+                >
+                  حجز الآن
+                </button>
+              </div>
+
+              {/* Additional Info Card */}
+              <div className={styles.infoCard}>
+                <h3 className={styles.infoCardTitle}>معلومات إضافية</h3>
+                <div className={styles.infoCardContent}>
+                  <div className={styles.infoCardItem}>
+                    <span className={styles.infoCardLabel}>المغادرة:</span>
+                    <span className={styles.infoCardValue}>متاح طوال العام</span>
+                  </div>
+                  <div className={styles.infoCardItem}>
+                    <span className={styles.infoCardLabel}>مدة الرحلة:</span>
+                    <span className={styles.infoCardValue}>{trip.duration?.days || 0} أيام / {trip.duration?.nights || 0} ليالي</span>
+                  </div>
+                  <div className={styles.infoCardItem}>
+                    <span className={styles.infoCardLabel}>اللغات المتاحة:</span>
+                    <span className={styles.infoCardValue}>العربية، الإنجليزية</span>
+                  </div>
                 </div>
               </div>
-              
-              <div className={styles.bookingDetails}>
-                <ul>
-                  <li>تذاكر الطيران</li>
-                  <li>الإقامة الفندقية</li>
-                  <li>المواصلات</li>
-                  <li>بعض الوجبات</li>
-                </ul>
-              </div>
-              
-              <button 
-                className={styles.bookButton}
-                onClick={handleBookNow}
-              >
-                حجز الآن
-              </button>
             </div>
           </div>
         </Container>
