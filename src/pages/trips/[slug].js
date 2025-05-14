@@ -329,7 +329,62 @@ const TripForm = ({ tripTitle, price }) => {
 export default function SingleTrip({ trip }) {
   const router = useRouter();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isBookingCardExpanded, setIsBookingCardExpanded] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
   
+  // Add touch handling for mobile booking card
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  // Handle scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Handle touch events for the booking card
+  const handleTouchStart = (e) => {
+    setTouchStart(e.touches[0].clientY);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isUpSwipe = distance > 50;
+    const isDownSwipe = distance < -50;
+
+    if (isUpSwipe && !isBookingCardExpanded) {
+      setIsBookingCardExpanded(true);
+    } else if (isDownSwipe && isBookingCardExpanded) {
+      setIsBookingCardExpanded(false);
+    }
+
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+
+  // Close expanded card when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      const bookingCard = document.querySelector(`.${styles.bookingCard}`);
+      if (bookingCard && !bookingCard.contains(e.target) && isBookingCardExpanded) {
+        setIsBookingCardExpanded(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isBookingCardExpanded]);
+
   // Show loading state during fallback
   if (router.isFallback) {
     return (
@@ -512,8 +567,16 @@ export default function SingleTrip({ trip }) {
 
         {/* Right Column - Booking Card */}
         <div className={styles.sidebarContent}>
-          <div className={styles.bookingCard}>
-            <div className={styles.price}>
+          <div 
+            className={`${styles.bookingCard} ${isBookingCardExpanded ? styles.expanded : ''}`}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div 
+              className={styles.price}
+              onClick={() => setIsBookingCardExpanded(!isBookingCardExpanded)}
+            >
               <h3>السعر لكل شخص</h3>
               <div className={styles.priceAmount}>
                 {price} <span>ريال</span>
