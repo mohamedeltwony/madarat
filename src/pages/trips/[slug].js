@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import { FaCalendarAlt, FaMapMarkerAlt, FaMoneyBillWave, FaChevronDown, FaChevronUp, FaClock, FaPassport, FaLanguage, FaPlane } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaMoneyBillWave, FaChevronDown, FaChevronUp, FaClock, FaPassport, FaLanguage, FaPlane, FaInfoCircle } from 'react-icons/fa';
 import Layout from '../../components/Layout';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
@@ -268,13 +268,20 @@ export default function SingleTrip({ trip }) {
                 <div className={styles.tripDescription} dangerouslySetInnerHTML={{ __html: description }} />
               </div>
               
-              {/* Trip Highlights - New Design */}
+              {/* Trip Highlights - Modern Design */}
               <div className={styles.highlightsSection}>
-                <h2 className={styles.highlightsSectionTitle}>تفاصيل البرنامج</h2>
+                <div className={styles.decorativeCircle}></div>
+                <div className={styles.decorativeDots}></div>
+                <h2 className={styles.highlightsSectionTitle}>
+                  <span className={styles.titleIcon}><FaInfoCircle /></span>
+                  تفاصيل البرنامج
+                  <span className={styles.titleLine}></span>
+                </h2>
                 <div className={styles.highlightsCards}>
-                  <div className={styles.highlightCard}>
+                  <div className={`${styles.highlightCard} ${styles.durationCard}`}>
                     <div className={styles.highlightCardIcon}>
                       <FaCalendarAlt />
+                      <div className={styles.iconRing}></div>
                     </div>
                     <div className={styles.highlightCardContent}>
                       <h3>مدة الرحلة</h3>
@@ -282,9 +289,10 @@ export default function SingleTrip({ trip }) {
                     </div>
                   </div>
                   
-                  <div className={styles.highlightCard}>
+                  <div className={`${styles.highlightCard} ${styles.priceCard}`}>
                     <div className={styles.highlightCardIcon}>
                       <FaMoneyBillWave />
+                      <div className={styles.iconRing}></div>
                     </div>
                     <div className={styles.highlightCardContent}>
                       <h3>سعر الرحلة</h3>
@@ -292,9 +300,10 @@ export default function SingleTrip({ trip }) {
                     </div>
                   </div>
                   
-                  <div className={styles.highlightCard}>
+                  <div className={`${styles.highlightCard} ${styles.destinationCard}`}>
                     <div className={styles.highlightCardIcon}>
                       <FaMapMarkerAlt />
+                      <div className={styles.iconRing}></div>
                     </div>
                     <div className={styles.highlightCardContent}>
                       <h3>الوجهة</h3>
@@ -302,9 +311,10 @@ export default function SingleTrip({ trip }) {
                     </div>
                   </div>
                   
-                  <div className={styles.highlightCard}>
+                  <div className={`${styles.highlightCard} ${styles.timeCard}`}>
                     <div className={styles.highlightCardIcon}>
-                      <FaClock />
+                      <FaPlane />
+                      <div className={styles.iconRing}></div>
                     </div>
                     <div className={styles.highlightCardContent}>
                       <h3>وقت السفر</h3>
@@ -312,9 +322,10 @@ export default function SingleTrip({ trip }) {
                     </div>
                   </div>
                   
-                  <div className={styles.highlightCard}>
+                  <div className={`${styles.highlightCard} ${styles.languageCard}`}>
                     <div className={styles.highlightCardIcon}>
                       <FaLanguage />
+                      <div className={styles.iconRing}></div>
                     </div>
                     <div className={styles.highlightCardContent}>
                       <h3>اللغات</h3>
@@ -322,9 +333,10 @@ export default function SingleTrip({ trip }) {
                     </div>
                   </div>
                   
-                  <div className={styles.highlightCard}>
+                  <div className={`${styles.highlightCard} ${styles.visaCard}`}>
                     <div className={styles.highlightCardIcon}>
                       <FaPassport />
+                      <div className={styles.iconRing}></div>
                     </div>
                     <div className={styles.highlightCardContent}>
                       <h3>الفيزا</h3>

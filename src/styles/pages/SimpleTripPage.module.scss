@@ -3,12 +3,22 @@
 @use 'src/styles/settings/__settings.scss' as *;
 
 // Variables
-$border-radius: 8px;
-$box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-$box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-$transition-speed: 0.3s;
+$border-radius: 16px;
+$border-radius-sm: 12px;
+$box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+$box-shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+$transition-speed: 0.4s;
 $primary-color: $color-primary;
+$gold-color: #FFD700;
 $section-spacing: 2.5rem;
+
+// Color variables for cards
+$duration-gradient: linear-gradient(135deg, #00A896, #02C39A);
+$price-gradient: linear-gradient(135deg, #FFB347, $gold-color);
+$destination-gradient: linear-gradient(135deg, #2A9D8F, #264653);
+$time-gradient: linear-gradient(135deg, #06D6A0, #1B9AAA);
+$language-gradient: linear-gradient(135deg, #118AB2, #073B4C);
+$visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 
 // ======== Layout Styles ========
 .loading, .error {
@@ -288,14 +298,16 @@ $section-spacing: 2.5rem;
 }
 
 .contentBox {
-  background-color: #fff;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
   border-radius: $border-radius;
   padding: 2rem;
   box-shadow: $box-shadow;
-  transition: box-shadow $transition-speed ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: box-shadow $transition-speed ease, transform $transition-speed ease;
   
   &:hover {
     box-shadow: $box-shadow-hover;
+    transform: translateY(-2px);
   }
 }
 
@@ -329,16 +341,9 @@ $section-spacing: 2.5rem;
 
 // Trip Description Styles
 .tripDescription {
-  line-height: 1.7;
-  color: $color-gray-800;
-  
-  p {
-    margin-bottom: 1rem;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
 }
 
 // Included/Excluded Lists
@@ -385,6 +390,7 @@ $section-spacing: 2.5rem;
   border-radius: $border-radius;
   padding: 2rem;
   box-shadow: $box-shadow;
+  border: 1px solid rgba(0, 0, 0, 0.05);
   width: 100%;
   position: sticky;
   top: 2rem;
@@ -475,13 +481,14 @@ $section-spacing: 2.5rem;
 }
 
 .accordionItem {
-  border: 1px solid $color-gray-200;
-  border-radius: $border-radius;
+  border-radius: $border-radius-sm;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   overflow: hidden;
   transition: box-shadow $transition-speed ease;
   
   &:hover {
-    box-shadow: $box-shadow;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 }
 
@@ -512,34 +519,88 @@ $section-spacing: 2.5rem;
   color: $color-gray-700;
 }
 
-// ======== Trip Highlights - New Design ========
+// ======== Trip Highlights - Modern Design ========
 .highlightsSection {
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
   border-radius: $border-radius;
-  padding: 2.5rem;
+  padding: 3rem;
   box-shadow: $box-shadow;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all $transition-speed ease;
+  position: relative;
+  overflow: hidden;
   
   &:hover {
     box-shadow: $box-shadow-hover;
+    transform: translateY(-3px);
+    
+    .decorativeCircle {
+      transform: scale(1.1);
+    }
+    
+    .decorativeDots {
+      transform: rotate(15deg);
+    }
   }
 }
 
+.decorativeCircle {
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($gold-color, 0.1));
+  border-radius: 50%;
+  transition: transform 0.6s ease;
+  z-index: 0;
+}
+
+.decorativeDots {
+  position: absolute;
+  bottom: -50px;
+  left: -50px;
+  width: 150px;
+  height: 150px;
+  background-image: radial-gradient(circle, rgba($primary-color, 0.1) 2px, transparent 2px);
+  background-size: 15px 15px;
+  transition: transform 0.6s ease;
+  z-index: 0;
+}
+
 .highlightsSectionTitle {
-  font-size: 1.8rem;
-  color: $color-primary;
-  margin-bottom: 2rem;
-  text-align: center;
+  font-size: 2rem;
+  color: $primary-color;
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   position: relative;
+  z-index: 1;
   
-  &:after {
-    content: '';
+  .titleIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($gold-color, 0.1));
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    
+    svg {
+      font-size: 1.5rem;
+      color: $primary-color;
+    }
+  }
+  
+  .titleLine {
     position: absolute;
     bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
+    left: 0;
+    width: 100%;
     height: 3px;
-    background-color: $color-primary;
+    background: linear-gradient(to right, $primary-color, $gold-color);
     border-radius: 3px;
   }
 }
@@ -547,7 +608,9 @@ $section-spacing: 2.5rem;
 .highlightsCards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
   
   @media (max-width: 991px) {
     grid-template-columns: repeat(2, 1fr);
@@ -559,52 +622,121 @@ $section-spacing: 2.5rem;
 }
 
 .highlightCard {
-  background-color: white;
-  border-radius: $border-radius;
-  padding: 1.5rem;
+  background: white;
+  border-radius: $border-radius-sm;
+  padding: 1.75rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  gap: 1.25rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: all $transition-speed cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: transparent;
+    transition: all $transition-speed ease;
+  }
   
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     
     .highlightCardIcon {
-      background-color: $color-primary;
-      color: white;
+      transform: scale(1.1) rotate(10deg);
+      
+      .iconRing {
+        transform: scale(1.2);
+        opacity: 1;
+      }
     }
   }
+  
+  // Card-specific styles
+  &.durationCard::before { background: $duration-gradient; }
+  &.priceCard::before { background: $price-gradient; }
+  &.destinationCard::before { background: $destination-gradient; }
+  &.timeCard::before { background: $time-gradient; }
+  &.languageCard::before { background: $language-gradient; }
+  &.visaCard::before { background: $visa-gradient; }
 }
 
 .highlightCardIcon {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background-color: rgba($color-primary, 0.1);
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  color: $color-primary;
-  margin-bottom: 1rem;
-  transition: all 0.3s ease;
+  transition: all $transition-speed cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  flex-shrink: 0;
+  
+  svg {
+    font-size: 1.75rem;
+    color: white;
+    z-index: 2;
+  }
+  
+  .iconRing {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: inherit;
+    transform: scale(0.8);
+    opacity: 0;
+    transition: all $transition-speed ease;
+  }
 }
+
+// Card-specific icon backgrounds
+.durationCard .highlightCardIcon { background: $duration-gradient; }
+.priceCard .highlightCardIcon { background: $price-gradient; }
+.destinationCard .highlightCardIcon { background: $destination-gradient; }
+.timeCard .highlightCardIcon { background: $time-gradient; }
+.languageCard .highlightCardIcon { background: $language-gradient; }
+.visaCard .highlightCardIcon { background: $visa-gradient; }
 
 .highlightCardContent {
   h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    color: $color-gray-800;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: $color-gray-600;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   
   p {
-    color: $color-gray-600;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     margin: 0;
+    font-weight: 600;
+    background: linear-gradient(135deg, $primary-color, $gold-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.5px;
+  }
+}
+
+// Animation keyframes
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba($primary-color, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba($primary-color, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba($primary-color, 0);
   }
 } 
