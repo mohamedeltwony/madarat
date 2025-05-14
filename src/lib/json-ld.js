@@ -1,6 +1,5 @@
 import JsonLd from '@/components/JsonLd';
 import config from '../../package.json';
-
 import { authorPathByName } from '@/lib/users';
 import { postPathBySlug } from '@/lib/posts';
 import { pagePathBySlug } from '@/lib/pages';
