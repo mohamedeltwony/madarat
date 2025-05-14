@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Meta from '@/components/Meta';
 import { getSiteMetadataREST, getAllMenusREST } from '@/lib/rest-api';
@@ -6,7 +6,7 @@ import styles from '@/styles/pages/BookNow.module.scss';
 import Layout from '@/components/Layout';
 import Footer from '@/components/Footer';
 
-export default function BookNowPage({ metadata, menus }) {
+export default function BookNowPage({ metadata, menus, destinations = [] }) {
   const [formData, setFormData] = useState({
     phone: '',
     name: '',
@@ -57,26 +57,6 @@ export default function BookNowPage({ metadata, menus }) {
       setIsSubmitting(false);
     }
   };
-
-  const destinations = [
-    'جورجيا',
-    'أذربيجان',
-    'البوسنة',
-    'ألبانيا',
-    'تركيا',
-    'المالديف',
-    'ماليزيا',
-    'اندونيسيا',
-    'تايلاند',
-    'سريلانكا',
-    'موريشيوس',
-    'صلالة',
-    'اوزباكستان',
-    'جنوب افريقيا',
-    'سنغافورة',
-    'روسيا',
-    'الفلبين',
-  ];
 
   return (
     <Layout>
@@ -145,8 +125,7 @@ export default function BookNowPage({ metadata, menus }) {
                   <div className={styles.formInfo}>
                     <h2 className={styles.formTitle}>نموذج طلب الحجز</h2>
                     <p className={styles.formDescription}>
-                      املأ النموذج أدناه وسيتواصل معك أحد مستشاري السفر خلال 24
-                      ساعة لترتيب رحلتك المثالية
+                      املأ النموذج أدناه وسيتواصل معك أحد مستشاري السفر في أقرب وقت لترتيب رحلتك المثالية
                     </p>
                   </div>
 
@@ -221,16 +200,16 @@ export default function BookNowPage({ metadata, menus }) {
                         id="destination"
                         name="destination"
                         className={`${styles.formSelect} ${styles.cairoFont}`}
-                        required
                         value={formData.destination}
                         onChange={handleChange}
+                        required
                       >
                         <option value="— الرجاء تحديد اختيار —">
                           — الرجاء تحديد اختيار —
                         </option>
-                        {destinations.map((destination) => (
-                          <option key={destination} value={destination}>
-                            {destination}
+                        {(destinations || []).map((destination) => (
+                          <option key={destination.id} value={destination.name}>
+                            {destination.name}
                           </option>
                         ))}
                       </select>
@@ -377,10 +356,26 @@ export async function getServerSideProps() {
     const metadata = await getSiteMetadataREST();
     const { menus = [] } = await getAllMenusREST();
 
+    // Fetch destinations from WordPress API
+    const destinationsResponse = await fetch('https://madaratalkon.com/wp-json/wp/v2/destination?_fields=id,name&per_page=100');
+    let destinations = [];
+    
+    if (destinationsResponse.ok) {
+      const data = await destinationsResponse.json();
+      // Ensure we have a valid array of destinations with required fields
+      destinations = Array.isArray(data) ? data.map(item => ({
+        id: item.id,
+        name: item.name || ''
+      })).filter(item => item.name) : [];
+    } else {
+      console.error('Failed to fetch destinations:', destinationsResponse.statusText);
+    }
+
     return {
       props: {
-        metadata: metadata || {}, // Ensure metadata is never undefined
+        metadata: metadata || {},
         menus: menus || [],
+        destinations: destinations || [], // Ensure we always return an array
       },
     };
   } catch (error) {
@@ -393,6 +388,7 @@ export async function getServerSideProps() {
           description: 'موقع السفر والرحلات الأول في الوطن العربي',
         },
         menus: [],
+        destinations: [], // Return empty array on error
       },
     };
   }

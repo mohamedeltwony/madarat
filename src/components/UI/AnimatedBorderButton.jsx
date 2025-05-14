@@ -17,6 +17,7 @@ const AnimatedBorderButton = ({
   const [open, setOpen] = useState(false);
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
+  const timeoutRef = useRef(null);
 
   // Determine button class based on variant
   const buttonClass = `${styles.button} ${styles[variant]} ${className}`;
@@ -38,6 +39,15 @@ const AnimatedBorderButton = ({
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   // Button content
   const buttonContent = (
     <>
@@ -46,7 +56,20 @@ const AnimatedBorderButton = ({
     </>
   );
 
-  // Dropdown logic (open on hover)
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpen(false);
+    }, 1000); // 1 second delay
+  };
+
+  // Dropdown logic
   if (dropdownItems) {
     return (
       <div
@@ -55,8 +78,8 @@ const AnimatedBorderButton = ({
           '--border-radius': borderRadius,
           '--animation-duration': animationDuration,
         }}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <button
           ref={buttonRef}
