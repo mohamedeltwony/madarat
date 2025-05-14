@@ -29,27 +29,7 @@ $brand-gold: #cc9c64;
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('/images/pattern.png');
-    opacity: 0.1;
-    animation: floatPattern 60s linear infinite;
-  }
-}
-
-@keyframes floatPattern {
-  0% {
-    transform: translateX(0) translateY(0);
-  }
-  25% {
-    transform: translateX(-5%) translateY(2%);
-  }
-  50% {
-    transform: translateX(-2%) translateY(5%);
-  }
-  75% {
-    transform: translateX(-7%) translateY(3%);
-  }
-  100% {
-    transform: translateX(0) translateY(0);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
   }
 }
 
