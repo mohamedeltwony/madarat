@@ -1,7 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import { FaCalendarAlt, FaMapMarkerAlt, FaMoneyBillWave, FaChevronDown, FaChevronUp, FaClock, FaPassport, FaLanguage, FaPlane, FaInfoCircle } from 'react-icons/fa';
+import { 
+  FaCalendarAlt, 
+  FaMapMarkerAlt, 
+  FaMoneyBillWave, 
+  FaChevronDown, 
+  FaChevronUp, 
+  FaClock, 
+  FaPassport, 
+  FaLanguage, 
+  FaPlane,
+  FaInfoCircle,
+  FaHotel,
+  FaCar,
+  FaUtensils,
+  FaUserTie,
+  FaCamera,
+  FaTicketAlt,
+  FaMedkit,
+  FaPhoneAlt,
+  FaTimesCircle,
+  FaShoppingBag,
+  FaWineGlassAlt,
+  FaGift,
+  FaCreditCard,
+  FaGoogle,
+  FaEnvelope,
+  FaUser
+} from 'react-icons/fa';
 import Layout from '../../components/Layout';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
@@ -14,6 +41,7 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
+import jwt_decode from 'jwt-decode';
 
 // Function to decode HTML entities
 const decodeHtmlEntities = (text) => {
@@ -161,6 +189,32 @@ const TripGallery = ({ images }) => {
   );
 };
 
+// Simplified contact form component
+const ContactForm = ({ price }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const installmentAmount = Math.ceil(price / 4);
+
+  return (
+    <div className={styles.contactForm}>
+      <div className={styles.installmentInfo}>
+        <FaCreditCard className={styles.installmentIcon} />
+        <h3>الدفع بالتقسيط على أربع دفعات</h3>
+        <div className={styles.installmentAmount}>
+          <span>{installmentAmount.toLocaleString('ar-SA')}</span> ريال / شهرياً
+        </div>
+      </div>
+
+      <button 
+        className={styles.submitButton}
+        onClick={() => window.location.href = '/contact'}
+        disabled={isLoading}
+      >
+        اضغط هنا وسيتواصل معك مستشارك السياحي
+      </button>
+    </div>
+  );
+};
+
 export default function SingleTrip({ trip }) {
   const router = useRouter();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -250,136 +304,135 @@ export default function SingleTrip({ trip }) {
       </div>
       
       {/* Main Content */}
-      <Section>
-        <Container>
-          {/* Trip Gallery */}
-          {trip.gallery && trip.gallery.length > 0 && (
-            <div className={styles.galleryWrapper}>
-              <TripGallery images={trip.gallery} />
-            </div>
-          )}
-          
-          <div className={styles.mainContent}>
-            {/* Left Column - Trip Details */}
-            <div className={styles.tripDetails}>
-              {/* Trip Description */}
-              <div className={styles.contentBox}>
-                <div className={styles.decorativeCircle}></div>
-                <div className={styles.decorativeDots}></div>
-                <h2 className={styles.sectionTitle}>
-                  نبذة عن الرحلة
-                  <span className={styles.titleLine}></span>
-                </h2>
-                <div className={styles.tripDescription} dangerouslySetInnerHTML={{ __html: description }} />
-              </div>
-              
-              {/* What's Included */}
-              <div className={styles.twoColumns}>
-                <div className={styles.contentBox}>
-                  <div className={styles.decorativeCircle}></div>
-                  <div className={styles.decorativeDots}></div>
-                  <h2 className={styles.sectionTitle}>
-                    الخدمات المشمولة
-                    <span className={styles.titleLine}></span>
-                  </h2>
-                  <div className={styles.includedList} dangerouslySetInnerHTML={{ 
-                    __html: trip.cost_includes ? 
-                      trip.cost_includes.replace(/\n/g, '<br>') : 
-                      '<p>لا توجد معلومات</p>' 
-                  }} />
-                </div>
-                
-                <div className={styles.contentBox}>
-                  <div className={styles.decorativeCircle}></div>
-                  <div className={styles.decorativeDots}></div>
-                  <h2 className={styles.sectionTitle}>
-                    غير مشمول
-                    <span className={styles.titleLine}></span>
-                  </h2>
-                  <div className={styles.excludedList} dangerouslySetInnerHTML={{ 
-                    __html: trip.cost_excludes ? 
-                      trip.cost_excludes.replace(/\n/g, '<br>') : 
-                      '<p>لا توجد معلومات</p>' 
-                  }} />
-                </div>
-              </div>
-              
-              {/* Itinerary */}
-              {hasItineraries && (
-                <div className={styles.contentBox}>
-                  <div className={styles.decorativeCircle}></div>
-                  <div className={styles.decorativeDots}></div>
-                  <h2 className={styles.sectionTitle}>
-                    برنامج الرحلة
-                    <span className={styles.titleLine}></span>
-                  </h2>
-                  <div className={styles.accordion}>
-                    {trip.itineraries.map((day, index) => (
-                      <AccordionItem
-                        key={index}
-                        title={`اليوم ${index + 1}: ${day.title || ''}`}
-                        content={day.content || ''}
-                        defaultOpen={index === 0}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {/* FAQs */}
-              {hasFaqs && (
-                <div className={styles.contentBox}>
-                  <div className={styles.decorativeCircle}></div>
-                  <div className={styles.decorativeDots}></div>
-                  <h2 className={styles.sectionTitle}>
-                    الأسئلة الشائعة
-                    <span className={styles.titleLine}></span>
-                  </h2>
-                  <div className={styles.accordion}>
-                    {trip.faqs.map((faq, index) => (
-                      <AccordionItem
-                        key={index}
-                        title={faq.title || ''}
-                        content={faq.content || ''}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            {/* Right Column - Booking Card */}
-            <div className={styles.sidebarContent}>
-              <div className={styles.bookingCard}>
-                <div className={styles.price}>
-                  <h3>السعر لكل شخص</h3>
-                  <div className={styles.priceAmount}>
-                    {price} <span>ريال</span>
-                  </div>
-                </div>
-                
-                <div className={styles.bookingDetails}>
+      <div className={styles.mainContent}>
+        {/* Left Column - Trip Details */}
+        <div className={styles.tripDetails}>
+          {/* Main Description Box */}
+          <div className={`${styles.bentoBox} ${styles.mainDescription}`}>
+            <div className={styles.decorativeCircle}></div>
+            <div className={styles.decorativeDots}></div>
+            <h2 className={styles.sectionTitle}>
+              نبذة عن الرحلة
+              <span className={styles.titleLine}></span>
+            </h2>
+            <div className={styles.tripDescription} dangerouslySetInnerHTML={{ __html: description }} />
+          </div>
+
+          {/* Services Grid */}
+          <div className={styles.bentoGrid}>
+            {/* Included Services Box */}
+            <div className={`${styles.bentoBox} ${styles.includedServices}`}>
+              <h2 className={styles.sectionTitle}>
+                الخدمات المشمولة
+                <span className={styles.titleLine}></span>
+              </h2>
+              <div className={styles.includedList}>
+                {trip.cost_includes ? (
                   <ul>
-                    <li>تذاكر الطيران</li>
-                    <li>الإقامة الفندقية</li>
-                    <li>المواصلات</li>
-                    <li>بعض الوجبات</li>
+                    {trip.cost_includes.split('\n').map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
                   </ul>
-                </div>
-                
-                <button 
-                  className={styles.bookButton}
-                  onClick={handleBookNow}
-                >
-                  حجز الآن
-                </button>
+                ) : (
+                  <p>لا توجد معلومات</p>
+                )}
+              </div>
+            </div>
+
+            {/* Excluded Services Box */}
+            <div className={`${styles.bentoBox} ${styles.excludedServices}`}>
+              <h2 className={styles.sectionTitle}>
+                غير مشمول
+                <span className={styles.titleLine}></span>
+              </h2>
+              <div className={styles.excludedList}>
+                {trip.cost_excludes ? (
+                  <ul>
+                    {trip.cost_excludes.split('\n').map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>لا توجد معلومات</p>
+                )}
               </div>
             </div>
           </div>
-        </Container>
-      </Section>
+
+          {/* Itinerary Box */}
+          {hasItineraries && (
+            <div className={`${styles.bentoBox} ${styles.itineraryBox}`}>
+              <h2 className={styles.sectionTitle}>
+                برنامج الرحلة
+                <span className={styles.titleLine}></span>
+              </h2>
+              <div className={styles.accordion}>
+                {trip.itineraries.map((day, index) => (
+                  <AccordionItem
+                    key={index}
+                    title={`اليوم ${index + 1}: ${day.title || ''}`}
+                    content={day.content || ''}
+                    defaultOpen={index === 0}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* FAQs Box */}
+          {hasFaqs && (
+            <div className={`${styles.bentoBox} ${styles.faqBox}`}>
+              <h2 className={styles.sectionTitle}>
+                الأسئلة الشائعة
+                <span className={styles.titleLine}></span>
+              </h2>
+              <div className={styles.accordion}>
+                {trip.faqs.map((faq, index) => (
+                  <AccordionItem
+                    key={index}
+                    title={faq.title || ''}
+                    content={faq.content || ''}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right Column - Booking Card */}
+        <div className={styles.sidebarContent}>
+          <div className={styles.bookingCard}>
+            <div className={styles.price}>
+              <h3>السعر لكل شخص</h3>
+              <div className={styles.priceAmount}>
+                {price} <span>ريال</span>
+              </div>
+            </div>
+            
+            <div className={styles.installmentInfo}>
+              <FaCreditCard className={styles.installmentIcon} />
+              <h3>الدفع بالتقسيط على أربع دفعات</h3>
+              <div className={styles.installmentAmount}>
+                <span>{Math.ceil(parseInt(price.replace(/,/g, '')) / 4).toLocaleString('ar-SA')}</span> ريال / شهرياً
+              </div>
+            </div>
+
+            <button 
+              className={styles.bookButton}
+              onClick={() => window.location.href = '/contact'}
+            >
+              اضغط هنا وسيتواصل معك مستشارك السياحي
+            </button>
+          </div>
+        </div>
+      </div>
       
-      {/* Booking Modal would go here */}
+      {/* Trip Gallery */}
+      {trip.gallery && trip.gallery.length > 0 && (
+        <div className={styles.galleryWrapper}>
+          <TripGallery images={trip.gallery} />
+        </div>
+      )}
     </Layout>
   );
 }

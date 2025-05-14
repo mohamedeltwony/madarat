@@ -288,6 +288,7 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 2rem;
+  position: relative;
   
   @media (max-width: 991px) {
     grid-template-columns: 1fr;
@@ -298,38 +299,96 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 .tripDetails {
   display: flex;
   flex-direction: column;
-  gap: $section-spacing;
+  gap: 2rem;
 }
 
-.contentBox {
-  background: linear-gradient(135deg, #ffffff, #f8f9fa);
-  border-radius: $border-radius;
-  padding: 2.5rem;
-  box-shadow: $box-shadow;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: all $transition-speed ease;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: $section-spacing;
+.bentoGrid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 2rem;
   
-  &:hover {
-    box-shadow: $box-shadow-hover;
-    transform: translateY(-3px);
-    
-    .decorativeCircle {
-      transform: scale(1.1);
-    }
-    
-    .decorativeDots {
-      transform: rotate(15deg);
-    }
+  @media (max-width: 991px) {
+    grid-template-columns: 1fr;
   }
 }
 
+.bentoBox {
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border-radius: $border-radius;
+  padding: 2rem;
+  box-shadow: $box-shadow;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all $transition-speed cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: $box-shadow-hover;
+  }
+}
+
+.mainDescription {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba($primary-color, 0.05), rgba($gold-color, 0.05));
+}
+
+.includedServices, .excludedServices {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  ul {
+    flex-grow: 1;
+  }
+}
+
+.includedServices {
+  background: linear-gradient(135deg, rgba($primary-color, 0.03), rgba($gold-color, 0.03));
+}
+
+.excludedServices {
+  background: linear-gradient(135deg, rgba(#ff3b30, 0.03), rgba(#ff9500, 0.03));
+}
+
+.itineraryBox {
+  background: linear-gradient(135deg, rgba($primary-color, 0.02), rgba($gold-color, 0.02));
+}
+
+.faqBox {
+  background: linear-gradient(135deg, rgba($primary-color, 0.01), rgba($gold-color, 0.01));
+}
+
+// Decorative Elements
+.decorativeCircle {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($gold-color, 0.1));
+  border-radius: 50%;
+  transition: transform 0.6s ease;
+  z-index: 0;
+}
+
+.decorativeDots {
+  position: absolute;
+  bottom: -30px;
+  left: -30px;
+  width: 120px;
+  height: 120px;
+  background-image: radial-gradient(circle, rgba($primary-color, 0.1) 2px, transparent 2px);
+  background-size: 15px 15px;
+  transition: transform 0.6s ease;
+  z-index: 0;
+}
+
+// Section Titles
 .sectionTitle {
   position: relative;
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
   color: $primary-color;
   display: flex;
   align-items: center;
@@ -338,125 +397,86 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   
   .titleLine {
     position: absolute;
-    bottom: -10px;
+    bottom: -8px;
     left: 0;
     width: 100%;
-    height: 3px;
+    height: 2px;
     background: linear-gradient(to right, $primary-color, $gold-color);
-    border-radius: 3px;
-  }
-}
-
-.twoColumns {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  margin-bottom: $section-spacing;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-// Trip Description Styles
-.tripDescription {
-  position: relative;
-  z-index: 1;
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: $color-gray-800;
-  
-  p {
-    margin-bottom: 1.5rem;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
-
-// Included/Excluded Lists
-.includedList, .excludedList {
-  position: relative;
-  z-index: 1;
-  
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  li {
-    position: relative;
-    padding-right: 2rem;
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-    color: $color-gray-800;
-    transition: all $transition-speed ease;
-    
-    &:before {
-      content: "✓";
-      position: absolute;
-      right: 0;
-      color: $primary-color;
-      font-weight: bold;
-      background: linear-gradient(135deg, $primary-color, $gold-color);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    &:hover {
-      transform: translateX(-5px);
-    }
-  }
-}
-
-.excludedList {
-  li:before {
-    content: "✕";
-    background: linear-gradient(135deg, #ff3b30, #ff9500);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    border-radius: 2px;
   }
 }
 
 // ======== Sidebar Content ========
 .sidebarContent {
-  width: 100%;
+  @media (min-width: 992px) {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+  }
 }
 
 // ======== Booking Card ========
 .bookingCard {
   background: linear-gradient(135deg, #ffffff, #f8f9fa);
   border-radius: $border-radius;
-  padding: 2.5rem;
+  padding: 2rem;
   box-shadow: $box-shadow;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 2rem;
   transition: all $transition-speed ease;
   
+  @media (max-width: 991px) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    border-radius: $border-radius $border-radius 0 0;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+    
+    .price {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      
+      h3 {
+        margin: 0;
+      }
+    }
+    
+    .installmentInfo {
+      display: none;
+    }
+  }
+  
   &:hover {
-    box-shadow: $box-shadow-hover;
-    transform: translateY(-3px);
+    @media (min-width: 992px) {
+      transform: translateY(-3px);
+      box-shadow: $box-shadow-hover;
+    }
   }
 }
 
 .price {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   
   h3 {
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
+    font-size: 1.2rem;
     color: $color-gray-800;
-    font-weight: 600;
+    margin-bottom: 0.5rem;
   }
 }
 
 .priceAmount {
   font-size: 2.5rem;
   font-weight: 700;
+  color: $primary-color;
   background: $primary-gradient;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -466,46 +486,65 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
     margin-right: 0.25rem;
     opacity: 0.8;
   }
+  
+  @media (max-width: 991px) {
+    font-size: 1.8rem;
+    
+    span {
+      font-size: 1rem;
+    }
+  }
 }
 
-.bookingDetails {
-  margin-bottom: 2rem;
+.installmentInfo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: $border-radius-sm;
   
-  ul {
-    list-style: none;
-    padding: 0;
+  .installmentIcon {
+    font-size: 1.5rem;
+    color: $primary-color;
+    margin-bottom: 0.5rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    color: $color-gray-800;
+    margin-bottom: 0.5rem;
+  }
+  
+  .installmentAmount {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: $primary-color;
     
-    li {
-      position: relative;
-      padding-right: 1.75rem;
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-      
-      &:before {
-        content: "✓";
-        position: absolute;
-        right: 0;
-        color: $color-primary;
-        font-weight: bold;
-      }
+    span {
+      font-size: 1.4rem;
+      font-weight: 700;
     }
   }
 }
 
 .bookButton {
-  display: block;
   width: 100%;
   padding: 1.25rem;
   background: $primary-gradient;
   color: white;
   border: none;
   border-radius: $border-radius-sm;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all $transition-speed ease;
   position: relative;
   overflow: hidden;
+  
+  @media (max-width: 991px) {
+    padding: 1rem;
+    font-size: 1rem;
+  }
   
   &:before {
     content: '';
@@ -617,67 +656,6 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
     .decorativeDots {
       transform: rotate(15deg);
     }
-  }
-}
-
-.decorativeCircle {
-  position: absolute;
-  top: -50px;
-  right: -50px;
-  width: 150px;
-  height: 150px;
-  background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($gold-color, 0.1));
-  border-radius: 50%;
-  transition: transform 0.6s ease;
-  z-index: 0;
-}
-
-.decorativeDots {
-  position: absolute;
-  bottom: -30px;
-  left: -30px;
-  width: 120px;
-  height: 120px;
-  background-image: radial-gradient(circle, rgba($primary-color, 0.1) 2px, transparent 2px);
-  background-size: 15px 15px;
-  transition: transform 0.6s ease;
-  z-index: 0;
-}
-
-.highlightsSectionTitle {
-  font-size: 2rem;
-  color: $primary-color;
-  margin-bottom: 3rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: relative;
-  z-index: 1;
-  
-  .titleIcon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($gold-color, 0.1));
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-    
-    svg {
-      font-size: 1.5rem;
-      color: $primary-color;
-    }
-  }
-  
-  .titleLine {
-    position: absolute;
-    bottom: -10px;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(to right, $primary-color, $gold-color);
-    border-radius: 3px;
   }
 }
 
@@ -814,5 +792,12 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   }
   100% {
     box-shadow: 0 0 0 0 rgba($primary-color, 0);
+  }
+}
+
+// Add padding to the bottom of the page on mobile to account for fixed booking card
+@media (max-width: 991px) {
+  .tripDetails {
+    padding-bottom: 120px;
   }
 } 

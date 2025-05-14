@@ -30,6 +30,7 @@
     "fuse.js": "^6.6.2",
     "glob": "^10.3.10",
     "he": "^1.2.0",
+    "jwt-decode": "^4.0.0",
     "loader-utils": "^3.2.1",
     "next": "^15.3.0",
     "next-cloudinary": "^6.16.0",
