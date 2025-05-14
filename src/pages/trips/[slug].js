@@ -330,11 +330,55 @@ export default function SingleTrip({ trip }) {
   const router = useRouter();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isBookingCardExpanded, setIsBookingCardExpanded] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [hasShownHint, setHasShownHint] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   
   // Add touch handling for mobile booking card
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
+
+  // Handle scroll position and hint visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      const position = window.scrollY;
+      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercentage = (position / pageHeight) * 100;
+      
+      setScrollPosition(position);
+
+      // Show hint if scrolled 30% and hasn't been shown before
+      if (scrollPercentage > 30 && !hasShownHint) {
+        setShowHint(true);
+        setHasShownHint(true);
+        
+        // Hide hint after 3 seconds
+        setTimeout(() => {
+          setShowHint(false);
+        }, 3000);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasShownHint]);
+
+  // Show hint after 5 seconds if user hasn't scrolled
+  useEffect(() => {
+    if (!hasShownHint) {
+      const timer = setTimeout(() => {
+        setShowHint(true);
+        setHasShownHint(true);
+        
+        // Hide hint after 3 seconds
+        setTimeout(() => {
+          setShowHint(false);
+        }, 3000);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [hasShownHint]);
 
   // Handle scroll position
   useEffect(() => {
@@ -574,13 +618,17 @@ export default function SingleTrip({ trip }) {
             onTouchEnd={handleTouchEnd}
           >
             <div 
-              className={styles.price}
-              onClick={() => setIsBookingCardExpanded(!isBookingCardExpanded)}
+              className={`${styles.price} ${showHint ? styles.showHint : ''}`}
+              onClick={() => {
+                setIsBookingCardExpanded(!isBookingCardExpanded);
+                setShowHint(false);
+              }}
             >
               <h3>السعر لكل شخص</h3>
               <div className={styles.priceAmount}>
                 {price} <span>ريال</span>
               </div>
+              <div className={styles.priceHint}>اضغط هنا</div>
             </div>
             
             <div className={styles.installmentInfo}>
