@@ -7,6 +7,21 @@ import Container from '../../components/Container';
 import Section from '../../components/Section';
 import styles from '../../styles/pages/SimpleTripPage.module.scss';
 import { useRouter } from 'next/router';
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
+
+// Function to decode HTML entities
+const decodeHtmlEntities = (text) => {
+  if (!text) return '';
+  const textArea = document.createElement('textarea');
+  textArea.innerHTML = text;
+  return textArea.value;
+};
 
 // Simple accordion component
 const AccordionItem = ({ title, content, defaultOpen = false }) => {
@@ -26,6 +41,69 @@ const AccordionItem = ({ title, content, defaultOpen = false }) => {
           dangerouslySetInnerHTML={{ __html: content }} 
         />
       )}
+    </div>
+  );
+};
+
+// Gallery component
+const TripGallery = ({ images }) => {
+  const [index, setIndex] = useState(-1);
+
+  if (!images || images.length === 0) {
+    return null;
+  }
+
+  // Adjust the grid class based on the number of images
+  const getGridClass = () => {
+    if (images.length === 1) {
+      return `${styles.galleryGrid} ${styles.singleImage}`;
+    } else if (images.length === 2) {
+      return `${styles.galleryGrid} ${styles.twoImages}`;
+    } else if (images.length === 3) {
+      return `${styles.galleryGrid} ${styles.threeImages}`;
+    } else {
+      return styles.galleryGrid;
+    }
+  };
+
+  return (
+    <div className={styles.galleryContainer}>
+      <div className={getGridClass()}>
+        {images.map((image, idx) => (
+          <div 
+            key={idx} 
+            className={`${styles.galleryItem} ${idx === 0 ? styles.featuredGalleryItem : ''}`}
+            onClick={() => setIndex(idx)}
+          >
+            <Image
+              src={image.src}
+              alt={image.alt || "Trip image"}
+              fill
+              sizes="(max-width: 768px) 50vw, 33vw"
+              className={styles.galleryImage}
+              loading={idx === 0 ? "eager" : "lazy"}
+            />
+          </div>
+        ))}
+      </div>
+
+      <Lightbox
+        open={index >= 0}
+        index={index}
+        close={() => setIndex(-1)}
+        slides={images.map(image => ({ src: image.src, alt: image.alt }))}
+        plugins={[Thumbnails, Zoom, Fullscreen, Slideshow]}
+        carousel={{
+          finite: images.length <= 5
+        }}
+        thumbnails={{
+          position: "bottom"
+        }}
+        zoom={{
+          maxZoomPixelRatio: 3,
+          zoomInMultiplier: 2
+        }}
+      />
     </div>
   );
 };
@@ -67,17 +145,18 @@ export default function SingleTrip({ trip }) {
   
   // Safe access to properties with fallbacks
   const title = trip.title || '';
+  const decodedTitle = typeof window !== 'undefined' ? decodeHtmlEntities(title) : title;
   const description = trip.description || '';
   const hasItineraries = trip.itineraries && Array.isArray(trip.itineraries) && trip.itineraries.length > 0;
   const hasFaqs = trip.faqs && Array.isArray(trip.faqs) && trip.faqs.length > 0;
-  const featuredImage = trip.gallery && trip.gallery.length > 0 ? trip.gallery[0] : '/images/placeholder.jpg';
+  const featuredImage = trip.gallery && trip.gallery.length > 0 ? trip.gallery[0].src : '/images/placeholder.jpg';
   const price = (trip.wp_travel_engine_setting_trip_actual_price || trip.price || 4999).toLocaleString('ar-SA');
   const handleBookNow = () => setIsBookingModalOpen(true);
   
   return (
     <Layout>
       <Head>
-        <title>{title} | مدارات الكون</title>
+        <title>{decodedTitle} | مدارات الكون</title>
         <meta name="description" content={description?.substring(0, 160)} />
       </Head>
       
@@ -86,7 +165,7 @@ export default function SingleTrip({ trip }) {
         <div className={styles.heroImage}>
           <Image 
             src={featuredImage} 
-            alt={title}
+            alt={decodedTitle}
             fill
             sizes="100vw"
             quality={90} 
@@ -96,7 +175,7 @@ export default function SingleTrip({ trip }) {
         </div>
         <Container>
           <div className={styles.heroContent}>
-            <h1>{title}</h1>
+            <h1 dangerouslySetInnerHTML={{ __html: title }}></h1>
             <div className={styles.tripInfo}>
               <div className={styles.infoItem}>
                 <FaCalendarAlt />
@@ -120,6 +199,14 @@ export default function SingleTrip({ trip }) {
       {/* Main Content */}
       <Section>
         <Container>
+          {/* Trip Gallery */}
+          {trip.gallery && trip.gallery.length > 0 && (
+            <div className={styles.contentBox}>
+              <h2 className={styles.sectionTitle}>معرض الصور</h2>
+              <TripGallery images={trip.gallery} />
+            </div>
+          )}
+          
           <div className={styles.mainContent}>
             {/* Left Column - Trip Details */}
             <div className={styles.tripDetails}>
@@ -245,13 +332,48 @@ export async function getStaticProps({ params }) {
     
     // Featured image
     if (trip?._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
-      galleryImages.push(trip._embedded['wp:featuredmedia'][0].source_url);
+      galleryImages.push({
+        src: trip._embedded['wp:featuredmedia'][0].source_url,
+        alt: trip._embedded['wp:featuredmedia'][0]?.alt_text || trip.title?.rendered || 'Trip image'
+      });
     }
     
     // Additional gallery images if available
     if (trip?.wpte_gallery_id) {
-      // The logic for extracting gallery images would go here
-      // For simplicity, we're just using the featured image
+      // Process gallery image IDs
+      const galleryIds = Object.entries(trip.wpte_gallery_id)
+        .filter(([key, value]) => !isNaN(parseInt(key)) && value)
+        .map(([_, value]) => value);
+
+      // Fetch all media items for the gallery
+      if (galleryIds.length > 0) {
+        // In a production environment, we would fetch each media item individually
+        // or use a batch endpoint if available
+        for (const id of galleryIds) {
+          try {
+            const mediaResponse = await fetch(`https://madaratalkon.com/wp-json/wp/v2/media/${id}`);
+            if (mediaResponse.ok) {
+              const media = await mediaResponse.json();
+              
+              // Add the media to our gallery
+              if (media?.source_url) {
+                galleryImages.push({
+                  src: media.source_url,
+                  alt: media.alt_text || `${trip.title?.rendered || 'Trip'} - Gallery image`
+                });
+              }
+            }
+          } catch (mediaError) {
+            console.error(`Error fetching media item ${id}:`, mediaError);
+            
+            // Fallback to using a constructed URL if the media endpoint fails
+            galleryImages.push({
+              src: `https://madaratalkon.com/wp-content/uploads/2025/04/gallery-${id}.jpg`,
+              alt: `${trip.title?.rendered || 'Trip'} - Gallery image ${id}`
+            });
+          }
+        }
+      }
     }
     
     // Format trip data with safe defaults
@@ -282,7 +404,8 @@ export async function getStaticProps({ params }) {
           title: item?.title || '',
           content: item?.content || ''
         })) : [],
-      gallery: galleryImages.length > 0 ? galleryImages : ['/images/placeholder.jpg'],
+      gallery: galleryImages.length > 0 ? galleryImages : [],
+      wpte_gallery_id: trip.wpte_gallery_id || {},
     };
 
     return {
