@@ -264,92 +264,24 @@ export default function SingleTrip({ trip }) {
             <div className={styles.tripDetails}>
               {/* Trip Description */}
               <div className={styles.contentBox}>
-                <h2 className={styles.sectionTitle}>نبذة عن الرحلة</h2>
-                <div className={styles.tripDescription} dangerouslySetInnerHTML={{ __html: description }} />
-              </div>
-              
-              {/* Trip Highlights - Modern Design */}
-              <div className={styles.highlightsSection}>
                 <div className={styles.decorativeCircle}></div>
                 <div className={styles.decorativeDots}></div>
-                <h2 className={styles.highlightsSectionTitle}>
-                  <span className={styles.titleIcon}><FaInfoCircle /></span>
-                  تفاصيل البرنامج
+                <h2 className={styles.sectionTitle}>
+                  نبذة عن الرحلة
                   <span className={styles.titleLine}></span>
                 </h2>
-                <div className={styles.highlightsCards}>
-                  <div className={`${styles.highlightCard} ${styles.durationCard}`}>
-                    <div className={styles.highlightCardIcon}>
-                      <FaCalendarAlt />
-                      <div className={styles.iconRing}></div>
-                    </div>
-                    <div className={styles.highlightCardContent}>
-                      <h3>مدة الرحلة</h3>
-                      <p>{trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</p>
-                    </div>
-                  </div>
-                  
-                  <div className={`${styles.highlightCard} ${styles.priceCard}`}>
-                    <div className={styles.highlightCardIcon}>
-                      <FaMoneyBillWave />
-                      <div className={styles.iconRing}></div>
-                    </div>
-                    <div className={styles.highlightCardContent}>
-                      <h3>سعر الرحلة</h3>
-                      <p>{price} {trip.currency?.code || 'ريال'}</p>
-                    </div>
-                  </div>
-                  
-                  <div className={`${styles.highlightCard} ${styles.destinationCard}`}>
-                    <div className={styles.highlightCardIcon}>
-                      <FaMapMarkerAlt />
-                      <div className={styles.iconRing}></div>
-                    </div>
-                    <div className={styles.highlightCardContent}>
-                      <h3>الوجهة</h3>
-                      <p>{trip.destination?.title || 'وجهات متعددة'}</p>
-                    </div>
-                  </div>
-                  
-                  <div className={`${styles.highlightCard} ${styles.timeCard}`}>
-                    <div className={styles.highlightCardIcon}>
-                      <FaPlane />
-                      <div className={styles.iconRing}></div>
-                    </div>
-                    <div className={styles.highlightCardContent}>
-                      <h3>وقت السفر</h3>
-                      <p>متاح طوال العام</p>
-                    </div>
-                  </div>
-                  
-                  <div className={`${styles.highlightCard} ${styles.languageCard}`}>
-                    <div className={styles.highlightCardIcon}>
-                      <FaLanguage />
-                      <div className={styles.iconRing}></div>
-                    </div>
-                    <div className={styles.highlightCardContent}>
-                      <h3>اللغات</h3>
-                      <p>العربية، الإنجليزية</p>
-                    </div>
-                  </div>
-                  
-                  <div className={`${styles.highlightCard} ${styles.visaCard}`}>
-                    <div className={styles.highlightCardIcon}>
-                      <FaPassport />
-                      <div className={styles.iconRing}></div>
-                    </div>
-                    <div className={styles.highlightCardContent}>
-                      <h3>الفيزا</h3>
-                      <p>مطلوبة</p>
-                    </div>
-                  </div>
-                </div>
+                <div className={styles.tripDescription} dangerouslySetInnerHTML={{ __html: description }} />
               </div>
               
               {/* What's Included */}
               <div className={styles.twoColumns}>
                 <div className={styles.contentBox}>
-                  <h2 className={styles.sectionTitle}>الخدمات المشمولة</h2>
+                  <div className={styles.decorativeCircle}></div>
+                  <div className={styles.decorativeDots}></div>
+                  <h2 className={styles.sectionTitle}>
+                    الخدمات المشمولة
+                    <span className={styles.titleLine}></span>
+                  </h2>
                   <div className={styles.includedList} dangerouslySetInnerHTML={{ 
                     __html: trip.cost_includes ? 
                       trip.cost_includes.replace(/\n/g, '<br>') : 
@@ -358,7 +290,12 @@ export default function SingleTrip({ trip }) {
                 </div>
                 
                 <div className={styles.contentBox}>
-                  <h2 className={styles.sectionTitle}>غير مشمول</h2>
+                  <div className={styles.decorativeCircle}></div>
+                  <div className={styles.decorativeDots}></div>
+                  <h2 className={styles.sectionTitle}>
+                    غير مشمول
+                    <span className={styles.titleLine}></span>
+                  </h2>
                   <div className={styles.excludedList} dangerouslySetInnerHTML={{ 
                     __html: trip.cost_excludes ? 
                       trip.cost_excludes.replace(/\n/g, '<br>') : 
@@ -370,7 +307,12 @@ export default function SingleTrip({ trip }) {
               {/* Itinerary */}
               {hasItineraries && (
                 <div className={styles.contentBox}>
-                  <h2 className={styles.sectionTitle}>برنامج الرحلة</h2>
+                  <div className={styles.decorativeCircle}></div>
+                  <div className={styles.decorativeDots}></div>
+                  <h2 className={styles.sectionTitle}>
+                    برنامج الرحلة
+                    <span className={styles.titleLine}></span>
+                  </h2>
                   <div className={styles.accordion}>
                     {trip.itineraries.map((day, index) => (
                       <AccordionItem
@@ -387,7 +329,12 @@ export default function SingleTrip({ trip }) {
               {/* FAQs */}
               {hasFaqs && (
                 <div className={styles.contentBox}>
-                  <h2 className={styles.sectionTitle}>الأسئلة الشائعة</h2>
+                  <div className={styles.decorativeCircle}></div>
+                  <div className={styles.decorativeDots}></div>
+                  <h2 className={styles.sectionTitle}>
+                    الأسئلة الشائعة
+                    <span className={styles.titleLine}></span>
+                  </h2>
                   <div className={styles.accordion}>
                     {trip.faqs.map((faq, index) => (
                       <AccordionItem

@@ -12,6 +12,10 @@ $primary-color: $color-primary;
 $gold-color: #FFD700;
 $section-spacing: 2.5rem;
 
+// Gradient variables
+$primary-gradient: linear-gradient(135deg, $primary-color, darken($primary-color, 10%));
+$gold-gradient: linear-gradient(135deg, $gold-color, darken($gold-color, 10%));
+
 // Color variables for cards
 $duration-gradient: linear-gradient(135deg, #00A896, #02C39A);
 $price-gradient: linear-gradient(135deg, #FFB347, $gold-color);
@@ -300,39 +304,54 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 .contentBox {
   background: linear-gradient(135deg, #ffffff, #f8f9fa);
   border-radius: $border-radius;
-  padding: 2rem;
+  padding: 2.5rem;
   box-shadow: $box-shadow;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: box-shadow $transition-speed ease, transform $transition-speed ease;
+  transition: all $transition-speed ease;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: $section-spacing;
   
   &:hover {
     box-shadow: $box-shadow-hover;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    
+    .decorativeCircle {
+      transform: scale(1.1);
+    }
+    
+    .decorativeDots {
+      transform: rotate(15deg);
+    }
   }
 }
 
 .sectionTitle {
   position: relative;
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
   color: $primary-color;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1;
   
-  &:after {
-    content: '';
+  .titleLine {
     position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 50px;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
     height: 3px;
-    background-color: $primary-color;
+    background: linear-gradient(to right, $primary-color, $gold-color);
+    border-radius: 3px;
   }
 }
 
 .twoColumns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: $section-spacing;
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -341,41 +360,63 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 
 // Trip Description Styles
 .tripDescription {
+  position: relative;
+  z-index: 1;
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #333;
+  color: $color-gray-800;
+  
+  p {
+    margin-bottom: 1.5rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 // Included/Excluded Lists
 .includedList, .excludedList {
-  line-height: 1.7;
+  position: relative;
+  z-index: 1;
   
-  ul, ol {
-    padding-right: 1.5rem;
-    margin-bottom: 1rem;
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
   
   li {
     position: relative;
-    margin-bottom: 0.5rem;
-    padding-right: 1.5rem;
+    padding-right: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: $color-gray-800;
+    transition: all $transition-speed ease;
     
     &:before {
       content: "✓";
       position: absolute;
       right: 0;
-      color: $color-primary;
+      color: $primary-color;
       font-weight: bold;
+      background: linear-gradient(135deg, $primary-color, $gold-color);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    &:hover {
+      transform: translateX(-5px);
     }
   }
 }
 
 .excludedList {
-  li {
-    &:before {
-      content: "✕";
-      color: #ff3b30;
-    }
+  li:before {
+    content: "✕";
+    background: linear-gradient(135deg, #ff3b30, #ff9500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 
@@ -386,28 +427,28 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 
 // ======== Booking Card ========
 .bookingCard {
-  background-color: #fff;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
   border-radius: $border-radius;
-  padding: 2rem;
+  padding: 2.5rem;
   box-shadow: $box-shadow;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  width: 100%;
   position: sticky;
   top: 2rem;
-  transition: box-shadow $transition-speed ease;
+  transition: all $transition-speed ease;
   
   &:hover {
     box-shadow: $box-shadow-hover;
+    transform: translateY(-3px);
   }
 }
 
 .price {
-  margin-bottom: 2rem;
   text-align: center;
+  margin-bottom: 2rem;
   
   h3 {
     font-size: 1.3rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     color: $color-gray-800;
     font-weight: 600;
   }
@@ -416,12 +457,14 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 .priceAmount {
   font-size: 2.5rem;
   font-weight: 700;
-  color: $color-primary;
+  background: $primary-gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   
   span {
     font-size: 1.3rem;
-    color: $color-gray-600;
     margin-right: 0.25rem;
+    opacity: 0.8;
   }
 }
 
@@ -453,19 +496,36 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   display: block;
   width: 100%;
   padding: 1.25rem;
-  background-color: $color-primary;
+  background: $primary-gradient;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: $border-radius-sm;
   font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color $transition-speed ease, transform $transition-speed ease;
+  transition: all $transition-speed ease;
+  position: relative;
+  overflow: hidden;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
   
   &:hover {
-    background-color: darken($color-primary, 10%);
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba($color-primary, 0.4);
+    box-shadow: 0 5px 15px rgba($primary-color, 0.4);
+    
+    &:before {
+      transform: translateX(100%);
+    }
   }
   
   &:active {
@@ -475,20 +535,22 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 
 // ======== Accordion Styles ========
 .accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .accordionItem {
   border-radius: $border-radius-sm;
+  background: white;
+  margin-bottom: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  transition: box-shadow $transition-speed ease;
+  transition: all $transition-speed ease;
   
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
   }
 }
 
@@ -496,27 +558,41 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.2rem 1.5rem;
-  background-color: $color-gray-50;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba($primary-color, 0.05), rgba($gold-color, 0.05));
   cursor: pointer;
-  transition: background-color $transition-speed ease;
+  transition: all $transition-speed ease;
   
   h3 {
     font-size: 1.1rem;
     margin: 0;
     color: $color-gray-800;
+    font-weight: 600;
+  }
+  
+  svg {
+    color: $primary-color;
+    font-size: 1.2rem;
+    transition: transform $transition-speed ease;
   }
   
   &:hover {
-    background-color: $color-gray-100;
+    background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($gold-color, 0.1));
+    
+    h3 {
+      background: $primary-gradient;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
 }
 
 .accordionContent {
   padding: 1.5rem;
-  border-top: 1px solid $color-gray-200;
-  line-height: 1.6;
+  line-height: 1.8;
   color: $color-gray-700;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background: white;
 }
 
 // ======== Trip Highlights - Modern Design ========
@@ -546,10 +622,10 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 
 .decorativeCircle {
   position: absolute;
-  top: -100px;
-  right: -100px;
-  width: 200px;
-  height: 200px;
+  top: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
   background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($gold-color, 0.1));
   border-radius: 50%;
   transition: transform 0.6s ease;
@@ -558,10 +634,10 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 
 .decorativeDots {
   position: absolute;
-  bottom: -50px;
-  left: -50px;
-  width: 150px;
-  height: 150px;
+  bottom: -30px;
+  left: -30px;
+  width: 120px;
+  height: 120px;
   background-image: radial-gradient(circle, rgba($primary-color, 0.1) 2px, transparent 2px);
   background-size: 15px 15px;
   transition: transform 0.6s ease;
