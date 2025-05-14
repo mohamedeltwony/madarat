@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import { FaCalendarAlt, FaMapMarkerAlt, FaMoneyBillWave, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaMoneyBillWave, FaChevronDown, FaChevronUp, FaClock, FaPassport, FaLanguage, FaPlane } from 'react-icons/fa';
 import Layout from '../../components/Layout';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
@@ -268,40 +268,68 @@ export default function SingleTrip({ trip }) {
                 <div className={styles.tripDescription} dangerouslySetInnerHTML={{ __html: description }} />
               </div>
               
-              {/* Trip Highlights */}
-              <div className={styles.contentBox}>
-                <h2 className={styles.sectionTitle}>مميزات الرحلة</h2>
-                <div className={styles.tripHighlights}>
-                  <div className={styles.highlightGrid}>
-                    <div className={styles.highlightItem}>
-                      <div className={styles.highlightIcon}>
-                        <FaCalendarAlt />
-                      </div>
-                      <div className={styles.highlightContent}>
-                        <h3>مدة الرحلة</h3>
-                        <p>{trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</p>
-                      </div>
+              {/* Trip Highlights - New Design */}
+              <div className={styles.highlightsSection}>
+                <h2 className={styles.highlightsSectionTitle}>تفاصيل البرنامج</h2>
+                <div className={styles.highlightsCards}>
+                  <div className={styles.highlightCard}>
+                    <div className={styles.highlightCardIcon}>
+                      <FaCalendarAlt />
                     </div>
-                    <div className={styles.highlightItem}>
-                      <div className={styles.highlightIcon}>
-                        <FaMoneyBillWave />
-                      </div>
-                      <div className={styles.highlightContent}>
-                        <h3>سعر الرحلة</h3>
-                        <p>{price} {trip.currency?.code || 'ريال'}</p>
-                      </div>
+                    <div className={styles.highlightCardContent}>
+                      <h3>مدة الرحلة</h3>
+                      <p>{trip.duration?.days || 0} {trip.duration?.duration_unit || 'يوم'}</p>
                     </div>
-                    {trip.destination && (
-                      <div className={styles.highlightItem}>
-                        <div className={styles.highlightIcon}>
-                          <FaMapMarkerAlt />
-                        </div>
-                        <div className={styles.highlightContent}>
-                          <h3>الوجهة</h3>
-                          <p>{trip.destination.title || ''}</p>
-                        </div>
-                      </div>
-                    )}
+                  </div>
+                  
+                  <div className={styles.highlightCard}>
+                    <div className={styles.highlightCardIcon}>
+                      <FaMoneyBillWave />
+                    </div>
+                    <div className={styles.highlightCardContent}>
+                      <h3>سعر الرحلة</h3>
+                      <p>{price} {trip.currency?.code || 'ريال'}</p>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.highlightCard}>
+                    <div className={styles.highlightCardIcon}>
+                      <FaMapMarkerAlt />
+                    </div>
+                    <div className={styles.highlightCardContent}>
+                      <h3>الوجهة</h3>
+                      <p>{trip.destination?.title || 'وجهات متعددة'}</p>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.highlightCard}>
+                    <div className={styles.highlightCardIcon}>
+                      <FaClock />
+                    </div>
+                    <div className={styles.highlightCardContent}>
+                      <h3>وقت السفر</h3>
+                      <p>متاح طوال العام</p>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.highlightCard}>
+                    <div className={styles.highlightCardIcon}>
+                      <FaLanguage />
+                    </div>
+                    <div className={styles.highlightCardContent}>
+                      <h3>اللغات</h3>
+                      <p>العربية، الإنجليزية</p>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.highlightCard}>
+                    <div className={styles.highlightCardIcon}>
+                      <FaPassport />
+                    </div>
+                    <div className={styles.highlightCardContent}>
+                      <h3>الفيزا</h3>
+                      <p>مطلوبة</p>
+                    </div>
                   </div>
                 </div>
               </div>
