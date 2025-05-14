@@ -215,6 +215,117 @@ const ContactForm = ({ price }) => {
   );
 };
 
+// Add this before the SingleTrip component
+const TripForm = ({ tripTitle, price }) => {
+  const [formData, setFormData] = useState({
+    phone: '',
+    name: '',
+    email: '',
+    nationality: ''
+  });
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Here you can handle the form submission
+    console.log('Form submitted:', { ...formData, tripTitle });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  return (
+    <form className={styles.tripForm} onSubmit={handleSubmit}>
+      <div className={`${styles.formGroup} ${styles.phoneGroup}`}>
+        <label htmlFor="phone" className={styles.formLabel}>الجوال</label>
+        <div className={styles.phoneInput}>
+          <input
+            type="tel"
+            id="phone"
+            className={styles.formInput}
+            name="phone"
+            placeholder=" "
+            autoComplete="tel"
+            required
+            value={formData.phone}
+            onChange={handleChange}
+          />
+          <span className={styles.countryCode}>+966</span>
+        </div>
+      </div>
+
+      <div className={styles.formGroup}>
+        <input
+          type="text"
+          id="name"
+          className={styles.formInput}
+          name="name"
+          placeholder=" "
+          autoComplete="name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+        <label htmlFor="name" className={styles.formLabel}>الاسم الكامل (اختياري)</label>
+      </div>
+
+      <div className={styles.formGroup}>
+        <input
+          type="email"
+          id="email"
+          className={styles.formInput}
+          name="email"
+          placeholder=" "
+          autoComplete="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <label htmlFor="email" className={styles.formLabel}>البريد الإلكتروني (اختياري)</label>
+      </div>
+
+      <div className={`${styles.formGroup} ${styles.nationalityGroup}`}>
+        <div className={styles.radioGroup}>
+          <label className={styles.radioLabel}>
+            <input
+              type="radio"
+              name="nationality"
+              required
+              value="مواطن"
+              checked={formData.nationality === "مواطن"}
+              onChange={handleChange}
+            />
+            <span>مواطن</span>
+          </label>
+          <label className={styles.radioLabel}>
+            <input
+              type="radio"
+              name="nationality"
+              required
+              value="مقيم"
+              checked={formData.nationality === "مقيم"}
+              onChange={handleChange}
+            />
+            <span>مقيم</span>
+          </label>
+        </div>
+      </div>
+
+      <div className={styles.formActions}>
+        <button className={styles.sparkleButton} type="submit" dir="auto">
+          <div className={styles.buttonGlow}></div>
+          <span className={styles.buttonContent}>
+            <div></div>
+            <span>اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا</span>
+          </span>
+        </button>
+      </div>
+    </form>
+  );
+};
+
 export default function SingleTrip({ trip }) {
   const router = useRouter();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -417,12 +528,10 @@ export default function SingleTrip({ trip }) {
               </div>
             </div>
 
-            <button 
-              className={styles.bookButton}
-              onClick={() => window.location.href = '/contact'}
-            >
-              اضغط هنا وسيتواصل معك مستشارك السياحي
-            </button>
+            <TripForm 
+              tripTitle={decodedTitle}
+              price={price}
+            />
           </div>
         </div>
       </div>
