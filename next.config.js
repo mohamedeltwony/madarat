@@ -96,8 +96,27 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
 
-  // Removed webpack config for SVGR as it's no longer needed
-
+  // Add webpack configuration for React Icons
+  webpack: (config, { isServer }) => {
+    // Add specific handling for react-icons to properly chunk it
+    config.optimization.splitChunks = {
+      ...config.optimization.splitChunks,
+      chunks: 'all',
+      cacheGroups: {
+        ...config.optimization.splitChunks.cacheGroups,
+        reactIcons: {
+          test: /react-icons/,
+          name: 'react-icons',
+          priority: 10,
+          enforce: true,
+          chunks: 'all',
+        },
+      },
+    };
+    
+    return config;
+  },
+  
   async headers() {
     return [
       {

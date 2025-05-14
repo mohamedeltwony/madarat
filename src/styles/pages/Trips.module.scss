@@ -1,7 +1,7 @@
 @use 'sass:color';
 @use 'styles/settings/__settings' as *;
 @use 'styles/settings/_colors' as *;
-@import 'styles/settings/_typography';
+@use 'styles/settings/_typography' as *;
 
 // Variables
 $primary-color: #0c4c44; // Brand teal color

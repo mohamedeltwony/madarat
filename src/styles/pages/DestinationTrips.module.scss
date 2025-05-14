@@ -1,6 +1,5 @@
 @use 'sass:color';
-@use '../../styles/settings/__settings' as *;
-@import 'styles/settings/_typography';
+@use 'styles/settings/_typography' as *;
 
 .destinationTrips {
   .heroSection {

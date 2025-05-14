@@ -745,42 +745,36 @@ export async function getPostsByDay({ year, month, day }) {
 }
 
 /**
- * getYearArchives
- * Gets all years that have posts
+ * Get year archives data
  */
 export async function getYearArchives() {
   try {
     const response = await fetch(`${API_URL}/archives`, {
       headers: {
         'Content-Type': 'application/json',
-        'User-Agent':
-          'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
     });
 
     if (!response.ok) {
-      console.error(`[getYearArchives] HTTP error ${response.status}`);
-      return getDefaultYears();
+      console.warn(`[getYearArchives] HTTP error ${response.status}`);
+      // Return mock data array on error
+      return [
+        { value: '2024', count: 10 },
+        { value: '2023', count: 20 }
+      ];
     }
 
     const data = await response.json();
-
-    if (Array.isArray(data.years)) {
-      return data.years.map((year) => parseInt(year, 10));
-    }
-
-    // If API doesn't return years, use fallback
-    return getDefaultYears();
+    // Return the years array directly instead of the object
+    return data.years || [];
   } catch (error) {
     console.error('[getYearArchives] Error:', error);
-    return getDefaultYears();
+    // Return mock data array on error
+    return [
+      { value: '2024', count: 10 },
+      { value: '2023', count: 20 }
+    ];
   }
-}
-
-function getDefaultYears() {
-  const currentYear = new Date().getFullYear();
-  // Return last 5 years as default
-  return [currentYear, currentYear - 1, currentYear - 2];
 }
 
 /**

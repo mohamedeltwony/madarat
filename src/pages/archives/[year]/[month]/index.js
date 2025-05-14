@@ -83,7 +83,8 @@ export async function getStaticPaths() {
   // In production, you might want to only generate paths for months that actually have posts
   const paths = [];
 
-  years.forEach((year) => {
+  years.forEach((yearObj) => {
+    const year = yearObj.value;
     // Generate paths for each month (1-12)
     for (let month = 1; month <= 12; month++) {
       paths.push({

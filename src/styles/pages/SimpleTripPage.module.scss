@@ -13,8 +13,8 @@ $gold-color: #FFD700;
 $section-spacing: 2.5rem;
 
 // Gradient variables
-$primary-gradient: linear-gradient(135deg, $primary-color, darken($primary-color, 10%));
-$gold-gradient: linear-gradient(135deg, $gold-color, darken($gold-color, 10%));
+$primary-gradient: linear-gradient(135deg, $primary-color, color.adjust($primary-color, $lightness: -10%));
+$gold-gradient: linear-gradient(135deg, $gold-color, color.adjust($gold-color, $lightness: -10%));
 
 // Color variables for cards
 $duration-gradient: linear-gradient(135deg, #00A896, #02C39A);

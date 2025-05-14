@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import styles from './PureBlackGoldDropdownButton.module.css';
 
 const PureBlackGoldDropdownButton = ({
   text = 'زر منسدل ذهبي',
@@ -10,324 +11,61 @@ const PureBlackGoldDropdownButton = ({
     { text: 'خيار رقم ٣', href: '#option3' },
   ],
 }) => {
-  const iframeRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-
-  // Generate items HTML for the dropdown
-  const dropdownItemsHtml = dropdownItems
-    .map((item, index) => {
-      return `
-      <a href="${item.href || '#'}" 
-        target="${item.target || '_self'}" 
-        class="dropdown-item" 
-        data-index="${index}">
-        ${
-          item.icon
-            ? `<span class="item-icon">${
-                typeof item.icon === 'object' ? 'Icon' : item.icon
-              }</span>`
-            : ''
-        }
-        <span class="item-text">${item.text}</span>
-      </a>
-    `;
-    })
-    .join('');
-
-  // This HTML will be inserted into the iframe with specific CSS reset
-  const buttonHTML = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <style>
-          /* Complete CSS Reset */
-          * {
-            margin: 0;
-            padding: 0;
-            border: 0;
-            outline: 0;
-            font-size: 100%;
-            vertical-align: baseline;
-            background: transparent;
-            box-sizing: border-box;
-          }
-          
-          body, html {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-            background-color: transparent !important;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-          }
-          
-          .dropdown-wrapper {
-            position: relative;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          }
-          
-          .button-container {
-            position: relative;
-            width: 100%;
-            height: ${height}px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: ${height / 2}px;
-            overflow: hidden;
-            cursor: pointer;
-          }
-          
-          /* Black background with gold border */
-          .button-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #000000;
-            border: 2px solid #ffd700;
-            border-radius: ${height / 2}px;
-            z-index: 1;
-          }
-          
-          /* Gold glow effect */
-          .gold-glow {
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border-radius: ${height / 2}px;
-            background: linear-gradient(45deg, #ffd700, #ffea00, #e6c200, #ffd700, #ffea00);
-            background-size: 300% 300%;
-            animation: borderGlow 6s linear infinite;
-            z-index: 0;
-            opacity: 0.8;
-            filter: blur(4px);
-          }
-          
-          .button-container:hover .button-bg {
-            background-color: #111111;
-          }
-          
-          .button-container:hover .gold-glow {
-            opacity: 1;
-            filter: blur(6px);
-          }
-          
-          .button-text {
-            position: relative;
-            z-index: 2;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          
-          .dropdown-arrow {
-            margin-right: 8px;
-            transition: transform 0.3s ease;
-          }
-          
-          .dropdown-arrow.open {
-            transform: rotate(180deg);
-          }
-          
-          .dropdown-menu {
-            position: absolute;
-            top: calc(100% + 10px);
-            left: 0;
-            width: 100%;
-            max-height: 0;
-            overflow: hidden;
-            background: #000000;
-            border-radius: 10px;
-            border: 2px solid #ffd700;
-            z-index: 10;
-            transition: max-height 0.3s ease, opacity 0.3s ease;
-            opacity: 0;
-            display: flex;
-            flex-direction: column;
-            padding: 0;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-          }
-          
-          .dropdown-menu.open {
-            max-height: 300px;
-            opacity: 1;
-            padding: 8px 0;
-          }
-          
-          .dropdown-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            color: white;
-            text-decoration: none;
-            transition: background-color 0.2s ease;
-          }
-          
-          .dropdown-item:hover {
-            background-color: #111111;
-            color: #ffd700;
-          }
-          
-          .item-icon {
-            margin-left: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          
-          .item-text {
-            flex: 1;
-            text-align: right;
-          }
-          
-          @keyframes borderGlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="dropdown-wrapper">
-          <div class="button-container" id="goldButton">
-            <div class="gold-glow"></div>
-            <div class="button-bg"></div>
-            <div class="button-text">
-              ${text}
-              <span class="dropdown-arrow" id="arrow">▼</span>
-            </div>
-          </div>
-          
-          <div class="dropdown-menu" id="dropdownMenu">
-            ${dropdownItemsHtml}
-          </div>
-        </div>
-        
-        <script>
-          const button = document.getElementById('goldButton');
-          const menu = document.getElementById('dropdownMenu');
-          const arrow = document.getElementById('arrow');
-          let isOpen = false;
-          
-          function toggleDropdown() {
-            isOpen = !isOpen;
-            if (isOpen) {
-              menu.classList.add('open');
-              arrow.classList.add('open');
-            } else {
-              menu.classList.remove('open');
-              arrow.classList.remove('open');
-            }
-            
-            // Send current state to parent
-            window.parent.postMessage({ type: 'dropdownStateChange', isOpen }, '*');
-          }
-          
-          button.addEventListener('click', function(e) {
-            e.preventDefault();
-            toggleDropdown();
-          });
-          
-          // Handle clicks on dropdown items
-          const items = document.querySelectorAll('.dropdown-item');
-          items.forEach(item => {
-            item.addEventListener('click', function() {
-              const index = this.getAttribute('data-index');
-              window.parent.postMessage({ 
-                type: 'dropdownItemClicked', 
-                index: Number(index) 
-              }, '*');
-              // Optionally close the dropdown after selection
-              // toggleDropdown();
-            });
-          });
-          
-          // Handle clicks outside of dropdown to close it
-          document.addEventListener('click', function(e) {
-            if (!e.target.closest('.dropdown-wrapper') && isOpen) {
-              toggleDropdown();
-            }
-          });
-          
-          // Listen for messages from parent to control dropdown
-          window.addEventListener('message', function(event) {
-            if (event.data === 'closeDropdown' && isOpen) {
-              toggleDropdown();
-            } else if (event.data === 'openDropdown' && !isOpen) {
-              toggleDropdown();
-            }
-          });
-        </script>
-      </body>
-    </html>
-  `;
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
-    if (iframeRef.current) {
-      // Write the HTML content to the iframe
-      const iframe = iframeRef.current;
-      const iframeDocument =
-        iframe.contentDocument || iframe.contentWindow.document;
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
 
-      iframeDocument.open();
-      iframeDocument.write(buttonHTML);
-      iframeDocument.close();
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-      // Add message listener for iframe communication
-      const handleMessage = (event) => {
-        if (event.data?.type === 'dropdownStateChange') {
-          setIsOpen(event.data.isOpen);
-        } else if (event.data?.type === 'dropdownItemClicked') {
-          const item = dropdownItems[event.data.index];
-          if (item && item.onClick) {
-            item.onClick();
-          }
-        }
-      };
-
-      window.addEventListener('message', handleMessage);
-
-      return () => {
-        window.removeEventListener('message', handleMessage);
-      };
-    }
-  }, [buttonHTML, dropdownItems]);
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
-    /* eslint-disable react/no-unknown-property */
-    <iframe
-      ref={iframeRef}
-      style={{
-        width,
-        height: isOpen ? height + dropdownItems.length * 40 + 16 : height, // Adjust height dynamically
-        border: 'none',
-        overflow: 'visible',
-        background: 'transparent',
-        backgroundColor: 'transparent',
-        pointerEvents: 'auto',
-        transition: 'height 0.3s ease',
-      }}
-      title="Pure Black Gold Dropdown Button"
-      scrolling="no"
-      frameBorder="0"
-      allowTransparency="true"
-    />
-    /* eslint-enable react/no-unknown-property */
+    <div 
+      className={styles.dropdownContainer} 
+      ref={dropdownRef}
+      style={{ width: `${width}px` }}
+    >
+      <button
+        type="button"
+        className={styles.dropdownButton}
+        onClick={handleToggle}
+        style={{ height: `${height}px` }}
+      >
+        {text}
+        <span className={`${styles.arrow} ${isOpen ? styles.up : ''}`}>▼</span>
+      </button>
+      {isOpen && (
+        <ul className={styles.dropdownMenu} role="menu">
+          {dropdownItems.map((item, index) => (
+            <li key={index} role="menuitem">
+              <a
+                href={item.href}
+                target={item.target}
+                className={styles.dropdownItem}
+                onClick={item.onClick}
+              >
+                {item.icon && (
+                  <span className={styles.itemIcon}>
+                    {typeof item.icon === 'object' ? 'Icon' : item.icon}
+                  </span>
+                )}
+                <span className={styles.itemText}>{item.text}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 

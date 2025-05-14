@@ -73,13 +73,11 @@ export async function getStaticProps({ params = {} }) {
 export async function getStaticPaths() {
   const years = await getYearArchives();
 
-  const paths = years.map((year) => {
-    return {
-      params: {
-        year: year.toString(),
-      },
-    };
-  });
+  const paths = years.map((yearObj) => ({
+    params: {
+      year: yearObj.value.toString(),
+    },
+  }));
 
   return {
     paths,

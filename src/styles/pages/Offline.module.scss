@@ -1,6 +1,5 @@
 @use 'sass:color';
-@use '../settings/__settings' as *;
-@import '../settings/_typography';
+@use '../settings/_typography' as *;
 
 .offlinePage {
   min-height: 100vh;

@@ -1,6 +1,6 @@
 @use 'sass:color';
+@use '../settings/__settings' as *;
 @use 'styles/settings/_colors' as *;
-@import '../settings/__settings';
 
 .container {
   max-width: 1200px;

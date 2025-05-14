@@ -1,6 +1,6 @@
 @use 'sass:color';
+@use './_variables.module.scss' as *;
 @use 'styles/settings/_colors' as *;
-@import './_variables.module.scss';
 
 .main {
   padding: 2rem 0;

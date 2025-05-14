@@ -1,6 +1,6 @@
 @use 'sass:color';
 @use 'styles/settings/_colors' as *;
-@import '../settings/__settings';
+@use '../settings/__settings' as *;
 
 // Brand Colors
 $brand-primary: #0c4444;

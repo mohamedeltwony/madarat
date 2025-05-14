@@ -29,7 +29,9 @@ import EnhancedGoldButton from './EnhancedGoldButton';
 import SimpleGoldButton from './SimpleGoldButton';
 import PureDivGoldButton from './PureDivGoldButton';
 import OptimizedGoldButton from './OptimizedGoldButton';
+import OptimizedGoldDropdownButton from './OptimizedGoldDropdownButton';
 import PureBlackGoldButton from './PureBlackGoldButton';
+import PureBlackGoldDropdownButton from './PureBlackGoldDropdownButton';
 import EnhancedGoldDropdownButton from './EnhancedGoldDropdownButton';
 
 // Re-export all components
@@ -62,7 +64,9 @@ export {
   SimpleGoldButton,
   PureDivGoldButton,
   OptimizedGoldButton,
+  OptimizedGoldDropdownButton,
   PureBlackGoldButton,
+  PureBlackGoldDropdownButton,
   EnhancedGoldDropdownButton,
 };
 

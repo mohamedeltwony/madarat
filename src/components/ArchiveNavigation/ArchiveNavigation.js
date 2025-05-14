@@ -9,31 +9,34 @@ const ArchiveNavigation = ({ years, activeYear, activeMonth }) => {
 
       <div>
         {years &&
-          years.map((year) => (
-            <div key={year} className="mb-4">
-              <Link
-                href={`/archives/${year}`}
-                className={`${styles.yearLink} ${activeYear === year.toString() ? styles.active : ''}`}
-              >
-                {year}
-              </Link>
+          years.map((yearObj) => {
+            const year = yearObj.value;
+            return (
+              <div key={year} className="mb-4">
+                <Link
+                  href={`/archives/${year}`}
+                  className={`${styles.yearLink} ${activeYear === year.toString() ? styles.active : ''}`}
+                >
+                  {year} ({yearObj.count})
+                </Link>
 
-              {activeYear === year.toString() && (
-                <ul className={styles.monthsList}>
-                  {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                    <li key={month}>
-                      <Link
-                        href={`/archives/${year}/${month.toString().padStart(2, '0')}`}
-                        className={`${styles.monthLink} ${activeMonth === month.toString() ? styles.active : ''}`}
-                      >
-                        {getMonthName(month)}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
+                {activeYear === year.toString() && (
+                  <ul className={styles.monthsList}>
+                    {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                      <li key={month}>
+                        <Link
+                          href={`/archives/${year}/${month.toString().padStart(2, '0')}`}
+                          className={`${styles.monthLink} ${activeMonth === month.toString().padStart(2, '0') ? styles.active : ''}`}
+                        >
+                          {getMonthName(month)}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
       </div>
     </nav>
   );
