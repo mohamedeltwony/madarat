@@ -1,8 +1,6 @@
 import { useContext, createContext } from 'react';
-
-import config from '../../package.json';
-
 import { removeLastTrailingSlash } from '@/lib/util';
+import SITE_CONFIG from '@/lib/config';
 
 export const SiteContext = createContext();
 
@@ -11,11 +9,10 @@ export const SiteContext = createContext();
  */
 
 export function useSiteContext(data) {
-  const { homepage = '' } = config;
+  const { homepage = '' } = SITE_CONFIG;
 
   // Trim the trailing slash from the end of homepage to avoid
   // double // issues throughout the metadata
-
   const cleanHomepage = removeLastTrailingSlash(homepage);
 
   return {

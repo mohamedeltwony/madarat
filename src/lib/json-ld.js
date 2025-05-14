@@ -1,11 +1,11 @@
 import JsonLd from '@/components/JsonLd';
-import config from '../../package.json';
+import SITE_CONFIG from '@/lib/config';
 import { authorPathByName } from '@/lib/users';
 import { postPathBySlug } from '@/lib/posts';
 import { pagePathBySlug } from '@/lib/pages';
 
 export function ArticleJsonLd({ post = {}, siteTitle = '' }) {
-  const { homepage = '' } = config;
+  const { homepage = '' } = SITE_CONFIG;
   const {
     title,
     slug,
@@ -59,7 +59,7 @@ export function ArticleJsonLd({ post = {}, siteTitle = '' }) {
 }
 
 export function WebsiteJsonLd({ siteTitle = '' }) {
-  const { homepage = '' } = config;
+  const { homepage = '' } = SITE_CONFIG;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -83,7 +83,7 @@ export function WebpageJsonLd({
   siteTitle = '',
   slug = '',
 }) {
-  const { homepage = '' } = config;
+  const { homepage = '' } = SITE_CONFIG;
   const path = pagePathBySlug(slug);
 
   const jsonLd = {
@@ -102,7 +102,7 @@ export function WebpageJsonLd({
 }
 
 export function AuthorJsonLd({ author = {} }) {
-  const { homepage = '' } = config;
+  const { homepage = '' } = SITE_CONFIG;
   const { name, avatar, description } = author;
   const path = authorPathByName(name);
 
@@ -119,7 +119,7 @@ export function AuthorJsonLd({ author = {} }) {
 }
 
 export function LogoJsonLd() {
-  const { homepage = '', faviconPath = '/favicon.ico' } = config;
+  const { homepage = '', faviconPath = '/favicon.ico' } = SITE_CONFIG;
 
   const jsonLd = {
     '@context': 'https://schema.org',
