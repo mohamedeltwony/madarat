@@ -94,17 +94,17 @@ const AnimatedBorderButton = ({
             ref={dropdownRef}
             className={`${styles.dropdownMenu} ${styles[`${variant}Dropdown`]}`}
           >
-            {dropdownItems.map((item, idx) => (
-              <button
-                key={idx}
-                className={`${styles.dropdownButton} ${styles[`${variant}DropdownButton`]}`}
-                onClick={() => {
-                  setOpen(false);
-                  item.onClick && item.onClick();
-                }}
+            {dropdownItems.map((item, index) => (
+              <div
+                key={index}
+                className={styles.dropdownItem}
+                onClick={item.onClick}
+                role="button"
+                tabIndex={0}
               >
-                {item.label}
-              </button>
+                {item.icon}
+                <span>{item.label}</span>
+              </div>
             ))}
           </div>
         )}

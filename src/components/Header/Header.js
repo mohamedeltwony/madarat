@@ -156,19 +156,19 @@ const Header = () => {
   const getCtaDropdownItems = () => {
     return [
       {
-        label: 'للحجز سجل رقمك',
+        label: 'احجز رحلتك الآن',
         icon: <FaUserTie size={14} />,
         onClick: () => router.push('/book-now'),
       },
       {
-        label: 'إتصل في مستشارك',
+        label: 'اتصل بنا',
         icon: <FaPhoneAlt size={14} />,
-        onClick: () => (window.location.href = 'tel:920034019'),
+        onClick: () => window.location.href = 'tel:920034019',
       },
       {
-        label: 'شكوى أو ملاحظات',
+        label: 'ملاحظات وشكاوى',
         icon: <FaCommentDots size={14} />,
-        onClick: () => router.push('/feedback'),
+        onClick: () => router.push('/contact'),
       },
     ];
   };

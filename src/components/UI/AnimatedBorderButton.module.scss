@@ -280,3 +280,40 @@
     background-size: 400% 400%;
   }
 }
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-primary);
+  font-weight: 500;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  svg {
+    opacity: 0.8;
+  }
+}
+
+/* Dropdown item variants */
+.defaultDropdown .dropdownItem {
+  color: #ffffff;
+}
+
+.transparentDropdown .dropdownItem {
+  color: #ffffff;
+}
+
+.goldDropdown .dropdownItem {
+  color: #000000;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.1);
+  }
+}
