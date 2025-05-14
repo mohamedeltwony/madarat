@@ -87,8 +87,9 @@ export default function SingleTrip({ trip }) {
           <Image 
             src={featuredImage} 
             alt={title}
-            layout="fill"
-            objectFit="cover"
+            fill
+            sizes="100vw"
+            quality={90} 
             priority
           />
           <div className={styles.overlay}></div>
