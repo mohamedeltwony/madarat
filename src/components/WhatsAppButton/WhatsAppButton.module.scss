@@ -4,17 +4,17 @@
 
 .floatingButtons {
   position: fixed;
-  bottom: 116px;
+  bottom: 106px;
   left: 40px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   z-index: 1300;
 }
 
 .floatingButton {
-  width: 56px;
-  height: 56px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -49,6 +49,10 @@
       opacity: 0.5;
     }
   }
+
+  &.callButton.client {
+    margin-bottom: 15px;
+  }
 }
 
 .whatsappButton {
@@ -65,7 +69,9 @@
   .whatsappIcon {
     position: relative;
     z-index: 2;
-    transform: scale(1.2);
+    transform: scale(1);
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -84,7 +90,7 @@
     position: relative;
     z-index: 2;
     color: white;
-    font-size: 1.4rem;
+    font-size: 1.1rem;
   }
 }
 
