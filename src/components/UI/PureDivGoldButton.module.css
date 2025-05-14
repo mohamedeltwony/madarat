@@ -1,0 +1,44 @@
+.pureDivGoldButton {
+  background: linear-gradient(45deg, #ffd700, #ffea00);
+  border-radius: 25px;
+  color: #000;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  user-select: none;
+  position: relative;
+  outline: none;
+}
+
+.pureDivGoldButton:hover,
+.pureDivGoldButton:focus {
+  background: linear-gradient(45deg, #ffea00, #ffd700);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.pureDivGoldButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pureDivGoldButton.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  color: #666;
+}
+
+/* Focus ring for accessibility */
+.pureDivGoldButton:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+} 
