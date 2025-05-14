@@ -53,45 +53,104 @@ const TripGallery = ({ images }) => {
     return null;
   }
 
-  // Adjust the grid class based on the number of images
-  const getGridClass = () => {
-    if (images.length === 1) {
-      return `${styles.galleryGrid} ${styles.singleImage}`;
-    } else if (images.length === 2) {
-      return `${styles.galleryGrid} ${styles.twoImages}`;
-    } else if (images.length === 3) {
-      return `${styles.galleryGrid} ${styles.threeImages}`;
-    } else {
-      return styles.galleryGrid;
+  // We need at least one image for the gallery
+  const featuredImage = images[0];
+  
+  // The rest of the images for the grid (up to 4)
+  // If we don't have enough images, we'll pad the array with duplicates
+  // but only for display purposes
+  let gridImages = images.slice(1, 5);
+  
+  // If we have fewer than 4 grid images, duplicate the last one to fill the grid
+  // but only if we have at least one grid image
+  if (gridImages.length > 0 && gridImages.length < 4) {
+    const lastImage = gridImages[gridImages.length - 1];
+    while (gridImages.length < 4) {
+      gridImages.push({...lastImage});
     }
-  };
+  } else if (gridImages.length === 0) {
+    // If we have no grid images, use the featured image
+    gridImages = [
+      {...featuredImage},
+      {...featuredImage},
+      {...featuredImage},
+      {...featuredImage}
+    ];
+  }
+  
+  // All images for the lightbox
+  const allImages = images;
 
   return (
     <div className={styles.galleryContainer}>
-      <div className={getGridClass()}>
-        {images.map((image, idx) => (
-          <div 
-            key={idx} 
-            className={`${styles.galleryItem} ${idx === 0 ? styles.featuredGalleryItem : ''}`}
-            onClick={() => setIndex(idx)}
-          >
+      <div className={styles.galleryRow}>
+        {/* Large featured image - left side */}
+        <div className={styles.galleryMainCol}>
+          <div className={styles.galleryMainImage} onClick={() => setIndex(0)}>
             <Image
-              src={image.src}
-              alt={image.alt || "Trip image"}
+              src={featuredImage.src}
+              alt={featuredImage.alt || "Trip featured image"}
               fill
-              sizes="(max-width: 768px) 50vw, 33vw"
+              sizes="(max-width: 768px) 100vw, 50vw"
               className={styles.galleryImage}
-              loading={idx === 0 ? "eager" : "lazy"}
+              loading="eager"
+              priority
             />
+            <div className={styles.imageOverlay}>
+              <span className={styles.viewIcon}><i className="bi bi-eye"></i></span>
+            </div>
           </div>
-        ))}
+        </div>
+
+        {/* Grid of smaller images - right side */}
+        <div className={styles.galleryGridCol}>
+          <div className={styles.galleryGrid}>
+            {gridImages.map((image, idx) => {
+              // If this is the third image (index 2) and we have more than 4 total images
+              const isViewMoreButton = idx === 2 && images.length > 5;
+              // If this is the last image in our grid
+              const isLastImage = idx === 3;
+
+              return (
+                <div key={idx} className={styles.galleryGridItem}>
+                  <div 
+                    className={`${styles.galleryImgWrap} ${(isViewMoreButton || isLastImage) ? styles.active : ''}`}
+                    onClick={() => isViewMoreButton ? setIndex(0) : setIndex(idx + 1)}
+                  >
+                    <Image
+                      src={image.src}
+                      alt={image.alt || "Trip gallery image"}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                      className={styles.galleryImage}
+                      loading="lazy"
+                    />
+                    <div className={styles.imageOverlay}>
+                      {isViewMoreButton ? (
+                        <button className={styles.viewMoreBtn}>
+                          <i className="bi bi-plus-lg"></i> View More Images
+                        </button>
+                      ) : isLastImage ? (
+                        <div className={styles.watchVideoBtn}>
+                          <i className="bi bi-play-circle"></i> Watch Video
+                        </div>
+                      ) : (
+                        <span className={styles.viewIcon}><i className="bi bi-eye"></i></span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       <Lightbox
         open={index >= 0}
         index={index}
         close={() => setIndex(-1)}
-        slides={images.map(image => ({ src: image.src, alt: image.alt }))}
+        slides={allImages.map(image => ({ src: image.src, alt: image.alt }))}
         plugins={[Thumbnails, Zoom, Fullscreen, Slideshow]}
         carousel={{
           finite: images.length <= 5

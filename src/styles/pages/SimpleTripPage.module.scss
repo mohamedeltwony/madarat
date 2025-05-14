@@ -257,110 +257,97 @@ $transition-speed: 0.3s;
 
 // ======== Gallery Styles ========
 .galleryContainer {
-  margin: 0.5rem 0 2rem;
+  margin: 0.5rem 0 2.5rem;
+}
+
+.galleryRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  
+  @media (max-width: 991px) {
+    flex-direction: column;
+  }
+}
+
+.galleryMainCol {
+  flex: 0 0 calc(50% - 0.5rem);
+  
+  @media (max-width: 991px) {
+    flex: 0 0 100%;
+  }
+}
+
+.galleryGridCol {
+  flex: 0 0 calc(50% - 0.5rem);
+  
+  @media (max-width: 991px) {
+    flex: 0 0 100%;
+  }
+}
+
+.galleryMainImage {
+  position: relative;
+  height: 0;
+  padding-bottom: 75%;
+  border-radius: $border-radius;
+  overflow: hidden;
+  cursor: pointer;
+  
+  &:hover {
+    .imageOverlay {
+      opacity: 1;
+    }
+    
+    .galleryImage {
+      transform: scale(1.05);
+    }
+  }
 }
 
 .galleryGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 0.5rem;
-  max-height: 500px;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto;
-    max-height: none;
-  }
-  
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-    grid-auto-rows: 250px;
-  }
-}
-
-// Specific layouts for different number of images
-.singleImage {
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  
-  .galleryItem {
-    padding-bottom: 56.25%; // 16:9 aspect ratio
-    height: auto;
-  }
-}
-
-.twoImages {
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 1fr;
-  
-  .galleryItem {
-    &:first-child {
-      grid-column: span 1;
-    }
-  }
-}
-
-.threeImages {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  
-  .galleryItem {
-    &:first-child {
-      grid-row: span 2;
-    }
-  }
+  gap: 1rem;
+  height: 100%;
 }
 
-.galleryItem {
+.galleryGridItem {
   position: relative;
-  overflow: hidden;
-  border-radius: $border-radius;
-  height: 0;
-  padding-bottom: 66.67%;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   
-  &:first-child {
-    grid-row: span 2;
-    grid-column: span 2;
-    
-    @media (max-width: 768px) {
-      grid-row: span 1;
-      grid-column: span 2;
-    }
-    
-    @media (max-width: 480px) {
-      grid-column: span 1;
-    }
+  @media (max-width: 991px) {
+    height: 0;
+    padding-bottom: 75%;
   }
+}
+
+.galleryImgWrap {
+  position: relative;
+  height: 0;
+  padding-bottom: 75%;
+  border-radius: $border-radius;
+  overflow: hidden;
+  cursor: pointer;
   
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    .imageOverlay {
+      opacity: 1;
+    }
     
     .galleryImage {
       transform: scale(1.05);
-      opacity: 0.9;
-    }
-
-    &::after {
-      opacity: 1;
     }
   }
   
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.2);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1;
+  &.active {
+    .imageOverlay {
+      opacity: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
   }
 }
 
@@ -371,4 +358,75 @@ $transition-speed: 0.3s;
   width: 100% !important;
   height: 100% !important;
   z-index: 0;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.viewIcon {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #333;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #fff;
+    transform: scale(1.1);
+  }
+}
+
+.viewMoreBtn,
+.watchVideoBtn {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #fff;
+    transform: scale(1.05);
+  }
+  
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+.watchVideoBtn {
+  color: #fff;
+  background-color: rgba(0, 122, 255, 0.8);
+  
+  i {
+    font-size: 1.5rem;
+  }
+  
+  &:hover {
+    background-color: rgb(0, 122, 255);
+  }
 } 
