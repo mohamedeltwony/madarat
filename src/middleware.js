@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-// import type { NextRequest } from 'next/server' // Remove type import
 
-// Define the paths that should NOT be redirected
+// Define paths for routing middleware if needed
 const ALLOWED_PATHS = [
-  '/london-scotland-trip', // The target page itself
+  '/london-scotland-trip',
   '/thank-you-citizen',
   '/thank-you-resident',
   '/cruise-italy-spain-france',
@@ -20,23 +19,15 @@ const ALLOWED_PATHS = [
   '/russia-trip',
 ];
 
-// Define paths/patterns to exclude from the middleware altogether (e.g., static assets, API routes)
-// This helps avoid unnecessary middleware execution.
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Also exclude paths containing a dot (.), which are likely static files.
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.).*)',
-  ],
-};
-
-export function middleware(request) {
-  // Middleware redirection disabled
+// This middleware only handles routing, not CSRF protection
+// CSRF protection is applied directly to API routes with the csrf wrapper
+export function middleware(req) {
+  // Basic middleware for any routing needs
   return NextResponse.next();
 }
+
+// Only apply middleware to frontend routes if needed
+// CSRF protection is handled in the API routes directly
+export const config = {
+  matcher: [],
+};
