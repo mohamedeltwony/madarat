@@ -155,6 +155,58 @@ export default function TurkeyTrip() {
     return null;
   };
 
+  // Function to submit data to Zapier with timeout handling
+  const submitToZapier = async (payload) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        // Try main proxy endpoint first with a timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+        
+        try {
+          const proxyResponse = await fetch('/api/zapier-proxy', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+          });
+          
+          clearTimeout(timeoutId);
+          
+          // Any response from Zapier is considered success for our purposes
+          console.log('Zapier proxy response status:', proxyResponse.status);
+          resolve(true);
+          return;
+        } catch (proxyError) {
+          console.warn('Error with Zapier proxy, trying direct endpoint:', proxyError);
+          clearTimeout(timeoutId);
+        }
+        
+        // If we get here, proxy failed or timed out - try direct endpoint
+        try {
+          const directResponse = await fetch('/api/zapier-direct', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+          
+          console.log('Direct endpoint response status:', directResponse.status);
+          resolve(true);
+        } catch (directError) {
+          console.error('Error with direct endpoint:', directError);
+          reject(directError);
+        }
+      } catch (error) {
+        console.error('Error in Zapier submission:', error);
+        reject(error);
+      }
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLoading) return;
@@ -175,6 +227,19 @@ export default function TurkeyTrip() {
         return;
       }
 
+      // Generate IDs
+      const leadEventId = crypto.randomUUID();
+      const externalId = crypto.randomUUID();
+      
+      // Process phone number
+      let processedPhone = formData.phone.replace(/[^0-9]/g, '');
+      if (processedPhone.startsWith('966') && processedPhone.length >= 12) {
+        processedPhone = '0' + processedPhone.substring(3);
+      } else if (!processedPhone.startsWith('0') && processedPhone.startsWith('5') && processedPhone.length === 9) {
+        processedPhone = '0' + processedPhone;
+      }
+
+      // Prepare data payload
       const queryParams = new URLSearchParams(window.location.search);
       const clientData = {
         utm_source: queryParams.get('utm_source'),
@@ -187,168 +252,85 @@ export default function TurkeyTrip() {
         fbp: getCookie('_fbp'),
       };
 
-      // --- Facebook Event Tracking (Keep original logic/names) ---
-      const eventData = {
-        content_name: 'Turkey Trip Form',
-        content_category: 'Travel Lead',
-        value: 0, // Keep original value
-        currency: 'SAR',
-      };
-      const leadEventId = crypto.randomUUID();
-      console.log(`Generated Lead Event ID: ${leadEventId}`);
+      // Facebook event tracking (in background - don't await)
       if (formData.nationality === 'مواطن') {
-        console.log('Sending Lead event via CAPI for citizen');
-        await sendFbEvent('Lead', formData, leadEventId);
-      } else {
-        console.log('Skipping CAPI Lead event for non-citizen');
+        sendFbEvent('Lead', formData, leadEventId).catch(err => {
+          console.error('FB event error (non-blocking):', err);
+        });
       }
-      // --- End Facebook Event Tracking ---
 
-      // --- Zapier Webhook Integration using API Proxy ---
-      try {
-        // Process phone number for Zapier to ensure consistent format
-        let processedPhone = formData.phone;
-        if (processedPhone) {
-          // Remove all non-digit characters
-          processedPhone = processedPhone.replace(/[^0-9]/g, '');
+      // Create Zapier payload
+      const zapierPayload = {
+        name: formData.name || 'Not provided',
+        phone: processedPhone || 'Not provided',
+        email: formData.email || 'Not provided',
+        nationality: formData.nationality,
+        destination: formData.destination,
+        formSource: 'turkey-trip',
+        formName: 'Turkey Trip Form',
+        pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+        timestamp: new Date().toISOString(),
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        leadEventId: leadEventId,
+        externalId: externalId,
+        ...clientData,
+      };
 
-          // Handle different formats: standardize to Saudi mobile format
-          if (processedPhone.startsWith('966') && processedPhone.length >= 12) {
-            // If starts with 966, convert to 05xx format for better display
-            processedPhone = '0' + processedPhone.substring(3);
-            console.log(
-              'Converted international format to local format:',
-              processedPhone
-            );
-          } else if (
-            !processedPhone.startsWith('0') &&
-            processedPhone.startsWith('5') &&
-            processedPhone.length === 9
-          ) {
-            // If starts with 5 and is 9 digits, add leading 0
-            processedPhone = '0' + processedPhone;
-            console.log('Added leading 0 to phone number:', processedPhone);
-          }
-        }
+      // Try both Zapier endpoints but don't wait for completion
+      // First try the proxy endpoint
+      fetch('/api/zapier-proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(zapierPayload),
+      }).catch(error => {
+        console.error('Zapier proxy error (non-blocking):', error);
+        
+        // If proxy fails, try the direct endpoint as fallback
+        fetch('/api/zapier-direct', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(zapierPayload),
+        }).catch(err => console.error('Both Zapier endpoints failed:', err));
+      });
 
-        const now = new Date();
-
-        // Create payload for submission
-        const zapierPayload = {
-          name: formData.name || 'Not provided',
-          phone: processedPhone || 'Not provided',
-          email: formData.email || 'Not provided',
-          nationality: formData.nationality,
-          destination: formData.destination,
-          formSource: 'turkey-trip',
-          formName: 'Turkey Trip Form',
-          pageUrl: typeof window !== 'undefined' ? window.location.href : '',
-          timestamp: now.toISOString(),
-          date: now.toLocaleDateString(),
-          time: now.toLocaleTimeString(),
-          leadEventId: leadEventId,
-          externalId: crypto.randomUUID(),
-          ...clientData, // Include UTM parameters and other client data
-        };
-
-        console.log('Sending data to Zapier via API proxy:', zapierPayload);
-
-        try {
-          // Use our own API endpoint as proxy to avoid CORS issues
-          const proxyResponse = await fetch('/api/zapier-proxy', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(zapierPayload),
-          });
-
-          const proxyData = await proxyResponse.json();
-          console.log('Zapier proxy response:', proxyData);
-
-          if (!proxyResponse.ok) {
-            console.error('Error from Zapier proxy:', proxyData);
-            // If the main proxy fails, try the direct endpoint as backup
-            console.warn('Trying direct endpoint as backup');
-            try {
-              const directResponse = await fetch('/api/zapier-direct', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(zapierPayload),
-              });
-
-              const directData = await directResponse.json();
-              console.log('Direct endpoint response:', directData);
-
-              if (directResponse.ok) {
-                console.log('Successfully logged data via direct endpoint');
-              }
-            } catch (directError) {
-              console.error('Error with direct endpoint:', directError);
-            }
-          } else {
-            console.log('Successfully sent data to Zapier via proxy');
-          }
-        } catch (zapierError) {
-          console.error('Error sending to Zapier proxy:', zapierError);
-
-          // Try the direct endpoint as backup
-          console.warn('Proxy failed, trying direct endpoint as backup');
-          try {
-            const directResponse = await fetch('/api/zapier-direct', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(zapierPayload),
-            });
-
-            const directData = await directResponse.json();
-            console.log('Direct endpoint response:', directData);
-
-            if (directResponse.ok) {
-              console.log('Successfully logged data via direct endpoint');
-            }
-          } catch (directError) {
-            console.error('Error with direct endpoint:', directError);
-          }
-        }
-      } catch (error) {
-        console.error('Error in Zapier integration:', error);
-        // Don't block the form submission due to Zapier errors
-      }
-      // --- End Zapier Integration ---
-
-      const externalId = crypto.randomUUID();
-      const thankYouPageBase =
-        formData.nationality === 'مواطن'
-          ? '/thank-you-citizen'
-          : '/thank-you-resident';
-      const redirectQueryParams = new URLSearchParams();
-      if (formData.email) redirectQueryParams.set('email', formData.email);
-      if (formData.phone) redirectQueryParams.set('phone', formData.phone);
-      redirectQueryParams.set('external_id', externalId);
-      redirectQueryParams.set('eventId', leadEventId);
-      const redirectUrl = `${thankYouPageBase}?${redirectQueryParams.toString()}`;
-      console.log(`Redirecting to: ${redirectUrl}`);
-      router.push(redirectUrl);
-
-      // Reset form (Keep original logic)
+      // Reset form
       setFormData({
         name: '',
         phone: '',
         email: '',
         nationality: '',
-        destination: 'تركيا', // Updated destination in reset
+        destination: 'الشمال التركي',
       });
       setFormStarted(false);
-      // Don't reset isLoading here as page is redirecting
+      
+      // Determine redirect path based on nationality
+      const redirectPath = 
+        (formData.nationality === 'مواطن' || 
+         formData.nationality === 'Saudi Arabia' || 
+         formData.nationality === 'العربية السعودية') 
+          ? '/thank-you-citizen' 
+          : '/thank-you-resident';
+      
+      console.log(`Redirecting to: ${redirectPath}`);
+      
+      // First change loading state to avoid UI issues
+      setIsLoading(false);
+      
+      // Use window.location.href for direct redirection instead of router.push
+      const queryString = new URLSearchParams({
+        phone: processedPhone,
+        external_id: externalId,
+        eventId: leadEventId
+      }).toString();
+      
+      console.log(`Using direct location redirect to: ${redirectPath}?${queryString}`);
+      window.location.href = `${redirectPath}?${queryString}`;
+      
     } catch (error) {
       console.error('Error processing form submission:', error);
-      alert('حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.');
-      setIsLoading(false); // Reset loading state on error
+      alert('حدث خطأ في تقديم النموذج. يرجى المحاولة مرة أخرى.');
+      setIsLoading(false);
     }
   };
 
