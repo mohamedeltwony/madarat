@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   try {
     // Log the request for debugging
     console.log('Zapier proxy received request');
+    console.log('Request headers:', JSON.stringify(req.headers, null, 2));
 
     // The Zapier webhook URL from environment variables only
     const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL;
@@ -26,7 +27,7 @@ export default async function handler(req, res) {
     }
     
     // Don't log the full webhook URL for security
-    console.log('Using Zapier webhook from environment variables');
+    console.log('Using Zapier webhook from environment variables:', zapierWebhookUrl.substring(0, 20) + '...');
 
     // Get client IP address
     const forwarded = req.headers['x-forwarded-for'];
@@ -70,6 +71,8 @@ export default async function handler(req, res) {
       operating_system: enhancedPayload.operating_system,
       browser: enhancedPayload.browser,
       ip_address: enhancedPayload.ip_address,
+      formSource: enhancedPayload.formSource,
+      destination: enhancedPayload.destination
     });
 
     // Create a controller for timeout
@@ -78,7 +81,7 @@ export default async function handler(req, res) {
 
     try {
       // Make a single attempt with timeout
-      console.log('Attempting submission to Zapier with timeout');
+      console.log('Attempting submission to Zapier with timeout, URL:', zapierWebhookUrl.substring(0, 20) + '...');
       const response = await fetch(zapierWebhookUrl, {
         method: 'POST',
         headers: {

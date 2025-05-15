@@ -208,7 +208,7 @@ export default function TurkeyTrip() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // We'll still prevent default and handle it manually
     if (isLoading) return;
     setIsLoading(true);
 
@@ -244,34 +244,7 @@ export default function TurkeyTrip() {
       
       // Get browser and device information
       const userAgent = navigator.userAgent;
-      const browserInfo = {
-        browser: 'Unknown',
-        os: 'Unknown',
-        device: 'Unknown',
-      };
-      
-      // Simple browser detection
-      if (/Firefox/i.test(userAgent)) browserInfo.browser = 'Firefox';
-      else if (/Chrome/i.test(userAgent) && !/Edg/i.test(userAgent) && !/OPR/i.test(userAgent)) browserInfo.browser = 'Chrome';
-      else if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)) browserInfo.browser = 'Safari';
-      else if (/Edg/i.test(userAgent)) browserInfo.browser = 'Edge';
-      else if (/OPR/i.test(userAgent)) browserInfo.browser = 'Opera';
-      else if (/MSIE|Trident/i.test(userAgent)) browserInfo.browser = 'Internet Explorer';
-      
-      // OS detection
-      if (/Windows/i.test(userAgent)) browserInfo.os = 'Windows';
-      else if (/Macintosh|Mac OS X/i.test(userAgent)) browserInfo.os = 'macOS';
-      else if (/Android/i.test(userAgent)) browserInfo.os = 'Android';
-      else if (/iPhone|iPad|iPod/i.test(userAgent)) browserInfo.os = 'iOS';
-      else if (/Linux/i.test(userAgent)) browserInfo.os = 'Linux';
-      
-      // Device vendor detection (simplified)
-      if (/iPhone|iPad|iPod/i.test(userAgent)) browserInfo.device = 'Apple';
-      else if (/Android.*Samsung/i.test(userAgent)) browserInfo.device = 'Samsung';
-      else if (/Android.*Pixel/i.test(userAgent)) browserInfo.device = 'Google';
-      else if (/Android.*Huawei/i.test(userAgent)) browserInfo.device = 'Huawei';
-      else if (/Macintosh|Mac OS X/i.test(userAgent)) browserInfo.device = 'Apple';
-      else if (/Windows/i.test(userAgent)) browserInfo.device = 'PC';
+      const browserInfo = getBrowserAndDeviceInfo(userAgent);
       
       const clientData = {
         // UTM parameters
@@ -281,22 +254,20 @@ export default function TurkeyTrip() {
         utm_term: queryParams.get('utm_term') || 'none',
         utm_content: queryParams.get('utm_content') || 'none',
         
-        // Device and browser info
-        screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
-        screenHeight: typeof window !== 'undefined' ? window.screen.height : null,
-        deviceVendor: browserInfo.device,
-        operatingSystem: browserInfo.os,
+        // Device and browser info - Standardized field names
+        screen_width: typeof window !== 'undefined' ? window.screen.width : null,
+        screen_height: typeof window !== 'undefined' ? window.screen.height : null,
+        device_vendor: browserInfo.device,
+        operating_system: browserInfo.os,
         browser: browserInfo.browser,
-        userAgent: userAgent,
+        user_agent: userAgent,
         
         // Facebook tracking IDs
-        fbc: getCookie('_fbc') || 'none',
-        fbp: getCookie('_fbp') || 'none',
+        fb_browser_id: getCookie('_fbp') || 'none',
+        fb_click_id: getCookie('_fbc') || 'none',
         
         // Referrer info
         referrer: document.referrer || 'direct',
-        
-        // IP address will be captured by the server
       };
 
       // Facebook event tracking (in background - don't await)
@@ -324,61 +295,103 @@ export default function TurkeyTrip() {
         ...clientData,
       };
 
-      // Try both Zapier endpoints but don't wait for completion
-      // First try the proxy endpoint
-      fetch('/api/zapier-proxy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(zapierPayload),
-      }).catch(error => {
-        console.error('Zapier proxy error (non-blocking):', error);
-        
-        // If proxy fails, try the direct endpoint as fallback
-        fetch('/api/zapier-direct', {
+      console.log('Sending data to Zapier via API...');
+      try {
+        // Wait for the request to complete before redirecting
+        const response = await fetch('/api/zapier-proxy', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(zapierPayload),
-        }).catch(err => console.error('Both Zapier endpoints failed:', err));
-      });
-
-      // Reset form
-      setFormData({
-        name: '',
-        phone: '',
-        email: '',
-        nationality: '',
-        destination: 'الشمال التركي',
-      });
-      setFormStarted(false);
-      
-      // Determine redirect path based on nationality
-      const redirectPath = 
-        (formData.nationality === 'مواطن' || 
-         formData.nationality === 'Saudi Arabia' || 
-         formData.nationality === 'العربية السعودية') 
-          ? '/thank-you-citizen' 
-          : '/thank-you-resident';
-      
-      console.log(`Redirecting to: ${redirectPath}`);
-      
-      // First change loading state to avoid UI issues
-      setIsLoading(false);
-      
-      // Use window.location.href for direct redirection instead of router.push
-      const queryString = new URLSearchParams({
-        phone: processedPhone,
-        external_id: externalId,
-        eventId: leadEventId
-      }).toString();
-      
-      console.log(`Using direct location redirect to: ${redirectPath}?${queryString}`);
-      window.location.href = `${redirectPath}?${queryString}`;
+        });
+        
+        const responseData = await response.json();
+        console.log('Zapier proxy response:', responseData);
+        
+        // Determine redirect path based on nationality
+        const redirectPath = 
+          (formData.nationality === 'مواطن' || 
+           formData.nationality === 'Saudi Arabia' || 
+           formData.nationality === 'العربية السعودية') 
+            ? '/thank-you-citizen' 
+            : '/thank-you-resident';
+            
+        console.log(`Redirecting to: ${redirectPath}`);
+        
+        // This is the new approach - directly create a form and submit it
+        const redirectForm = document.createElement('form');
+        redirectForm.method = 'GET';
+        redirectForm.action = redirectPath;
+        
+        // Add hidden fields
+        const phoneField = document.createElement('input');
+        phoneField.type = 'hidden';
+        phoneField.name = 'phone';
+        phoneField.value = processedPhone;
+        redirectForm.appendChild(phoneField);
+        
+        const externalIdField = document.createElement('input');
+        externalIdField.type = 'hidden';
+        externalIdField.name = 'external_id';
+        externalIdField.value = externalId;
+        redirectForm.appendChild(externalIdField);
+        
+        const eventIdField = document.createElement('input');
+        eventIdField.type = 'hidden';
+        eventIdField.name = 'eventId';
+        eventIdField.value = leadEventId;
+        redirectForm.appendChild(eventIdField);
+        
+        // Add form to body
+        document.body.appendChild(redirectForm);
+        
+        // Submit the form
+        redirectForm.submit();
+        
+      } catch (error) {
+        console.error('Zapier proxy error:', error);
+        setIsLoading(false);
+        alert('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.');
+      }
       
     } catch (error) {
       console.error('Error processing form submission:', error);
       alert('حدث خطأ في تقديم النموذج. يرجى المحاولة مرة أخرى.');
       setIsLoading(false);
     }
+  };
+
+  // Helper function to get browser and device information
+  const getBrowserAndDeviceInfo = (userAgent) => {
+    const info = {
+      browser: 'Unknown',
+      os: 'Unknown',
+      device: 'Unknown',
+    };
+    
+    // Browser detection
+    if (/Firefox/i.test(userAgent)) info.browser = 'Firefox';
+    else if (/Chrome/i.test(userAgent) && !/Edg/i.test(userAgent) && !/OPR/i.test(userAgent)) info.browser = 'Chrome';
+    else if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)) info.browser = 'Safari';
+    else if (/Edg/i.test(userAgent)) info.browser = 'Edge';
+    else if (/OPR/i.test(userAgent)) info.browser = 'Opera';
+    else if (/MSIE|Trident/i.test(userAgent)) info.browser = 'Internet Explorer';
+    
+    // OS detection
+    if (/Windows/i.test(userAgent)) info.os = 'Windows';
+    else if (/Macintosh|Mac OS X/i.test(userAgent)) info.os = 'macOS';
+    else if (/Android/i.test(userAgent)) info.os = 'Android';
+    else if (/iPhone|iPad|iPod/i.test(userAgent)) info.os = 'iOS';
+    else if (/Linux/i.test(userAgent)) info.os = 'Linux';
+    
+    // Device vendor detection (simplified)
+    if (/iPhone|iPad|iPod/i.test(userAgent)) info.device = 'Apple';
+    else if (/Android.*Samsung/i.test(userAgent)) info.device = 'Samsung';
+    else if (/Android.*Pixel/i.test(userAgent)) info.device = 'Google';
+    else if (/Android.*Huawei/i.test(userAgent)) info.device = 'Huawei';
+    else if (/Macintosh|Mac OS X/i.test(userAgent)) info.device = 'Apple';
+    else if (/Windows/i.test(userAgent)) info.device = 'PC';
+    
+    return info;
   };
 
   // Saudi cities (Keep original if needed by form logic, though not displayed)

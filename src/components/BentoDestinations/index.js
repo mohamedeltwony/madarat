@@ -137,6 +137,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
               className={styles.image}
               priority={isPriority}
               loading={isPriority ? 'eager' : 'lazy'}
+              placeholder="empty"
               onError={(e) => {
                 console.error('Image loading error:', e);
                 e.target.src = '/images/placeholder.jpg';

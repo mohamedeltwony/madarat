@@ -12,8 +12,6 @@
     rgba(255, 255, 255, 0.1),
     rgba(255, 255, 255, 0.05)
   );
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   position: relative;
@@ -583,8 +581,6 @@
     rgba(0, 0, 0, 0.05) 100%
   );
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
 
   .destinationCard:hover & {
     background: linear-gradient(
@@ -594,8 +590,6 @@
       rgba(0, 0, 0, 0.45) 60%,
       rgba(0, 0, 0, 0.15) 100%
     );
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
     padding-bottom: 1.8rem;
   }
 }
@@ -788,8 +782,6 @@
 @media (max-width: 768px) {
   .destinationsContainer {
     padding: 1.5rem 0;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
   }
 
   .sectionHeading {
@@ -890,8 +882,6 @@
 
   .destinationCard {
     min-height: 160px;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
   }
 
   .tripCount {
@@ -909,8 +899,6 @@
 
   .content {
     padding: 0.8rem;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
   }
 
   .title {

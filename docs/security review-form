@@ -1,0 +1,121 @@
+# Security Review: Turkey Trip Form
+
+Based on my analysis of the codebase, here's a security assessment of the form implementation on the turkey-trip page:
+
+## Overall Security Status: Moderate
+
+### Positive Security Measures
+- ✅ Server-side validation prevents non-POST requests
+- ✅ Error handling is implemented to prevent application crashes
+- ✅ Server responses don't leak sensitive internal implementation details
+- ✅ Timeouts are implemented for external API calls
+
+### Security Issues & Recommendations
+
+#### 1. Zapier Webhook URL Exposure
+**Severity: High**
+
+**Issue:** The Zapier webhook URL is directly embedded in the codebase and visible in environment variables. This webhook can be used by anyone to submit data directly to your Zapier workflow.
+
+```javascript
+const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL ||
+  'https://hooks.zapier.com/hooks/catch/18799879/2x6aaqq/';
+```
+
+**Recommendation:**
+- Remove the hardcoded fallback URL
+- Use environment variables exclusively (.env.local for development, secure environment variables in production)
+- Consider implementing signature verification for webhook calls
+
+#### 2. Missing CSRF Protection
+**Severity: Medium**
+
+**Issue:** The form doesn't implement Cross-Site Request Forgery (CSRF) protection, which could allow malicious sites to submit the form on behalf of authenticated users.
+
+**Recommendation:**
+- Implement CSRF tokens in your forms
+- Add the SameSite=Strict attribute to cookies
+- Consider using Next.js built-in CSRF protection or a library like `next-csrf`
+
+#### 3. No Rate Limiting
+**Severity: Medium**
+
+**Issue:** There's no rate limiting on form submissions, which could allow attackers to flood your Zapier webhook with submissions.
+
+**Recommendation:**
+- Implement rate limiting based on IP address
+- Consider using a service like Cloudflare or implementing rate limiting middleware
+
+#### 4. Client-Side Data Validation
+**Severity: Low**
+
+**Issue:** While there's some validation (e.g., phone number format), it's primarily client-side. Server-side validation is minimal.
+
+**Recommendation:**
+- Implement comprehensive server-side validation
+- Validate data types, lengths, and formats on the server
+
+#### 5. Email Protection
+**Severity: Low**
+
+**Issue:** Email addresses collected in the form aren't validated for proper format.
+
+**Recommendation:**
+- Add comprehensive email validation on both client and server sides
+
+#### 6. Credentials in Logs
+**Severity: Low**
+
+**Issue:** Detailed form data including personal information is logged to console, which could be captured in server logs.
+
+```javascript
+console.log(`[${requestId}] Full form data:`, JSON.stringify(enhancedBody, null, 2));
+```
+
+**Recommendation:**
+- Limit logging of personal data
+- Redact sensitive information in logs
+- Consider a structured logging system with proper PII handling
+
+#### 7. Missing Security Headers
+**Severity: Low**
+
+**Issue:** The application doesn't set important security headers that can protect against common attacks.
+
+**Recommendation:**
+- Implement Content-Security-Policy
+- Add X-XSS-Protection, X-Content-Type-Options, and Referrer-Policy headers
+- Consider using Helmet.js or Next.js security headers configuration
+
+## Implementation Plan
+
+### Immediate Actions
+1. Remove hardcoded Zapier webhook URL from the codebase:
+```javascript
+const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL;
+if (!zapierWebhookUrl) {
+  console.error('No Zapier webhook URL configured');
+  // Handle error appropriately
+}
+```
+
+2. Implement basic request validation on the server side:
+```javascript
+// Validate required fields
+if (!req.body.phone) {
+  return res.status(400).json({ error: 'Phone number is required' });
+}
+```
+
+3. Reduce sensitive data in logs:
+```javascript
+// Log only non-sensitive data
+console.log(`Form submission from ${ip}, form: ${formSource}`);
+```
+
+### Medium-Term Improvements
+1. Add CSRF protection
+2. Implement rate limiting
+3. Add security headers
+
+Would you like me to implement any of these security improvements now?

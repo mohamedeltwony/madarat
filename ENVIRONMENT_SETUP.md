@@ -21,8 +21,9 @@ EMAIL_USER=your_email@example.com
 EMAIL_PASS=your_secure_password
 LEAD_RECIPIENT_EMAILS=admin@example.com,sales@example.com
 
-# Zapier Webhook URL - Critical security
+# Zapier Webhook URLs - Critical security
 ZAPIER_WEBHOOK_URL=https://hooks.zapier.com/hooks/catch/YOUR_ACCOUNT/YOUR_HOOK_ID/
+ZAPIER_PARTIAL_WEBHOOK_URL=https://hooks.zapier.com/hooks/catch/YOUR_ACCOUNT/YOUR_PARTIAL_HOOK_ID/
 
 # Webhook security key (generate with: openssl rand -hex 32)
 WEBHOOK_SECRET_KEY=your_random_secret_key_used_for_signatures
@@ -67,6 +68,15 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 3. Select "Catch Hook" as the trigger event
 4. Copy the webhook URL provided by Zapier
 5. Add this URL to your `.env.local` file as `ZAPIER_WEBHOOK_URL`
+
+### Setting up Zapier Partial Submission Webhook
+
+For improved user experience and data collection:
+1. Create a separate Zap in Zapier for partial form submissions
+2. Choose "Webhooks by Zapier" as the trigger
+3. Copy the webhook URL provided by Zapier
+4. Add this URL to your `.env.local` file as `ZAPIER_PARTIAL_WEBHOOK_URL`
+5. Configure the Zap to handle partial (incomplete) submission data
 
 For enhanced security in production:
 1. Implement proper signature verification on both ends

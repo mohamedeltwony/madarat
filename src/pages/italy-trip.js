@@ -220,7 +220,7 @@ export default function ItalyTrip() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // We'll still prevent default and handle it manually
     if (isLoading) return;
     setIsLoading(true);
 
@@ -239,195 +239,171 @@ export default function ItalyTrip() {
         return;
       }
 
-      const queryParams = new URLSearchParams(window.location.search);
-      const clientData = {
-        utm_source: queryParams.get('utm_source'),
-        utm_medium: queryParams.get('utm_medium'),
-        utm_campaign: queryParams.get('utm_campaign'),
-        utm_term: queryParams.get('utm_term'),
-        utm_content: queryParams.get('utm_content'),
-        screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
-        fbc: getCookie('_fbc'),
-        fbp: getCookie('_fbp'),
-      };
-
-      // --- Facebook Event Tracking (Keep original logic/names) ---
-      const eventData = {
-        content_name: 'Italy Trip Form', // Updated form name
-        content_category: 'Travel Lead',
-        value: 0, // Keep original value
-        currency: 'SAR',
-      };
+      // Generate IDs
       const leadEventId = crypto.randomUUID();
-      console.log(`Generated Lead Event ID: ${leadEventId}`);
-      if (formData.nationality === 'مواطن') {
-        console.log('Sending Lead event via CAPI for citizen');
-        await sendFbEvent('Lead', formData, leadEventId);
-      } else {
-        console.log('Skipping CAPI Lead event for non-citizen');
-      }
-      // --- End Facebook Event Tracking ---
-
-      // --- Zapier Webhook Integration using API Proxy ---
-      try {
-        // Process phone number for Zapier to ensure consistent format
-        let processedPhone = formData.phone;
-        if (processedPhone) {
-          // Remove all non-digit characters
-          processedPhone = processedPhone.replace(/[^0-9]/g, '');
-
-          // Handle different formats: standardize to Saudi mobile format
-          if (processedPhone.startsWith('966') && processedPhone.length >= 12) {
-            // If starts with 966, convert to 05xx format for better display
-            processedPhone = '0' + processedPhone.substring(3);
-            console.log(
-              'Converted international format to local format:',
-              processedPhone
-            );
-          } else if (
-            !processedPhone.startsWith('0') &&
-            processedPhone.startsWith('5') &&
-            processedPhone.length === 9
-          ) {
-            // If starts with 5 and is 9 digits, add leading 0
-            processedPhone = '0' + processedPhone;
-            console.log('Added leading 0 to phone number:', processedPhone);
-          }
-        }
-
-        const now = new Date();
-
-        // Create payload for submission
-        const zapierPayload = {
-          name: formData.name || 'Not provided',
-          phone: processedPhone || 'Not provided',
-          email: formData.email || 'Not provided',
-          nationality: formData.nationality,
-          destination: formData.destination,
-          formSource: 'italy-trip',
-          formName: 'Italy Trip Form',
-          pageUrl: typeof window !== 'undefined' ? window.location.href : '',
-          timestamp: now.toISOString(),
-          date: now.toLocaleDateString(),
-          time: now.toLocaleTimeString(),
-          leadEventId: leadEventId,
-          externalId: crypto.randomUUID(),
-          ...clientData, // Include UTM parameters and other client data
-        };
-
-        console.log('Sending data to Zapier via API proxy:', zapierPayload);
-
-        try {
-          // Use our own API endpoint as proxy to avoid CORS issues
-          const proxyResponse = await fetch('/api/zapier-proxy', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(zapierPayload),
-          });
-
-          const proxyData = await proxyResponse.json();
-          console.log('Zapier proxy response:', proxyData);
-
-          if (!proxyResponse.ok) {
-            console.error('Error from Zapier proxy:', proxyData);
-            // If the main proxy fails, try the direct endpoint as backup
-            console.warn('Trying direct endpoint as backup');
-            try {
-              const directResponse = await fetch('/api/zapier-direct', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(zapierPayload),
-              });
-
-              const directData = await directResponse.json();
-              console.log('Direct endpoint response:', directData);
-
-              if (directResponse.ok) {
-                console.log('Successfully logged data via direct endpoint');
-              }
-            } catch (directError) {
-              console.error('Error with direct endpoint:', directError);
-            }
-          } else {
-            console.log('Successfully sent data to Zapier via proxy');
-          }
-        } catch (zapierError) {
-          console.error('Error sending to Zapier proxy:', zapierError);
-
-          // Try the direct endpoint as backup
-          console.warn('Proxy failed, trying direct endpoint as backup');
-          try {
-            const directResponse = await fetch('/api/zapier-direct', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(zapierPayload),
-            });
-
-            const directData = await directResponse.json();
-            console.log('Direct endpoint response:', directData);
-
-            if (directResponse.ok) {
-              console.log('Successfully logged data via direct endpoint');
-            }
-          } catch (directError) {
-            console.error('Error with direct endpoint:', directError);
-          }
-        }
-      } catch (error) {
-        console.error('Error in Zapier integration:', error);
-        // Don't block the form submission due to Zapier errors
-      }
-      // --- End Zapier Integration ---
-
-      // 1. Client-side Pixel Event - REMOVED to prevent double firing
-      // The Lead event is now fired only on the thank-you-citizen/resident page load.
-      // 2. Server-side CAPI Event (Conditional based on nationality)
-      if (formData.nationality === 'مواطن') {
-        console.log('Sending Lead event via CAPI for citizen');
-        // Pass the generated leadEventId to the CAPI call
-        await sendFbEvent('Lead', formData, leadEventId);
-      } else {
-        console.log('Skipping CAPI Lead event for non-citizen');
-        // Note: Even if CAPI isn't sent, the pixel on thank-you-resident might still fire.
-        // We still pass the eventId in the redirect for potential pixel deduplication there.
-      }
-      // --- End Facebook Event Tracking ---
-
       const externalId = crypto.randomUUID();
-      const thankYouPageBase =
-        formData.nationality === 'مواطن'
-          ? '/thank-you-citizen'
-          : '/thank-you-resident';
-      const redirectQueryParams = new URLSearchParams();
-      if (formData.email) redirectQueryParams.set('email', formData.email);
-      if (formData.phone) redirectQueryParams.set('phone', formData.phone);
-      redirectQueryParams.set('external_id', externalId);
-      redirectQueryParams.set('eventId', leadEventId);
-      const redirectUrl = `${thankYouPageBase}?${redirectQueryParams.toString()}`;
-      console.log(`Redirecting to: ${redirectUrl}`);
-      router.push(redirectUrl);
+      
+      // Process phone number
+      let processedPhone = formData.phone.replace(/[^0-9]/g, '');
+      if (processedPhone.startsWith('966') && processedPhone.length >= 12) {
+        processedPhone = '0' + processedPhone.substring(3);
+      } else if (!processedPhone.startsWith('0') && processedPhone.startsWith('5') && processedPhone.length === 9) {
+        processedPhone = '0' + processedPhone;
+      }
 
-      // Reset form (Keep original logic)
-      setFormData({
-        name: '',
-        phone: '',
-        email: '',
-        nationality: '',
-        destination: 'ايطاليا', // Updated destination in reset
-      });
-      setFormStarted(false);
-      // Don't reset isLoading here as page is redirecting
+      // Prepare data payload
+      const queryParams = new URLSearchParams(window.location.search);
+      
+      // Get browser and device information
+      const userAgent = navigator.userAgent;
+      const browserInfo = getBrowserAndDeviceInfo(userAgent);
+      
+      const clientData = {
+        // UTM parameters
+        utm_source: queryParams.get('utm_source') || 'direct',
+        utm_medium: queryParams.get('utm_medium') || 'none',
+        utm_campaign: queryParams.get('utm_campaign') || 'none',
+        utm_term: queryParams.get('utm_term') || 'none',
+        utm_content: queryParams.get('utm_content') || 'none',
+        
+        // Device and browser info - Standardized field names
+        screen_width: typeof window !== 'undefined' ? window.screen.width : null,
+        screen_height: typeof window !== 'undefined' ? window.screen.height : null,
+        device_vendor: browserInfo.device,
+        operating_system: browserInfo.os,
+        browser: browserInfo.browser,
+        user_agent: userAgent,
+        
+        // Facebook tracking IDs
+        fb_browser_id: getCookie('_fbp') || 'none',
+        fb_click_id: getCookie('_fbc') || 'none',
+        
+        // Referrer info
+        referrer: document.referrer || 'direct',
+      };
+
+      // Facebook event tracking (in background - don't await)
+      if (formData.nationality === 'مواطن') {
+        sendFbEvent('Lead', formData, leadEventId).catch(err => {
+          console.error('FB event error (non-blocking):', err);
+        });
+      }
+
+      // Create Zapier payload
+      const zapierPayload = {
+        name: formData.name || 'Not provided',
+        phone: processedPhone || 'Not provided',
+        email: formData.email || 'Not provided',
+        nationality: formData.nationality,
+        destination: formData.destination,
+        formSource: 'italy-trip',
+        formName: 'Italy Trip Form',
+        pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+        timestamp: new Date().toISOString(),
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        leadEventId: leadEventId,
+        externalId: externalId,
+        ...clientData,
+      };
+
+      console.log('Sending data to Zapier via API...');
+      try {
+        // Wait for the request to complete before redirecting
+        const response = await fetch('/api/zapier-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(zapierPayload),
+        });
+        
+        const responseData = await response.json();
+        console.log('Zapier proxy response:', responseData);
+        
+        // Determine redirect path based on nationality
+        const redirectPath = 
+          (formData.nationality === 'مواطن' || 
+           formData.nationality === 'Saudi Arabia' || 
+           formData.nationality === 'العربية السعودية') 
+            ? '/thank-you-citizen' 
+            : '/thank-you-resident';
+            
+        console.log(`Redirecting to: ${redirectPath}`);
+        
+        // This is the new approach - directly create a form and submit it
+        const redirectForm = document.createElement('form');
+        redirectForm.method = 'GET';
+        redirectForm.action = redirectPath;
+        
+        // Add hidden fields
+        const phoneField = document.createElement('input');
+        phoneField.type = 'hidden';
+        phoneField.name = 'phone';
+        phoneField.value = processedPhone;
+        redirectForm.appendChild(phoneField);
+        
+        const externalIdField = document.createElement('input');
+        externalIdField.type = 'hidden';
+        externalIdField.name = 'external_id';
+        externalIdField.value = externalId;
+        redirectForm.appendChild(externalIdField);
+        
+        const eventIdField = document.createElement('input');
+        eventIdField.type = 'hidden';
+        eventIdField.name = 'eventId';
+        eventIdField.value = leadEventId;
+        redirectForm.appendChild(eventIdField);
+        
+        // Add form to body
+        document.body.appendChild(redirectForm);
+        
+        // Submit the form
+        redirectForm.submit();
+        
+      } catch (error) {
+        console.error('Zapier proxy error:', error);
+        setIsLoading(false);
+        alert('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.');
+      }
+      
     } catch (error) {
       console.error('Error processing form submission:', error);
-      alert('حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.');
-      setIsLoading(false); // Reset loading state on error
+      alert('حدث خطأ في تقديم النموذج. يرجى المحاولة مرة أخرى.');
+      setIsLoading(false);
     }
+  };
+
+  // Helper function to get browser and device information
+  const getBrowserAndDeviceInfo = (userAgent) => {
+    const info = {
+      browser: 'Unknown',
+      os: 'Unknown',
+      device: 'Unknown',
+    };
+    
+    // Browser detection
+    if (/Firefox/i.test(userAgent)) info.browser = 'Firefox';
+    else if (/Chrome/i.test(userAgent) && !/Edg/i.test(userAgent) && !/OPR/i.test(userAgent)) info.browser = 'Chrome';
+    else if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)) info.browser = 'Safari';
+    else if (/Edg/i.test(userAgent)) info.browser = 'Edge';
+    else if (/OPR/i.test(userAgent)) info.browser = 'Opera';
+    else if (/MSIE|Trident/i.test(userAgent)) info.browser = 'Internet Explorer';
+    
+    // OS detection
+    if (/Windows/i.test(userAgent)) info.os = 'Windows';
+    else if (/Macintosh|Mac OS X/i.test(userAgent)) info.os = 'macOS';
+    else if (/Android/i.test(userAgent)) info.os = 'Android';
+    else if (/iPhone|iPad|iPod/i.test(userAgent)) info.os = 'iOS';
+    else if (/Linux/i.test(userAgent)) info.os = 'Linux';
+    
+    // Device vendor detection (simplified)
+    if (/iPhone|iPad|iPod/i.test(userAgent)) info.device = 'Apple';
+    else if (/Android.*Samsung/i.test(userAgent)) info.device = 'Samsung';
+    else if (/Android.*Pixel/i.test(userAgent)) info.device = 'Google';
+    else if (/Android.*Huawei/i.test(userAgent)) info.device = 'Huawei';
+    else if (/Macintosh|Mac OS X/i.test(userAgent)) info.device = 'Apple';
+    else if (/Windows/i.test(userAgent)) info.device = 'PC';
+    
+    return info;
   };
 
   // Saudi cities (Keep original if needed by form logic, though not displayed)

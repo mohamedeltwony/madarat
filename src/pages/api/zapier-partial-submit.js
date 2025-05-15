@@ -11,13 +11,22 @@ export default async function handler(req, res) {
     // Log the request for debugging
     console.log('Zapier partial submit received request');
 
-    // The Zapier webhook URL for partial submissions
-    const zapierPartialWebhookUrl =
-      process.env.ZAPIER_PARTIAL_WEBHOOK_URL ||
-      process.env.ZAPIER_WEBHOOK_URL ||
-      'https://hooks.zapier.com/hooks/catch/18799879/2ns1zxk/';
+    // The Zapier webhook URL for partial submissions - only use environment variables
+    const zapierPartialWebhookUrl = process.env.ZAPIER_PARTIAL_WEBHOOK_URL;
+      
+    // Check if we have a webhook URL  
+    if (!zapierPartialWebhookUrl) {
+      console.error('No Zapier partial webhook URL configured in environment variables');
+      return res.status(200).json({
+        status: 500,
+        success: false,
+        error: 'Zapier partial webhook not configured',
+        timestamp: new Date().toISOString(),
+      });
+    }
 
-    console.log('Using Zapier partial webhook URL:', zapierPartialWebhookUrl);
+    console.log('Using Zapier partial webhook URL from environment variables:', 
+      zapierPartialWebhookUrl.substring(0, 20) + '...');
 
     // Add metadata to identify this as a partial submission
     const enhancedData = {
