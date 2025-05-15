@@ -241,15 +241,62 @@ export default function TurkeyTrip() {
 
       // Prepare data payload
       const queryParams = new URLSearchParams(window.location.search);
+      
+      // Get browser and device information
+      const userAgent = navigator.userAgent;
+      const browserInfo = {
+        browser: 'Unknown',
+        os: 'Unknown',
+        device: 'Unknown',
+      };
+      
+      // Simple browser detection
+      if (/Firefox/i.test(userAgent)) browserInfo.browser = 'Firefox';
+      else if (/Chrome/i.test(userAgent) && !/Edg/i.test(userAgent) && !/OPR/i.test(userAgent)) browserInfo.browser = 'Chrome';
+      else if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)) browserInfo.browser = 'Safari';
+      else if (/Edg/i.test(userAgent)) browserInfo.browser = 'Edge';
+      else if (/OPR/i.test(userAgent)) browserInfo.browser = 'Opera';
+      else if (/MSIE|Trident/i.test(userAgent)) browserInfo.browser = 'Internet Explorer';
+      
+      // OS detection
+      if (/Windows/i.test(userAgent)) browserInfo.os = 'Windows';
+      else if (/Macintosh|Mac OS X/i.test(userAgent)) browserInfo.os = 'macOS';
+      else if (/Android/i.test(userAgent)) browserInfo.os = 'Android';
+      else if (/iPhone|iPad|iPod/i.test(userAgent)) browserInfo.os = 'iOS';
+      else if (/Linux/i.test(userAgent)) browserInfo.os = 'Linux';
+      
+      // Device vendor detection (simplified)
+      if (/iPhone|iPad|iPod/i.test(userAgent)) browserInfo.device = 'Apple';
+      else if (/Android.*Samsung/i.test(userAgent)) browserInfo.device = 'Samsung';
+      else if (/Android.*Pixel/i.test(userAgent)) browserInfo.device = 'Google';
+      else if (/Android.*Huawei/i.test(userAgent)) browserInfo.device = 'Huawei';
+      else if (/Macintosh|Mac OS X/i.test(userAgent)) browserInfo.device = 'Apple';
+      else if (/Windows/i.test(userAgent)) browserInfo.device = 'PC';
+      
       const clientData = {
-        utm_source: queryParams.get('utm_source'),
-        utm_medium: queryParams.get('utm_medium'),
-        utm_campaign: queryParams.get('utm_campaign'),
-        utm_term: queryParams.get('utm_term'),
-        utm_content: queryParams.get('utm_content'),
+        // UTM parameters
+        utm_source: queryParams.get('utm_source') || 'direct',
+        utm_medium: queryParams.get('utm_medium') || 'none',
+        utm_campaign: queryParams.get('utm_campaign') || 'none',
+        utm_term: queryParams.get('utm_term') || 'none',
+        utm_content: queryParams.get('utm_content') || 'none',
+        
+        // Device and browser info
         screenWidth: typeof window !== 'undefined' ? window.screen.width : null,
-        fbc: getCookie('_fbc'),
-        fbp: getCookie('_fbp'),
+        screenHeight: typeof window !== 'undefined' ? window.screen.height : null,
+        deviceVendor: browserInfo.device,
+        operatingSystem: browserInfo.os,
+        browser: browserInfo.browser,
+        userAgent: userAgent,
+        
+        // Facebook tracking IDs
+        fbc: getCookie('_fbc') || 'none',
+        fbp: getCookie('_fbp') || 'none',
+        
+        // Referrer info
+        referrer: document.referrer || 'direct',
+        
+        // IP address will be captured by the server
       };
 
       // Facebook event tracking (in background - don't await)
