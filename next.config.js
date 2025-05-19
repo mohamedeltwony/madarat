@@ -150,6 +150,18 @@ const nextConfig = {
             value: 'nosniff',
           },
           {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Set-Cookie',
+            value: 'Path=/; HttpOnly; Secure; SameSite=Strict',
+          },
+          {
             key: 'Access-Control-Allow-Origin',
             value: '*',
           },

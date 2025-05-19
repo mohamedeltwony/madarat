@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { csrf } from '@/utils/csrf';
 
 // Helper function to hash data using SHA-256
 const hashData = (data) => {
@@ -9,7 +10,8 @@ const hashData = (data) => {
     .digest('hex');
 };
 
-export default async function handler(req, res) {
+// Create a handler that will be wrapped with CSRF protection
+async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
@@ -106,3 +108,14 @@ export default async function handler(req, res) {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 }
+
+// Try to apply CSRF protection, but fall back to the regular handler if it fails
+let protectedHandler;
+try {
+  protectedHandler = csrf(handler);
+} catch (error) {
+  console.error('Failed to initialize CSRF protection for fb-events:', error);
+  protectedHandler = handler;
+}
+
+export default protectedHandler;

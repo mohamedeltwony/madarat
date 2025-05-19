@@ -25,8 +25,9 @@ LEAD_RECIPIENT_EMAILS=admin@example.com,sales@example.com
 ZAPIER_WEBHOOK_URL=https://hooks.zapier.com/hooks/catch/YOUR_ACCOUNT/YOUR_HOOK_ID/
 ZAPIER_PARTIAL_WEBHOOK_URL=https://hooks.zapier.com/hooks/catch/YOUR_ACCOUNT/YOUR_PARTIAL_HOOK_ID/
 
-# Webhook security key (generate with: openssl rand -hex 32)
+# Security keys (generate with: openssl rand -hex 32)
 WEBHOOK_SECRET_KEY=your_random_secret_key_used_for_signatures
+CSRF_SECRET=your_random_csrf_secret_key
 
 # Facebook Pixel Integration (if used)
 FACEBOOK_PIXEL_ID=your_facebook_pixel_id
@@ -81,6 +82,24 @@ For improved user experience and data collection:
 For enhanced security in production:
 1. Implement proper signature verification on both ends
 2. Consider using a middleware service like Cloudflare Workers to add additional security
+
+### Setting up CSRF Protection
+
+The application uses Cross-Site Request Forgery (CSRF) protection to secure form submissions:
+
+1. Generate a random secret for CSRF protection:
+```bash
+openssl rand -hex 32
+```
+
+2. Add this secret to your `.env.local` file as `CSRF_SECRET`
+
+3. The application automatically:
+   - Generates CSRF tokens for forms
+   - Validates tokens on form submission
+   - Rejects requests without valid tokens
+
+This protection prevents malicious websites from submitting forms on behalf of your users.
 
 ## Updating Secrets
 

@@ -1,7 +1,9 @@
 // Direct API endpoint for fallback in case Zapier proxy has issues
 // This just logs the request and returns success
+import { csrf } from '@/utils/csrf';
 
-export default async function handler(req, res) {
+// Create a handler that will be wrapped with CSRF protection
+async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -80,6 +82,17 @@ export default async function handler(req, res) {
     });
   }
 }
+
+// Try to apply CSRF protection, but fall back to the regular handler if it fails
+let protectedHandler;
+try {
+  protectedHandler = csrf(handler);
+} catch (error) {
+  console.error('Failed to initialize CSRF protection for zapier-direct:', error);
+  protectedHandler = handler;
+}
+
+export default protectedHandler;
 
 // Helper function to generate a signature using proper crypto
 // In production, implement this with a proper HMAC using a secret key

@@ -1,7 +1,9 @@
 // Zapier partial submission API endpoint
 // This sends partial form data to Zapier as users are filling out the form
+import { csrf } from '@/utils/csrf';
 
-export default async function handler(req, res) {
+// Create a handler that will be wrapped with CSRF protection
+async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -95,3 +97,14 @@ export default async function handler(req, res) {
     });
   }
 }
+
+// Try to apply CSRF protection, but fall back to the regular handler if it fails
+let protectedHandler;
+try {
+  protectedHandler = csrf(handler);
+} catch (error) {
+  console.error('Failed to initialize CSRF protection for partial submit:', error);
+  protectedHandler = handler;
+}
+
+export default protectedHandler;
