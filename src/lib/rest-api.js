@@ -73,8 +73,8 @@ export async function fetchAPI(endpoint, params = {}, options = {}) {
         'User-Agent':
           'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
-      // Add timeout for fetch
-      signal: AbortSignal.timeout(10000), // 10 second timeout
+      // Increase timeout for fetch to 15 seconds (from 10s)
+      signal: AbortSignal.timeout(15000), // 15 second timeout
     });
 
     if (!response.ok) {
@@ -107,6 +107,12 @@ export async function fetchAPI(endpoint, params = {}, options = {}) {
   } catch (error) {
     console.error(`[REST API] Error fetching from ${url}:`, error);
     
+    // Try to get stale data from cache even if expired
+    if (useCache && CACHE.data[cacheKey]) {
+      console.log(`[CACHE] Using stale cached data for ${url} due to fetch error`);
+      return CACHE.data[cacheKey];
+    }
+    
     // Return mock data on any API failure
     return getMockData(endpoint, params);
   }
@@ -138,11 +144,69 @@ function getMockData(endpoint, params = {}) {
   }
   
   if (endpoint.includes('/wp/v2/trip')) {
-    return [];
+    // Mock trip data
+    return [
+      {
+        id: 1,
+        title: { rendered: 'رحلة تركيا المميزة' },
+        slug: 'turkey-special',
+        featured_image: {
+          full: { source_url: '/images/placeholder.jpg' }
+        },
+        price: 2999,
+        currency: { code: 'SAR' },
+        duration: { days: 7, nights: 6 },
+        destination: { name: 'تركيا' }
+      },
+      {
+        id: 2,
+        title: { rendered: 'جورجيا السياحية' },
+        slug: 'georgia-tour',
+        featured_image: {
+          full: { source_url: '/images/placeholder.jpg' }
+        },
+        price: 3499,
+        currency: { code: 'SAR' },
+        duration: { days: 8, nights: 7 },
+        destination: { name: 'جورجيا' }
+      }
+    ];
   }
   
   if (endpoint.includes('/wp/v2/destination')) {
-    return [];
+    // Mock destination data with proper image URLs
+    return [
+      {
+        id: 1,
+        name: 'تركيا',
+        slug: 'turkey',
+        description: 'اكتشف جمال تركيا مع رحلات مميزة',
+        thumbnail: {
+          source_url: '/images/destinations/turkey.jpg'
+        },
+        count: 12
+      },
+      {
+        id: 2,
+        name: 'جورجيا',
+        slug: 'georgia',
+        description: 'رحلات رائعة إلى جورجيا',
+        thumbnail: {
+          source_url: '/images/destinations/georgia.jpg'
+        },
+        count: 8
+      },
+      {
+        id: 3,
+        name: 'أذربيجان',
+        slug: 'azerbaijan',
+        description: 'استمتع بجمال أذربيجان',
+        thumbnail: {
+          source_url: '/images/destinations/azerbaijan.jpg'
+        },
+        count: 6
+      }
+    ];
   }
   
   if (endpoint.includes('/wp-api-menus/v2/menus')) {

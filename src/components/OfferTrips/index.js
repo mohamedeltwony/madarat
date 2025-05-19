@@ -54,11 +54,64 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
+// Fallback mock data for when API fails
+const fallbackOffers = [
+  {
+    id: 1,
+    title: { rendered: 'رحلة تركيا المميزة' },
+    slug: 'turkey-trip',
+    featured_image: {
+      full: { source_url: '/images/destinations/turkey.jpg' }
+    },
+    price: 2999,
+    currency: { code: 'SAR' },
+    duration: { days: 7, nights: 6 },
+    destination: { name: 'تركيا' }
+  },
+  {
+    id: 2,
+    title: { rendered: 'جورجيا السياحية' },
+    slug: 'georgia-trip',
+    featured_image: {
+      full: { source_url: '/images/destinations/georgia.jpg' }
+    },
+    price: 3499,
+    currency: { code: 'SAR' },
+    duration: { days: 8, nights: 7 },
+    destination: { name: 'جورجيا' }
+  },
+  {
+    id: 3,
+    title: { rendered: 'أذربيجان الرائعة' },
+    slug: 'azerbaijan-trip',
+    featured_image: {
+      full: { source_url: '/images/destinations/azerbaijan.jpg' }
+    },
+    price: 2799,
+    currency: { code: 'SAR' },
+    duration: { days: 6, nights: 5 },
+    destination: { name: 'أذربيجان' }
+  },
+  {
+    id: 4,
+    title: { rendered: 'البوسنة الساحرة' },
+    slug: 'bosnia-trip',
+    featured_image: {
+      full: { source_url: '/images/destinations/bosnia.jpg' }
+    },
+    price: 3899,
+    currency: { code: 'SAR' },
+    duration: { days: 9, nights: 8 },
+    destination: { name: 'البوسنة' }
+  }
+];
+
 export default function OfferTrips() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
     const fetchOfferTrips = async () => {
@@ -66,7 +119,10 @@ export default function OfferTrips() {
         setLoading(true);
         // Use relative URL instead of absolute URL to avoid DNS issues
         const response = await fetch(
-          '/api/wp/v2/trip?trip_tag=154&per_page=4&orderby=date&order=desc'
+          '/api/wp/v2/trip?trip_tag=154&per_page=4&orderby=date&order=desc',
+          {
+            signal: AbortSignal.timeout(10000), // 10 second timeout
+          }
         );
 
         if (!response.ok) {
@@ -79,6 +135,13 @@ export default function OfferTrips() {
         setLoading(false);
       } catch (err) {
         console.error('Error fetching offer trips:', err);
+        
+        // Use fallback data when API fails
+        console.log('Using fallback offer data');
+        setTrips(fallbackOffers);
+        setUsingFallback(true);
+        
+        // Still set the error for notification
         setError(err.toString()); // Convert to string to handle all error types
         setLoading(false);
       }
@@ -109,6 +172,18 @@ export default function OfferTrips() {
     setActiveCard(null);
   };
 
+  // Handle retry action
+  const handleRetry = () => {
+    setLoading(true);
+    setError(null);
+    setUsingFallback(false);
+    
+    setTimeout(() => {
+      // Refetch from the API
+      fetchOfferTrips();
+    }, 500);
+  };
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
@@ -118,12 +193,15 @@ export default function OfferTrips() {
     );
   }
 
-  if (error) {
+  if (error && !usingFallback) {
     return (
       <div className={styles.errorContainer}>
         <p className={styles.errorMessage}>
           عذراً، حدث خطأ أثناء تحميل العروض: {error}
         </p>
+        <button className={styles.retryButton} onClick={handleRetry}>
+          إعادة المحاولة
+        </button>
       </div>
     );
   }
@@ -140,6 +218,11 @@ export default function OfferTrips() {
     <div className={styles.offerTripsContainer}>
       <div className={styles.offerTripsHeader}>
         <h2 className={styles.offerTripsTitle}>العروض الحالية</h2>
+        {usingFallback && (
+          <div className={styles.fallbackNotice}>
+            <p>يتم عرض بيانات محلية بسبب مشكلة في الاتصال بالخادم</p>
+          </div>
+        )}
       </div>
 
       <div className={styles.tripsGrid}>
@@ -174,6 +257,10 @@ export default function OfferTrips() {
                     width={400}
                     height={250}
                     className={styles.tripImage}
+                    onError={(e) => {
+                      console.error('Image loading error:', e);
+                      e.target.src = '/images/placeholder.jpg';
+                    }}
                   />
                 ) : (
                   <div className={styles.placeholderImage}>
