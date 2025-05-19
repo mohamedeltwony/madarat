@@ -113,40 +113,41 @@ export default function OfferTrips() {
   const [activeCard, setActiveCard] = useState(null);
   const [usingFallback, setUsingFallback] = useState(false);
 
-  useEffect(() => {
-    const fetchOfferTrips = async () => {
-      try {
-        setLoading(true);
-        // Use relative URL instead of absolute URL to avoid DNS issues
-        const response = await fetch(
-          '/api/wp/v2/trip?trip_tag=154&per_page=4&orderby=date&order=desc',
-          {
-            signal: AbortSignal.timeout(10000), // 10 second timeout
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+  // Move fetchOfferTrips outside of useEffect
+  const fetchOfferTrips = async () => {
+    try {
+      setLoading(true);
+      // Use relative URL instead of absolute URL to avoid DNS issues
+      const response = await fetch(
+        '/api/wp/v2/trip?trip_tag=154&per_page=4&orderby=date&order=desc',
+        {
+          signal: AbortSignal.timeout(10000), // 10 second timeout
         }
+      );
 
-        const data = await response.json();
-        console.log('Fetched trips data:', data);
-        setTrips(data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching offer trips:', err);
-        
-        // Use fallback data when API fails
-        console.log('Using fallback offer data');
-        setTrips(fallbackOffers);
-        setUsingFallback(true);
-        
-        // Still set the error for notification
-        setError(err.toString()); // Convert to string to handle all error types
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    };
 
+      const data = await response.json();
+      console.log('Fetched trips data:', data);
+      setTrips(data);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching offer trips:', err);
+      
+      // Use fallback data when API fails
+      console.log('Using fallback offer data');
+      setTrips(fallbackOffers);
+      setUsingFallback(true);
+      
+      // Still set the error for notification
+      setError(err.toString()); // Convert to string to handle all error types
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchOfferTrips();
   }, []);
 

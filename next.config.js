@@ -13,8 +13,8 @@ const nextConfig = {
   
   // i18n configuration for Arabic support
   i18n: {
-    locales: ['ar', 'en'],
-    defaultLocale: 'ar',
+    locales: ['default', 'ar', 'en'],
+    defaultLocale: 'default',
     localeDetection: false,
   },
   
@@ -38,13 +38,18 @@ const nextConfig = {
   
   // Experimental features
   experimental: {
-    urlImports: ['https://madaratalkon.com'],
+    urlImports: ['https://themer.sanity.build/'],
   },
   
   // Image domains
   images: {
     // unoptimized: true, // Re-enable Next.js Image Optimization globally
-    domains: ['madaratalkon.com', 'via.placeholder.com', 'placehold.co', 'placeholder.pics', 'placekitten.com', 'picsum.photos', 'loremflickr.com'],
+    domains: [
+      'madaratalkon.com',
+      'secure.gravatar.com',
+      'res.cloudinary.com',
+      'wp.example.org',
+    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -91,7 +96,7 @@ const nextConfig = {
     ],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    formats: ['image/webp'],
+    formats: ['image/avif', 'image/webp'],
   },
   poweredByHeader: false,
   compress: true,
@@ -179,6 +184,18 @@ const nextConfig = {
     WORDPRESS_API_URL: 'https://madaratalkon.com',
     WORDPRESS_MENU_LOCATION_NAVIGATION:
       process.env.WORDPRESS_MENU_LOCATION_NAVIGATION || 'PRIMARY',
+    WORDPRESS_GRAPHQL_ENDPOINT: process.env.WORDPRESS_GRAPHQL_ENDPOINT,
+    WORDPRESS_REST_API: process.env.WORDPRESS_REST_API,
+  },
+  // Add exportPathMap to control which paths get pre-rendered
+  exportPathMap: async function () {
+    // Only export the homepage and other static pages
+    // Skip dynamic routes like [slug] that might have errors
+    return {
+      '/': { page: '/' },
+      '/404': { page: '/404' },
+      '/500': { page: '/500' },
+    };
   },
 };
 

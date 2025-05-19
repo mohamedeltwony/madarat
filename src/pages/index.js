@@ -259,7 +259,6 @@ export async function getStaticProps() {
           dest.thumbnail?.source_url ||
           dest._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
           '/images/placeholder.jpg',
-        link: dest.link,
         slug: dest.slug,
         tripCount: dest.count || 0,
       }));
