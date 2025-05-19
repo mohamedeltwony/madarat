@@ -237,9 +237,41 @@ export default function TurkeyTrip() {
 
             {/* Contact Form - Using London/Scotland structure */}
             <TripForm
-              destination="الشمال التركي"
-              formSource="turkey-trip"
-              formName="Turkey Trip Form"
+              fields={[
+                {
+                  name: 'phone',
+                  label: 'الجوال',
+                  type: 'tel',
+                  required: true,
+                  autoComplete: 'tel',
+                  floatingLabel: true,
+                  showCountryCode: true, // Custom prop for UI
+                },
+                {
+                  name: 'name',
+                  label: 'الاسم الكامل (اختياري)',
+                  type: 'text',
+                  required: false,
+                  autoComplete: 'name',
+                  floatingLabel: true,
+                },
+                {
+                  name: 'email',
+                  label: 'البريد الإلكتروني (اختياري)',
+                  type: 'email',
+                  required: false,
+                  autoComplete: 'email',
+                  floatingLabel: true,
+                },
+              ]}
+              zapierConfig={{
+                endpoint: '/api/zapier-proxy',
+                extraPayload: {
+                  destination: 'الشمال التركي',
+                  tripName: 'Turkey',
+                  price: 2499,
+                },
+              }}
               onSuccess={handleFormSuccess}
             />
             {/* End Contact Form */}
@@ -252,9 +284,6 @@ export default function TurkeyTrip() {
       </main>
 
       {/* Removed Chatbot and ExitPopup */}
-
-      {/* Add a hidden input for CSRF token in the form */}
-      <input type="hidden" name="csrf-token" value={csrfToken} />
     </div>
   );
 }

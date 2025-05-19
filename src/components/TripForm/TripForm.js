@@ -202,25 +202,66 @@ export default function TripForm({
   return (
     <div className={styles.formContainer}>
       <form onSubmit={handleSubmit} className={styles.tripForm}>
-        {fields.map((field) => (
-          <div key={field.name} className={`${styles.formGroup} ${styles.floatingLabelGroup}`}>
-            <input
-              type={field.type}
-              id={field.name}
-              className={styles.formInput}
-              name={field.name}
-              value={formData[field.name] || ''}
-              onChange={handleInputChange}
-              placeholder={field.placeholder || ' '}
-              autoComplete={field.autoComplete || field.name}
-              required={field.required}
-            />
-            <label htmlFor={field.name} className={styles.formLabel}>
-              {field.label}
-              {field.required ? ' *' : ''}
-            </label>
-          </div>
-        ))}
+        {fields.map((field) => {
+          if (field.name === 'phone') {
+            return (
+              <div
+                key={field.name}
+                className={
+                  `${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ` +
+                  `${formData.phone ? styles.hasValue : ''} ` +
+                  `${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`
+                }
+              >
+                <label htmlFor="phone" className={styles.formLabel}>
+                  {field.label}
+                </label>
+                <div className={styles.phoneInput}>
+                  <input
+                    type="tel"
+                    id="phone"
+                    className={styles.formInput}
+                    name="phone"
+                    value={formData.phone || ''}
+                    onChange={handleInputChange}
+                    onBlur={() => setPhoneTouched(true)}
+                    placeholder={field.placeholder || ' '}
+                    autoComplete={field.autoComplete || 'tel'}
+                    required={field.required}
+                  />
+                  {field.showCountryCode && (
+                    <span className={styles.countryCode}>+966</span>
+                  )}
+                </div>
+                {phoneTouched && !isPhoneValid && formData.phone.trim() !== '' && (
+                  <p className={styles.errorMessage}>
+                    يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام.
+                  </p>
+                )}
+              </div>
+            );
+          }
+          // Default field rendering
+          return (
+            <div key={field.name} className={`${styles.formGroup} ${styles.floatingLabelGroup}`}>
+              <input
+                type={field.type}
+                id={field.name}
+                className={styles.formInput}
+                name={field.name}
+                value={formData[field.name] || ''}
+                onChange={handleInputChange}
+                placeholder={field.placeholder || ' '}
+                autoComplete={field.autoComplete || field.name}
+                required={field.required}
+              />
+              <label htmlFor={field.name} className={styles.formLabel}>
+                {field.label}
+                {field.required ? ' *' : ''}
+              </label>
+            </div>
+          );
+        })}
         {/* Nationality radio group (always included) */}
         <div className={`${styles.formGroup} ${styles.nationalityGroup}`}>
           <div className={styles.radioGroup}>
