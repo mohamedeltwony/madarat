@@ -256,31 +256,53 @@ export default function AdvancedSearch({
 }
 
 export async function getStaticProps() {
-  // Fetch layout data
-  const { metadata } = await getSiteMetadata();
-  const { menus } = await getAllMenus();
-
-  // Fetch page-specific data
-  const { categories } = await getCategories({
-    count: 100, // Get all available categories
-  });
-
-  const { years } = await getYearArchives();
-
-  // Sanitize data to remove undefined values
-  const sanitizedMetadata = JSON.parse(JSON.stringify(metadata || {}));
-  const sanitizedMenus = JSON.parse(JSON.stringify(menus || {}));
-  const sanitizedCategories = JSON.parse(JSON.stringify(categories || []));
-  const sanitizedYears = JSON.parse(JSON.stringify(years || []));
-
+  // Initialize with default values
+  let categories = [];
+  let metadata = {};
+  let menus = [];
+  let years = [];
+  
+  // Fetch categories with error handling
+  try {
+    const categoriesData = await getCategories();
+    categories = categoriesData?.categories || [];
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+  }
+  
+  // Fetch metadata with error handling
+  try {
+    const metadataData = await getSiteMetadata();
+    metadata = metadataData?.metadata || {};
+  } catch (error) {
+    console.error('Error fetching site metadata:', error);
+  }
+  
+  // Fetch menus with error handling
+  try {
+    const menuData = await getAllMenus();
+    menus = menuData?.menus || [];
+  } catch (error) {
+    console.error('Error fetching menus:', error);
+  }
+  
+  // Fetch years with error handling
+  try {
+    const yearData = await getYearArchives();
+    years = yearData?.years?.map(y => y.value) || [];
+  } catch (error) {
+    console.error('Error fetching year archives:', error);
+  }
+  
+  // Static fallback years if API returns empty
+  const defaultYears = ['2024', '2023', '2022'];
+  
   return {
     props: {
-      categories: sanitizedCategories,
-      years: sanitizedYears,
-      metadata: sanitizedMetadata,
-      menus: sanitizedMenus,
+      categories,
+      years: years.length > 0 ? years : defaultYears,
+      metadata,
+      menus,
     },
-    // Add ISR with a reasonable revalidation period
-    revalidate: 600, // Revalidate every 10 minutes
   };
 }
