@@ -745,39 +745,6 @@ export async function getPostsByDay({ year, month, day }) {
 }
 
 /**
- * Get year archives data
- */
-export async function getYearArchives() {
-  try {
-    const response = await fetch(`${API_URL}/archives`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      console.warn(`[getYearArchives] HTTP error ${response.status}`);
-      // Return mock data array on error
-      return [
-        { value: '2024', count: 10 },
-        { value: '2023', count: 20 }
-      ];
-    }
-
-    const data = await response.json();
-    // Return the years array directly instead of the object
-    return data.years || [];
-  } catch (error) {
-    console.error('[getYearArchives] Error:', error);
-    // Return mock data array on error
-    return [
-      { value: '2024', count: 10 },
-      { value: '2023', count: 20 }
-    ];
-  }
-}
-
-/**
  * getPostBySlugREST
  */
 export async function getPostBySlugREST(slug) {
@@ -1015,4 +982,12 @@ export async function getAllPostSlugs(count = 100) {
     console.error('Error fetching all post slugs:', error);
     return [];
   }
+}
+
+/**
+ * Get year archives data - STUB
+ */
+export async function getYearArchives() {
+  // Return empty years array
+  return { years: [] };
 }

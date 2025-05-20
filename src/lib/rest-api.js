@@ -59,23 +59,22 @@ export async function fetchAPI(endpoint, params = {}, options = {}) {
     const cachedData = getFromCache(cacheKey);
     if (cachedData) return cachedData;
   }
-  
-  // Use mock data during build to avoid API failures
-  if (USE_DEMO_DATA) {
-    console.log(`[BUILD] Using mock data for ${endpoint}`);
-    return getMockData(endpoint, params);
-  }
 
   try {
+    // Set a reasonably longer timeout for real API calls
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
         'User-Agent':
           'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
       },
-      // Add timeout for fetch
-      signal: AbortSignal.timeout(10000), // 10 second timeout
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(
@@ -105,56 +104,20 @@ export async function fetchAPI(endpoint, params = {}, options = {}) {
 
     return data;
   } catch (error) {
-    console.error(`[REST API] Error fetching from ${url}:`, error);
+    console.error(`[REST API] Error fetching from ${url}:`, error.message);
     
-    // Return mock data on any API failure
-    return getMockData(endpoint, params);
-  }
-}
-
-/**
- * Returns mock data for different endpoints during build or API failures
- */
-function getMockData(endpoint, params = {}) {
-  // Mock data for different endpoints
-  if (endpoint === '') {
-    // Site metadata
-    return {
-      name: 'مدارات الكون',
-      description: 'موقع السفر والرحلات الأول في الوطن العربي',
-    };
-  }
-  
-  if (endpoint.includes('/wp/v2/posts')) {
-    // Return empty array or mock post if slug is specified
-    if (params.slug) {
+    // Return empty results instead of mock data
+    if (endpoint.includes('/wp/v2/posts')) {
       return [];
+    } else if (endpoint.includes('/wp/v2/categories')) {
+      return [];
+    } else if (endpoint.includes('/archives')) {
+      return { years: [] };
+    } else {
+      // Default empty response
+      return Array.isArray(params) ? [] : {};
     }
-    return [];
   }
-  
-  if (endpoint.includes('/wp/v2/categories')) {
-    return [];
-  }
-  
-  if (endpoint.includes('/wp/v2/trip')) {
-    return [];
-  }
-  
-  if (endpoint.includes('/wp/v2/destination')) {
-    return [];
-  }
-  
-  if (endpoint.includes('/wp-api-menus/v2/menus')) {
-    return [];
-  }
-  
-  if (endpoint.includes('/archives')) {
-    return { years: [] };
-  }
-  
-  // Default empty response
-  return Array.isArray(params) ? [] : {};
 }
 
 /**
@@ -162,13 +125,25 @@ function getMockData(endpoint, params = {}) {
  */
 export async function getSiteMetadataREST() {
   try {
-    const data = await fetchAPI('');
+    const response = await fetch(`${API_URL}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
+      },
+      // Add a reasonable timeout
+      signal: AbortSignal.timeout(10000)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch site metadata: ${response.status}`);
+    }
+
+    const data = await response.json();
 
     return {
       title: data.name || 'مدارات الكون',
       siteTitle: data.name || 'مدارات الكون',
-      description:
-        data.description || 'موقع السفر والرحلات الأول في الوطن العربي',
+      description: data.description || 'موقع السفر والرحلات الأول في الوطن العربي',
       language: 'ar',
       social: {
         facebook: 'https://facebook.com/madaratalkon',
@@ -464,31 +439,25 @@ export async function getTripsREST(options = {}) {
 }
 
 /**
- * Gets all pages (stub implementation for compatibility)
+ * Gets all pages - STUB
  */
 export async function getAllPagesREST() {
-  console.warn(
-    '[getAllPagesREST] This function is deprecated and returns dummy data.'
-  );
+  // Just return empty pages array
   return { pages: [] };
 }
 
 /**
- * Gets page by URI (stub implementation for compatibility)
+ * Gets page by URI - STUB
  */
-export async function getPageByUriREST() {
-  console.warn(
-    '[getPageByUriREST] This function is deprecated and returns dummy data.'
-  );
+export async function getPageByUriREST(uri) {
+  // Just return null page
   return { page: null };
 }
 
 /**
- * Gets all menus (stub implementation for compatibility)
+ * Gets all menus - STUB
  */
 export async function getAllMenusREST() {
-  console.warn(
-    '[getAllMenusREST] This function is deprecated and returns dummy data.'
-  );
+  // Just return empty menus array
   return { menus: [] };
 }

@@ -233,7 +233,6 @@ const Header = () => {
             </div>
 
             <ul className={styles.sidebarMenu}>
-              {/* احجز خدمة */}
               <li className={styles.sidebarMenuItem}>
                 <LocalizedLink
                   href="/book-now"
@@ -242,51 +241,14 @@ const Header = () => {
                   احجز خدمة
                 </LocalizedLink>
               </li>
-
-              {/* الرحلات */}
               <li className={styles.sidebarMenuItem}>
                 <div
                   className={`${styles.sidebarMenuLink} ${activeDropdown === 'trips' ? styles.active : ''}`}
-                  onClick={() => toggleDropdown('trips')}
                 >
                   <span>الرحلات</span>
                   <FaChevronDown className={styles.dropdownIcon} />
                 </div>
-                {activeDropdown === 'trips' && (
-                  <ul className={styles.sidebarSubmenu}>
-                    <li>
-                      <LocalizedLink href="/trips">جميع الرحلات</LocalizedLink>
-                    </li>
-                    <li>
-                      <LocalizedLink href="/packages/honeymoon">
-                        رحلات شهر العسل
-                      </LocalizedLink>
-                    </li>
-                    <li>
-                      <LocalizedLink href="/packages/family">
-                        رحلات عائلية
-                      </LocalizedLink>
-                    </li>
-                    <li>
-                      <LocalizedLink href="/packages/adventure">
-                        رحلات المغامرة
-                      </LocalizedLink>
-                    </li>
-                    <li>
-                      <LocalizedLink href="/packages/luxury">
-                        رحلات فاخرة
-                      </LocalizedLink>
-                    </li>
-                    <li>
-                      <LocalizedLink href="/packages/budget">
-                        رحلات اقتصادية
-                      </LocalizedLink>
-                    </li>
-                  </ul>
-                )}
               </li>
-
-              {/* الوجهات */}
               <li className={styles.sidebarMenuItem}>
                 <div
                   className={`${styles.sidebarMenuLink} ${activeDropdown === 'destinations' ? styles.active : ''}`}
@@ -297,60 +259,27 @@ const Header = () => {
                 </div>
                 {activeDropdown === 'destinations' && (
                   <ul className={styles.sidebarSubmenu}>
-                    <li>
-                      <LocalizedLink href="/destinations">
-                        جميع الوجهات
-                      </LocalizedLink>
-                    </li>
-                    <li>
-                      <LocalizedLink href="/destinations/europe">
-                        أوروبا
-                      </LocalizedLink>
-                    </li>
-                    <li>
-                      <LocalizedLink href="/destinations/middle-east">
-                        الشرق الأوسط
-                      </LocalizedLink>
-                    </li>
-                    <li>
-                      <LocalizedLink href="/destinations/asia">
-                        آسيا
-                      </LocalizedLink>
-                    </li>
-                    <li>
-                      <LocalizedLink href="/destinations/americas">
-                        الأمريكتين
-                      </LocalizedLink>
-                    </li>
-                    <li>
-                      <LocalizedLink href="/destinations/africa">
-                        أفريقيا
-                      </LocalizedLink>
-                    </li>
+                    <li><LocalizedLink href="/destinations">جميع الوجهات</LocalizedLink></li>
+                    <li><LocalizedLink href="/destinations/europe">أوروبا</LocalizedLink></li>
+                    <li><LocalizedLink href="/destinations/middle-east">الشرق الأوسط</LocalizedLink></li>
+                    <li><LocalizedLink href="/destinations/asia">آسيا</LocalizedLink></li>
+                    <li><LocalizedLink href="/destinations/americas">الأمريكتين</LocalizedLink></li>
+                    <li><LocalizedLink href="/destinations/africa">أفريقيا</LocalizedLink></li>
                   </ul>
                 )}
               </li>
-
-              {/* المقالات */}
               <li className={styles.sidebarMenuItem}>
                 <LocalizedLink href="/blog" className={styles.sidebarMenuLink}>
                   المقالات
                 </LocalizedLink>
               </li>
-
-              {/* من نحن */}
               <li className={styles.sidebarMenuItem}>
                 <LocalizedLink href="/about" className={styles.sidebarMenuLink}>
                   من نحن
                 </LocalizedLink>
               </li>
-
-              {/* تواصل معنا */}
               <li className={styles.sidebarMenuItem}>
-                <LocalizedLink
-                  href="/contact"
-                  className={styles.sidebarMenuLink}
-                >
+                <LocalizedLink href="/contact" className={styles.sidebarMenuLink}>
                   تواصل معنا
                 </LocalizedLink>
               </li>

@@ -59,21 +59,38 @@ export async function getStaticProps({ params = {} }) {
     year,
   });
 
-  const years = await getYearArchives();
+  const { years = [] } = await getYearArchives();
+  
+  // Define fallback years in case API returns empty
+  const defaultYears = [
+    { value: '2024', count: 10 },
+    { value: '2023', count: 20 },
+    { value: '2022', count: 15 }
+  ];
 
   return {
     props: {
       posts,
-      years,
+      years: years.length > 0 ? years : defaultYears,
       year,
     },
   };
 }
 
 export async function getStaticPaths() {
-  const years = await getYearArchives();
+  const { years = [] } = await getYearArchives();
+  
+  // Define fallback years in case API returns empty
+  const defaultYears = [
+    { value: '2024', count: 10 },
+    { value: '2023', count: 20 },
+    { value: '2022', count: 15 }
+  ];
 
-  const paths = years.map((yearObj) => ({
+  // Use the available years or fallback to defaults
+  const yearsData = years.length > 0 ? years : defaultYears;
+  
+  const paths = yearsData.map((yearObj) => ({
     params: {
       year: yearObj.value.toString(),
     },

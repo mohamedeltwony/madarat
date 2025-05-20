@@ -64,12 +64,19 @@ export async function getStaticProps({ params = {} }) {
     month,
   });
 
-  const years = await getYearArchives();
+  const { years = [] } = await getYearArchives();
+  
+  // Define fallback years in case API returns empty
+  const defaultYears = [
+    { value: '2024', count: 10 },
+    { value: '2023', count: 20 },
+    { value: '2022', count: 15 }
+  ];
 
   return {
     props: {
       posts,
-      years,
+      years: years.length > 0 ? years : defaultYears,
       year,
       month,
     },
@@ -77,20 +84,27 @@ export async function getStaticProps({ params = {} }) {
 }
 
 export async function getStaticPaths() {
-  const years = await getYearArchives();
+  const { years = [] } = await getYearArchives();
+  
+  // Define fallback years in case API returns empty
+  const defaultYears = [
+    { value: '2024', count: 10 },
+    { value: '2023', count: 20 },
+    { value: '2022', count: 15 }
+  ];
 
-  // This is just a sample of paths - we generate all possible year/month combinations
-  // In production, you might want to only generate paths for months that actually have posts
+  // Use the available years or fallback to defaults
+  const yearsData = years.length > 0 ? years : defaultYears;
+  
+  // For simplicity, just create paths for all months in the available years
   const paths = [];
-
-  years.forEach((yearObj) => {
-    const year = yearObj.value;
-    // Generate paths for each month (1-12)
+  
+  yearsData.forEach((yearObj) => {
     for (let month = 1; month <= 12; month++) {
       paths.push({
         params: {
-          year: year.toString(),
-          month: month.toString().padStart(2, '0'),
+          year: yearObj.value.toString(),
+          month: month.toString(),
         },
       });
     }

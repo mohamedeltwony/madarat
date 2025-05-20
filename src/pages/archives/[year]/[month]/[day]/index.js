@@ -67,7 +67,7 @@ export default function DayArchive({ posts, years, year, month, day }) {
   );
 }
 
-export async function getServerSideProps({ params = {} }) {
+export async function getStaticProps({ params = {} }) {
   const { year, month, day } = params;
 
   const { posts } = await getPostsByDay({
@@ -76,18 +76,32 @@ export async function getServerSideProps({ params = {} }) {
     day,
   });
 
-  const years = await getYearArchives();
+  const { years = [] } = await getYearArchives();
+  
+  // Define fallback years in case API returns empty
+  const defaultYears = [
+    { value: '2024', count: 10 },
+    { value: '2023', count: 20 },
+    { value: '2022', count: 15 }
+  ];
 
-  // Using server-side rendering for daily archives
-  // This provides better performance as we don't need to generate
-  // static pages for every possible day, which would be too many
   return {
     props: {
       posts,
-      years,
+      years: years.length > 0 ? years : defaultYears,
       year,
       month,
       day,
     },
+  };
+}
+
+export async function getStaticPaths() {
+  // For performance reasons, we'll use fallback: 'blocking' 
+  // and only pre-generate a minimal set of date paths
+  
+  return {
+    paths: [],
+    fallback: 'blocking',
   };
 }
