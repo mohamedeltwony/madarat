@@ -11,6 +11,7 @@ import { getRecentPosts } from '../lib/posts';
 import { getCategories } from '../lib/categories';
 import NextNProgress from 'nextjs-progressbar';
 import FloatingButtons from '../components/WhatsAppButton/WhatsAppButton';
+import { trackPageView } from '../utils/facebookTracking';
 
 import '../styles/globals.scss';
 import '../styles/wordpress.scss';
@@ -52,7 +53,32 @@ function App({ Component, pageProps = {} }) {
           });
       });
     }
+    
+    // Update Facebook parameters on route change
+    if (typeof window !== 'undefined') {
+      updateFbParams();
+    }
   }, []);
+  
+  // Listen for route changes to update FB parameters and track page views
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      updateFbParams();
+      
+      // Also track page view with our enhanced tracking module on route change
+      if (window.fbq) {
+        // Let the page finish loading before tracking the page view
+        const timer = setTimeout(() => {
+          trackPageView({
+            content_name: document.title,
+            content_category: router.pathname.split('/')[1] || 'home'
+          });
+        }, 500);
+        
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [router.asPath, router.pathname]);
 
   // Helper function to get cookie value by name (wrapped in useCallback)
   const getCookieValue = useCallback((name) => {
@@ -109,13 +135,95 @@ function App({ Component, pageProps = {} }) {
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '275826455249702');
-            fbq('track', 'PageView');
+            
+            // Initialize with additional parameters for better matching
+            fbq('init', '275826455249702', {
+              external_id: getUserExternalId()
+            });
+            
+            // Track PageView on all pages with event ID for deduplication
+            const pageViewEventId = 'pv_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+            fbq('track', 'PageView', {}, {eventID: pageViewEventId});
+            
+            // Helper function to get user ID if available
+            function getUserExternalId() {
+              // Return user ID from your auth system if available
+              return localStorage.getItem('userId') || '';
+            }
+            
+            // Capture and store fbp and fbc parameters
+            function updateFbParams() {
+              try {
+                // Get fbp from cookie
+                const fbp = document.cookie.split(';').find(c => c.trim().startsWith('_fbp='));
+                if (fbp) {
+                  localStorage.setItem('_fbp', fbp.split('=')[1]);
+                }
+                
+                // Extract fbc from URL if present
+                const url = new URL(window.location.href);
+                const fbclid = url.searchParams.get('fbclid');
+                if (fbclid) {
+                  const fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+                  localStorage.setItem('_fbc', fbc);
+                  
+                  // Also store in cookie for better cross-page tracking
+                  document.cookie = '_fbc=' + fbc + '; path=/; max-age=7776000; SameSite=Lax';
+                }
+                
+                // Check for other standard UTM parameters
+                const utm_source = url.searchParams.get('utm_source');
+                const utm_medium = url.searchParams.get('utm_medium');
+                const utm_campaign = url.searchParams.get('utm_campaign');
+                
+                if (utm_source) localStorage.setItem('utm_source', utm_source);
+                if (utm_medium) localStorage.setItem('utm_medium', utm_medium);
+                if (utm_campaign) localStorage.setItem('utm_campaign', utm_campaign);
+              } catch (e) {
+                console.error('Error capturing FB parameters:', e);
+              }
+            }
+            
+            // Call on page load
+            updateFbParams();
           `,
         }}
       />
     </>
   );
+}
+
+// Add global function for updateFbParams
+function updateFbParams() {
+  try {
+    if (typeof window === 'undefined') return;
+    
+    // Get fbp from cookie
+    const fbp = document.cookie.split(';').find(c => c.trim().startsWith('_fbp='));
+    if (fbp) {
+      localStorage.setItem('_fbp', fbp.split('=')[1]);
+    }
+    
+    // Extract fbc from URL if present
+    const url = new URL(window.location.href);
+    const fbclid = url.searchParams.get('fbclid');
+    if (fbclid) {
+      const fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+      localStorage.setItem('_fbc', fbc);
+      
+      // Also set as cookie for better cross-page tracking
+      document.cookie = '_fbc=' + fbc + '; path=/; max-age=7776000; SameSite=Lax';
+    }
+    
+    // Store UTM parameters
+    const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+    utmParams.forEach(param => {
+      const value = url.searchParams.get(param);
+      if (value) localStorage.setItem(param, value);
+    });
+  } catch (e) {
+    console.error('Error capturing FB parameters:', e);
+  }
 }
 
 export default App;
