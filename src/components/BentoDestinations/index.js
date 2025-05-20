@@ -3,6 +3,58 @@ import Link from 'next/link';
 import Image from 'next/legacy/image';
 import styles from './BentoDestinations.module.scss';
 
+// Fallback destinations data when API fails
+const fallbackDestinations = [
+  {
+    id: 1,
+    title: 'تركيا',
+    slug: 'turkey',
+    description: 'اكتشف جمال تركيا مع رحلات مميزة',
+    image: '/images/destinations/turkey.jpg',
+    tripCount: 12
+  },
+  {
+    id: 2,
+    title: 'جورجيا',
+    slug: 'georgia',
+    description: 'رحلات رائعة إلى جورجيا',
+    image: '/images/destinations/georgia.jpg',
+    tripCount: 8
+  },
+  {
+    id: 3,
+    title: 'أذربيجان',
+    slug: 'azerbaijan',
+    description: 'استمتع بجمال أذربيجان',
+    image: '/images/destinations/azerbaijan.jpg',
+    tripCount: 6
+  },
+  {
+    id: 4,
+    title: 'إيطاليا',
+    slug: 'italy',
+    description: 'رحلات مميزة إلى إيطاليا',
+    image: '/images/destinations/italy.jpg',
+    tripCount: 5
+  },
+  {
+    id: 5,
+    title: 'البوسنة',
+    slug: 'bosnia',
+    description: 'استكشف جمال البوسنة الطبيعي',
+    image: '/images/destinations/bosnia.jpg',
+    tripCount: 4
+  },
+  {
+    id: 6,
+    title: 'بولندا',
+    slug: 'poland',
+    description: 'رحلات إلى بولندا بأسعار مميزة',
+    image: '/images/destinations/poland.jpg',
+    tripCount: 3
+  }
+];
+
 const BentoDestinations = ({ destinations = [], error = null }) => {
   const [showAll, setShowAll] = useState(false);
   const [sortedDestinations, setSortedDestinations] = useState([]);
@@ -10,15 +62,27 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
   const [remainingDestinations, setRemainingDestinations] = useState([]);
   const [isButtonAnimating, setIsButtonAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [usingFallback, setUsingFallback] = useState(false);
   const expandedGridRef = useRef(null);
 
   // Sort destinations by trip count to find most popular ones
   useEffect(() => {
-    if (destinations && destinations.length) {
-      setIsLoading(true);
+    setIsLoading(true);
+    
+    // Use fallback data if destinations is empty or contains invalid data
+    const destinationsToUse = 
+      (!destinations || destinations.length === 0 || !Array.isArray(destinations)) 
+        ? fallbackDestinations 
+        : destinations;
+    
+    if (destinationsToUse !== destinations) {
+      setUsingFallback(true);
+      console.log('Using fallback destinations data');
+    }
 
+    try {
       // Sort by trip count (highest first)
-      const sorted = [...destinations].sort(
+      const sorted = [...destinationsToUse].sort(
         (a, b) => (b.tripCount || 0) - (a.tripCount || 0)
       );
 
@@ -32,7 +96,13 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
       setTimeout(() => {
         setIsLoading(false);
       }, 300);
-    } else {
+    } catch (err) {
+      console.error('Error processing destinations data:', err);
+      // Fallback to default data in case of any error
+      setSortedDestinations(fallbackDestinations);
+      setTopDestinations(fallbackDestinations.slice(0, 6));
+      setRemainingDestinations(fallbackDestinations.slice(6));
+      setUsingFallback(true);
       setIsLoading(false);
     }
   }, [destinations]);
@@ -55,7 +125,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
     }, 300);
   }, [showAll]);
 
-  if (error) {
+  if (error && !usingFallback) {
     return (
       <div className={styles.error}>
         <p>{error}</p>
@@ -131,7 +201,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
           {destination.image ? (
             <Image
               src={destination.image}
-              alt={destination.title}
+              alt={destination.title || 'وجهة سياحية'}
               layout="fill"
               objectFit="cover"
               className={styles.image}
@@ -198,36 +268,37 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
           left: '5%',
           width: '180px',
           height: '180px',
-          opacity: 0.4,
-          background:
-            'radial-gradient(circle at 30% 30%, rgba(204, 156, 100, 0.2), rgba(255, 255, 255, 0.05))',
+          opacity: 0.05,
         }}
       ></div>
-
       <div
         className={styles.glassCircle}
         style={{
-          top: '60%',
-          right: '8%',
-          width: '220px',
-          height: '220px',
-          opacity: 0.3,
-          background:
-            'radial-gradient(circle at 70% 30%, rgba(204, 156, 100, 0.15), rgba(255, 255, 255, 0.03))',
+          top: '70%',
+          left: '8%',
+          width: '120px',
+          height: '120px',
+          opacity: 0.03,
         }}
       ></div>
-
       <div
-        className={styles.glassDiamond}
+        className={styles.glassCircle}
         style={{
-          top: '35%',
-          right: '20%',
-          transform: 'rotate(45deg)',
+          top: '30%',
+          right: '3%',
+          width: '150px',
+          height: '150px',
+          opacity: 0.04,
+        }}
+      ></div>
+      <div
+        className={styles.glassCircle}
+        style={{
+          top: '75%',
+          right: '10%',
           width: '100px',
           height: '100px',
-          opacity: 0.2,
-          background:
-            'linear-gradient(135deg, rgba(204, 156, 100, 0.1), rgba(255, 255, 255, 0.05))',
+          opacity: 0.02,
         }}
       ></div>
     </div>
@@ -242,6 +313,11 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
       <div className={styles.sectionHeading}>
         <h2>أشهر الوجهات السياحية</h2>
         <p>اكتشف معنا أفضل الوجهات حول العالم</p>
+        {usingFallback && (
+          <div className={styles.fallbackNotice}>
+            <p>يتم عرض بيانات محلية بسبب مشكلة في الاتصال بخادم البيانات</p>
+          </div>
+        )}
       </div>
 
       {/* Loading Indicator */}

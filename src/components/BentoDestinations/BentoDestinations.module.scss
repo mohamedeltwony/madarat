@@ -963,3 +963,18 @@
     transform: scale(0.5) translate(-5px, -10px);
   }
 }
+
+.fallbackNotice {
+  margin: 0.5rem auto 1rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 193, 7, 0.2);
+  border-left: 3px solid #ffc107;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #856404;
+  max-width: 600px;
+  
+  p {
+    margin: 0;
+  }
+}

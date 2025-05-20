@@ -61,9 +61,9 @@ export async function fetchAPI(endpoint, params = {}, options = {}) {
   }
 
   try {
-    // Set a reasonably longer timeout for real API calls
+    // Set a longer timeout for API calls (15 seconds)
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
     
     const response = await fetch(url, {
       headers: {
@@ -105,6 +105,12 @@ export async function fetchAPI(endpoint, params = {}, options = {}) {
     return data;
   } catch (error) {
     console.error(`[REST API] Error fetching from ${url}:`, error.message);
+    
+    // Try to get stale data from cache even if expired
+    if (useCache && CACHE.data[cacheKey]) {
+      console.log(`[CACHE] Using stale cached data for ${url} due to fetch error`);
+      return CACHE.data[cacheKey];
+    }
     
     // Return empty results instead of mock data
     if (endpoint.includes('/wp/v2/posts')) {

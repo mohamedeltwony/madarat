@@ -219,51 +219,100 @@ export async function getStaticProps() {
       description: 'موقع مدارات الكون',
     };
 
-    // Fetch destinations with REST API
+    // Fetch destinations with local API proxy instead of direct WordPress API
     console.log('Starting to fetch destinations...');
-    const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100&_embed',
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent':
-            'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
-        },
+    let formattedDestinations = [];
+    
+    try {
+      // Use relative API URL to avoid cross-origin issues
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/wp/v2/destination?per_page=100`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          timeout: 15000, // 15 second timeout
+        }
+      );
+
+      if (!response.ok) {
+        console.error('Failed to fetch destinations:', {
+          status: response.status,
+          statusText: response.statusText,
+        });
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    );
 
-    if (!response.ok) {
-      console.error('Failed to fetch destinations:', {
-        status: response.status,
-        statusText: response.statusText,
-      });
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const destinations = await response.json();
+
+      if (!Array.isArray(destinations)) {
+        console.error('Destinations data is not an array:', destinations);
+        throw new Error('Invalid destinations data format');
+      }
+
+      formattedDestinations = destinations.map((dest) => ({
+        id: dest.id,
+        title: dest.name,
+        description: dest.description || '',
+        image:
+          dest.thumbnail?.sizes?.full?.source_url ||
+          dest.thumbnail?.source_url ||
+          dest._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+          '/images/placeholder.jpg',
+        slug: dest.slug,
+        tripCount: dest.count || 0,
+      }));
+    } catch (destError) {
+      console.error('Error fetching destinations, using fallbacks:', destError);
+      // Use fallback destinations
+      formattedDestinations = [
+        {
+          id: 1,
+          title: 'تركيا',
+          description: 'اكتشف جمال تركيا مع رحلات مميزة',
+          image: '/images/destinations/turkey.jpg',
+          slug: 'turkey',
+          tripCount: 12,
+        },
+        {
+          id: 2,
+          title: 'جورجيا',
+          description: 'رحلات رائعة إلى جورجيا',
+          image: '/images/destinations/georgia.jpg',
+          slug: 'georgia',
+          tripCount: 8,
+        },
+        {
+          id: 3,
+          title: 'أذربيجان',
+          description: 'استمتع بجمال أذربيجان',
+          image: '/images/destinations/azerbaijan.jpg',
+          slug: 'azerbaijan',
+          tripCount: 6,
+        },
+        {
+          id: 4,
+          title: 'إيطاليا',
+          description: 'رحلات مميزة إلى إيطاليا',
+          image: '/images/destinations/italy.jpg',
+          slug: 'italy',
+          tripCount: 5,
+        },
+        {
+          id: 5,
+          title: 'البوسنة',
+          description: 'استكشف جمال البوسنة الطبيعي',
+          image: '/images/destinations/bosnia.jpg',
+          slug: 'bosnia',
+          tripCount: 4,
+        },
+      ];
     }
-
-    const destinations = await response.json();
-
-    if (!Array.isArray(destinations)) {
-      console.error('Destinations data is not an array:', destinations);
-      throw new Error('Invalid destinations data format');
-    }
-
-    const formattedDestinations = destinations.map((dest) => ({
-      id: dest.id,
-      title: dest.name,
-      description: dest.description || '',
-      image:
-        dest.thumbnail?.sizes?.full?.source_url ||
-        dest.thumbnail?.source_url ||
-        dest._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
-        '/images/placeholder.jpg',
-      link: dest.link,
-      slug: dest.slug,
-      tripCount: dest.count || 0,
-    }));
 
     // Fetch posts with REST API
     let posts = [];
     let pagination = null;
+    
     try {
       const postsResponse = await fetch(
         'https://madaratalkon.com/wp-json/wp/v2/posts?_embed&per_page=20',
@@ -380,7 +429,9 @@ export async function getStaticProps() {
         posts: [],
         pagination: null,
         featuredAuthors: [],
-        archives: [],
+        archives: {
+          years: [],
+        },
         error: error.message,
       },
       revalidate: 60,
