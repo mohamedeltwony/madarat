@@ -398,27 +398,40 @@ export default function InternationalLicence() {
     },
   ];
 
-  // Handle form success - Added missing function
-  const handleFormSuccess = (data) => {
-    console.log('Form submitted successfully:', data);
-    setIsSuccess(true);
+  // Handle form success - Adding proper redirection like in turkey-trip.js
+  const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality }) => {
+    // Determine redirect path based on nationality
+    const redirectPath =
+      (nationality === 'مواطن' || nationality === 'Saudi Arabia' || nationality === 'العربية السعودية')
+        ? '/thank-you-citizen'
+        : '/thank-you-resident';
     
-    // Send Facebook conversion event
-    try {
-      sendFbEvent('Lead', {
-        content_name: 'International License Form',
-        content_category: 'license',
-        value: 199,
-        currency: 'SAR',
-      });
-    } catch (err) {
-      console.error('Error sending Facebook event:', err);
-    }
+    // Create a form and submit it for redirect
+    const redirectForm = document.createElement('form');
+    redirectForm.method = 'GET';
+    redirectForm.action = redirectPath;
     
-    // Show success message
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 500);
+    // Add hidden fields
+    const phoneField = document.createElement('input');
+    phoneField.type = 'hidden';
+    phoneField.name = 'phone';
+    phoneField.value = processedPhone;
+    redirectForm.appendChild(phoneField);
+    
+    const externalIdField = document.createElement('input');
+    externalIdField.type = 'hidden';
+    externalIdField.name = 'external_id';
+    externalIdField.value = externalId;
+    redirectForm.appendChild(externalIdField);
+    
+    const eventIdField = document.createElement('input');
+    eventIdField.type = 'hidden';
+    eventIdField.name = 'eventId';
+    eventIdField.value = leadEventId;
+    redirectForm.appendChild(eventIdField);
+    
+    document.body.appendChild(redirectForm);
+    redirectForm.submit();
   };
 
   return (
