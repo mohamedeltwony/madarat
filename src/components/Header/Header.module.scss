@@ -963,3 +963,150 @@ $breakpoint-large: 1200px;
     }
   }
 }
+
+// New dropdown menu styles
+.dropdownToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.2s ease;
+  position: relative;
+  
+  &:hover, &.active {
+    color: $color-secondary;
+  }
+  
+  .dropdownIcon {
+    font-size: 0.7rem;
+    margin-right: 0.3rem;
+    transition: transform 0.2s ease;
+  }
+  
+  &.active .dropdownIcon {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 220px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 1000;
+  margin-top: 0.5rem;
+  opacity: 0;
+  animation: fadeInDown 0.2s ease forwards;
+  
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: $breakpoint-medium) {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    margin-top: 0;
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.dropdownItem {
+  display: block;
+  padding: 0.8rem 1rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  text-align: right;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  &:hover {
+    padding-right: 1.3rem;
+  }
+  
+  @media (max-width: $breakpoint-medium) {
+    padding: 1rem 1.5rem;
+    
+    &:hover {
+      padding-right: 2rem;
+    }
+  }
+}
+
+// Sidebar menu for trip pages
+.sidebarMenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  
+  .sidebarMenuItem {
+    margin-bottom: 0.5rem;
+  }
+  
+  .sidebarMenuLink {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    
+    &:hover, &.active {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .dropdownIcon {
+      font-size: 0.7rem;
+      transition: transform 0.2s ease;
+    }
+    
+    &.active .dropdownIcon {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.sidebarSubmenu {
+  list-style: none;
+  padding: 0;
+  margin: 0.3rem 0 0.8rem 1.5rem;
+  border-right: 2px solid rgba(255, 215, 0, 0.3);
+  
+  li {
+    margin: 0.3rem 0;
+    
+    a {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        color: $color-secondary;
+        background-color: rgba(255, 255, 255, 0.05);
+        padding-right: 1.3rem;
+      }
+    }
+  }
+}

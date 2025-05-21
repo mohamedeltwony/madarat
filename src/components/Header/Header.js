@@ -244,10 +244,17 @@ const Header = () => {
               <li className={styles.sidebarMenuItem}>
                 <div
                   className={`${styles.sidebarMenuLink} ${activeDropdown === 'trips' ? styles.active : ''}`}
+                  onClick={() => toggleDropdown('trips')}
                 >
                   <span>الرحلات</span>
                   <FaChevronDown className={styles.dropdownIcon} />
                 </div>
+                {activeDropdown === 'trips' && (
+                  <ul className={styles.sidebarSubmenu}>
+                    <li><LocalizedLink href="/trips">جميع الرحلات</LocalizedLink></li>
+                    <li><LocalizedLink href="/trip-listings">قائمة الرحلات السياحية</LocalizedLink></li>
+                  </ul>
+                )}
               </li>
               <li className={styles.sidebarMenuItem}>
                 <div
@@ -350,9 +357,23 @@ const Header = () => {
               </LocalizedLink>
             </li>
             <li className={styles.menuItem}>
-              <LocalizedLink href="/trips" className={styles.menuLink}>
-                الرحلات
-              </LocalizedLink>
+              <div
+                className={`${styles.menuLink} ${styles.dropdownToggle} ${activeDropdown === 'main-trips' ? styles.active : ''}`}
+                onClick={() => toggleDropdown('main-trips')}
+              >
+                <span>الرحلات</span>
+                <FaChevronDown className={styles.dropdownIcon} />
+              </div>
+              {activeDropdown === 'main-trips' && (
+                <div className={styles.dropdown}>
+                  <LocalizedLink href="/trips" className={styles.dropdownItem}>
+                    جميع الرحلات
+                  </LocalizedLink>
+                  <LocalizedLink href="/trip-listings" className={styles.dropdownItem}>
+                    قائمة الرحلات السياحية
+                  </LocalizedLink>
+                </div>
+              )}
             </li>
 
             {/* Expanded menu items (visible when expanded or on mobile) */}
