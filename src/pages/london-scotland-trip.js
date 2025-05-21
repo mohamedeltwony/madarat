@@ -209,6 +209,11 @@ export default function LondonScotlandTrip() {
     if (isLoading) return; // Prevent multiple submissions
     setIsLoading(true); // Start loading
 
+    // Declare variables outside try block so they're available in the finally block
+    let redirectUrl = '';
+    let externalId = '';
+    let leadEventId = '';
+    
     try {
       // --- Form Validation Check ---
       if (!isPhoneValid && formData.phone.trim() !== '') {
@@ -251,7 +256,7 @@ export default function LondonScotlandTrip() {
       // --- Generate Event ID for Lead ---
       // Generate eventId regardless of nationality, as it's needed for the redirect
       // and potentially for the pixel event on the thank-you page.
-      const leadEventId = crypto.randomUUID();
+      leadEventId = crypto.randomUUID();
       console.log(`Generated Lead Event ID: ${leadEventId}`);
 
       // 1. Client-side Pixel Event - REMOVED to prevent double firing
@@ -298,6 +303,10 @@ export default function LondonScotlandTrip() {
 
         const now = new Date();
 
+        // Generate External ID 
+        externalId = crypto.randomUUID();
+        console.log(`Generated External ID: ${externalId}`);
+
         // Create payload for submission
         const zapierPayload = {
           name: formData.name || 'Not provided',
@@ -312,7 +321,7 @@ export default function LondonScotlandTrip() {
           date: now.toLocaleDateString(),
           time: now.toLocaleTimeString(),
           leadEventId: leadEventId,
-          externalId: crypto.randomUUID(),
+          externalId: externalId,
           ...clientData, // Include UTM parameters and other client data
         };
 
@@ -407,22 +416,19 @@ export default function LondonScotlandTrip() {
           }),
         });
 
+        // Check for successful response
         if (!emailResponse.ok) {
           const errorData = await emailResponse.json();
           console.error('Failed to send lead email:', errorData.message);
-          // Optional: Display a user-friendly error message, but don't block redirect
+          // Log error but continue with redirect - don't block the user flow
         } else {
           console.log('Lead email sent successfully via API route');
         }
       } catch (error) {
         console.error('Error calling send-lead-email API:', error);
-        // Optional: Display a user-friendly error message, but don't block redirect
+        // Log error but continue with redirect - don't block the user flow
       }
       // --- End Send Lead Email ---
-
-      // --- Generate External ID ---
-      const externalId = crypto.randomUUID();
-      console.log(`Generated External ID: ${externalId}`);
 
       // --- Construct Redirect URL with Query Params ---
       const thankYouPageBase =
@@ -433,26 +439,36 @@ export default function LondonScotlandTrip() {
       const redirectQueryParams = new URLSearchParams(); // Renamed variable
       if (formData.email) redirectQueryParams.set('email', formData.email);
       if (formData.phone) redirectQueryParams.set('phone', formData.phone);
+      if (formData.name) redirectQueryParams.set('name', formData.name);
+      if (formData.name) {
+        // Split name into firstName and lastName for better tracking
+        const nameParts = formData.name.split(' ');
+        redirectQueryParams.set('firstName', nameParts[0]);
+        if (nameParts.length > 1) {
+          redirectQueryParams.set('lastName', nameParts.slice(1).join(' '));
+        }
+      }
+      
       redirectQueryParams.set('external_id', externalId); // Add external_id
       redirectQueryParams.set('eventId', leadEventId); // Add eventId for deduplication on thank-you page
+      
+      // Add fbp and fbc for better tracking
+      const fbp = getCookie('_fbp') || localStorage.getItem('_fbp');
+      const fbc = getCookie('_fbc') || localStorage.getItem('_fbc');
+      if (fbp) redirectQueryParams.set('fbp', fbp);
+      if (fbc) redirectQueryParams.set('fbc', fbc);
 
-      const redirectUrl = `${thankYouPageBase}?${redirectQueryParams.toString()}`; // Use renamed variable
-
-      console.log(`Redirecting to: ${redirectUrl}`);
-      // No need to set isLoading false here, page is changing
-      router.push(redirectUrl);
-      // --- End Redirect ---
-
-      // Reset form (Might happen after redirect, which is usually fine)
-      setFormData({
-        name: '',
-        phone: '',
-        email: '',
-        nationality: '', // Reset nationality
-        // city: '', // Removed city field
-        destination: 'لندن واسكتلندا',
+      redirectUrl = `${thankYouPageBase}?${redirectQueryParams.toString()}`; // Set redirectUrl for use in finally block
+      console.log('DEBUG: Final redirect URL constructed:', redirectUrl);
+      
+      // Also log existence check for the thank-you pages
+      const thankYouCitizenExists = typeof window !== 'undefined' && document.querySelector('a[href="/thank-you-citizen"]') !== null;
+      const thankYouResidentExists = typeof window !== 'undefined' && document.querySelector('a[href="/thank-you-resident"]') !== null;
+      console.log('DEBUG: Thank you page existence check (might be limited):', {
+        thankYouCitizenExists,
+        thankYouResidentExists,
+        redirectingTo: formData.nationality === 'مواطن' ? 'thank-you-citizen' : 'thank-you-resident'
       });
-      setFormStarted(false); // Reset form started state
     } catch (error) {
       console.error('Error processing form submission:', error);
       // You might want to track this error in analytics
@@ -463,7 +479,50 @@ export default function LondonScotlandTrip() {
         });
       }
       alert('حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.');
-      setIsLoading(false); // Reset loading state on error
+      
+      // Fall back to a basic redirect URL if we encounter an error
+      if (!redirectUrl && externalId && leadEventId) {
+        redirectUrl = `/thank-you-citizen?eventId=${leadEventId}&external_id=${externalId}`;
+      } else if (!redirectUrl) {
+        redirectUrl = '/thank-you-citizen'; // Ultimate fallback
+      }
+    } finally {
+      // Ensure we attempt the redirect even if errors occurred
+      if (redirectUrl) {
+        console.log(`Redirecting to: ${redirectUrl}`);
+        // Define a function to execute the redirect that can be called multiple ways
+        const executeRedirect = () => {
+          console.log('Executing redirect now:', redirectUrl);
+          window.location.href = redirectUrl;
+        };
+        
+        // Try direct window.location first
+        executeRedirect();
+        
+        // Also use setTimeout as a backup in case there's a timing issue
+        setTimeout(executeRedirect, 100);
+        
+        // Last resort - create a hidden link and click it
+        const link = document.createElement('a');
+        link.href = redirectUrl;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+      } else {
+        // If everything failed, at least reset the loading state
+        setIsLoading(false);
+      }
+      
+      // Reset form (Might happen after redirect, which is usually fine)
+      setFormData({
+        name: '',
+        phone: '',
+        email: '',
+        nationality: '', // Reset nationality
+        // city: '', // Removed city field
+        destination: 'لندن واسكتلندا',
+      });
+      setFormStarted(false); // Reset form started state
     }
   };
 
@@ -583,7 +642,10 @@ export default function LondonScotlandTrip() {
 
             {/* Contact Form */}
             <div className={styles.formContainer}>
-              <form onSubmit={handleSubmit} className={styles.tripForm}>
+              <form onSubmit={handleSubmit} className={styles.tripForm} 
+                    action="/thank-you-citizen" 
+                    method="get"
+                    id="tripForm">
                 {/* Phone field needs special handling due to country code */}
                 {/* Add hasValue and inputError classes conditionally */}
                 <div
@@ -705,6 +767,10 @@ export default function LondonScotlandTrip() {
                       : 'اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا'}
                   </SparkleButton>
                 </div>
+                
+                {/* Hidden fields for non-JavaScript fallback */}
+                <input type="hidden" name="external_id" value={crypto.randomUUID()} />
+                <input type="hidden" name="eventId" value={crypto.randomUUID()} />
               </form>
             </div>
           </div>

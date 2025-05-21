@@ -77,8 +77,10 @@ export default async function handler(req, res) {
       console.error(
         '[API /send-lead-email] LEAD_RECIPIENT_EMAILS environment variable is not set.'
       );
-      return res.status(500).json({
-        message: 'Server configuration error: Missing recipient emails.',
+      // Instead of failing with 500, return success with a warning
+      return res.status(200).json({
+        message: 'Lead received but email not sent: Missing recipient emails configuration.',
+        warning: 'LEAD_RECIPIENT_EMAILS not configured'
       });
     }
     console.log(`[API /send-lead-email] Recipient Emails: ${recipientEmails}`);
@@ -93,8 +95,10 @@ export default async function handler(req, res) {
       console.error(
         '[API /send-lead-email] Missing one or more SMTP environment variables (EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS).'
       );
-      return res.status(500).json({
-        message: 'Server configuration error: Missing SMTP credentials.',
+      // Instead of failing with 500, return success with a warning
+      return res.status(200).json({
+        message: 'Lead received but email not sent: Missing SMTP configuration.',
+        warning: 'SMTP credentials not configured'
       });
     }
     console.log(

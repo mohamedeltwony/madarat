@@ -167,11 +167,30 @@ export default function TripForm({
       });
       if (!response.ok) throw new Error('Zapier proxy error');
       setIsLoading(false);
+      
+      // Prepare cleaned user data for thank-you page
+      const cleanedEmail = formData.email ? formData.email.toLowerCase().trim() : '';
+      const cleanedPhone = formData.phone ? formData.phone.replace(/\D/g, '') : '';
+      const nameParts = formData.name ? formData.name.trim().split(' ') : [];
+      const firstName = nameParts.length > 0 ? nameParts[0] : '';
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+      
+      // Collect Facebook browser and click IDs
+      const fbp = getCookie('_fbp') || localStorage.getItem('_fbp') || '';
+      const fbc = getCookie('_fbc') || localStorage.getItem('_fbc') || '';
+      
+      // Pass all needed data to the success handler
       onSuccess({
-        processedPhone,
+        processedPhone: cleanedPhone,
         externalId,
         leadEventId,
         nationality: formData.nationality,
+        email: cleanedEmail,
+        name: formData.name || '',
+        firstName: firstName,
+        lastName: lastName,
+        fbp,
+        fbc
       });
     } catch (error) {
       setIsLoading(false);

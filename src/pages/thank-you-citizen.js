@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'; // Import useRouter
 import styles from '@/styles/pages/ThankYou.module.scss';
 import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti';
+import { trackLeadEvent, getFacebookParams } from '@/utils/facebookTracking'; // Import tracking functions
 
 // Helper function to get cookie value by name
 const getCookieValue = (name) => {
@@ -32,6 +33,45 @@ async function sha256(str) {
     console.error('SHA-256 Hashing Error:', error);
     return null;
   }
+}
+
+// Clean and format user data for facebook
+function cleanUserData(data) {
+  const cleaned = {};
+  
+  // Clean email
+  if (data.email) {
+    cleaned.email = data.email.toLowerCase().trim();
+  }
+  
+  // Clean phone (remove non-digits)
+  if (data.phone) {
+    cleaned.phone = data.phone.replace(/\D/g, '');
+  }
+  
+  // Process name fields
+  if (data.firstName) {
+    cleaned.firstName = data.firstName.trim();
+  }
+  
+  if (data.lastName) {
+    cleaned.lastName = data.lastName.trim();
+  }
+  
+  // If we have name but no first/last name, split it
+  if (data.name && (!data.firstName && !data.lastName)) {
+    const nameParts = data.name.trim().split(' ');
+    cleaned.firstName = nameParts[0];
+    if (nameParts.length > 1) {
+      cleaned.lastName = nameParts.slice(1).join(' ');
+    }
+  }
+  
+  // Pass through other fields
+  cleaned.external_id = data.external_id || null;
+  cleaned.nationality = data.nationality || null;
+  
+  return cleaned;
 }
 
 export default function ThankYouCitizen() {
@@ -82,70 +122,98 @@ export default function ThankYouCitizen() {
 
   // Fire Pixel Lead event on page load with user data
   useEffect(() => {
-    const trackLeadEvent = async () => {
-      // Check if fbq is loaded and its queue exists
-      if (typeof window.fbq !== 'function' || !window.fbq.queue) {
-        console.log('[Pixel] fbq not available on thank-you-citizen page load');
-        return;
-      }
+    const trackLeadEventWithData = async () => {
+      // Wait for router to be ready
+      if (!router.isReady) return;
 
+      console.log('Thank you page loaded with query params:', router.query);
+      
       // --- Get User Data ---
-      // 1. From Query Parameters (adjust keys if different)
+      // 1. From Query Parameters
       const email = router.query.email || null;
       const phone = router.query.phone || null;
-      const external_id = router.query.external_id || null; // Read external_id
-      const eventId = router.query.eventId || null; // Read eventId for deduplication
-
-      // --- Get Cookie Data ---
-      const fbc = getCookieValue('_fbc');
-      const fbp = getCookieValue('_fbp');
-
-      // --- Prepare Data Payload ---
-      const userData = {};
-      const hashedEmail = await sha256(email);
-      const hashedPhone = await sha256(phone);
-
-      if (hashedEmail) userData.em = hashedEmail;
-      if (hashedPhone) userData.ph = hashedPhone;
-      if (fbc) userData.fbc = fbc;
-      if (fbp) userData.fbp = fbp;
-      if (external_id) userData.external_id = external_id; // Add external_id if present
-
-      // --- Fire Pixel Event ---
-      if (Object.keys(userData).length > 0) {
-        // Include eventID for deduplication if available
-        if (eventId) {
-          console.log(
-            '[Pixel] Firing Lead event with user data and eventID:',
-            userData,
-            eventId
-          );
-          window.fbq('track', 'Lead', userData, { eventID: eventId });
-        } else {
-          console.log(
-            '[Pixel] Firing Lead event with user data (no eventID):',
-            userData
-          );
-          window.fbq('track', 'Lead', userData);
-        }
-      } else {
-        console.log('[Pixel] Firing Lead event (no user data, no eventID)');
-        // Fallback, consider if eventId should be generated even without user data
-        if (eventId) {
-          window.fbq('track', 'Lead', {}, { eventID: eventId });
-        } else {
-          window.fbq('track', 'Lead');
-        }
+      const firstName = router.query.firstName || null;
+      const lastName = router.query.lastName || null;
+      const name = router.query.name || null;
+      const external_id = router.query.external_id || null;
+      const eventId = router.query.eventId || null;
+      const nationality = router.query.nationality || null;
+      
+      // If we don't have any user data, we can't track effectively
+      if (!email && !phone && !name && !firstName) {
+        console.warn('No user data available for tracking in query parameters');
+        return;
       }
+      
+      // --- Get Facebook Tracking Parameters ---
+      const fbParams = getFacebookParams();
+      // Also check URL parameters as fallback
+      const fbc = router.query.fbc || fbParams.fbc || null;
+      const fbp = router.query.fbp || fbParams.fbp || null;
+      
+      console.log('Facebook tracking parameters:', { 
+        fbp: fbp ? 'present' : 'missing', 
+        fbc: fbc ? 'present' : 'missing',
+        eventId: eventId ? 'present' : 'missing'
+      });
+      
+      // --- Clean and format user data ---
+      const userData = cleanUserData({
+        email,
+        phone,
+        firstName,
+        lastName,
+        name,
+        external_id,
+        nationality
+      });
+      
+      // --- Send event to Facebook ---
+      const result = await trackLeadEvent({
+        ...userData,
+        fbc,
+        fbp,
+        event_id: eventId,
+        event_source_url: window.location.href,
+        content_name: 'Citizenship Form Submission',
+        lead_event_source: 'thank-you-page',
+        form_id: 'citizen-form',
+        value: 10, // Estimated value of this lead
+        currency: 'SAR'
+      });
+      
+      console.log('Tracking result:', result);
     };
 
-    // Wait for router to be ready before accessing query params
-    if (router.isReady) {
-      // Use a small delay to ensure fbq might be ready if loaded async
-      const timer = setTimeout(trackLeadEvent, 100);
-      return () => clearTimeout(timer);
-    }
+    // Use a small delay to ensure fbq might be ready if loaded async
+    const timer = setTimeout(trackLeadEventWithData, 500);
+    return () => clearTimeout(timer);
   }, [router.isReady, router.query]); // Re-run if router becomes ready or query params change
+  
+  // Direct server event for Conversion API
+  const sendServerEvent = async (eventName, eventData, eventId) => {
+    try {
+      console.log(`Sending ${eventName} to server with eventId: ${eventId}`);
+      
+      const response = await fetch('/api/facebook-conversion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventName,
+          userData: eventData,
+          eventId
+        })
+      });
+      
+      if (!response.ok) {
+        console.error('Error sending to Conversion API:', await response.json());
+      } else {
+        console.log('Successfully sent to Conversion API');
+      }
+    } catch (error) {
+      console.error('Error sending server event:', error);
+    }
+  };
 
   return (
     <div className={styles.container} dir="rtl">
@@ -179,26 +247,19 @@ export default function ThankYouCitizen() {
               priority // Load logo quickly
             />
           </div>
-          <h1 className={styles.title}>شكراً لك!</h1>
-          <p className={styles.message}>
-            يعطيك العافية! استلمنا بياناتك وبيتواصل معك مستشار السفر حقنا في
-            أقرب وقت ممكن عشان يضبط لك رحلتك.
+
+          <h1 className={styles.title}>تم استلام طلبك بنجاح!</h1>
+          <p className={styles.subtitle}>
+            شكراً لإهتمامك بالتسجيل في رحلة لندن واسكتلندا، سيتواصل معك فريقنا
+            قريباً!
           </p>
-          <div className={styles.buttonGroup}>
-            {/* Updated to single button linking to Google Drive PDF */}
-            <a
-              href="https://drive.google.com/file/d/1jcY1xviwxlPB7JL6nOvARWC04b8m6iTq/view?usp=sharing"
-              target="_blank" // Open in new tab
-              rel="noopener noreferrer" // Security best practice for target="_blank"
-              className={styles.downloadLink}
-              // download attribute might not work reliably for cross-origin links
-            >
-              <SparkleButton className={styles.downloadButton}>
-                حمّل دليل وجهة لندن
-              </SparkleButton>
-            </a>
+
+          {/* Add sparkle button to return to homepage */}
+          <div className={styles.buttonWrapper}>
+            <SparkleButton href="/" filled>
+              العودة للصفحة الرئيسية
+            </SparkleButton>
           </div>
-          {/* Removed Test Button */}
         </div>
       </main>
     </div>

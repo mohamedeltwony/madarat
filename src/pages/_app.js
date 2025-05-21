@@ -137,7 +137,7 @@ function App({ Component, pageProps = {} }) {
             'https://connect.facebook.net/en_US/fbevents.js');
             
             // Initialize with additional parameters for better matching
-            fbq('init', '275826455249702', {
+            fbq('init', '330286163283402', {
               external_id: getUserExternalId()
             });
             

@@ -242,7 +242,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ message: 'Lead email sent successfully.' });
 
     // --- Facebook Conversion API Event ---
-    const pixelId = '275826455249702'; // Your Facebook Pixel ID found in _app.js
+    const pixelId = '330286163283402'; // Your Facebook Pixel ID found in _app.js
     // Ensure you set this environment variable securely!
     // You can generate an Access Token in your Facebook Events Manager under Settings -> Conversion API -> Generate Access Token.
     const accessToken = process.env.FACEBOOK_ACCESS_TOKEN;
