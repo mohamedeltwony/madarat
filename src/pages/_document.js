@@ -16,8 +16,12 @@ class MyDocument extends Document {
 
           <link
             rel="icon"
-            type="image/x-icon"
-            href="/images/icons/favicon.ico"
+            type="image/png"
+            href="/images/مدارات-2.png"
+          />
+          <link 
+            rel="apple-touch-icon" 
+            href="/images/مدارات-2.png" 
           />
 
           {/* Google Fonts with proper preconnect */}

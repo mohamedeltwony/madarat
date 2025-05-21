@@ -221,30 +221,22 @@ export default function ThankYouCitizen() {
         <title>شكراً لك! | مدارات الكون</title>
         <meta
           name="description"
-          content="شكراً لتسجيلك معنا في رحلة لندن واسكتلندا."
+          content="شكراً لتسجيلك معنا في مدارات الكون للسياحة والسفر."
         />
-        <meta name="robots" content="noindex, nofollow" />{' '}
-        {/* Prevent indexing */}
-        <link rel="icon" href="/favicon.ico" />
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="icon" href="/images/مدارات-2.png" />
+        <link rel="apple-touch-icon" href="/images/مدارات-2.png" />
       </Head>
 
-      {/* Background Image/Overlay handled by CSS on .container */}
-
-      {/* No need for ReactCanvasConfetti component when using imperative API */}
-      {/* <ReactCanvasConfetti ... /> */}
-
-      {/* Content Overlay */}
       <main className={styles.mainContent}>
         <div className={styles.contentBox}>
           <div className={styles.logoContainer}>
-            {' '}
-            {/* Added container for logo */}
             <Image
-              src="/logo.png" // Path relative to public folder
+              src="/logo.png"
               alt="مدارات الكون للسياحة والسفر"
-              width={180} // Adjust width as needed
-              height={55} // Adjust height based on aspect ratio
-              priority // Load logo quickly
+              width={180}
+              height={55}
+              priority
             />
           </div>
 
@@ -253,6 +245,45 @@ export default function ThankYouCitizen() {
             شكراً لإهتمامك بالتسجيل في رحلة لندن واسكتلندا، سيتواصل معك فريقنا
             قريباً!
           </p>
+
+          {/* Contact Information */}
+          <div className={styles.contactInfo}>
+            <h3 className={styles.contactTitle}>هل لديك أي استفسار؟</h3>
+            <p className={styles.contactText}>
+              يمكنك التواصل معنا عبر:
+            </p>
+            <p className={styles.contactMethod}>
+              <strong>العنوان:</strong> طريق أنس بن مالك، الملقا، الرياض 13521، المملكة العربية السعودية
+            </p>
+            <p className={styles.contactMethod}>
+              <strong>الموقع:</strong> الملقا، ريحانة بوليفارد
+            </p>
+            <p className={styles.contactMethod}>
+              <strong>الجوال:</strong> +966 9200 34019
+            </p>
+            <p className={styles.contactMethod}>
+              <strong>البريد الإلكتروني:</strong> info@madaratalkon.com
+            </p>
+          </div>
+          
+          {/* Social Media Links */}
+          <div className={styles.socialLinks}>
+            <h3 className={styles.socialTitle}>تابعنا على مواقع التواصل الاجتماعي</h3>
+            <div className={styles.socialIcons}>
+              <a href="https://www.instagram.com/madaraatalkon/" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+                <Image src="/icons/instagram.svg" alt="Instagram" width={30} height={30} />
+              </a>
+              <a href="https://www.youtube.com/@MadaratAlkon" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+                <Image src="/icons/youtube.svg" alt="YouTube" width={30} height={30} />
+              </a>
+              <a href="https://www.tiktok.com/@madaraatalkon" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+                <Image src="/icons/tiktok.svg" alt="TikTok" width={30} height={30} />
+              </a>
+              <a href="http://www.linkedin.com/company/madaraatalkon" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+                <Image src="/icons/linkedin.svg" alt="LinkedIn" width={30} height={30} />
+              </a>
+            </div>
+          </div>
 
           {/* Add sparkle button to return to homepage */}
           <div className={styles.buttonWrapper}>
@@ -265,3 +296,4 @@ export default function ThankYouCitizen() {
     </div>
   );
 }
+

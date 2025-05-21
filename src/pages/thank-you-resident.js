@@ -1,16 +1,13 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useRouter } from 'next/router'; // Re-add useRouter import
+import { useRouter } from 'next/router';
 import styles from '@/styles/pages/ThankYou.module.scss';
 import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti';
 
-// Removed getCookieValue helper function
-// Removed sha256 helper function
-
 export default function ThankYouResident() {
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
 
   // Function to fire confetti with specific options
   const fireConfetti = () => {
@@ -55,38 +52,28 @@ export default function ThankYouResident() {
     return () => clearTimeout(timer);
   }, []); // Empty dependency array, fire only once on mount + intervals
 
-  // Removed useEffect hook that fired Pixel Lead event
-
   return (
     <div className={styles.container} dir="rtl">
       <Head>
         <title>شكراً لك! | مدارات الكون</title>
         <meta
           name="description"
-          content="شكراً لتسجيلك معنا في رحلة لندن واسكتلندا."
+          content="شكراً لتسجيلك معنا في مدارات الكون للسياحة والسفر."
         />
-        <meta name="robots" content="noindex, nofollow" />{' '}
-        {/* Prevent indexing */}
-        <link rel="icon" href="/favicon.ico" />
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="icon" href="/images/مدارات-2.png" />
+        <link rel="apple-touch-icon" href="/images/مدارات-2.png" />
       </Head>
 
-      {/* Background Image/Overlay handled by CSS on .container */}
-
-      {/* No need for ReactCanvasConfetti component when using imperative API */}
-      {/* <ReactCanvasConfetti ... /> */}
-
-      {/* Content Overlay */}
       <main className={styles.mainContent}>
         <div className={styles.contentBox}>
           <div className={styles.logoContainer}>
-            {' '}
-            {/* Added container for logo */}
             <Image
-              src="/logo.png" // Path relative to public folder
+              src="/logo.png"
               alt="مدارات الكون للسياحة والسفر"
-              width={180} // Adjust width as needed
-              height={55} // Adjust height based on aspect ratio
-              priority // Load logo quickly
+              width={180}
+              height={55}
+              priority
             />
           </div>
           <h1 className={styles.title}>شكراً لك!</h1>
@@ -94,23 +81,55 @@ export default function ThankYouResident() {
             يعطيك العافية! استلمنا بياناتك وبيتواصل معك مستشار السفر حقنا في
             أقرب وقت ممكن عشان يضبط لك رحلتك.
           </p>
-          <div className={styles.buttonGroup}>
-            {/* Updated to single button linking to Google Drive PDF */}
-            <a
-              href="https://drive.google.com/file/d/1jcY1xviwxlPB7JL6nOvARWC04b8m6iTq/view?usp=sharing"
-              target="_blank" // Open in new tab
-              rel="noopener noreferrer" // Security best practice for target="_blank"
-              className={styles.downloadLink}
-              // download attribute might not work reliably for cross-origin links
-            >
-              <SparkleButton className={styles.downloadButton}>
-                حمّل دليل وجهة لندن
-              </SparkleButton>
-            </a>
+          
+          {/* Contact Information */}
+          <div className={styles.contactInfo}>
+            <h3 className={styles.contactTitle}>هل لديك أي استفسار؟</h3>
+            <p className={styles.contactText}>
+              يمكنك التواصل معنا عبر:
+            </p>
+            <p className={styles.contactMethod}>
+              <strong>العنوان:</strong> طريق أنس بن مالك، الملقا، الرياض 13521، المملكة العربية السعودية
+            </p>
+            <p className={styles.contactMethod}>
+              <strong>الموقع:</strong> الملقا، ريحانة بوليفارد
+            </p>
+            <p className={styles.contactMethod}>
+              <strong>الجوال:</strong> +966 9200 34019
+            </p>
+            <p className={styles.contactMethod}>
+              <strong>البريد الإلكتروني:</strong> info@madaratalkon.com
+            </p>
           </div>
-          {/* Removed Test Button */}
+          
+          {/* Social Media Links */}
+          <div className={styles.socialLinks}>
+            <h3 className={styles.socialTitle}>تابعنا على مواقع التواصل الاجتماعي</h3>
+            <div className={styles.socialIcons}>
+              <a href="https://www.instagram.com/madaraatalkon/" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+                <Image src="/icons/instagram.svg" alt="Instagram" width={30} height={30} />
+              </a>
+              <a href="https://www.youtube.com/@MadaratAlkon" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+                <Image src="/icons/youtube.svg" alt="YouTube" width={30} height={30} />
+              </a>
+              <a href="https://www.tiktok.com/@madaraatalkon" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+                <Image src="/icons/tiktok.svg" alt="TikTok" width={30} height={30} />
+              </a>
+              <a href="http://www.linkedin.com/company/madaraatalkon" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
+                <Image src="/icons/linkedin.svg" alt="LinkedIn" width={30} height={30} />
+              </a>
+            </div>
+          </div>
+
+          {/* Return to homepage button */}
+          <div className={styles.buttonWrapper}>
+            <SparkleButton href="/" filled>
+              العودة للصفحة الرئيسية
+            </SparkleButton>
+          </div>
         </div>
       </main>
     </div>
   );
 }
+
