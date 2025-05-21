@@ -252,7 +252,6 @@ const Header = () => {
                 {activeDropdown === 'trips' && (
                   <ul className={styles.sidebarSubmenu}>
                     <li><LocalizedLink href="/trips">جميع الرحلات</LocalizedLink></li>
-                    <li><LocalizedLink href="/trip-listings">قائمة الرحلات السياحية</LocalizedLink></li>
                   </ul>
                 )}
               </li>
@@ -357,23 +356,9 @@ const Header = () => {
               </LocalizedLink>
             </li>
             <li className={styles.menuItem}>
-              <div
-                className={`${styles.menuLink} ${styles.dropdownToggle} ${activeDropdown === 'main-trips' ? styles.active : ''}`}
-                onClick={() => toggleDropdown('main-trips')}
-              >
-                <span>الرحلات</span>
-                <FaChevronDown className={styles.dropdownIcon} />
-              </div>
-              {activeDropdown === 'main-trips' && (
-                <div className={styles.dropdown}>
-                  <LocalizedLink href="/trips" className={styles.dropdownItem}>
-                    جميع الرحلات
-                  </LocalizedLink>
-                  <LocalizedLink href="/trip-listings" className={styles.dropdownItem}>
-                    قائمة الرحلات السياحية
-                  </LocalizedLink>
-                </div>
-              )}
+              <LocalizedLink href="/trips" className={styles.menuLink}>
+                الرحلات
+              </LocalizedLink>
             </li>
 
             {/* Expanded menu items (visible when expanded or on mobile) */}
