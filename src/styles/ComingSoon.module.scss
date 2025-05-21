@@ -1,0 +1,405 @@
+@import './_variables.scss';
+
+// Split layout container
+.splitContainer {
+  display: flex;
+  position: relative;
+  font-family: 'Cairo', 'Tajawal', sans-serif;
+  height: 100%;
+  
+  @media (max-width: $breakpoint-medium) {
+    flex-direction: column;
+    height: auto;
+  }
+}
+
+// Image side (left side on LTR, right side on RTL)
+.imageSide {
+  width: 50%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  background-image: url('/images/cruise-background.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1;
+  
+  @media (max-width: $breakpoint-medium) {
+    width: 100%;
+    height: 40vh;
+    min-height: 300px;
+    position: relative;
+  }
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(16, 76, 68, 0.85) 0%, rgba(16, 76, 68, 0.6) 100%);
+  z-index: 1;
+}
+
+.imageContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  padding: 2rem;
+}
+
+.logoContainerImage {
+  background-color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  display: inline-block;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.imageTagline {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+  animation: fadeUp 1.5s ease-out forwards;
+  margin-bottom: 1rem;
+}
+
+.accentColor {
+  color: $secondary-color;
+  font-weight: 800;
+}
+
+.imageDescription {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  animation: fadeUp 1.8s ease-out forwards;
+  opacity: 0.9;
+}
+
+// Content side (right side on LTR, left side on RTL)
+.contentSide {
+  width: 50%;
+  background-color: white;
+  color: $text-color-dark;
+  min-height: 100vh;
+  position: relative;
+  z-index: 2;
+  margin-right: 50%;
+  
+  @media (max-width: $breakpoint-medium) {
+    width: 100%;
+    margin-right: 0;
+  }
+}
+
+.contentInner {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+// Title and subtitle
+.title {
+  margin-bottom: 2rem;
+  
+  span {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $primary-color;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: $text-color;
+  opacity: 0.9;
+}
+
+// Countdown
+.countdown {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 2rem 0;
+  direction: ltr; // Keep countdown numbers in LTR direction
+  
+  @media (max-width: $breakpoint-small) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.countdownItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  
+  @media (max-width: $breakpoint-small) {
+    width: calc(50% - 1rem);
+    margin-bottom: 1rem;
+  }
+}
+
+.countdownNumber {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background-color: $primary-color;
+  color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  min-width: 80px;
+  box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+  text-align: center;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba($primary-color, 0.4);
+  }
+}
+
+.countdownLabel {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: $text-color;
+  font-family: 'Cairo', 'Tajawal', sans-serif;
+}
+
+// Features grid
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+  
+  @media (max-width: $breakpoint-small) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.featureItem {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 1.5rem;
+  border: 1px solid #eee;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border-color: #ddd;
+  }
+
+  h3 {
+    margin: 0.7rem 0 0.5rem;
+    color: $primary-color;
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: $text-color;
+    line-height: 1.5;
+  }
+}
+
+.featureIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+// Form section
+.formSection {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+  
+  // Custom styles for the LeadForm inside the coming soon page
+  :global(.LeadMagnets_leadForm__JC4nY) {
+    
+    :global(.LeadMagnets_formTitle__j7yj1) {
+      font-size: 1.5rem;
+      color: $primary-color;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    :global(.LeadMagnets_formSubtitle__d3W3j) {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: $text-color;
+      line-height: 1.5;
+    }
+    
+    :global(.LeadMagnets_formGroup__7h5QD) {
+      margin-bottom: 1.5rem;
+      
+      label {
+        color: $text-color-dark !important;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+      
+      input {
+        background-color: white;
+        border: 1px solid #ddd;
+        color: $text-color-dark !important;
+        padding: 0.9rem 1rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        width: 100%;
+        transition: all 0.3s ease;
+        
+        &::placeholder {
+          color: rgba(0, 0, 0, 0.35);
+        }
+        
+        &:focus {
+          border-color: $secondary-color;
+          box-shadow: 0 0 0 3px rgba($secondary-color, 0.1);
+          outline: none;
+        }
+      }
+      
+      :global(.LeadMagnets_errorText__5oiQI) {
+        color: #ff6b6b !important;
+        font-size: 0.85rem;
+        margin-top: 0.4rem;
+      }
+    }
+    
+    :global(.LeadMagnets_formActions__VG_zi) {
+      margin-top: 2rem;
+      
+      :global(.UI_sparkleButton__05rBL) {
+        background-color: $secondary-color;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba($secondary-color, 0.3);
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 20px rgba($secondary-color, 0.4);
+        }
+        
+        &:active {
+          transform: translateY(-1px);
+        }
+        
+        :global(.UI_buttonGlow__8V2Om) {
+          border-radius: 8px;
+        }
+      }
+    }
+    
+    :global(.LeadMagnets_successMessage__w9a6a) {
+      padding: 2rem;
+      
+      :global(.LeadMagnets_successIcon__R3SAL) {
+        background-color: $secondary-color;
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 1.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        box-shadow: 0 5px 20px rgba($secondary-color, 0.3);
+      }
+      
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+        color: $primary-color;
+      }
+      
+      p {
+        color: $text-color;
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+// Social icons
+.socialIcons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.socialIcon {
+  color: $primary-color;
+  background-color: #f8f9fa;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  
+  &:hover {
+    background-color: $secondary-color;
+    color: white;
+    transform: translateY(-3px);
+    border-color: $secondary-color;
+    box-shadow: 0 5px 15px rgba($secondary-color, 0.3);
+  }
+}
+
+// Footer
+.footer {
+  text-align: center;
+  padding: 1.5rem 0;
+  color: $text-color;
+  font-size: 0.9rem;
+  margin-top: auto;
+  opacity: 0.7;
+}
+
+// Animations
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 

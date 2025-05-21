@@ -58,6 +58,9 @@ body {
   font-size: 16px;
   line-height: var(--line-height-normal);
   background-color: #fff;
+  scroll-behavior: smooth;
+  height: 100%;
+  overflow-x: hidden;
 }
 
 h1,
