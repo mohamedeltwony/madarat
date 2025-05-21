@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import styles from './SparkleEffect.module.scss';
 
 // Random number generator within a range
@@ -37,37 +37,52 @@ const Sparkle = ({ size, color, style }) => {
 };
 
 // Main sparkle effect component
-const SparkleEffect = ({ active = false, color = '#cc9c64' }) => {
-  const [sparkles, setSparkles] = useState([]);
-
-  // Generate new sparkles when active changes
+const SparkleEffect = () => {
+  const sparkleContainerRef = useRef(null);
+  
   useEffect(() => {
-    if (active) {
-      // Create 4 sparkles
-      const newSparkles = Array.from({ length: 4 }, (_, i) => ({
-        id: `sparkle-${i}-${Date.now()}`,
-        size: `${random(6, 12)}px`,
-        color: color + (i % 2 === 0 ? 'BB' : 'AA'), // Semi-transparent color
-      }));
-      setSparkles(newSparkles);
-    } else {
-      setSparkles([]);
+    if (!sparkleContainerRef.current) return;
+    
+    // Create random sparkles
+    const sparkleCount = 7; // Number of sparkles to create
+    const container = sparkleContainerRef.current;
+    const sparkles = [];
+    
+    for (let i = 0; i < sparkleCount; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = styles.sparkle;
+      
+      // Random size between 4px and 12px
+      const size = 4 + Math.random() * 8;
+      sparkle.style.width = `${size}px`;
+      sparkle.style.height = `${size}px`;
+      
+      // Random position
+      sparkle.style.top = `${Math.random() * 100}%`;
+      sparkle.style.left = `${Math.random() * 100}%`;
+      
+      // Random delay for animation
+      sparkle.style.animationDelay = `${Math.random() * 1.5}s`;
+      
+      // Random duration for animation
+      sparkle.style.animationDuration = `${1 + Math.random() * 2}s`;
+      
+      container.appendChild(sparkle);
+      sparkles.push(sparkle);
     }
-  }, [active, color]);
-
-  if (!active) return null;
-
+    
+    return () => {
+      // Clean up sparkles when component unmounts
+      sparkles.forEach(sparkle => {
+        if (container.contains(sparkle)) {
+          container.removeChild(sparkle);
+        }
+      });
+    };
+  }, []);
+  
   return (
-    <div className={styles.sparkleContainer}>
-      {sparkles.map((sparkle) => (
-        <Sparkle
-          key={sparkle.id}
-          size={sparkle.size}
-          color={sparkle.color}
-          style={{ position: 'absolute' }}
-        />
-      ))}
-    </div>
+    <div ref={sparkleContainerRef} className={styles.sparkleContainer}></div>
   );
 };
 

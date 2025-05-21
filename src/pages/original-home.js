@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import useSite from '@/hooks/use-site';
 import Layout from '@/components/Layout';
@@ -14,7 +14,6 @@ import styles from '@/styles/pages/Home.module.scss';
 import UIStyles from '@/components/UI/UI.module.scss';
 import { getSiteMetadataREST } from '@/lib/rest-api';
 import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import ComingSoon from './coming-soon';
 import PostCard from '@/components/PostCard';

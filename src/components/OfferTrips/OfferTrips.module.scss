@@ -22,26 +22,21 @@ $glass-border: rgba(255, 255, 255, 0.12);
     inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
 }
 
-@mixin futuristic-glass {
-  background: linear-gradient(
-    135deg,
-    rgba($primary-color, 0.15) 0%,
-    rgba($secondary-color, 0.08) 100%
-  );
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border: 1px solid rgba($primary-color, 0.2);
-  box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.2),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow:
-      0 20px 60px rgba(0, 0, 0, 0.25),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+@mixin card-hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+  
+  .cardImage {
+    transform: scale(1.05);
+  }
+  
+  .imageOverlay {
+    opacity: 0.4;
+  }
+  
+  .viewTripButton {
+    background-color: $accent-color;
+    color: #fff;
   }
 }
 
@@ -193,633 +188,233 @@ $glass-border: rgba(255, 255, 255, 0.12);
 
 // Component Styles
 .offerTripsContainer {
-  padding: 4rem 0;
+  padding: 3rem 0;
   margin: 0 auto;
-  max-width: 1400px;
+  max-width: 1300px;
   width: 100%;
   direction: rtl;
   position: relative;
   overflow: visible;
   text-align: right;
   box-sizing: border-box;
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-  }
-
-  &::before {
-    top: -100px;
-    right: -100px;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      rgba($accent-color, 0.2) 0%,
-      rgba($accent-color, 0) 70%
-    );
-    animation: pulse 5s infinite;
-  }
-
-  &::after {
-    bottom: -100px;
-    left: -100px;
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      rgba($primary-color, 0.15) 0%,
-      rgba($primary-color, 0) 70%
-    );
-    animation: pulse 7s infinite;
-  }
 }
 
 .offerTripsHeader {
   text-align: center;
-  margin-bottom: 3.5rem;
-  animation: float 6s ease-in-out infinite;
+  margin-bottom: 3rem;
 }
 
 .offerTripsTitle {
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   font-weight: 700;
+  color: $primary-color;
   margin-bottom: 0.5rem;
-  background: linear-gradient(
-    45deg,
-    $primary-color,
-    $accent-color,
-    $secondary-color
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
   position: relative;
-
-  &::after {
+  display: inline-block;
+  
+  &:after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
     width: 80px;
     height: 3px;
-    background: linear-gradient(
-      90deg,
-      rgba($primary-color, 0),
-      $accent-color,
-      rgba($primary-color, 0)
-    );
+    background-color: $accent-color;
+    border-radius: 2px;
   }
 }
 
 .offerTripsSubtitle {
-  font-size: 1.2rem;
-  color: rgba($text-color, 0.9);
-  opacity: 0.8;
-  margin-top: 20px;
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 700px;
+  margin: 1rem auto 0;
 }
 
-// Grid layout
-.tripsGrid {
+.offerTripsGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  padding: 1.5rem 0;
-  width: 100%;
-  direction: rtl;
-
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   }
-
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  @media (max-width: 640px) {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 1.5rem;
+  
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
-.gridItem {
-  position: relative;
-  transition: transform 0.6s ease-out;
-  box-sizing: border-box;
-
-  &:hover {
-    transform: scale(1.02);
-    z-index: 5;
-
-    &::before,
-    &::after {
-      opacity: 0.9;
-    }
-  }
-
-  // Star animations
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cc9c64cc'%3E%3Cpath d='M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-size: contain;
-    z-index: 20;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease;
-  }
-
-  &::before {
-    top: -8px;
-    right: 15%;
-    width: 22px;
-    height: 22px;
-    animation:
-      sparkleRotate 7s infinite,
-      floatingStar 10s infinite;
-  }
-
-  &::after {
-    top: 20%;
-    left: -5px;
-    width: 15px;
-    height: 15px;
-    animation:
-      sparkleRotate 8s 0.5s infinite,
-      floatingStar 11s 1s infinite;
-  }
-}
-
-// Remove Splide-specific styles that are no longer needed
-.splideContainer {
-  display: none;
-}
-
-.slideItem {
-  display: none;
-}
-
+// Trip card styles
 .tripCard {
-  display: block;
-  height: 100%;
-  @include futuristic-glass;
-  overflow: hidden;
-  color: inherit;
-  text-decoration: none;
   position: relative;
-
-  &:hover {
-    transform: translateY(-3px);
-    transition: all 0.5s ease-out;
-
-    &::before {
-      animation-duration: 8s;
-    }
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      45deg,
-      rgba($accent-color, 0) 40%,
-      rgba($accent-color, 0.1) 50%,
-      rgba($accent-color, 0) 60%
-    );
-    background-size: 300% 100%;
-    animation: shine 8s infinite linear;
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  &:hover::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 20px;
-    padding: 2px;
-    background: linear-gradient(
-      300deg,
-      $primary-color,
-      $accent-color,
-      $secondary-color,
-      $primary-color
-    );
-    background-size: 300% 300%;
-    animation: magicBorder 3s ease infinite;
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    z-index: 2;
-  }
-}
-
-.tripImageContainer {
-  position: relative;
-  height: 220px;
+  border-radius: 16px;
   overflow: hidden;
-  border-radius: 20px 20px 0 0;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(
-      circle at center,
-      rgba($accent-color, 0.3) 0%,
-      rgba($accent-color, 0) 70%
-    );
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-    z-index: 2;
-  }
-
-  .tripCard:hover &::after {
-    opacity: 1;
-    animation: magicRipple 2s infinite;
-  }
-}
-
-.tripImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 1s ease-out;
-  filter: brightness(0.95);
-
-  .tripCard:hover & {
-    transform: scale(1.08);
-    filter: brightness(1.05) contrast(1.02) saturate(1.1);
-    animation: magicGlow 5s infinite;
-  }
-}
-
-.placeholderImage {
-  @include flex-center;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    135deg,
-    rgba($primary-color, 0.1),
-    rgba($secondary-color, 0.1)
-  );
-  color: rgba($text-color, 0.5);
-  font-weight: 600;
-}
-
-.tripBadge {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: linear-gradient(45deg, $accent-color, color.adjust($accent-color, $lightness: -10%));
-  color: $light-text;
-  padding: 0.35rem 0.85rem;
-  border-radius: 30px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  z-index: 2;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  transform: translateY(0);
-  transition: all 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-
-  .tripCard:hover & {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    filter: drop-shadow(0 0 8px rgba($accent-color, 0.5));
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 30px;
-    background: linear-gradient(
-      45deg,
-      transparent,
-      rgba(255, 255, 255, 0.3),
-      transparent
-    );
-    animation: shine 3s infinite;
-    opacity: 0.7;
-    z-index: -1;
-  }
-}
-
-.tripDuration {
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  background: rgba($primary-color, 0.85);
-  color: $light-text;
-  padding: 0.4rem 0.9rem;
-  border-radius: 30px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  z-index: 2;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(4px);
+  background-color: #fff;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
+  height: 100%;
   display: flex;
-  align-items: center;
-  gap: 5px;
-
-  .tripCard:hover & {
-    background: $accent-color;
-    transform: translateY(-3px);
-    box-shadow:
-      0 6px 15px rgba(0, 0, 0, 0.3),
-      0 0 10px rgba($accent-color, 0.5);
+  flex-direction: column;
+  
+  &:hover {
+    @include card-hover;
   }
 }
 
-.durationIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.tripContent {
-  padding: 1.5rem;
+.cardImageContainer {
   position: relative;
-  z-index: 2;
-}
-
-.tripTitle {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  line-height: 1.4;
-  color: $primary-color;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  width: 100%;
+  height: 200px;
   overflow: hidden;
-  transition: color 0.3s ease;
-
-  .tripCard:hover & {
-    background: linear-gradient(45deg, $primary-color, $accent-color);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-fill-color: transparent;
-  }
 }
 
-.tripDestination {
+.cardImage {
+  transition: transform 0.5s ease;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5));
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.priceTag {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: $accent-color;
+  color: #fff;
+  padding: 6px 15px;
+  border-top-right-radius: 12px;
+  font-weight: bold;
+  z-index: 2;
   display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 0.8rem;
-  color: rgba($text-color, 0.8);
-  font-size: 0.95rem;
-}
-
-.destinationIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $primary-color;
-
-  .tripCard:hover & {
-    color: $accent-color;
-    animation: float 3s ease-in-out infinite;
-  }
-}
-
-.tripPrice {
-  @include flex-between;
-  margin-top: 1.2rem;
-}
-
-.priceLabel {
-  font-size: 0.85rem;
-  color: rgba($text-color, 0.8);
-  font-weight: 500;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .priceValue {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.priceCurrency {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.cardContent {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.cardTitle {
   font-size: 1.25rem;
   font-weight: 700;
-  color: $accent-color;
-  background: linear-gradient(
-    135deg,
-    rgba($accent-color, 0.15),
-    rgba($accent-color, 0.05)
-  );
-  padding: 0.4rem 1rem;
-  border-radius: 30px;
-  position: relative;
-  overflow: hidden;
+  margin: 0 0 1rem;
+  color: $primary-color;
+  line-height: 1.3;
+}
+
+.cardDetails {
   display: flex;
-  align-items: center;
-  gap: 5px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      45deg,
-      rgba($accent-color, 0) 40%,
-      rgba($accent-color, 0.15) 50%,
-      rgba($accent-color, 0) 60%
-    );
-    background-size: 200% 100%;
-    animation: shine 4s infinite linear;
-    z-index: -1;
-  }
-
-  .tripCard:hover & {
-    background: linear-gradient(
-      135deg,
-      rgba($accent-color, 0.25),
-      rgba($accent-color, 0.1)
-    );
-    box-shadow: 0 0 15px rgba($accent-color, 0.3);
-    transform: scale(1.05);
-  }
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
 }
 
-.currencyCode {
-  font-size: 0.85rem;
-  opacity: 0.8;
-  font-weight: 600;
-}
-
-.tripFooter {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba($primary-color, 0.1);
-}
-
-.viewDetails {
+.detailItem {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.9rem;
+}
+
+.detailIcon {
+  display: inline-flex;
+  color: $accent-color;
+  width: 20px;
+  height: 20px;
+}
+
+.detailText {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.viewTripButton {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
   color: $primary-color;
   font-weight: 600;
+  text-decoration: none;
   transition: all 0.3s ease;
-
-  svg {
-    transition: transform 0.3s ease;
-  }
-
-  .tripCard:hover & {
-    color: $accent-color;
-
-    svg {
-      transform: translateX(8px);
-      animation: float 2s ease-in-out infinite;
-    }
+  
+  &:hover {
+    background-color: $accent-color;
+    color: #fff;
   }
 }
 
 .viewAllContainer {
-  text-align: center;
-  margin-top: 3rem;
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
 }
 
 .viewAllButton {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  background: linear-gradient(
-    45deg,
-    $primary-color,
-    color.adjust($primary-color, $lightness: -10%)
-  );
-  color: $light-text;
-  padding: 0.9rem 2rem;
-  border-radius: 50px;
+  padding: 12px 30px;
+  border-radius: 8px;
+  background-color: $primary-color;
+  color: #fff;
   font-weight: 600;
-  font-size: 1.1rem;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-decoration: none;
-  box-shadow:
-    0 10px 20px rgba($primary-color, 0.3),
-    inset 0 2px 0 rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  
   &:hover {
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 15px 30px rgba($primary-color, 0.4);
-
-    &::before {
-      transform: translateX(100%);
-    }
-
-    .buttonIcon {
-      transform: translateX(3px);
-    }
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent
-    );
-    transition: transform 0.6s ease;
-    z-index: 1;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.13) 0%,
-      transparent 60%,
-      transparent 100%
-    );
-    z-index: 1;
-    pointer-events: none;
+    background-color: darken($primary-color, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   }
 }
 
-.buttonIcon {
+// Loading state
+.loadingContainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
-  position: relative;
-  z-index: 2;
-}
-
-// Loading & Error States
-.loadingContainer {
-  @include flex-center;
   min-height: 300px;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.loadingText {
-  color: $primary-color;
-  font-size: 1.1rem;
-  font-weight: 500;
-  animation: fadeIn 0.5s ease forwards;
 }
 
 .loadingSpinner {
-  width: 60px;
-  height: 60px;
-  border: 4px solid rgba($primary-color, 0.1);
-  border-left-color: $primary-color;
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba($primary-color, 0.1);
+  border-top-color: $primary-color;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    right: -15px;
-    bottom: -15px;
-    border: 3px solid transparent;
-    border-top-color: $accent-color;
-    border-radius: 50%;
-    animation: spin 1.5s linear reverse infinite;
-  }
+  margin-bottom: 1rem;
 }
 
 @keyframes spin {
@@ -828,172 +423,94 @@ $glass-border: rgba(255, 255, 255, 0.12);
   }
 }
 
-.errorContainer,
-.noTripsContainer {
-  @include flex-center;
-  min-height: 200px;
-  padding: 2.5rem;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px $shadow-color;
-  text-align: center;
-  border: 1px solid rgba($primary-color, 0.1);
+.loadingText {
+  color: #666;
+  font-size: 1rem;
 }
 
-.errorMessage {
-  color: #ef4444;
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-.noTripsMessage {
-  color: $text-color;
-  font-weight: 600;
-  opacity: 0.8;
-  font-size: 1.1rem;
-}
-
+// Error state
 .errorContainer {
   text-align: center;
   padding: 2rem;
-  background: rgba(255, 0, 0, 0.05);
-  border-radius: 8px;
-  margin: 2rem 0;
+  background-color: #fff6f6;
+  border-radius: 10px;
+  border: 1px solid #ffcccc;
 }
 
 .errorMessage {
-  color: #e53e3e;
+  color: #cc0000;
   margin-bottom: 1rem;
 }
 
 .retryButton {
-  background: #3182ce;
+  background-color: $primary-color;
   color: white;
   border: none;
-  padding: 0.5rem 1.5rem;
-  border-radius: 4px;
+  padding: 8px 16px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
+  font-weight: 500;
+  transition: background-color 0.3s;
   
   &:hover {
-    background: #2c5282;
-    transform: translateY(-2px);
+    background-color: darken($primary-color, 10%);
   }
 }
 
-.fallbackNotice {
-  margin-top: 0.5rem;
+// No trips state
+.noTripsContainer {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.noTripsMessage {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+// Warning banner for fallback data
+.warningBanner {
+  margin-top: 1rem;
   padding: 0.5rem 1rem;
-  background: rgba(255, 193, 7, 0.2);
-  border-left: 3px solid #ffc107;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  color: #856404;
+  background-color: #fff8e6;
+  border: 1px solid #ffe0b2;
+  border-radius: 8px;
+  text-align: center;
+  color: #b35900;
   
   p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     margin: 0;
+    font-size: 0.9rem;
+  }
+  
+  .retryButton {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    
+    &:hover {
+      background-color: darken(#ff9800, 10%);
+    }
   }
 }
 
-// Responsive Adjustments
-@media (max-width: 1024px) {
-  .offerTripsTitle {
-    font-size: 2.3rem;
-  }
-
-  .offerTripsSubtitle {
-    font-size: 1.1rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .offerTripsContainer {
-    padding: 3rem 0.5rem;
-    width: 98%;
-  }
-
-  .offerTripsTitle {
-    font-size: 2rem;
-  }
-
-  .tripImageContainer {
-    height: 180px;
-  }
-
-  .tripContent {
-    padding: 1.2rem;
-  }
-
-  .tripTitle {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .priceValue {
-    font-size: 1.1rem;
-    padding: 0.3rem 0.7rem;
-  }
-
-  .viewAllButton {
-    padding: 0.7rem 1.5rem;
-    font-size: 1rem;
-  }
-
-  .tripFooter {
-    margin-top: 1.2rem;
-    padding-top: 0.8rem;
-  }
-
-  .viewDetails {
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .offerTripsContainer {
-    padding: 2.5rem 0.25rem;
-    width: 100%;
-  }
-
-  .offerTripsHeader {
-    margin-bottom: 2rem;
-  }
-
-  .offerTripsTitle {
-    font-size: 1.8rem;
-  }
-
-  .tripImageContainer {
-    height: 180px;
-  }
-
-  .tripContent {
-    padding: 1.2rem;
-  }
-
-  .tripTitle {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .priceValue {
-    font-size: 1.1rem;
-    padding: 0.3rem 0.7rem;
-  }
-
-  .viewAllButton {
-    padding: 0.7rem 1.5rem;
-    font-size: 1rem;
-  }
-
-  .tripFooter {
-    margin-top: 1.2rem;
-    padding-top: 0.8rem;
-  }
-
-  .viewDetails {
-    font-size: 0.85rem;
-  }
+// Card sparkles effect
+.cardSparkles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
 }

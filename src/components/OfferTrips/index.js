@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import styles from './OfferTrips.module.scss';
 import SparkleEffect from './SparkleEffect';
 import { fetchOfferTrips } from '@/lib/wordpress-api';
@@ -59,51 +59,43 @@ const ArrowRightIcon = () => (
 const fallbackOffers = [
   {
     id: 1,
-    title: { rendered: 'رحلة تركيا المميزة' },
+    title: 'رحلة تركيا المميزة',
     slug: 'turkey-trip',
-    featured_image: {
-      full: { source_url: '/images/destinations/turkey.jpg' }
-    },
+    featuredImage: '/images/destinations/turkey.jpg',
     price: 2999,
-    currency: { code: 'SAR' },
-    duration: { days: 7, nights: 6 },
-    destination: { name: 'تركيا' }
+    currency: 'SAR',
+    duration: '7 أيام / 6 ليالي',
+    destination: 'تركيا'
   },
   {
     id: 2,
-    title: { rendered: 'جورجيا السياحية' },
+    title: 'جورجيا السياحية',
     slug: 'georgia-trip',
-    featured_image: {
-      full: { source_url: '/images/destinations/georgia.jpg' }
-    },
+    featuredImage: '/images/destinations/georgia.jpg',
     price: 3499,
-    currency: { code: 'SAR' },
-    duration: { days: 8, nights: 7 },
-    destination: { name: 'جورجيا' }
+    currency: 'SAR',
+    duration: '8 أيام / 7 ليالي',
+    destination: 'جورجيا'
   },
   {
     id: 3,
-    title: { rendered: 'أذربيجان الرائعة' },
+    title: 'أذربيجان الرائعة',
     slug: 'azerbaijan-trip',
-    featured_image: {
-      full: { source_url: '/images/destinations/azerbaijan.jpg' }
-    },
+    featuredImage: '/images/destinations/azerbaijan.jpg',
     price: 2799,
-    currency: { code: 'SAR' },
-    duration: { days: 6, nights: 5 },
-    destination: { name: 'أذربيجان' }
+    currency: 'SAR',
+    duration: '6 أيام / 5 ليالي',
+    destination: 'أذربيجان'
   },
   {
     id: 4,
-    title: { rendered: 'البوسنة الساحرة' },
+    title: 'البوسنة الساحرة',
     slug: 'bosnia-trip',
-    featured_image: {
-      full: { source_url: '/images/destinations/bosnia.jpg' }
-    },
+    featuredImage: '/images/destinations/bosnia.jpg',
     price: 3899,
-    currency: { code: 'SAR' },
-    duration: { days: 9, nights: 8 },
-    destination: { name: 'البوسنة' }
+    currency: 'SAR',
+    duration: '9 أيام / 8 ليالي',
+    destination: 'البوسنة'
   }
 ];
 
@@ -156,6 +148,7 @@ export default function OfferTrips() {
 
   // Decode HTML entities in titles
   const decodeHTML = (html) => {
+    if (typeof window === 'undefined') return html;
     const txt = document.createElement('textarea');
     txt.innerHTML = html;
     return txt.value;
@@ -184,39 +177,63 @@ export default function OfferTrips() {
 
   if (loading) {
     return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner}></div>
-        <p className={styles.loadingText}>جاري تحميل العروض...</p>
+      <div className={styles.offerTripsContainer}>
+        <div className={styles.offerTripsHeader}>
+          <h2 className={styles.offerTripsTitle}>عروض سياحية مميزة</h2>
+          <p className={styles.offerTripsSubtitle}>
+            تمتع برحلات مصممة بعناية لتلبية احتياجاتك وتفضيلاتك بأسعار تنافسية
+          </p>
+        </div>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
+          <p className={styles.loadingText}>جاري تحميل العروض...</p>
+        </div>
       </div>
     );
   }
 
   if (error && !usingFallback) {
     return (
-      <div className={styles.errorContainer}>
-        <p className={styles.errorMessage}>
-          عذراً، حدث خطأ أثناء تحميل العروض: {error}
-        </p>
-        <button className={styles.retryButton} onClick={handleRetry}>
-          إعادة المحاولة
-        </button>
+      <div className={styles.offerTripsContainer}>
+        <div className={styles.offerTripsHeader}>
+          <h2 className={styles.offerTripsTitle}>عروض سياحية مميزة</h2>
+          <p className={styles.offerTripsSubtitle}>
+            تمتع برحلات مصممة بعناية لتلبية احتياجاتك وتفضيلاتك بأسعار تنافسية
+          </p>
+        </div>
+        <div className={styles.errorContainer}>
+          <p className={styles.errorMessage}>
+            عذراً، حدث خطأ أثناء تحميل العروض: {error}
+          </p>
+          <button className={styles.retryButton} onClick={handleRetry}>
+            إعادة المحاولة
+          </button>
+        </div>
       </div>
     );
   }
 
   if (!trips || trips.length === 0) {
     return (
-      <div className={styles.noTripsContainer}>
-        <p className={styles.noTripsMessage}>لا توجد عروض متاحة حالياً</p>
+      <div className={styles.offerTripsContainer}>
+        <div className={styles.offerTripsHeader}>
+          <h2 className={styles.offerTripsTitle}>عروض سياحية مميزة</h2>
+          <p className={styles.offerTripsSubtitle}>
+            تمتع برحلات مصممة بعناية لتلبية احتياجاتك وتفضيلاتك بأسعار تنافسية
+          </p>
+        </div>
+        <div className={styles.noTripsContainer}>
+          <p className={styles.noTripsMessage}>لا توجد عروض متاحة حالياً</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h2 className={styles.title}>عروض سياحية مميزة</h2>
-        <p className={styles.subtitle}>
+    <div className={styles.offerTripsContainer}>
+      <div className={styles.offerTripsHeader}>
+        <h2 className={styles.offerTripsTitle}>عروض سياحية مميزة</h2>
+        <p className={styles.offerTripsSubtitle}>
           تمتع برحلات مصممة بعناية لتلبية احتياجاتك وتفضيلاتك بأسعار تنافسية
         </p>
         {usingFallback && (
@@ -231,7 +248,7 @@ export default function OfferTrips() {
         )}
       </div>
 
-      <div className={styles.grid}>
+      <div className={styles.offerTripsGrid}>
         {trips.map((trip) => (
           <div
             key={trip.id}
@@ -239,67 +256,69 @@ export default function OfferTrips() {
             onMouseEnter={() => handleMouseEnter(trip.id)}
             onMouseLeave={handleMouseLeave}
           >
-            <div className={styles.imageContainer}>
+            <div className={styles.cardImageContainer}>
+              <div className={styles.imageOverlay}></div>
               <Image
                 src={trip.featuredImage || '/images/placeholder.jpg'}
                 alt={typeof trip.title === 'string' ? trip.title : trip.title?.rendered || ''}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className={styles.image}
+                layout="fill"
+                objectFit="cover"
+                quality={90}
+                className={styles.cardImage}
               />
               <div className={styles.priceTag}>
-                <span className={styles.price}>
-                  {trip.price ? formatPrice(trip.price) : 'اتصل بنا'}
+                <span className={styles.priceValue}>
+                  {formatPrice(trip.price || 0)}
                 </span>
-                <span className={styles.currency}>
-                  {trip.price ? (trip.currency?.code || 'ريال') : ''}
+                <span className={styles.priceCurrency}>
+                  {trip.currency || 'SAR'}
                 </span>
               </div>
+              {activeCard === trip.id && (
+                <div className={styles.cardSparkles}>
+                  <SparkleEffect />
+                </div>
+              )}
             </div>
-
-            <div className={styles.content}>
-              <h3 className={styles.tripTitle}>
-                {typeof trip.title === 'string' 
-                  ? decodeHTML(trip.title) 
-                  : decodeHTML(trip.title?.rendered || 'رحلة سياحية')}
+            
+            <div className={styles.cardContent}>
+              <h3 className={styles.cardTitle}>
+                {typeof trip.title === 'string'
+                  ? trip.title
+                  : decodeHTML(trip.title?.rendered || 'رحلة مميزة')}
               </h3>
-
-              <div className={styles.details}>
-                <div className={styles.detail}>
-                  <LocationIcon />
-                  <span>
-                    {trip.location || trip.destination?.name || 'وجهة سياحية'}
+              
+              <div className={styles.cardDetails}>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>
+                    <CalendarIcon />
+                  </span>
+                  <span className={styles.detailText}>
+                    {trip.duration || '7 أيام / 6 ليالي'}
                   </span>
                 </div>
-                <div className={styles.detail}>
-                  <CalendarIcon />
-                  <span>
-                    {trip.duration
-                      ? `${trip.duration.days || trip.duration} أيام / ${
-                          trip.duration.nights || trip.duration - 1
-                        } ليالي`
-                      : '7 أيام / 6 ليالي'}
+                
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>
+                    <LocationIcon />
+                  </span>
+                  <span className={styles.detailText}>
+                    {trip.destination || ''}
                   </span>
                 </div>
               </div>
-
-              <Link
-                href={trip.permalink || `/trips/${trip.slug || trip.id}`}
-                className={styles.viewDetails}
-              >
-                <span>عرض التفاصيل</span>
+              
+              <Link href={`/trips/${trip.slug}`} className={styles.viewTripButton}>
+                <span>عرض الرحلة</span>
                 <ArrowRightIcon />
-                {activeCard === trip.id && (
-                  <SparkleEffect isActive={activeCard === trip.id} />
-                )}
               </Link>
             </div>
           </div>
         ))}
       </div>
-
+      
       <div className={styles.viewAllContainer}>
-        <Link href="/trips" className={styles.viewAllLink}>
+        <Link href="/trips" className={styles.viewAllButton}>
           <span>عرض جميع الرحلات</span>
           <ArrowRightIcon />
         </Link>

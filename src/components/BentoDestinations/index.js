@@ -199,8 +199,8 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
         </div>
         <div className={styles.imageWrapper}>
           <Image
-            src={destination.image || '/images/placeholder.jpg'}
-            alt={destination.title || 'Destination Image'}
+            src={destination.thumbnail?.source_url || destination.image || '/images/placeholder.jpg'}
+            alt={destination.title || destination.name || 'Destination Image'}
             layout="fill"
             objectFit="cover"
             quality={isPriority ? 90 : 75}
@@ -212,7 +212,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
         </div>
         <div className={styles.content}>
           <h3 className={styles.title}>
-            {destination.title || 'وجهة غير معروفة'}
+            {destination.title || destination.name || 'وجهة غير معروفة'}
           </h3>
           {destination.description && (
             <p className={styles.description}>{destination.description}</p>

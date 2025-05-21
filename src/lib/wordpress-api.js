@@ -24,18 +24,46 @@ export async function fetchDestinations({ perPage = 100, page = 1 } = {}) {
 
     const destinations = await response.json();
     
+    console.log(`Fetched ${destinations.length} destinations`);
+    
     // Format destinations for frontend use
-    return destinations.map((dest) => ({
-      id: dest.id,
-      title: dest.name,
-      description: dest.description || '',
-      slug: dest.slug,
-      count: dest.count || 0,
-      // Try to get image from different possible fields
-      image: dest.acf?.featured_image?.url || 
-             (dest.yoast_head_json?.og_image && dest.yoast_head_json.og_image[0]?.url) ||
-             '/images/placeholder.jpg',
-    }));
+    return destinations.map((dest) => {
+      // Find the best image to use
+      let imageUrl = '/images/placeholder.jpg';
+      
+      // First try from the thumbnail object
+      if (dest.thumbnail && dest.thumbnail.sizes) {
+        // Try to get the destination-thumb-size image first
+        if (dest.thumbnail.sizes['destination-thumb-size']) {
+          imageUrl = dest.thumbnail.sizes['destination-thumb-size'].source_url;
+        } 
+        // Or try the full size image
+        else if (dest.thumbnail.sizes.full) {
+          imageUrl = dest.thumbnail.sizes.full.source_url;
+        }
+        // Or try medium size
+        else if (dest.thumbnail.sizes.medium) {
+          imageUrl = dest.thumbnail.sizes.medium.source_url;
+        }
+      }
+      // Or try from yoast metadata
+      else if (dest.yoast_head_json?.og_image && dest.yoast_head_json.og_image[0]?.url) {
+        imageUrl = dest.yoast_head_json.og_image[0].url;
+      }
+      // Or try from ACF fields
+      else if (dest.acf?.featured_image?.url) {
+        imageUrl = dest.acf.featured_image.url;
+      }
+      
+      return {
+        id: dest.id,
+        title: dest.name,
+        description: dest.description || '',
+        slug: dest.slug,
+        count: dest.count || 0,
+        image: imageUrl,
+      };
+    });
   } catch (error) {
     console.error('Error fetching destinations:', error);
     return [];
