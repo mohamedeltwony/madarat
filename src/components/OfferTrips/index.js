@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './OfferTrips.module.scss';
 import SparkleEffect from './SparkleEffect';
+import { fetchOfferTrips } from '@/lib/wordpress-api';
 
 // SVG Icons as components
 const LocationIcon = () => (
@@ -113,25 +114,21 @@ export default function OfferTrips() {
   const [activeCard, setActiveCard] = useState(null);
   const [usingFallback, setUsingFallback] = useState(false);
 
-  // Move fetchOfferTrips outside of useEffect
-  const fetchOfferTrips = async () => {
+  // Move fetchTrips outside of useEffect
+  const fetchTrips = async () => {
     try {
       setLoading(true);
-      // Use relative URL instead of absolute URL to avoid DNS issues
-      const response = await fetch(
-        '/api/wp/v2/trip?trip_tag=154&per_page=4&orderby=date&order=desc',
-        {
-          signal: AbortSignal.timeout(10000), // 10 second timeout
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      
+      // Use our WordPress API function
+      const { trips: offerTrips } = await fetchOfferTrips({ perPage: 4 });
+      
+      if (offerTrips && offerTrips.length > 0) {
+        console.log('Fetched trips data:', offerTrips);
+        setTrips(offerTrips);
+      } else {
+        throw new Error('No trips found');
       }
-
-      const data = await response.json();
-      console.log('Fetched trips data:', data);
-      setTrips(data);
+      
       setLoading(false);
     } catch (err) {
       console.error('Error fetching offer trips:', err);
@@ -148,7 +145,7 @@ export default function OfferTrips() {
   };
 
   useEffect(() => {
-    fetchOfferTrips();
+    fetchTrips();
   }, []);
 
   // Format price with separator
@@ -181,7 +178,7 @@ export default function OfferTrips() {
     
     setTimeout(() => {
       // Refetch from the API
-      fetchOfferTrips();
+      fetchTrips();
     }, 500);
   };
 
@@ -216,114 +213,95 @@ export default function OfferTrips() {
   }
 
   return (
-    <div className={styles.offerTripsContainer}>
-      <div className={styles.offerTripsHeader}>
-        <h2 className={styles.offerTripsTitle}>العروض الحالية</h2>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>عروض سياحية مميزة</h2>
+        <p className={styles.subtitle}>
+          تمتع برحلات مصممة بعناية لتلبية احتياجاتك وتفضيلاتك بأسعار تنافسية
+        </p>
         {usingFallback && (
-          <div className={styles.fallbackNotice}>
-            <p>يتم عرض بيانات محلية بسبب مشكلة في الاتصال بالخادم</p>
+          <div className={styles.warningBanner}>
+            <p>
+              نحن نعرض بيانات محلية مؤقتة. 
+              <button className={styles.retryButton} onClick={handleRetry}>
+                إعادة المحاولة
+              </button>
+            </p>
           </div>
         )}
       </div>
 
-      <div className={styles.tripsGrid}>
+      <div className={styles.grid}>
         {trips.map((trip) => (
-          <div key={trip.id} className={styles.gridItem}>
-            <Link
-              href={`/trips/${trip.slug}`}
-              className={styles.tripCard}
-              onMouseEnter={() => handleMouseEnter(trip.id)}
-              onMouseLeave={handleMouseLeave}
-            >
-              {activeCard === trip.id && <SparkleEffect active={true} />}
-              <div className={styles.tripImageContainer}>
-                {trip.featured_image &&
-                (trip.featured_image.sizes?.['destination-thumb-trip-size']
-                  ?.source_url ||
-                  trip.featured_image.sizes?.['trip-thumb-size']?.source_url ||
-                  trip.featured_image.full?.source_url) ? (
-                  <Image
-                    src={
-                      trip.featured_image.sizes?.['destination-thumb-trip-size']
-                        ?.source_url ||
-                      trip.featured_image.sizes?.['trip-thumb-size']
-                        ?.source_url ||
-                      trip.featured_image.full?.source_url
-                    }
-                    alt={
-                      trip.title?.rendered
-                        ? decodeHTML(trip.title.rendered)
-                        : 'رحلة سياحية'
-                    }
-                    width={400}
-                    height={250}
-                    className={styles.tripImage}
-                    onError={(e) => {
-                      console.error('Image loading error:', e);
-                      e.target.src = '/images/placeholder.jpg';
-                    }}
-                  />
-                ) : (
-                  <div className={styles.placeholderImage}>
-                    <span>لا توجد صورة</span>
-                  </div>
-                )}
-                <div className={styles.tripBadge}>
-                  <span>عرض خاص</span>
-                </div>
-                <div className={styles.tripDuration}>
-                  <span className={styles.durationIcon}>
-                    <CalendarIcon />
-                  </span>
+          <div
+            key={trip.id}
+            className={styles.tripCard}
+            onMouseEnter={() => handleMouseEnter(trip.id)}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className={styles.imageContainer}>
+              <Image
+                src={trip.featuredImage || '/images/placeholder.jpg'}
+                alt={typeof trip.title === 'string' ? trip.title : trip.title?.rendered || ''}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className={styles.image}
+              />
+              <div className={styles.priceTag}>
+                <span className={styles.price}>
+                  {trip.price ? formatPrice(trip.price) : 'اتصل بنا'}
+                </span>
+                <span className={styles.currency}>
+                  {trip.price ? (trip.currency?.code || 'ريال') : ''}
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.content}>
+              <h3 className={styles.tripTitle}>
+                {typeof trip.title === 'string' 
+                  ? decodeHTML(trip.title) 
+                  : decodeHTML(trip.title?.rendered || 'رحلة سياحية')}
+              </h3>
+
+              <div className={styles.details}>
+                <div className={styles.detail}>
+                  <LocationIcon />
                   <span>
-                    {trip.duration?.days || 0}{' '}
-                    {trip.duration?.days === 1 ? 'يوم' : 'أيام'}
+                    {trip.location || trip.destination?.name || 'وجهة سياحية'}
+                  </span>
+                </div>
+                <div className={styles.detail}>
+                  <CalendarIcon />
+                  <span>
+                    {trip.duration
+                      ? `${trip.duration.days || trip.duration} أيام / ${
+                          trip.duration.nights || trip.duration - 1
+                        } ليالي`
+                      : '7 أيام / 6 ليالي'}
                   </span>
                 </div>
               </div>
-              <div className={styles.tripContent}>
-                <h3 className={styles.tripTitle}>
-                  {trip.title?.rendered
-                    ? decodeHTML(trip.title.rendered)
-                    : 'رحلة بدون عنوان'}
-                </h3>
 
-                {trip.destination && (
-                  <div className={styles.tripDestination}>
-                    <span className={styles.destinationIcon}>
-                      <LocationIcon />
-                    </span>
-                    <span>{trip.destination.name}</span>
-                  </div>
+              <Link
+                href={trip.permalink || `/trips/${trip.slug || trip.id}`}
+                className={styles.viewDetails}
+              >
+                <span>عرض التفاصيل</span>
+                <ArrowRightIcon />
+                {activeCard === trip.id && (
+                  <SparkleEffect isActive={activeCard === trip.id} />
                 )}
-
-                <div className={styles.tripPrice}>
-                  <span className={styles.priceLabel}>ابتداءً من</span>
-                  <span className={styles.priceValue}>
-                    {formatPrice(trip.price || trip._s_price || '')}{' '}
-                    <span className={styles.currencyCode}>
-                      {trip.currency?.code || 'SAR'}
-                    </span>
-                  </span>
-                </div>
-
-                <div className={styles.tripFooter}>
-                  <span className={styles.viewDetails}>
-                    عرض التفاصيل <ArrowRightIcon />
-                  </span>
-                </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           </div>
         ))}
       </div>
 
       <div className={styles.viewAllContainer}>
-        <Link href="/trips" className={styles.viewAllButton}>
-          <span>عرض كل الرحلات</span>
-          <span className={styles.buttonIcon}>
-            <ArrowRightIcon />
-          </span>
+        <Link href="/trips" className={styles.viewAllLink}>
+          <span>عرض جميع الرحلات</span>
+          <ArrowRightIcon />
         </Link>
       </div>
     </div>

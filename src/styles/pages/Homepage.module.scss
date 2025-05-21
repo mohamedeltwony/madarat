@@ -1,0 +1,223 @@
+@import '../_variables.scss';
+
+.hero {
+  position: relative;
+  height: 80vh;
+  min-height: 600px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  
+  @media (max-width: 768px) {
+    height: 70vh;
+    min-height: 500px;
+  }
+}
+
+.heroContent {
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 2rem;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+}
+
+.heroDescription {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+.heroButton {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-3px);
+  }
+}
+
+.sectionTitle {
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  font-weight: 700;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background-color: var(--color-primary);
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+.destinationsSection {
+  padding: 5rem 0;
+  background-color: var(--color-bg-light);
+}
+
+.noDestinations {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+}
+
+// Form Overlay styles
+.formOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.formContainer {
+  width: 90%;
+  max-width: 500px;
+  padding: 2rem;
+  border-radius: 8px;
+  position: relative;
+  
+  h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  
+  p {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-text-secondary);
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+  }
+}
+
+.formActions {
+  margin-top: 2rem;
+}
+
+.loadingContainer {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+}
+
+// Features section
+.featuresSection {
+  padding: 5rem 0;
+  background-color: white;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.featureCard {
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: var(--color-bg-light);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .featureIcon {
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  p {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+} 

@@ -1,5 +1,5 @@
 // Define API URL constant
-const API_URL = 'https://madaratalkon.com/wp-json/wp/v2';
+const API_URL = 'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2';
 
 import { updateUserAvatar } from '@/lib/users';
 import { sortObjectsByDate } from '@/lib/datetime';

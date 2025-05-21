@@ -47,7 +47,7 @@ export function authorPathByName(name) {
 export async function getUserByNameSlug(slug) {
   try {
     const response = await fetch(
-      `https://madaratalkon.com/wp-json/wp/v2/users?slug=${slug}`,
+      `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/users?slug=${slug}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ export function userSlugByName(name) {
 export async function getAllUsers() {
   try {
     const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/users',
+      'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/users',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export async function getAllUsers() {
 export async function getAllAuthors() {
   try {
     const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/users',
+      'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/users',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -210,7 +210,7 @@ export function updateUserAvatar(avatar) {
 export async function getPostsByAuthorSlug({ slug, ...options }) {
   try {
     const response = await fetch(
-      `https://madaratalkon.com/wp-json/wp/v2/posts?author_name=${slug}&_embed`,
+      `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/posts?author_name=${slug}&_embed`,
       {
         headers: {
           'Content-Type': 'application/json',

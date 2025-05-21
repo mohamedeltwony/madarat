@@ -11,6 +11,7 @@ const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
 import styles from '@/styles/pages/LondonScotland.module.scss';
 // Removed getSiteMetadata import as it's no longer fetched here
 import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though unused in getStaticProps
+import TripForm from '../components/TripForm/TripForm';
 
 // Removed SVG Icon imports
 
@@ -117,6 +118,41 @@ export default function LondonScotlandTrip() {
   //   // Cleanup
   //   return () => window.removeEventListener('resize', checkIfMobile);
   // }, []);
+
+  // Handle form submission success from TripForm component
+  const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality }) => {
+    const thankYouUrl = nationality === 'مواطن' ? '/thank-you-citizen' : '/thank-you-resident';
+    
+    // Create a form for submission to thank you page
+    const redirectForm = document.createElement('form');
+    redirectForm.method = 'GET';
+    redirectForm.action = thankYouUrl;
+    
+    // Add phone number as query param
+    const phoneField = document.createElement('input');
+    phoneField.type = 'hidden';
+    phoneField.name = 'phone';
+    phoneField.value = processedPhone;
+    redirectForm.appendChild(phoneField);
+    
+    // Add external ID for tracking
+    const externalIdField = document.createElement('input');
+    externalIdField.type = 'hidden';
+    externalIdField.name = 'external_id';
+    externalIdField.value = externalId;
+    redirectForm.appendChild(externalIdField);
+    
+    // Add event ID for tracking
+    const eventIdField = document.createElement('input');
+    eventIdField.type = 'hidden';
+    eventIdField.name = 'eventId';
+    eventIdField.value = leadEventId;
+    redirectForm.appendChild(eventIdField);
+    
+    // Submit the form
+    document.body.appendChild(redirectForm);
+    redirectForm.submit();
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -640,139 +676,48 @@ export default function LondonScotlandTrip() {
             </div>
             {/* End Features Section */}
 
-            {/* Contact Form */}
+            {/* Contact Form - Replace with TripForm */}
             <div className={styles.formContainer}>
-              <form onSubmit={handleSubmit} className={styles.tripForm} 
-                    action="/thank-you-citizen" 
-                    method="get"
-                    id="tripForm">
-                {/* Phone field needs special handling due to country code */}
-                {/* Add hasValue and inputError classes conditionally */}
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`}
-                >
-                  <label htmlFor="phone" className={styles.formLabel}>
-                    الجوال
-                  </label>
-                  <div className={styles.phoneInput}>
-                    {/* Moved country code to the left */}
-                    <input
-                      type="tel"
-                      id="phone"
-                      className={styles.formInput} // Add class for styling
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
-                      placeholder=" " // Use space for placeholder trick
-                      autoComplete="tel" // Added autocomplete
-                      required // Made required
-                      // Removed pattern attribute to avoid conflicts with JS validation
-                    />
-                    <span className={styles.countryCode}>+966</span>
-                  </div>
-                  {/* Updated error message display */}
-                  {phoneTouched &&
-                    !isPhoneValid &&
-                    formData.phone.trim() !== '' && (
-                      <p className={styles.errorMessage}>
-                        يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع
-                        المناسب من الأرقام.
-                      </p>
-                    )}
-                </div>
-
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
-                >
-                  <input
-                    type="text"
-                    id="name"
-                    className={styles.formInput} // Add class for styling
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
-                    placeholder=" " // Use space for placeholder trick
-                    autoComplete="name" // Added autocomplete
-                    // required // Made optional
-                  />
-                  <label htmlFor="name" className={styles.formLabel}>
-                    الاسم الكامل (اختياري)
-                  </label>
-                </div>
-
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
-                >
-                  <input
-                    type="email"
-                    id="email"
-                    className={styles.formInput} // Add class for styling
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder=" " // Use space for placeholder trick
-                    autoComplete="email" // Added autocomplete
-                    // required // Made optional
-                  />
-                  <label htmlFor="email" className={styles.formLabel}>
-                    البريد الإلكتروني (اختياري)
-                  </label>
-                </div>
-
-                {/* Nationality Field */}
-                <div
-                  className={`${styles.formGroup} ${styles.nationalityGroup}`}
-                >
-                  {/* <label>الجنسية</label> Removed this label */}
-                  <div className={styles.radioGroup}>
-                    <label className={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="nationality"
-                        value="مواطن"
-                        checked={formData.nationality === 'مواطن'}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <span>مواطن</span>
-                    </label>
-                    <label className={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="nationality"
-                        value="مقيم"
-                        checked={formData.nationality === 'مقيم'}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <span>مقيم</span>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Removed City Field */}
-                {/* <div className={styles.formGroup}> ... </div> */}
-
-                <div className={styles.formActions}>
-                  <SparkleButton
-                    type="submit"
-                    className={styles.mainCTA}
-                    fullWidth
-                    disabled={isLoading} // Add disabled attribute
-                  >
-                    {/* Change button text based on loading state */}
-                    {isLoading
-                      ? '🚀 جاري الإرسال...'
-                      : 'اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا'}
-                  </SparkleButton>
-                </div>
-                
-                {/* Hidden fields for non-JavaScript fallback */}
-                <input type="hidden" name="external_id" value={crypto.randomUUID()} />
-                <input type="hidden" name="eventId" value={crypto.randomUUID()} />
-              </form>
+              <TripForm
+                fields={[
+                  {
+                    name: 'phone',
+                    label: 'الجوال',
+                    type: 'tel',
+                    required: true,
+                    autoComplete: 'tel',
+                    floatingLabel: true,
+                    showCountryCode: true,
+                  },
+                  {
+                    name: 'name',
+                    label: 'الاسم الكامل (اختياري)',
+                    type: 'text',
+                    required: false,
+                    autoComplete: 'name',
+                    floatingLabel: true,
+                  },
+                  {
+                    name: 'email',
+                    label: 'البريد الإلكتروني (اختياري)',
+                    type: 'email',
+                    required: false,
+                    autoComplete: 'email',
+                    floatingLabel: true,
+                  },
+                ]}
+                zapierConfig={{
+                  endpoint: '/api/zapier-proxy',
+                  extraPayload: {
+                    destination: 'لندن واسكتلندا',
+                    formSource: 'london-scotland-trip',
+                    formName: 'London Scotland Trip Form',
+                  },
+                }}
+                onSuccess={handleFormSuccess}
+              />
             </div>
+            {/* End Contact Form */}
           </div>
         </section>
 

@@ -15,7 +15,7 @@ export function categoryPathBySlug(slug) {
 export async function getAllCategories() {
   try {
     const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/categories',
+      'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/categories',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export async function getAllCategories() {
 export async function getCategoryBySlug(slug) {
   try {
     const response = await fetch(
-      `https://madaratalkon.com/wp-json/wp/v2/categories?slug=${slug}`,
+      `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/categories?slug=${slug}`,
       {
         headers: {
           'Content-Type': 'application/json',

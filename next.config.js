@@ -23,12 +23,12 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://madaratalkon.com/wp-json/:path*',
+        destination: 'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/:path*',
       },
       // Add more specific rewrite for the trip endpoint
       {
         source: '/api/wp/v2/trip',
-        destination: 'https://madaratalkon.com/wp-json/wp/v2/trip',
+        destination: 'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/trip',
       },
     ];
   },
@@ -46,6 +46,7 @@ const nextConfig = {
     // unoptimized: true, // Re-enable Next.js Image Optimization globally
     domains: [
       'madaratalkon.com',
+      'en4ha1dlwxxhwad.madaratalkon.com',
       'secure.gravatar.com',
       'res.cloudinary.com',
       'wp.example.org',
@@ -54,6 +55,12 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'madaratalkon.com',
+        port: '',
+        pathname: '/wp-content/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'en4ha1dlwxxhwad.madaratalkon.com',
         port: '',
         pathname: '/wp-content/uploads/**',
       },
@@ -181,7 +188,7 @@ const nextConfig = {
   env: {
     OG_IMAGE_DIRECTORY: '/images/og',
     POSTS_PRERENDER_COUNT: '5',
-    WORDPRESS_API_URL: 'https://madaratalkon.com',
+    WORDPRESS_API_URL: 'https://en4ha1dlwxxhwad.madaratalkon.com',
     WORDPRESS_MENU_LOCATION_NAVIGATION:
       process.env.WORDPRESS_MENU_LOCATION_NAVIGATION || 'PRIMARY',
     WORDPRESS_GRAPHQL_ENDPOINT: process.env.WORDPRESS_GRAPHQL_ENDPOINT,

@@ -11,6 +11,7 @@ const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
 import styles from '@/styles/pages/LondonScotland.module.scss'; // Keep using the same styles for cloning
 // Removed getSiteMetadata import as it's no longer fetched here
 import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though unused in getStaticProps
+import TripForm from '../components/TripForm/TripForm';
 
 // Removed SVG Icon imports
 
@@ -37,13 +38,17 @@ export default function InternationalLicence() {
     phone: '',
     email: '',
     nationality: '', // Added nationality field
-    // city: '', // Removed city field
+    city: 'الرياض', // Default city
     destination: 'الرخصة الدولية', // Changed destination to reflect service
   });
   const [formStarted, setFormStarted] = useState(false); // Track if form interaction started
   const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
   const [isPhoneValid, setIsPhoneValid] = useState(true); // Track phone validity, assume valid initially
   const [isLoading, setIsLoading] = useState(false); // Add loading state
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
+  const { utm_source } = router.query;
 
   // Helper function to send events to the backend API (Keep original logic)
   const sendFbEvent = async (eventName, data, eventId = null) => {
@@ -393,6 +398,29 @@ export default function InternationalLicence() {
     },
   ];
 
+  // Handle form success - Added missing function
+  const handleFormSuccess = (data) => {
+    console.log('Form submitted successfully:', data);
+    setIsSuccess(true);
+    
+    // Send Facebook conversion event
+    try {
+      sendFbEvent('Lead', {
+        content_name: 'International License Form',
+        content_category: 'license',
+        value: 199,
+        currency: 'SAR',
+      });
+    } catch (err) {
+      console.error('Error sending Facebook event:', err);
+    }
+    
+    // Show success message
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 500);
+  };
+
   return (
     <div className={styles.container} dir="rtl">
       <Head>
@@ -482,128 +510,46 @@ export default function InternationalLicence() {
             </div>
             {/* End Features Section */}
 
-            {/* Contact Form - Using London/Scotland structure */}
+            {/* Contact Form - Replace with TripForm */}
             <div className={styles.formContainer}>
-              <form onSubmit={handleSubmit} className={styles.tripForm}>
-                {/* Phone field needs special handling due to country code */}
-                {/* Add hasValue and inputError classes conditionally */}
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ${formData.phone ? styles.hasValue : ''} ${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`}
-                >
-                  <label htmlFor="phone" className={styles.formLabel}>
-                    الجوال
-                  </label>
-                  <div className={styles.phoneInput}>
-                    {/* Moved country code to the left */}
-                    <input
-                      type="tel"
-                      id="phone"
-                      className={styles.formInput} // Add class for styling
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      onBlur={() => setPhoneTouched(true)} // Mark as touched on blur
-                      placeholder=" " // Use space for placeholder trick
-                      autoComplete="tel" // Added autocomplete
-                      required // Made required
-                      // Removed pattern attribute to avoid conflicts with JS validation
-                    />
-                  </div>
-                  {/* Updated error message display */}
-                  {phoneTouched &&
-                    !isPhoneValid &&
-                    formData.phone.trim() !== '' && (
-                      <p className={styles.errorMessage}>
-                        يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع
-                        المناسب من الأرقام.
-                      </p>
-                    )}
-                </div>
-
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
-                >
-                  <input
-                    type="text"
-                    id="name"
-                    className={styles.formInput} // Add class for styling
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange} // Already handles InitiateCheckout trigger
-                    placeholder=" " // Use space for placeholder trick
-                    autoComplete="name" // Added autocomplete
-                    // required // Made optional
-                  />
-                  <label htmlFor="name" className={styles.formLabel}>
-                    الاسم الكامل (اختياري)
-                  </label>
-                </div>
-
-                <div
-                  className={`${styles.formGroup} ${styles.floatingLabelGroup}`}
-                >
-                  <input
-                    type="email"
-                    id="email"
-                    className={styles.formInput} // Add class for styling
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder=" " // Use space for placeholder trick
-                    autoComplete="email" // Added autocomplete
-                    // required // Made optional
-                  />
-                  <label htmlFor="email" className={styles.formLabel}>
-                    البريد الإلكتروني (اختياري)
-                  </label>
-                </div>
-
-                {/* Nationality Field */}
-                <div
-                  className={`${styles.formGroup} ${styles.nationalityGroup}`}
-                >
-                  {/* <label>الجنسية</label> Removed this label */}
-                  <div className={styles.radioGroup}>
-                    <label className={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="nationality"
-                        value="مواطن"
-                        checked={formData.nationality === 'مواطن'}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <span>مواطن</span>
-                    </label>
-                    <label className={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="nationality"
-                        value="مقيم"
-                        checked={formData.nationality === 'مقيم'}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <span>مقيم</span>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Removed City Dropdown */}
-                <div className={styles.formActions}>
-                  <SparkleButton
-                    type="submit"
-                    disabled={isLoading}
-                    className={styles.mainCTA}
-                  >
-                    <div className={styles.buttonGlow}></div>
-                    <span className={styles.buttonContent}>
-                      اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين
-                      السياحة لدينا
-                    </span>
-                  </SparkleButton>
-                </div>
-              </form>
+              <TripForm
+                fields={[
+                  {
+                    name: 'phone',
+                    label: 'الجوال',
+                    type: 'tel',
+                    required: true,
+                    autoComplete: 'tel',
+                    floatingLabel: true,
+                    showCountryCode: true,
+                  },
+                  {
+                    name: 'name',
+                    label: 'الاسم الكامل (اختياري)',
+                    type: 'text',
+                    required: false,
+                    autoComplete: 'name',
+                    floatingLabel: true,
+                  },
+                  {
+                    name: 'email',
+                    label: 'البريد الإلكتروني (اختياري)',
+                    type: 'email',
+                    required: false,
+                    autoComplete: 'email',
+                    floatingLabel: true,
+                  },
+                ]}
+                zapierConfig={{
+                  endpoint: '/api/zapier-proxy',
+                  extraPayload: {
+                    destination: 'الرخصة الدولية',
+                    formSource: 'international-licence',
+                    formName: 'International Licence Form',
+                  },
+                }}
+                onSuccess={handleFormSuccess}
+              />
             </div>
             {/* End Contact Form */}
           </div>

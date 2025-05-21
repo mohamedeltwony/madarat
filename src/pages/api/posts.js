@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   try {
     // Build API URL with appropriate parameters
-    let apiUrl = 'https://madaratalkon.com/wp-json/wp/v2/posts?_embed=true';
+    let apiUrl = 'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/posts?_embed=true';
 
     // Add pagination
     apiUrl += `&per_page=20&page=${page}`;
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     if (authorSlug) {
       // First get the author ID from the slug
       const authorsResponse = await fetch(
-        `https://madaratalkon.com/wp-json/wp/v2/users?slug=${authorSlug}`,
+        `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/users?slug=${authorSlug}`,
         {
           headers: {
             'Content-Type': 'application/json',

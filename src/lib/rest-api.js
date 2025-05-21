@@ -3,7 +3,7 @@
  * These functions replace the GraphQL functions with REST API equivalents
  */
 
-const API_URL = 'https://madaratalkon.com/wp-json';
+const API_URL = 'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json';
 
 // Check if we're building the site
 const IS_BUILD = process.env.NODE_ENV === 'production' && typeof window === 'undefined';
