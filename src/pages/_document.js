@@ -36,8 +36,15 @@ class MyDocument extends Document {
           <link
             href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap"
             rel="stylesheet"
-            media="print"
-            onLoad="this.media='all'"
+          />
+
+          {/* Preload critical Cairo font files directly */}
+          <link
+            rel="preload"
+            href="https://fonts.gstatic.com/s/cairo/v28/SLXgc1nY6HkvangtZmpQdkhzfH5lkSs2SgRjCAGMQ1z0hGA-W1ToLQ-HqUvBHw.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
           />
 
           {/* Bootstrap Icons - deferred loading */}
