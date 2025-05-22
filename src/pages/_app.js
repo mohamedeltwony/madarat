@@ -80,6 +80,22 @@ function App({ Component, pageProps = {} }) {
     }
   }, [router.asPath, router.pathname]);
 
+  // Track Google Ads page navigation
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (window.gtag) {
+        window.gtag('config', 'AW-16691848441', {
+          page_path: url,
+        });
+      }
+    };
+    
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
   // Helper function to get cookie value by name (wrapped in useCallback)
   const getCookieValue = useCallback((name) => {
     if (typeof document === 'undefined') {
@@ -186,6 +202,24 @@ function App({ Component, pageProps = {} }) {
             
             // Call on page load
             updateFbParams();
+          `,
+        }}
+      />
+
+      {/* Google tag (gtag.js) */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=AW-16691848441"
+        strategy="afterInteractive"
+      />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-16691848441');
           `,
         }}
       />
