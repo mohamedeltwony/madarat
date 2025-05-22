@@ -248,9 +248,6 @@ export default function TripForm({
                     autoComplete={field.autoComplete || 'tel'}
                     required={field.required}
                   />
-                  {field.showCountryCode && (
-                    <span className={styles.countryCode}>+966</span>
-                  )}
                 </div>
                 {phoneTouched && !isPhoneValid && formData.phone.trim() !== '' && (
                   <p className={styles.errorMessage}>

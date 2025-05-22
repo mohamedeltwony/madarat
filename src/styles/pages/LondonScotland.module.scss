@@ -192,18 +192,18 @@ $font-family: 'Cairo', sans-serif;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  margin-top: 2rem; // Keep margin-top to space after features
+  margin-top: 2rem;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.5);
   padding: 2rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  min-height: 450px; // Added min-height to potentially reduce CLS
+  min-height: 450px;
+  // Removed box-shadow for cleaner look
 
   @media (max-width: 768px) {
-    padding: 1.5rem;
-    min-height: auto; // Reset min-height on smaller screens if needed
+    padding: 0 1rem;
+    min-height: auto;
   }
 }
 
