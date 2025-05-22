@@ -160,14 +160,14 @@ export default function TrabzonNorthTurkeyTrip() {
               </div>
             </h1>
             <p className={styles.description}>
+              {' '}
               7 أيام - 6 ليالي
               <br />
               إقامة فاخرة في أكواخ خشبية ساحرة
               <br />
-              السعر يبدأ من
+              السعر للشخص في الغرفة المزدوجة
               <br />
-              <span className={styles.highlight}>2499</span> ر.س في الغرفة
-              المزدوجة
+              <span className={styles.highlight}>2699</span> ر.س
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}
@@ -234,8 +234,8 @@ export default function TrabzonNorthTurkeyTrip() {
                   endpoint: '/api/zapier-proxy',
                   extraPayload: {
                     destination: 'الشمال التركي',
-                    tripName: 'Trabzon North Turkey',
-                    price: 2499,
+                    tripName: 'Trabzon Wider North Turkey',
+                    price: 2699,
                   },
                 }}
                 onSuccess={handleFormSuccess}

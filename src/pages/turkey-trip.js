@@ -199,10 +199,9 @@ export default function TurkeyTrip() {
               <br />
               إقامة فاخرة في أكواخ خشبية ساحرة
               <br />
-              السعر يبدأ من
+              السعر للشخص في الغرفة المزدوجة
               <br />
-              <span className={styles.highlight}>2499</span> ر.س في الغرفة
-              المزدوجة
+              <span className={styles.highlight}>2699</span> ر.س
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}
@@ -269,7 +268,7 @@ export default function TurkeyTrip() {
                 extraPayload: {
                   destination: 'الشمال التركي',
                   tripName: 'Turkey',
-                  price: 2499,
+                  price: 2699,
                 },
               }}
               onSuccess={handleFormSuccess}

@@ -709,9 +709,9 @@ export default function LondonScotlandTrip() {
                 zapierConfig={{
                   endpoint: '/api/zapier-proxy',
                   extraPayload: {
-                    destination: 'لندن واسكتلندا',
-                    formSource: 'london-scotland-trip',
-                    formName: 'London Scotland Trip Form',
+                    destination: 'لندن وأسكتلندا',
+                    tripName: 'London Scotland',
+                    price: 5900,
                   },
                 }}
                 onSuccess={handleFormSuccess}

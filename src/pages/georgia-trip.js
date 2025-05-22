@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'; // Import useRouter
 import dynamic from 'next/dynamic'; // Import dynamic
 const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
   ssr: false,
+  loading: () => <div className={styles.buttonPlaceholder}>جاري التحميل...</div>,
 });
 // import Chatbot from '@/components/Chatbot'; // Removed
 // import ExitPopup from '@/components/ExitPopup'; // Removed
@@ -138,6 +139,7 @@ export default function GeorgiaTrip() {
             // objectFit="cover" // Remove prop, handle with CSS
             quality={75} // Adjust quality as needed
             priority // Prioritize loading for LCP
+            sizes="100vw" // Add appropriate sizes attribute
             className={styles.heroBackgroundImage} // Ensure this class handles object-fit: cover
           />
           <div className={styles.heroOverlay}></div>
@@ -150,7 +152,8 @@ export default function GeorgiaTrip() {
                 height={75}
                 priority
                 sizes="(max-width: 768px) 150px, 240px" // Refined sizes prop for responsiveness
-                // Removed unoptimized prop
+                placeholder="blur"
+                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
               />
             </div>
             <h1 className={styles.title}>
@@ -159,13 +162,12 @@ export default function GeorgiaTrip() {
             </h1>
             <p className={styles.description}>
               {' '}
-              {/* Changed description */}
               ٨ أيام - ٧ ليالي
               <br />
-              السعر يبدأ من
+              تبليسي - برجومي - باتومي
               <br />
-              <span className={styles.highlight}>2699</span> ر.س في الغرفة
-              المزدوجة
+              السعر للشخص في الغرفة المزدوجة{' '}
+              <span className={styles.highlight}>2899</span> ريال
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}
@@ -187,7 +189,7 @@ export default function GeorgiaTrip() {
                           alt={feature.text} // Use feature text as alt text
                           width={60} // Updated width
                           height={60} // Updated height
-                          // unoptimized // Removed to allow Next.js optimization
+                          loading="lazy" // Add lazy loading for non-LCP images
                         />
                       </div>
                     )}
@@ -233,7 +235,7 @@ export default function GeorgiaTrip() {
                   extraPayload: {
                     destination: 'جورجيا',
                     tripName: 'Georgia',
-                    price: 1799,
+                    price: 2899,
                   },
                 }}
                 onSuccess={handleFormSuccess}

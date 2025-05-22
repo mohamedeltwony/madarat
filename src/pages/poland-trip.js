@@ -223,7 +223,7 @@ export default function PolandTrip() {
                   extraPayload: {
                     destination: 'بولندا',
                     tripName: 'Poland',
-                    price: 1899,
+                    price: 3800,
                   },
                 }}
                 onSuccess={handleFormSuccess}

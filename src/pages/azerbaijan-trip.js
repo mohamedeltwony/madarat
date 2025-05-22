@@ -221,7 +221,7 @@ export default function AzerbaijanTrip() {
                   extraPayload: {
                     destination: 'أذربيجان',
                     tripName: 'Azerbaijan',
-                    price: 1599,
+                    price: 1990,
                   },
                 }}
                 onSuccess={handleFormSuccess}

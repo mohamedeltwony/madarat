@@ -32,21 +32,35 @@ class MyDocument extends Document {
             crossOrigin="anonymous"
           />
 
-          {/* Combined font loading for both Cairo and Tajawal */}
+          {/* Combined font loading for both Cairo and Tajawal - optimized with preload and media */}
           <link
             href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap"
             rel="stylesheet"
+            media="print"
+            onLoad="this.media='all'"
           />
 
-          {/* Bootstrap Icons */}
+          {/* Bootstrap Icons - deferred loading */}
           <link 
             rel="stylesheet" 
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+            media="print"
+            onLoad="this.media='all'"
+          />
+
+          {/* Preload critical assets - logo for LCP */}
+          <link 
+            rel="preload" 
+            href="/logo.png" 
+            as="image" 
+            fetchPriority="high"
           />
 
           {/* Microsoft Clarity Code */}
           <script
             type="text/javascript"
+            async
+            defer
             dangerouslySetInnerHTML={{
               __html: `
                 (function(c,l,a,r,i,t,y){

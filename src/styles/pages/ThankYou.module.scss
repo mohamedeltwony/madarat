@@ -100,7 +100,7 @@ $font-family: 'Cairo', sans-serif;
   }
 }
 
-.message {
+.message, .subtitle {
   font-size: 1.2rem;
   line-height: 1.7;
   margin-bottom: 2.5rem;
@@ -112,11 +112,102 @@ $font-family: 'Cairo', sans-serif;
   }
 }
 
+// Countdown Timer Styles
+.countdownContainer {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.8rem;
+  border: 1px solid rgba($color-gold, 0.2);
+}
+
+.countdownLabel {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #f0f0f0;
+}
+
+.countdownTimer {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $color-gold;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+// Contact Information Styles
+.contactInfo {
+  margin-bottom: 2rem;
+  text-align: right;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 0.8rem;
+}
+
+.contactTitle {
+  color: $color-gold;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+}
+
+.contactText {
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.contactMethod {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  
+  strong {
+    color: $color-gold;
+  }
+}
+
+// Social Media Links
+.socialLinks {
+  margin-bottom: 2rem;
+}
+
+.socialTitle {
+  color: $color-gold;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+}
+
+.socialIcons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.socialIcon {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  padding: 0.8rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba($color-gold, 0.3);
+    transform: translateY(-3px);
+  }
+}
+
 .buttonGroup {
   display: flex;
   flex-direction: column; // Stack buttons vertically
   gap: 1rem; // Space between buttons
   align-items: center; // Center buttons horizontally
+}
+
+.buttonWrapper {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
 }
 
 .downloadLink {

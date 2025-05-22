@@ -209,13 +209,8 @@ export default function SchengenVisaTrip() {
                 endpoint: '/api/zapier-proxy',
                 extraPayload: {
                   destination: 'تأشيرة شنغن',
-                  formName: 'Schengen Visa Service Form',
-                  formSource: 'schengen-visa-trip',
+                  tripName: 'Schengen Visa',
                   price: 299,
-                  emails: [
-                    'mohammed@madaratalkon.com',
-                    'hesham@madaratalkon.com',
-                  ],
                 },
               }}
               onSuccess={handleFormSuccess}

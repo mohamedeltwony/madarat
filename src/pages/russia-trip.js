@@ -155,7 +155,10 @@ export default function RussiaTrip() {
               رحلة <span className={styles.highlight}>موسكو</span>, روسيا
             </h1>
             <p className={styles.description}>
-              موسكو ٨ ايام, ٧ ليالي
+              {' '}
+              موسكو 
+              <br />
+              ٨ أيام - ٧ ليالي
               <br />
               استكشف المعالم التاريخية والمناظر الطبيعية الخلابة
               <br />
@@ -227,7 +230,7 @@ export default function RussiaTrip() {
                   extraPayload: {
                     destination: 'روسيا',
                     tripName: 'Russia',
-                    price: 2099,
+                    price: 3999,
                   },
                 }}
                 onSuccess={handleFormSuccess}

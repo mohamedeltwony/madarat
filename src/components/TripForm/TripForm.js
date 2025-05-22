@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { getCsrfToken } from '@/utils/csrf';
-const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), { ssr: false });
+// Lazy load the SparkleButton component
+const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), { 
+  ssr: false,
+  loading: () => <button className={styles.mainCTA} type="submit" disabled>إرسال</button> 
+});
 import styles from '@/styles/pages/LondonScotland.module.scss';
 
 export default function TripForm({
@@ -219,105 +223,103 @@ export default function TripForm({
   };
 
   return (
-    <div className={styles.formContainer}>
-      <form onSubmit={handleSubmit} className={styles.tripForm}>
-        {fields.map((field) => {
-          if (field.name === 'phone') {
-            return (
-              <div
-                key={field.name}
-                className={
-                  `${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ` +
-                  `${formData.phone ? styles.hasValue : ''} ` +
-                  `${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`
-                }
-              >
-                <label htmlFor="phone" className={styles.formLabel}>
-                  {field.label}
-                </label>
-                <div className={styles.phoneInput}>
-                  <input
-                    type="tel"
-                    id="phone"
-                    className={styles.formInput}
-                    name="phone"
-                    value={formData.phone || ''}
-                    onChange={handleInputChange}
-                    onBlur={() => setPhoneTouched(true)}
-                    placeholder={field.placeholder || ' '}
-                    autoComplete={field.autoComplete || 'tel'}
-                    required={field.required}
-                  />
-                </div>
-                {phoneTouched && !isPhoneValid && formData.phone.trim() !== '' && (
-                  <p className={styles.errorMessage}>
-                    يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام.
-                  </p>
-                )}
-              </div>
-            );
-          }
-          // Default field rendering
+    <form onSubmit={handleSubmit} className={styles.formContainer + ' ' + styles.tripForm}>
+      {fields.map((field) => {
+        if (field.name === 'phone') {
           return (
-            <div key={field.name} className={`${styles.formGroup} ${styles.floatingLabelGroup}`}>
-              <input
-                type={field.type}
-                id={field.name}
-                className={styles.formInput}
-                name={field.name}
-                value={formData[field.name] || ''}
-                onChange={handleInputChange}
-                placeholder={field.placeholder || ' '}
-                autoComplete={field.autoComplete || field.name}
-                required={field.required}
-              />
-              <label htmlFor={field.name} className={styles.formLabel}>
+            <div
+              key={field.name}
+              className={
+                `${styles.formGroup} ${styles.floatingLabelGroup} ${styles.phoneGroup} ` +
+                `${formData.phone ? styles.hasValue : ''} ` +
+                `${phoneTouched && !isPhoneValid && formData.phone.trim() !== '' ? styles.inputError : ''}`
+              }
+            >
+              <label htmlFor="phone" className={styles.formLabel}>
                 {field.label}
-                {field.required ? ' *' : ''}
               </label>
+              <div className={styles.phoneInput}>
+                <input
+                  type="tel"
+                  id="phone"
+                  className={styles.formInput}
+                  name="phone"
+                  value={formData.phone || ''}
+                  onChange={handleInputChange}
+                  onBlur={() => setPhoneTouched(true)}
+                  placeholder={field.placeholder || ' '}
+                  autoComplete={field.autoComplete || 'tel'}
+                  required={field.required}
+                />
+              </div>
+              {phoneTouched && !isPhoneValid && formData.phone.trim() !== '' && (
+                <p className={styles.errorMessage}>
+                  يجب أن يبدأ الرقم بـ 0 أو 5 أو 966 ويتكون من المقطع المناسب من الأرقام.
+                </p>
+              )}
             </div>
           );
-        })}
-        {/* Nationality radio group (always included) */}
-        <div className={`${styles.formGroup} ${styles.nationalityGroup}`}>
-          <div className={styles.radioGroup}>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="nationality"
-                value="مواطن"
-                checked={formData.nationality === 'مواطن'}
-                onChange={handleInputChange}
-                required
-              />
-              <span>مواطن</span>
-            </label>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="nationality"
-                value="مقيم"
-                checked={formData.nationality === 'مقيم'}
-                onChange={handleInputChange}
-                required
-              />
-              <span>مقيم</span>
+        }
+        // Default field rendering
+        return (
+          <div key={field.name} className={`${styles.formGroup} ${styles.floatingLabelGroup}`}>
+            <input
+              type={field.type}
+              id={field.name}
+              className={styles.formInput}
+              name={field.name}
+              value={formData[field.name] || ''}
+              onChange={handleInputChange}
+              placeholder={field.placeholder || ' '}
+              autoComplete={field.autoComplete || field.name}
+              required={field.required}
+            />
+            <label htmlFor={field.name} className={styles.formLabel}>
+              {field.label}
+              {field.required ? ' *' : ''}
             </label>
           </div>
+        );
+      })}
+      {/* Nationality radio group (always included) */}
+      <div className={`${styles.formGroup} ${styles.nationalityGroup}`}>
+        <div className={styles.radioGroup}>
+          <label className={styles.radioLabel}>
+            <input
+              type="radio"
+              name="nationality"
+              value="مواطن"
+              checked={formData.nationality === 'مواطن'}
+              onChange={handleInputChange}
+              required
+            />
+            <span>مواطن</span>
+          </label>
+          <label className={styles.radioLabel}>
+            <input
+              type="radio"
+              name="nationality"
+              value="مقيم"
+              checked={formData.nationality === 'مقيم'}
+              onChange={handleInputChange}
+              required
+            />
+            <span>مقيم</span>
+          </label>
         </div>
-        <div className={styles.formActions}>
-          <SparkleButton
-            type="submit"
-            disabled={isLoading}
-            className={styles.mainCTA}
-          >
-            <div className={styles.buttonGlow}></div>
-            <span className={styles.buttonContent}>
-              اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا
-            </span>
-          </SparkleButton>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div className={styles.formActions}>
+        <SparkleButton
+          type="submit"
+          disabled={isLoading}
+          className={styles.mainCTA}
+        >
+          <div className={styles.buttonGlow}></div>
+          <span className={styles.buttonContent}>
+            اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا
+          </span>
+        </SparkleButton>
+      </div>
+    </form>
   );
 } 

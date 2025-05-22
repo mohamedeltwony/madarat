@@ -199,10 +199,9 @@ export default function ItalyTrip() {
             <p className={styles.description}>
               7 أيام - 6 ليالي
               <br />
-              السعر يبدأ من
+              السعر للشخص في الغرفة المزدوجة
               <br />
-              <span className={styles.highlight}>4499</span> ر.س في الغرفة
-              المزدوجة
+              <span className={styles.highlight}>4499</span> ر.س
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}
@@ -268,9 +267,9 @@ export default function ItalyTrip() {
                 zapierConfig={{
                   endpoint: '/api/zapier-proxy',
                   extraPayload: {
-                    destination: 'إيطاليا',
+                    destination: 'ايطاليا',
                     tripName: 'Italy',
-                    price: 2999,
+                    price: 4499,
                   },
                 }}
                 onSuccess={handleFormSuccess}

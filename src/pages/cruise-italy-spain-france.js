@@ -541,9 +541,24 @@ export default function CruiseItalySpainFrance() {
             <h1 className={styles.title}>كروز الأحلام</h1>
             {/* Updated Headline */}
             <p className={styles.description}>
-              انطلق في مغامرة بحرية استثنائية لمدة 8 أيام و 7 ليالي بسعر يبدأ من
-              3655 ريال للشخص. استمتع بالإقامة الفاخرة، الوجبات الشهية، والمرافق
-              الترفيهية على متن الكروز.
+              8 أيام - 7 ليالي
+              <br />
+              عروض السفر:
+              <br />
+              <br />
+              برشلونة – إسبانيا
+              <br />
+              ابتداءً من <span className={styles.highlight}>3,655</span> ريال سعودي للشخص الواحد
+              <br />
+              <br />
+              روما – إيطاليا
+              <br />
+              ابتداءً من <span className={styles.highlight}>4,600</span> ريال سعودي للشخص الواحد
+              <br />
+              <br />
+              كروز النرويج – من كوبنهاغن وإليها (الدنمارك)
+              <br />
+              ابتداءً من <span className={styles.highlight}>5,330</span> ريال سعودي للشخص الواحد
             </p>{' '}
             {/* Updated Description */}
             {/* Features Section - Copied from London/Scotland page */}
@@ -606,10 +621,9 @@ export default function CruiseItalySpainFrance() {
                 zapierConfig={{
                   endpoint: '/api/zapier-proxy',
                   extraPayload: {
-                    destination: 'رحلة بحرية (ايطاليا، اسبانيا، فرنسا)',
-                    formSource: 'cruise-italy-spain-france',
-                    formName: 'Cruise Italy Spain France Form',
-                    price: 3700,
+                    destination: 'كروز',
+                    tripName: 'Cruise',
+                    price: 3655,
                   },
                 }}
                 onSuccess={handleFormSuccess}

@@ -557,8 +557,8 @@ export default function InternationalLicence() {
                   endpoint: '/api/zapier-proxy',
                   extraPayload: {
                     destination: 'الرخصة الدولية',
-                    formSource: 'international-licence',
-                    formName: 'International Licence Form',
+                    tripName: 'International Licence',
+                    price: 199,
                   },
                 }}
                 onSuccess={handleFormSuccess}

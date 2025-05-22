@@ -11,6 +11,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = {
   reactStrictMode: true,
   
+  // Modern browsers target
+  swcMinify: true,
+  
   // i18n configuration for Arabic support
   i18n: {
     locales: ['default', 'ar', 'en'],
@@ -39,6 +42,7 @@ const nextConfig = {
   // Experimental features
   experimental: {
     urlImports: ['https://themer.sanity.build/'],
+    // Modern browser options (remove incompatible flags)
   },
   
   // Image domains
@@ -116,12 +120,59 @@ const nextConfig = {
       chunks: 'all',
       cacheGroups: {
         ...config.optimization.splitChunks.cacheGroups,
+        // Group common vendor packages together
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name(module) {
+            // Get the name of the package
+            // Handle cases where module.context is null or undefined
+            if (!module.context) {
+              return 'vendor.unknown';
+            }
+            
+            const match = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/);
+            if (!match) {
+              return 'vendor.unknown';
+            }
+            
+            const packageName = match[1];
+            
+            // Return a chunk name based on the package name
+            // npm packages usually use @org/package-name format so convert to org-package-name
+            return `vendor.${packageName.replace('@', '').replace('/', '-')}`;
+          },
+          priority: 20,
+        },
+        // Facebook events
+        facebookEvents: {
+          test: /[\\/]node_modules[\\/].*facebook/,
+          name: 'facebook-events',
+          priority: 30,
+          enforce: true,
+          chunks: 'all',
+        },
+        // Google analytics
+        googleAnalytics: {
+          test: /[\\/]node_modules[\\/].*google/,
+          name: 'google-analytics',
+          priority: 30,
+          enforce: true,
+          chunks: 'all',
+        },
+        // React icons specific optimization
         reactIcons: {
           test: /react-icons/,
           name: 'react-icons',
-          priority: 10,
+          priority: 30,
           enforce: true,
           chunks: 'all',
+        },
+        // Common CSS
+        styles: {
+          test: /\.css$/,
+          name: 'styles',
+          enforce: true,
+          priority: 30,
         },
       },
     };
@@ -133,12 +184,12 @@ const nextConfig = {
     return [
       {
         // Apply cache headers to more static assets
-        source: '/:all*(svg|jpg|png|webp|woff2)',
+        source: '/:all*(svg|jpg|png|webp|avif|woff2|woff|ttf|js|css)',
         locale: false,
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, must-revalidate',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },

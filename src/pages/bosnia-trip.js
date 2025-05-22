@@ -162,14 +162,14 @@ export default function BosniaTrip() {
               رحلة <span className={styles.highlight}>البوسنة</span> الساحرة
             </h1>
             <p className={styles.description}>
+              {' '}
               10 أيام - 9 ليالي
               <br />
               سراييفو - موستار - بيهاتش
               <br />
-              السعر يبدأ من
+              السعر للشخص في الغرفة المزدوجة
               <br />
-              <span className={styles.highlight}>4599</span> ر.س في الغرفة
-              المزدوجة
+              <span className={styles.highlight}>4599</span> ر.س
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}
@@ -237,7 +237,7 @@ export default function BosniaTrip() {
                   extraPayload: {
                     destination: 'البوسنة',
                     tripName: 'Bosnia',
-                    price: 1999,
+                    price: 4599,
                   },
                 }}
                 onSuccess={handleFormSuccess}
