@@ -5,6 +5,7 @@ import {
   FaMapMarkerAlt,
   FaEnvelope,
 } from 'react-icons/fa';
+import { useRouter } from 'next/router';
 
 import useSite from '@/hooks/use-site';
 import { postPathBySlug } from '@/lib/posts';
@@ -16,8 +17,26 @@ import Container from '@/components/Container';
 import styles from './Footer.module.scss';
 
 const Footer = () => {
+  const router = useRouter();
   const { metadata = {}, recentPosts = [], categories = [] } = useSite();
   const { title } = metadata;
+
+  // Check if current page is a trip landing page
+  const isTripPage = router.pathname.includes('-trip') || 
+                     router.pathname.startsWith('/trips/') ||
+                     router.pathname === '/generic-trip' ||
+                     router.pathname === '/international-licence-trip' ||
+                     router.pathname === '/schengen-visa-trip' ||
+                     router.pathname === '/bosnia-trip' ||
+                     router.pathname === '/georgia-trip' ||
+                     router.pathname === '/azerbaijan-trip' ||
+                     router.pathname === '/poland-trip' ||
+                     router.pathname === '/italy-trip' ||
+                     router.pathname === '/russia-trip' ||
+                     router.pathname === '/turkey-trip' ||
+                     router.pathname === '/trabzon-wider-north-turkey' ||
+                     router.pathname === '/cruise-italy-spain-france' ||
+                     router.pathname === '/london-scotland-trip';
 
   const hasRecentPosts = Array.isArray(recentPosts) && recentPosts.length > 0;
   const hasRecentCategories =
@@ -37,23 +56,27 @@ const Footer = () => {
               </p>
 
               <div className={styles.contactInfo}>
-                <div className={styles.contactItem}>
-                  <FaPhone className={styles.contactIcon} />
-                  <a href="tel:920034019" className={styles.contactLink}>
-                    920034019
-                  </a>
-                </div>
-                <div className={styles.contactItem}>
-                  <FaWhatsapp className={styles.contactIcon} />
-                  <a
-                    href="https://wa.me/966920034019"
-                    className={styles.contactLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    تواصل عبر واتساب
-                  </a>
-                </div>
+                {!isTripPage && (
+                  <>
+                    <div className={styles.contactItem}>
+                      <FaPhone className={styles.contactIcon} />
+                      <a href="tel:920034019" className={styles.contactLink}>
+                        920034019
+                      </a>
+                    </div>
+                    <div className={styles.contactItem}>
+                      <FaWhatsapp className={styles.contactIcon} />
+                      <a
+                        href="https://wa.me/966920034019"
+                        className={styles.contactLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        تواصل عبر واتساب
+                      </a>
+                    </div>
+                  </>
+                )}
                 <div className={styles.contactItem}>
                   <FaEnvelope className={styles.contactIcon} />
                   <a

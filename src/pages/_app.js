@@ -34,6 +34,23 @@ function App({ Component, pageProps = {} }) {
 
   const router = useRouter();
 
+  // Check if current page is a trip landing page
+  const isTripPage = router.pathname.includes('-trip') || 
+                     router.pathname.startsWith('/trips/') ||
+                     router.pathname === '/generic-trip' ||
+                     router.pathname === '/international-licence-trip' ||
+                     router.pathname === '/schengen-visa-trip' ||
+                     router.pathname === '/bosnia-trip' ||
+                     router.pathname === '/georgia-trip' ||
+                     router.pathname === '/azerbaijan-trip' ||
+                     router.pathname === '/poland-trip' ||
+                     router.pathname === '/italy-trip' ||
+                     router.pathname === '/russia-trip' ||
+                     router.pathname === '/turkey-trip' ||
+                     router.pathname === '/trabzon-wider-north-turkey' ||
+                     router.pathname === '/cruise-italy-spain-france' ||
+                     router.pathname === '/london-scotland-trip';
+
   useEffect(() => {
     // Set RTL direction
     document.documentElement.dir = 'rtl';
@@ -143,14 +160,14 @@ function App({ Component, pageProps = {} }) {
           <SearchProvider>
             <NextNProgress height={4} color={variables.progressbarColor} />
             <Component {...pageProps} />
-            <FloatingButtons />
+            {!isTripPage && <FloatingButtons />}
           </SearchProvider>
         ) : (
           <>
             {/* Render without SearchProvider for other pages (e.g., landing pages) */}
             <NextNProgress height={4} color={variables.progressbarColor} />
             <Component {...pageProps} />
-            <FloatingButtons />
+            {!isTripPage && <FloatingButtons />}
           </>
         )}
       </SiteContext.Provider>

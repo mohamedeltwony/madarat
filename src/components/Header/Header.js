@@ -23,7 +23,21 @@ const Header = () => {
   const isHomePage = pathname === '/';
   const isTripPage =
     (pathname.includes('/trips/') && pathname !== '/trips') ||
-    pathname === '/book-now';
+    pathname === '/book-now' ||
+    pathname.includes('-trip') ||
+    pathname === '/generic-trip' ||
+    pathname === '/international-licence-trip' ||
+    pathname === '/schengen-visa-trip' ||
+    pathname === '/bosnia-trip' ||
+    pathname === '/georgia-trip' ||
+    pathname === '/azerbaijan-trip' ||
+    pathname === '/poland-trip' ||
+    pathname === '/italy-trip' ||
+    pathname === '/russia-trip' ||
+    pathname === '/turkey-trip' ||
+    pathname === '/trabzon-wider-north-turkey' ||
+    pathname === '/cruise-italy-spain-france' ||
+    pathname === '/london-scotland-trip';
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -154,7 +168,7 @@ const Header = () => {
 
   // Get CTA button dropdown items
   const getCtaDropdownItems = () => {
-    return [
+    const allItems = [
       {
         label: 'احجز رحلتك الآن',
         icon: <FaUserTie size={14} />,
@@ -171,6 +185,13 @@ const Header = () => {
         onClick: () => router.push('/contact'),
       },
     ];
+
+    // Filter out phone number option on trip pages
+    if (isTripPage) {
+      return allItems.filter(item => item.label !== 'اتصل بنا');
+    }
+
+    return allItems;
   };
 
   // Apply appropriate classes based on page type and scroll state

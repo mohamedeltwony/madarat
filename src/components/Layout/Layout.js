@@ -22,6 +22,23 @@ const Layout = ({ children }) => {
 
   metadata.og.url = `${homepage}${asPath}`;
 
+  // Check if current page is a trip landing page
+  const isTripPage = router.pathname.includes('-trip') || 
+                     router.pathname.startsWith('/trips/') ||
+                     router.pathname === '/generic-trip' ||
+                     router.pathname === '/international-licence-trip' ||
+                     router.pathname === '/schengen-visa-trip' ||
+                     router.pathname === '/bosnia-trip' ||
+                     router.pathname === '/georgia-trip' ||
+                     router.pathname === '/azerbaijan-trip' ||
+                     router.pathname === '/poland-trip' ||
+                     router.pathname === '/italy-trip' ||
+                     router.pathname === '/russia-trip' ||
+                     router.pathname === '/turkey-trip' ||
+                     router.pathname === '/trabzon-wider-north-turkey' ||
+                     router.pathname === '/cruise-italy-spain-france' ||
+                     router.pathname === '/london-scotland-trip';
+
   const metaSettings = {
     title: metadata.title,
     defaultTitle: metadata.title,
@@ -99,7 +116,8 @@ const Layout = ({ children }) => {
       <Header />
       <Main>{children}</Main>
       <Footer />
-      <WhatsAppButton /> {/* Add the WhatsApp button here */}
+      {/* Conditionally render WhatsApp button - hide on trip pages */}
+      {!isTripPage && <WhatsAppButton />}
     </div>
   );
 };
