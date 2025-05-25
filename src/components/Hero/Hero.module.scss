@@ -20,6 +20,60 @@
   right: 0;
   bottom: 0;
   z-index: 0;
+  
+  // Cinematic zoom effect - starts after page load
+  &::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background: url('/images/hero-background-new.png') center/cover no-repeat;
+    z-index: -1;
+    opacity: 0;
+    transform: scale(1);
+    animation-play-state: paused; // Initially paused
+  }
+}
+
+// Start the animation when loaded class is added to hero
+.hero.loaded .backgroundMedia::after {
+  opacity: 1;
+  animation: cinematicZoom 8s ease-in-out infinite alternate;
+  animation-delay: 0.5s; // Small delay after becoming visible
+  animation-fill-mode: forwards;
+}
+
+.hero.loaded .backgroundMedia {
+  // Hide the original background when zoom effect is active
+  img, video {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+}
+
+// Cinematic zoom keyframes
+@keyframes cinematicZoom {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+// Debug: Add a visible border to the pseudo-element for testing
+.hero.loaded .backgroundMedia::after {
+  // Uncomment for debugging - makes the zoom effect visible
+  border: 3px solid red !important;
+  z-index: 10 !important;
 }
 
 // Styles for the video element

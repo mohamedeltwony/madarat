@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image'; // Use next/image
 import styles from './Hero.module.scss';
@@ -12,8 +13,55 @@ const Hero = ({
   featuredLink,
   children,
 }) => {
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const heroRef = useRef(null);
+
+  // Performance optimization: Start cinematic zoom after page loads
+  useEffect(() => {
+    console.log('🎬 Hero cinematic zoom effect initializing...');
+    
+    const timer = setTimeout(() => {
+      console.log('🎬 Starting hero cinematic zoom effect');
+      setIsPageLoaded(true);
+      
+      if (heroRef.current) {
+        console.log('🎬 Hero element found, adding loaded class');
+        heroRef.current.classList.add(styles.loaded);
+        
+        // Debug: Check if the class was added
+        const hasLoadedClass = heroRef.current.classList.contains(styles.loaded);
+        console.log('🎬 Hero loaded class added:', hasLoadedClass);
+        
+        // Debug: Check computed styles
+        const computedStyle = window.getComputedStyle(heroRef.current.querySelector(`.${styles.backgroundMedia}`), '::after');
+        console.log('🎬 Hero after pseudo-element opacity:', computedStyle.opacity);
+        console.log('🎬 Hero after pseudo-element animation:', computedStyle.animation);
+        
+        // Debug: Check if animation is running
+        setTimeout(() => {
+          const afterElement = window.getComputedStyle(heroRef.current.querySelector(`.${styles.backgroundMedia}`), '::after');
+          console.log('🎬 Hero animation status after 2s:', {
+            opacity: afterElement.opacity,
+            transform: afterElement.transform,
+            animationName: afterElement.animationName,
+            animationDuration: afterElement.animationDuration,
+            animationPlayState: afterElement.animationPlayState
+          });
+        }, 2000);
+        
+      } else {
+        console.log('🎬 ERROR: Hero element not found!');
+      }
+    }, 500); // Small delay to ensure page is fully loaded
+
+    return () => {
+      console.log('🎬 Cleaning up hero cinematic zoom timer');
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
-    <div className={`${styles.hero} hero`}>
+    <div className={`${styles.hero} hero`} ref={heroRef}>
       {/* Background Media Container */}
       <div className={styles.backgroundMedia}>
         {backgroundVideo ? (
