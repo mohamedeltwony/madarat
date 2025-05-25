@@ -11,7 +11,9 @@ import { getRecentPosts } from '../lib/posts';
 import { getCategories } from '../lib/categories';
 import NextNProgress from 'nextjs-progressbar';
 import FloatingButtons from '../components/WhatsAppButton/WhatsAppButton';
+import CookieConsent from '../components/CookieConsent/CookieConsent';
 import { trackPageView } from '../utils/facebookTracking';
+import { gtmPageView, initializeDataLayer } from '../lib/gtm';
 
 import '../styles/globals.scss';
 import '../styles/wordpress.scss';
@@ -36,6 +38,9 @@ function App({ Component, pageProps = {} }) {
     // Set RTL direction
     document.documentElement.dir = 'rtl';
     document.documentElement.lang = 'ar';
+
+    // Initialize GTM dataLayer
+    initializeDataLayer();
 
     // Register service worker
     if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
@@ -65,7 +70,7 @@ function App({ Component, pageProps = {} }) {
     if (typeof window !== 'undefined') {
       updateFbParams();
       
-      // Also track page view with our enhanced tracking module on route change
+      // Track page view with Facebook Pixel
       if (window.fbq) {
         // Let the page finish loading before tracking the page view
         const timer = setTimeout(() => {
@@ -77,6 +82,19 @@ function App({ Component, pageProps = {} }) {
         
         return () => clearTimeout(timer);
       }
+
+      // Track page view with GTM
+      const gtmTimer = setTimeout(() => {
+        gtmPageView({
+          page_category: router.pathname.split('/')[1] || 'home',
+          page_type: router.pathname === '/' ? 'homepage' : 'page',
+          user_language: 'ar'
+        });
+      }, 300);
+
+      return () => {
+        clearTimeout(gtmTimer);
+      };
     }
   }, [router.asPath, router.pathname]);
 
@@ -136,6 +154,9 @@ function App({ Component, pageProps = {} }) {
           </>
         )}
       </SiteContext.Provider>
+
+      {/* Cookie Consent & GTM Integration */}
+      <CookieConsent />
 
       {/* Facebook Pixel Code */}
       <Script
