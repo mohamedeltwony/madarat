@@ -247,6 +247,27 @@ $glass-border: rgba(255, 255, 255, 0.12);
   }
 }
 
+// Grid layout for trips
+.tripsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+  
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.gridItem {
+  display: flex;
+  flex-direction: column;
+}
+
 // Trip card styles
 .tripCard {
   position: relative;
@@ -513,4 +534,136 @@ $glass-border: rgba(255, 255, 255, 0.12);
   height: 100%;
   pointer-events: none;
   z-index: 3;
+}
+
+// Trip card specific styles for grid layout
+.tripImageContainer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.tripImage {
+  transition: transform 0.5s ease;
+}
+
+.placeholderImage {
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.tripBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: $accent-color;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.tripDuration {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 2;
+}
+
+.durationIcon {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+}
+
+.tripContent {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.tripTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  color: $primary-color;
+  line-height: 1.3;
+}
+
+.tripDestination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.destinationIcon {
+  display: inline-flex;
+  color: $accent-color;
+  width: 16px;
+  height: 16px;
+}
+
+.tripPrice {
+  margin-bottom: 1rem;
+}
+
+.priceLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.priceValue {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $primary-color;
+}
+
+.currencyCode {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #666;
+}
+
+.tripFooter {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.viewDetails {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: $accent-color;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.buttonIcon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
 }

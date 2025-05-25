@@ -357,7 +357,7 @@ export async function getServerSideProps() {
     const { menus = [] } = await getAllMenusREST();
 
     // Fetch destinations from WordPress API
-    const destinationsResponse = await fetch('https://madaratalkon.com/wp-json/wp/v2/destination?_fields=id,name&per_page=100');
+    const destinationsResponse = await fetch('https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/destination?_fields=id,name&per_page=100');
     let destinations = [];
     
     if (destinationsResponse.ok) {

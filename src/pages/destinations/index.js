@@ -196,7 +196,7 @@ export async function getStaticProps() {
   while (currentTry < maxRetries) {
     try {
       const response = await fetch(
-        'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
+        'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
         {
           headers: {
             Accept: 'application/json',

@@ -469,7 +469,7 @@ export async function getStaticProps() {
     let pagination = null;
     try {
       const postsResponse = await fetch(
-        'https://madaratalkon.com/wp-json/wp/v2/posts?_embed&per_page=20',
+        'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/posts?_embed&per_page=20',
         {
           headers: {
             'Content-Type': 'application/json',

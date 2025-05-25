@@ -188,7 +188,7 @@ export async function getStaticPaths() {
   try {
     // Fetch all destinations to generate paths
     const response = await fetch(
-      'https://madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
+              'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
       {
         headers: {
           Accept: 'application/json',
@@ -225,7 +225,7 @@ export async function getStaticProps({ params }) {
   try {
     // Fetch destination data
     const destinationResponse = await fetch(
-      `https://madaratalkon.com/wp-json/wp/v2/destination?slug=${params.slug}&_embed`,
+      `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/destination?slug=${params.slug}&_embed`,
       {
         headers: {
           Accept: 'application/json',
@@ -253,7 +253,7 @@ export async function getStaticProps({ params }) {
 
     // Fetch trips for this destination using the correct endpoint
     const tripsResponse = await fetch(
-      `https://madaratalkon.com/wp-json/wp/v2/trip?destination=${destination.id}&per_page=100&_embed`,
+      `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/trip?destination=${destination.id}&per_page=100&_embed`,
       {
         headers: {
           Accept: 'application/json',

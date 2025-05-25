@@ -659,15 +659,62 @@ export default function SingleTrip({ trip }) {
 
 export async function getStaticProps({ params }) {
   try {
-    const response = await fetch(
-      `https://madaratalkon.com/wp-json/wp/v2/trip?slug=${params.slug}&_embed`
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    console.log('Fetching trip with slug:', params.slug);
+    
+    // Try multiple variations of the slug
+    const originalSlug = params.slug;
+    const encodedSlug = encodeURIComponent(params.slug);
+    const decodedSlug = decodeURIComponent(params.slug);
+    
+    let trips = [];
+    let response;
+    
+    // Try with encoded slug first
+    try {
+      console.log('Trying encoded slug:', encodedSlug);
+      response = await fetch(
+        `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/trip?slug=${encodedSlug}&_embed`
+      );
+      if (response.ok) {
+        trips = await response.json();
+        console.log('Found trips with encoded slug:', trips.length);
+      }
+    } catch (error) {
+      console.log('Error with encoded slug:', error.message);
+    }
+    
+    // If no trips found, try with original slug
+    if (trips.length === 0) {
+      try {
+        console.log('Trying original slug:', originalSlug);
+        response = await fetch(
+          `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/trip?slug=${originalSlug}&_embed`
+        );
+        if (response.ok) {
+          trips = await response.json();
+          console.log('Found trips with original slug:', trips.length);
+        }
+      } catch (error) {
+        console.log('Error with original slug:', error.message);
+      }
+    }
+    
+    // If still no trips found, try with decoded slug
+    if (trips.length === 0 && decodedSlug !== originalSlug) {
+      try {
+        console.log('Trying decoded slug:', decodedSlug);
+        response = await fetch(
+          `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/trip?slug=${decodedSlug}&_embed`
+        );
+        if (response.ok) {
+          trips = await response.json();
+          console.log('Found trips with decoded slug:', trips.length);
+        }
+      } catch (error) {
+        console.log('Error with decoded slug:', error.message);
+      }
     }
 
-    const trips = await response.json();
     const trip = trips[0];
 
     if (!trip) {
@@ -703,7 +750,7 @@ export async function getStaticProps({ params }) {
         // or use a batch endpoint if available
         for (const id of galleryIds) {
           try {
-            const mediaResponse = await fetch(`https://madaratalkon.com/wp-json/wp/v2/media/${id}`);
+            const mediaResponse = await fetch(`https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/media/${id}`);
             if (mediaResponse.ok) {
               const media = await mediaResponse.json();
               

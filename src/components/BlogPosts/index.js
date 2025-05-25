@@ -85,7 +85,7 @@ const BlogPosts = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          'https://madaratalkon.com/wp-json/wp/v2/posts'
+          'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/posts'
         );
 
         if (!response.ok) {
