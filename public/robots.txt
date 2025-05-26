@@ -12,9 +12,9 @@ Allow: /authors/
 # Disallow admin and private areas
 Disallow: /admin/
 Disallow: /api/
-Disallow: /drafts/
 Disallow: /_next/
-Disallow: /node_modules/
+Disallow: /examples/
+Disallow: /drafts
 
 # Disallow search and filter pages to prevent duplicate content
 Disallow: /search?
@@ -26,10 +26,13 @@ Allow: /favicon.ico
 Allow: /*.css
 Allow: /*.js
 
+# Allow important directories
+Allow: /offers/
+
 # Sitemap location
 Sitemap: https://madaratalkon.com/sitemap.xml
 
-# Crawl delay (optional - adjust based on server capacity)
+# Crawl delay (optional - helps prevent server overload)
 Crawl-delay: 1
 
 # Allow media files

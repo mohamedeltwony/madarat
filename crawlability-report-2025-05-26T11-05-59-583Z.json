@@ -1,0 +1,153 @@
+{
+  "summary": {
+    "total": 19,
+    "passed": 11,
+    "failed": 7,
+    "warnings": 1,
+    "score": 58
+  },
+  "tests": [
+    {
+      "name": "Robots.txt Accessibility",
+      "status": "PASS",
+      "message": "robots.txt is accessible and contains User-agent directive",
+      "details": {
+        "content": "# Allow all crawlers\nUser-agent: *\nAllow: /\n\n# Allow all search engines to crawl the site\nAllow: /posts/\nAllow: /destinations/\nAllow: /trips/\nAllow: /categories/\nAllow: /authors/\n\n# Disallow admin and..."
+      },
+      "timestamp": "2025-05-26T11:05:56.035Z"
+    },
+    {
+      "name": "Robots.txt Sitemap Reference",
+      "status": "PASS",
+      "message": "robots.txt contains sitemap reference",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:56.035Z"
+    },
+    {
+      "name": "Sitemap Accessibility",
+      "status": "FAIL",
+      "message": "No accessible sitemap found",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:57.386Z"
+    },
+    {
+      "name": "Noindex Check",
+      "status": "PASS",
+      "message": "No noindex directive found",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:57.403Z"
+    },
+    {
+      "name": "Mobile Viewport",
+      "status": "PASS",
+      "message": "Viewport meta tag is present",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:57.403Z"
+    },
+    {
+      "name": "Character Encoding",
+      "status": "PASS",
+      "message": "Character encoding declared: utf-8",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:57.403Z"
+    },
+    {
+      "name": "Internal Linking",
+      "status": "WARN",
+      "message": "No internal links found on homepage",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:57.421Z"
+    },
+    {
+      "name": "Page Accessibility",
+      "status": "FAIL",
+      "message": "Page returned status code: 500",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:57.437Z"
+    },
+    {
+      "name": "Page Speed (Homepage)",
+      "status": "PASS",
+      "message": "Page loaded in 16ms",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:57.453Z"
+    },
+    {
+      "name": "Page Accessibility (/about)",
+      "status": "FAIL",
+      "message": "Page returned status code: 500",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:57.762Z"
+    },
+    {
+      "name": "Page Speed (/about)",
+      "status": "PASS",
+      "message": "Page loaded in 18ms",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:57.780Z"
+    },
+    {
+      "name": "Page Accessibility (/contact)",
+      "status": "FAIL",
+      "message": "Page returned status code: 500",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:58.084Z"
+    },
+    {
+      "name": "Page Speed (/contact)",
+      "status": "PASS",
+      "message": "Page loaded in 19ms",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:58.103Z"
+    },
+    {
+      "name": "Page Accessibility (/trips)",
+      "status": "FAIL",
+      "message": "Page returned status code: 500",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:58.274Z"
+    },
+    {
+      "name": "Page Speed (/trips)",
+      "status": "PASS",
+      "message": "Page loaded in 16ms",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:58.290Z"
+    },
+    {
+      "name": "Page Accessibility (/destinations)",
+      "status": "FAIL",
+      "message": "Page returned status code: 500",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:58.442Z"
+    },
+    {
+      "name": "Page Speed (/destinations)",
+      "status": "PASS",
+      "message": "Page loaded in 17ms",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:58.459Z"
+    },
+    {
+      "name": "Page Accessibility (/blog)",
+      "status": "FAIL",
+      "message": "Page returned status code: 500",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:59.549Z"
+    },
+    {
+      "name": "Page Speed (/blog)",
+      "status": "PASS",
+      "message": "Page loaded in 33ms",
+      "details": null,
+      "timestamp": "2025-05-26T11:05:59.582Z"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "issue": "Missing sitemap",
+      "solution": "Ensure your sitemap.xml is accessible and properly formatted"
+    }
+  ]
+}

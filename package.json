@@ -14,7 +14,11 @@
     "format": "prettier --write src",
     "format:check": "prettier --check src",
     "prepare": "husky install",
-    "clean": "rm -rf .next"
+    "clean": "rm -rf .next",
+    "test:crawl": "node crawlability-test.js",
+    "test:crawl:prod": "node crawlability-test.js https://madarat.com",
+    "seo:scan": "node seo-fix-helper.js scan",
+    "seo:templates": "node seo-fix-helper.js templates"
   },
   "lint-staged": {
     "**/*.js": "npm run format:no-path",
