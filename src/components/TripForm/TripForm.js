@@ -31,6 +31,26 @@ export default function TripForm({
     // eslint-disable-next-line
   }, [fields]);
 
+  const getBrowserAndDeviceInfo = (userAgent) => {
+    const info = { browser: 'Unknown', os: 'Unknown', device: 'Unknown' };
+    if (/Firefox/i.test(userAgent)) info.browser = 'Firefox';
+    else if (/Chrome/i.test(userAgent) && !/Edg/i.test(userAgent) && !/OPR/i.test(userAgent)) info.browser = 'Chrome';
+    else if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)) info.browser = 'Safari';
+    else if (/Edg/i.test(userAgent)) info.browser = 'Edge';
+    else if (/OPR/i.test(userAgent)) info.browser = 'Opera';
+    else if (/MSIE|Trident/i.test(userAgent)) info.browser = 'Internet Explorer';
+    if (/Windows/i.test(userAgent)) info.os = 'Windows';
+    else if (/Macintosh|Mac OS X/i.test(userAgent)) info.os = 'macOS';
+    else if (/Android/i.test(userAgent)) info.os = 'Android';
+    else if (/iPhone|iPad|iPod/i.test(userAgent)) info.os = 'iOS';
+    else if (/Linux/i.test(userAgent)) info.os = 'Linux';
+    if (/iPhone|iPad|iPod/i.test(userAgent)) info.device = 'Apple';
+    else if (/Android.*Samsung/i.test(userAgent)) info.device = 'Samsung';
+    else if (/Android.*Pixel/i.test(userAgent)) info.device = 'Google';
+    else if (/Android.*Huawei/i.test(userAgent)) info.device = 'Huawei';
+    return info;
+  };
+
   const sendFbEvent = async (eventName, data, eventId = null) => {
     const phoneDigits = data.phone?.replace(/[^0-9]/g, '');
     try {
@@ -170,7 +190,8 @@ export default function TripForm({
         body: JSON.stringify(zapierPayload),
       });
       if (!response.ok) throw new Error('Zapier proxy error');
-      setIsLoading(false);
+      
+      console.log('Zapier submission successful, preparing redirect data...');
       
       // Prepare cleaned user data for thank-you page
       const cleanedEmail = formData.email ? formData.email.toLowerCase().trim() : '';
@@ -183,8 +204,7 @@ export default function TripForm({
       const fbp = getCookie('_fbp') || localStorage.getItem('_fbp') || '';
       const fbc = getCookie('_fbc') || localStorage.getItem('_fbc') || '';
       
-      // Pass all needed data to the success handler
-      onSuccess({
+      const successData = {
         processedPhone: cleanedPhone,
         externalId,
         leadEventId,
@@ -195,31 +215,19 @@ export default function TripForm({
         lastName: lastName,
         fbp,
         fbc
-      });
+      };
+      
+      console.log('Calling onSuccess with data:', successData);
+      
+      // Pass all needed data to the success handler
+      onSuccess(successData);
+      
+      // Set loading to false after onSuccess to avoid interfering with redirect
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       alert('حدث خطأ في تقديم النموذج. يرجى المحاولة مرة أخرى.');
     }
-  };
-
-  const getBrowserAndDeviceInfo = (userAgent) => {
-    const info = { browser: 'Unknown', os: 'Unknown', device: 'Unknown' };
-    if (/Firefox/i.test(userAgent)) info.browser = 'Firefox';
-    else if (/Chrome/i.test(userAgent) && !/Edg/i.test(userAgent) && !/OPR/i.test(userAgent)) info.browser = 'Chrome';
-    else if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)) info.browser = 'Safari';
-    else if (/Edg/i.test(userAgent)) info.browser = 'Edge';
-    else if (/OPR/i.test(userAgent)) info.browser = 'Opera';
-    else if (/MSIE|Trident/i.test(userAgent)) info.browser = 'Internet Explorer';
-    if (/Windows/i.test(userAgent)) info.os = 'Windows';
-    else if (/Macintosh|Mac OS X/i.test(userAgent)) info.os = 'macOS';
-    else if (/Android/i.test(userAgent)) info.os = 'Android';
-    else if (/iPhone|iPad|iPod/i.test(userAgent)) info.os = 'iOS';
-    else if (/Linux/i.test(userAgent)) info.os = 'Linux';
-    if (/iPhone|iPad|iPod/i.test(userAgent)) info.device = 'Apple';
-    else if (/Android.*Samsung/i.test(userAgent)) info.device = 'Samsung';
-    else if (/Android.*Pixel/i.test(userAgent)) info.device = 'Google';
-    else if (/Android.*Huawei/i.test(userAgent)) info.device = 'Huawei';
-    return info;
   };
 
   return (

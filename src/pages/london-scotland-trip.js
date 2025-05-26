@@ -121,37 +121,41 @@ export default function LondonScotlandTrip() {
 
   // Handle form submission success from TripForm component
   const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality }) => {
+    console.log('handleFormSuccess called with:', { processedPhone, externalId, leadEventId, nationality });
+    
     const thankYouUrl = nationality === 'مواطن' ? '/thank-you-citizen' : '/thank-you-resident';
     
-    // Create a form for submission to thank you page
-    const redirectForm = document.createElement('form');
-    redirectForm.method = 'GET';
-    redirectForm.action = thankYouUrl;
+    // Build query parameters
+    const queryParams = new URLSearchParams();
+    if (processedPhone) queryParams.set('phone', processedPhone);
+    if (externalId) queryParams.set('external_id', externalId);
+    if (leadEventId) queryParams.set('eventId', leadEventId);
     
-    // Add phone number as query param
-    const phoneField = document.createElement('input');
-    phoneField.type = 'hidden';
-    phoneField.name = 'phone';
-    phoneField.value = processedPhone;
-    redirectForm.appendChild(phoneField);
+    // Construct the full redirect URL
+    const redirectUrl = `${thankYouUrl}?${queryParams.toString()}`;
     
-    // Add external ID for tracking
-    const externalIdField = document.createElement('input');
-    externalIdField.type = 'hidden';
-    externalIdField.name = 'external_id';
-    externalIdField.value = externalId;
-    redirectForm.appendChild(externalIdField);
+    console.log(`Attempting redirect to: ${redirectUrl}`);
+    console.log('Current window location:', window.location.href);
     
-    // Add event ID for tracking
-    const eventIdField = document.createElement('input');
-    eventIdField.type = 'hidden';
-    eventIdField.name = 'eventId';
-    eventIdField.value = leadEventId;
-    redirectForm.appendChild(eventIdField);
-    
-    // Submit the form
-    document.body.appendChild(redirectForm);
-    redirectForm.submit();
+    // Add a small delay to ensure all async operations complete
+    setTimeout(() => {
+      console.log('Executing redirect now...');
+      try {
+        // Try router.push first as it's more reliable in Next.js
+        if (router) {
+          console.log('Using router.push for redirect...');
+          router.push(redirectUrl);
+        } else {
+          console.log('Router not available, using window.location.href...');
+          window.location.href = redirectUrl;
+        }
+      } catch (error) {
+        console.error('Redirect failed:', error);
+        // Final fallback: try window.location.replace
+        console.log('Trying window.location.replace as final fallback...');
+        window.location.replace(redirectUrl);
+      }
+    }, 100);
   };
 
   const handleInputChange = (e) => {

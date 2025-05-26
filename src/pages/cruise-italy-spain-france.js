@@ -144,35 +144,19 @@ export default function CruiseItalySpainFrance() {
   const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality }) => {
     const thankYouUrl = nationality === 'مواطن' ? '/thank-you-citizen' : '/thank-you-resident';
     
-    // Create a form for submission to thank you page
-    const redirectForm = document.createElement('form');
-    redirectForm.method = 'GET';
-    redirectForm.action = thankYouUrl;
+    // Build query parameters
+    const queryParams = new URLSearchParams();
+    if (processedPhone) queryParams.set('phone', processedPhone);
+    if (externalId) queryParams.set('external_id', externalId);
+    if (leadEventId) queryParams.set('eventId', leadEventId);
     
-    // Add phone number as query param
-    const phoneField = document.createElement('input');
-    phoneField.type = 'hidden';
-    phoneField.name = 'phone';
-    phoneField.value = processedPhone;
-    redirectForm.appendChild(phoneField);
+    // Construct the full redirect URL
+    const redirectUrl = `${thankYouUrl}?${queryParams.toString()}`;
     
-    // Add external ID for tracking
-    const externalIdField = document.createElement('input');
-    externalIdField.type = 'hidden';
-    externalIdField.name = 'external_id';
-    externalIdField.value = externalId;
-    redirectForm.appendChild(externalIdField);
+    console.log(`Redirecting to: ${redirectUrl}`);
     
-    // Add event ID for tracking
-    const eventIdField = document.createElement('input');
-    eventIdField.type = 'hidden';
-    eventIdField.name = 'eventId';
-    eventIdField.value = leadEventId;
-    redirectForm.appendChild(eventIdField);
-    
-    // Submit the form
-    document.body.appendChild(redirectForm);
-    redirectForm.submit();
+    // Use window.location.href for reliable redirect
+    window.location.href = redirectUrl;
   };
 
   const handleInputChange = (e) => {

@@ -406,32 +406,19 @@ export default function InternationalLicence() {
         ? '/thank-you-citizen'
         : '/thank-you-resident';
     
-    // Create a form and submit it for redirect
-    const redirectForm = document.createElement('form');
-    redirectForm.method = 'GET';
-    redirectForm.action = redirectPath;
+    // Build query parameters
+    const queryParams = new URLSearchParams();
+    if (processedPhone) queryParams.set('phone', processedPhone);
+    if (externalId) queryParams.set('external_id', externalId);
+    if (leadEventId) queryParams.set('eventId', leadEventId);
     
-    // Add hidden fields
-    const phoneField = document.createElement('input');
-    phoneField.type = 'hidden';
-    phoneField.name = 'phone';
-    phoneField.value = processedPhone;
-    redirectForm.appendChild(phoneField);
+    // Construct the full redirect URL
+    const redirectUrl = `${redirectPath}?${queryParams.toString()}`;
     
-    const externalIdField = document.createElement('input');
-    externalIdField.type = 'hidden';
-    externalIdField.name = 'external_id';
-    externalIdField.value = externalId;
-    redirectForm.appendChild(externalIdField);
+    console.log(`Redirecting to: ${redirectUrl}`);
     
-    const eventIdField = document.createElement('input');
-    eventIdField.type = 'hidden';
-    eventIdField.name = 'eventId';
-    eventIdField.value = leadEventId;
-    redirectForm.appendChild(eventIdField);
-    
-    document.body.appendChild(redirectForm);
-    redirectForm.submit();
+    // Use window.location.href for reliable redirect
+    window.location.href = redirectUrl;
   };
 
   return (

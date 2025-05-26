@@ -37,33 +37,45 @@ export default function ItalyTrip() {
 
   // Remove all form-related state and handlers except for the redirect logic
   const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality }) => {
+    console.log('handleFormSuccess called with:', { processedPhone, externalId, leadEventId, nationality });
+    
     // Determine redirect path based on nationality
     const redirectPath =
       (nationality === 'مواطن' || nationality === 'Saudi Arabia' || nationality === 'العربية السعودية')
         ? '/thank-you-citizen'
         : '/thank-you-resident';
-    // Create a form and submit it for redirect
-    const redirectForm = document.createElement('form');
-    redirectForm.method = 'GET';
-    redirectForm.action = redirectPath;
-    // Add hidden fields
-    const phoneField = document.createElement('input');
-    phoneField.type = 'hidden';
-    phoneField.name = 'phone';
-    phoneField.value = processedPhone;
-    redirectForm.appendChild(phoneField);
-    const externalIdField = document.createElement('input');
-    externalIdField.type = 'hidden';
-    externalIdField.name = 'external_id';
-    externalIdField.value = externalId;
-    redirectForm.appendChild(externalIdField);
-    const eventIdField = document.createElement('input');
-    eventIdField.type = 'hidden';
-    eventIdField.name = 'eventId';
-    eventIdField.value = leadEventId;
-    redirectForm.appendChild(eventIdField);
-    document.body.appendChild(redirectForm);
-    redirectForm.submit();
+    
+    // Build query parameters
+    const queryParams = new URLSearchParams();
+    if (processedPhone) queryParams.set('phone', processedPhone);
+    if (externalId) queryParams.set('external_id', externalId);
+    if (leadEventId) queryParams.set('eventId', leadEventId);
+    
+    // Construct the full redirect URL
+    const redirectUrl = `${redirectPath}?${queryParams.toString()}`;
+    
+    console.log(`Attempting redirect to: ${redirectUrl}`);
+    console.log('Current window location:', window.location.href);
+    
+    // Add a small delay to ensure all async operations complete
+    setTimeout(() => {
+      console.log('Executing redirect now...');
+      try {
+        // Try router.push first as it's more reliable in Next.js
+        if (router) {
+          console.log('Using router.push for redirect...');
+          router.push(redirectUrl);
+        } else {
+          console.log('Router not available, using window.location.href...');
+          window.location.href = redirectUrl;
+        }
+      } catch (error) {
+        console.error('Redirect failed:', error);
+        // Final fallback: try window.location.replace
+        console.log('Trying window.location.replace as final fallback...');
+        window.location.replace(redirectUrl);
+      }
+    }, 100);
   };
 
   // Helper function to get browser and device information
