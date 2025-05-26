@@ -37,10 +37,14 @@ export function fixInternalLinks() {
           const targetElement = document.getElementById(targetId);
 
           if (targetElement) {
-            // Scroll to the element
-            targetElement.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start',
+            // Use optimized smooth scroll with offset for fixed header
+            const headerOffset = 100;
+            const elementPosition = targetElement.offsetTop;
+            const offsetPosition = elementPosition - headerOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
             });
 
             // Update URL without reloading

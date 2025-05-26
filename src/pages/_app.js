@@ -30,6 +30,11 @@ const FloatingButtons = dynamic(() => import('../components/WhatsAppButton/Whats
   loading: () => null,
 });
 
+const PerformanceMonitor = dynamic(() => import('../components/PerformanceMonitor'), {
+  ssr: false,
+  loading: () => null,
+});
+
 // Import styles with proper optimization
 import '../styles/globals.scss';
 import '../styles/wordpress.scss';
@@ -243,6 +248,7 @@ function App({ Component, pageProps = {} }) {
           <FloatingButtons />
         </Suspense>
       )}
+      <PerformanceMonitor />
     </>
   );
 

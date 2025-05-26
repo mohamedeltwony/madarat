@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './TableOfContents.module.scss';
-import { FiList, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { FiList, FiChevronDown, FiChevronUp } from '@/components/icons';
 
 const TableOfContents = ({ headings }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -36,10 +36,14 @@ const TableOfContents = ({ headings }) => {
     e.preventDefault();
     const element = document.getElementById(id);
     if (element) {
-      // Smooth scroll to element
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
+      // Use optimized smooth scroll with offset for fixed header
+      const headerOffset = 100;
+      const elementPosition = element.offsetTop;
+      const offsetPosition = elementPosition - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
       });
 
       // Set URL hash without jumping

@@ -50,6 +50,11 @@
   font-family: var(--font-family-primary);
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Account for fixed header */
+}
+
 html,
 body {
   padding: 0;
@@ -58,9 +63,20 @@ body {
   font-size: 16px;
   line-height: var(--line-height-normal);
   background-color: #fff;
-  scroll-behavior: smooth;
   height: 100%;
   overflow-x: hidden;
+}
+
+/* Improve scrolling performance on mobile */
+@media (max-width: 768px) {
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 h1,

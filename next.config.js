@@ -112,70 +112,62 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
 
-  // Add webpack configuration for React Icons
-  webpack: (config, { isServer }) => {
-    // Add specific handling for react-icons to properly chunk it
-    config.optimization.splitChunks = {
-      ...config.optimization.splitChunks,
-      chunks: 'all',
-      cacheGroups: {
-        ...config.optimization.splitChunks.cacheGroups,
-        // Group common vendor packages together
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            // Get the name of the package
-            // Handle cases where module.context is null or undefined
-            if (!module.context) {
-              return 'vendor.unknown';
-            }
-            
-            const match = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/);
-            if (!match) {
-              return 'vendor.unknown';
-            }
-            
-            const packageName = match[1];
-            
-            // Return a chunk name based on the package name
-            // npm packages usually use @org/package-name format so convert to org-package-name
-            return `vendor.${packageName.replace('@', '').replace('/', '-')}`;
+  // Performance optimizations
+  webpack: (config, { isServer, dev }) => {
+    // Performance optimizations for production
+    if (!dev) {
+      // Optimize bundle splitting
+      config.optimization.splitChunks = {
+        ...config.optimization.splitChunks,
+        chunks: 'all',
+        minSize: 20000,
+        maxSize: 244000,
+        cacheGroups: {
+          ...config.optimization.splitChunks.cacheGroups,
+          // Framework chunk (React, Next.js)
+          framework: {
+            test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
+            name: 'framework',
+            priority: 40,
+            enforce: true,
+            chunks: 'all',
           },
-          priority: 20,
+          // Third-party libraries
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendor',
+            priority: 20,
+            chunks: 'all',
+            enforce: true,
+          },
+          // Common components
+          common: {
+            name: 'common',
+            minChunks: 2,
+            priority: 10,
+            chunks: 'all',
+            enforce: true,
+          },
         },
-        // Facebook events
-        facebookEvents: {
-          test: /[\\/]node_modules[\\/].*facebook/,
-          name: 'facebook-events',
-          priority: 30,
-          enforce: true,
-          chunks: 'all',
-        },
-        // Google analytics
-        googleAnalytics: {
-          test: /[\\/]node_modules[\\/].*google/,
-          name: 'google-analytics',
-          priority: 30,
-          enforce: true,
-          chunks: 'all',
-        },
-        // React icons specific optimization
-        reactIcons: {
-          test: /react-icons/,
-          name: 'react-icons',
-          priority: 30,
-          enforce: true,
-          chunks: 'all',
-        },
-        // Common CSS
-        styles: {
-          test: /\.css$/,
-          name: 'styles',
-          enforce: true,
-          priority: 30,
-        },
-      },
-    };
+      };
+
+      // Minimize CSS
+      config.optimization.minimizer = config.optimization.minimizer || [];
+      
+      // Tree shaking for unused code
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = false;
+    }
+
+    // Exclude react-icons from bundle to use our custom icons
+    config.externals = config.externals || [];
+    if (!isServer) {
+      config.externals.push({
+        'react-icons/fa': 'commonjs react-icons/fa',
+        'react-icons/fi': 'commonjs react-icons/fi',
+        'react-icons/bs': 'commonjs react-icons/bs',
+      });
+    }
     
     return config;
   },

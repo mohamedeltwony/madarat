@@ -116,9 +116,13 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
       // Scroll to expanded grid when showing all
       if (!showAll && expandedGridRef.current) {
         setTimeout(() => {
-          expandedGridRef.current.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
+          const headerOffset = 100;
+          const elementPosition = expandedGridRef.current.offsetTop;
+          const offsetPosition = elementPosition - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
           });
         }, 100);
       }

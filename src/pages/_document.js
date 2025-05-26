@@ -33,35 +33,11 @@ class MyDocument extends Document {
             fetchPriority="high"
           />
           
-          {/* Preload Critical Fonts */}
-          <link
-            rel="preload"
-            href="https://fonts.gstatic.com/s/cairo/v28/SLXgc1nY6HkvangtZmpQdkhzfH5lkSs2SgRjCAGMQ1z0hGA-W1ToLQ-HqUvBHw.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="https://fonts.gstatic.com/s/tajawal/v9/Iura6YBj_oCad4k1l_6gLuvPDSNmhqTOjsOKOw.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-
           {/* Optimized Font Loading with font-display: swap */}
           <link
-            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap"
             rel="stylesheet"
-            media="print"
-            onLoad="this.media='all'"
           />
-          <noscript>
-            <link
-              href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap"
-              rel="stylesheet"
-            />
-          </noscript>
 
           {/* Favicon and App Icons */}
           <link rel="icon" type="image/png" href="/favicon.png" />
@@ -84,6 +60,7 @@ class MyDocument extends Document {
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
             as="style"
             onLoad="this.onload=null;this.rel='stylesheet'"
+            media="print"
           />
           <noscript>
             <link 
@@ -119,12 +96,21 @@ class MyDocument extends Document {
           <style dangerouslySetInnerHTML={{
             __html: `
               /* Critical CSS for faster rendering */
+              * {
+                font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
+              }
               body { 
                 font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
                 margin: 0;
                 padding: 0;
                 direction: rtl;
                 text-align: right;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+              }
+              html {
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
               }
               .loading-spinner {
                 position: fixed;
@@ -208,12 +194,30 @@ class MyDocument extends Document {
               // Hide loading spinner when page loads
               window.addEventListener('load', function() {
                 document.getElementById('loading-spinner').style.display = 'none';
+                
+                // Defer third-party scripts after page load
+                setTimeout(function() {
+                  // Load Google Analytics after page load
+                  if (typeof gtag === 'undefined') {
+                    var script = document.createElement('script');
+                    script.async = true;
+                    script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-16669734019';
+                    document.head.appendChild(script);
+                  }
+                }, 2000);
               });
               
               // Add CSS animation for spinner
               const style = document.createElement('style');
               style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
               document.head.appendChild(style);
+              
+              // Optimize font loading
+              if ('fonts' in document) {
+                document.fonts.ready.then(function() {
+                  document.body.classList.add('fonts-loaded');
+                });
+              }
             `
           }} />
         </body>
