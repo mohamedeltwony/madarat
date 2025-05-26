@@ -18,7 +18,8 @@
     "test:crawl": "node crawlability-test.js",
     "test:crawl:prod": "node crawlability-test.js https://madarat.com",
     "seo:scan": "node seo-fix-helper.js scan",
-    "seo:templates": "node seo-fix-helper.js templates"
+    "seo:templates": "node seo-fix-helper.js templates",
+    "icons:generate": "node scripts/generate-icons.js"
   },
   "lint-staged": {
     "**/*.js": "npm run format:no-path",
@@ -33,7 +34,7 @@
     "dotenv": "^16.0.3",
     "fuse.js": "^6.6.2",
     "glob": "^10.3.10",
-        "he": "^1.2.0",
+    "he": "^1.2.0",
     "jwt-decode": "^4.0.0",
     "loader-utils": "^3.2.1",
     "next": "^15.3.2",
@@ -61,7 +62,7 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^15.4.0-canary.51",
-        "@svgr/webpack": "^8.1.0",
+    "@svgr/webpack": "^8.1.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.4.0-canary.51",
     "eslint-config-prettier": "^10.1.1",
@@ -70,7 +71,8 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
     "playwright": "^1.33.0",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "sharp": "^0.33.5"
   },
   "repository": {
     "type": "git",

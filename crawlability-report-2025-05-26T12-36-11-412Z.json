@@ -1,0 +1,368 @@
+{
+  "summary": {
+    "total": 49,
+    "passed": 43,
+    "failed": 1,
+    "warnings": 5,
+    "score": 88
+  },
+  "tests": [
+    {
+      "name": "Robots.txt Accessibility",
+      "status": "PASS",
+      "message": "robots.txt is accessible and contains User-agent directive",
+      "details": {
+        "content": "# Allow all crawlers\nUser-agent: *\nAllow: /\n\n# Allow all search engines to crawl the site\nAllow: /posts/\nAllow: /destinations/\nAllow: /trips/\nAllow: /categories/\nAllow: /authors/\n\n# Disallow admin and..."
+      },
+      "timestamp": "2025-05-26T12:35:59.604Z"
+    },
+    {
+      "name": "Robots.txt Sitemap Reference",
+      "status": "PASS",
+      "message": "robots.txt contains sitemap reference",
+      "details": null,
+      "timestamp": "2025-05-26T12:35:59.604Z"
+    },
+    {
+      "name": "Sitemap Accessibility",
+      "status": "PASS",
+      "message": "Sitemap found at /sitemap.xml with 52 URLs",
+      "details": {
+        "url": "/sitemap.xml",
+        "urlCount": 52
+      },
+      "timestamp": "2025-05-26T12:36:00.263Z"
+    },
+    {
+      "name": "Noindex Check",
+      "status": "PASS",
+      "message": "No noindex directive found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:01.983Z"
+    },
+    {
+      "name": "Mobile Viewport",
+      "status": "PASS",
+      "message": "Viewport meta tag is present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:01.983Z"
+    },
+    {
+      "name": "Character Encoding",
+      "status": "PASS",
+      "message": "Character encoding declared: utf-8",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:01.983Z"
+    },
+    {
+      "name": "Internal Linking",
+      "status": "PASS",
+      "message": "Found 17 internal links",
+      "details": {
+        "sampleLinks": [
+          "/",
+          "/book-now",
+          "/trips",
+          "/destinations",
+          "/posts/%d8%a3%d9%81%d8%b6%d9%84-%d8%a7%d9%84%d8%a3%d9%85%d8%a7%d9%83%d9%86-%d8%a7%d9%84%d8%b3%d9%8a%d8%a7%d8%ad%d9%8a%d8%a9-%d9%88%d8%a7%d9%84%d9%88%d8%ac%d9%87%d8%a7%d8%aa-%d8%a7%d9%84%d8%b9%d8%a7%d8%a6"
+        ]
+      },
+      "timestamp": "2025-05-26T12:36:02.997Z"
+    },
+    {
+      "name": "Title Tag (Homepage)",
+      "status": "WARN",
+      "message": "Title tag length (27) is outside optimal range (30-60 characters)",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:04.113Z"
+    },
+    {
+      "name": "Meta Description (Homepage)",
+      "status": "WARN",
+      "message": "Meta description length (17) is outside optimal range (120-160 characters)",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:04.113Z"
+    },
+    {
+      "name": "Canonical URL (Homepage)",
+      "status": "PASS",
+      "message": "Canonical URL is present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:04.113Z"
+    },
+    {
+      "name": "Open Graph Tags (Homepage)",
+      "status": "PASS",
+      "message": "Essential Open Graph tags are present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:04.113Z"
+    },
+    {
+      "name": "Structured Data (Homepage)",
+      "status": "PASS",
+      "message": "Valid JSON-LD structured data found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:04.114Z"
+    },
+    {
+      "name": "H1 Tag (Homepage)",
+      "status": "PASS",
+      "message": "Single H1 tag found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:04.114Z"
+    },
+    {
+      "name": "Page Speed (Homepage)",
+      "status": "WARN",
+      "message": "Page loaded in 1076ms (consider optimization)",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:05.190Z"
+    },
+    {
+      "name": "Title Tag (/about)",
+      "status": "PASS",
+      "message": "Title tag present with optimal length: 57 characters",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:05.782Z"
+    },
+    {
+      "name": "Meta Description (/about)",
+      "status": "PASS",
+      "message": "Meta description present with optimal length: 134 characters",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:05.782Z"
+    },
+    {
+      "name": "Canonical URL (/about)",
+      "status": "PASS",
+      "message": "Canonical URL is present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:05.782Z"
+    },
+    {
+      "name": "Open Graph Tags (/about)",
+      "status": "PASS",
+      "message": "Essential Open Graph tags are present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:05.782Z"
+    },
+    {
+      "name": "Structured Data (/about)",
+      "status": "PASS",
+      "message": "Valid JSON-LD structured data found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:05.782Z"
+    },
+    {
+      "name": "H1 Tag (/about)",
+      "status": "PASS",
+      "message": "Single H1 tag found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:05.782Z"
+    },
+    {
+      "name": "Page Speed (/about)",
+      "status": "PASS",
+      "message": "Page loaded in 425ms",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:06.207Z"
+    },
+    {
+      "name": "Title Tag (/contact)",
+      "status": "PASS",
+      "message": "Title tag present with optimal length: 58 characters",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:06.801Z"
+    },
+    {
+      "name": "Meta Description (/contact)",
+      "status": "PASS",
+      "message": "Meta description present with optimal length: 130 characters",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:06.801Z"
+    },
+    {
+      "name": "Canonical URL (/contact)",
+      "status": "PASS",
+      "message": "Canonical URL is present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:06.801Z"
+    },
+    {
+      "name": "Open Graph Tags (/contact)",
+      "status": "PASS",
+      "message": "Essential Open Graph tags are present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:06.801Z"
+    },
+    {
+      "name": "Structured Data (/contact)",
+      "status": "PASS",
+      "message": "Valid JSON-LD structured data found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:06.801Z"
+    },
+    {
+      "name": "H1 Tag (/contact)",
+      "status": "PASS",
+      "message": "Single H1 tag found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:06.801Z"
+    },
+    {
+      "name": "Page Speed (/contact)",
+      "status": "PASS",
+      "message": "Page loaded in 429ms",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:07.230Z"
+    },
+    {
+      "name": "Title Tag (/trips)",
+      "status": "PASS",
+      "message": "Title tag present with optimal length: 31 characters",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:08.152Z"
+    },
+    {
+      "name": "Meta Description (/trips)",
+      "status": "WARN",
+      "message": "Meta description length (51) is outside optimal range (120-160 characters)",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:08.153Z"
+    },
+    {
+      "name": "Canonical URL (/trips)",
+      "status": "PASS",
+      "message": "Canonical URL is present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:08.153Z"
+    },
+    {
+      "name": "Open Graph Tags (/trips)",
+      "status": "PASS",
+      "message": "Essential Open Graph tags are present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:08.153Z"
+    },
+    {
+      "name": "Structured Data (/trips)",
+      "status": "PASS",
+      "message": "Valid JSON-LD structured data found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:08.153Z"
+    },
+    {
+      "name": "H1 Tag (/trips)",
+      "status": "PASS",
+      "message": "Single H1 tag found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:08.153Z"
+    },
+    {
+      "name": "Page Speed (/trips)",
+      "status": "PASS",
+      "message": "Page loaded in 531ms",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:08.684Z"
+    },
+    {
+      "name": "Title Tag (/destinations)",
+      "status": "PASS",
+      "message": "Title tag present with optimal length: 31 characters",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:09.700Z"
+    },
+    {
+      "name": "Meta Description (/destinations)",
+      "status": "WARN",
+      "message": "Meta description length (85) is outside optimal range (120-160 characters)",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:09.700Z"
+    },
+    {
+      "name": "Canonical URL (/destinations)",
+      "status": "PASS",
+      "message": "Canonical URL is present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:09.700Z"
+    },
+    {
+      "name": "Open Graph Tags (/destinations)",
+      "status": "PASS",
+      "message": "Essential Open Graph tags are present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:09.700Z"
+    },
+    {
+      "name": "Structured Data (/destinations)",
+      "status": "PASS",
+      "message": "Valid JSON-LD structured data found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:09.700Z"
+    },
+    {
+      "name": "H1 Tag (/destinations)",
+      "status": "FAIL",
+      "message": "No H1 tag found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:09.700Z"
+    },
+    {
+      "name": "Page Speed (/destinations)",
+      "status": "PASS",
+      "message": "Page loaded in 563ms",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:10.263Z"
+    },
+    {
+      "name": "Title Tag (/blog)",
+      "status": "PASS",
+      "message": "Title tag present with optimal length: 58 characters",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:10.992Z"
+    },
+    {
+      "name": "Meta Description (/blog)",
+      "status": "PASS",
+      "message": "Meta description present with optimal length: 149 characters",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:10.992Z"
+    },
+    {
+      "name": "Canonical URL (/blog)",
+      "status": "PASS",
+      "message": "Canonical URL is present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:10.992Z"
+    },
+    {
+      "name": "Open Graph Tags (/blog)",
+      "status": "PASS",
+      "message": "Essential Open Graph tags are present",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:10.992Z"
+    },
+    {
+      "name": "Structured Data (/blog)",
+      "status": "PASS",
+      "message": "Valid JSON-LD structured data found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:10.992Z"
+    },
+    {
+      "name": "H1 Tag (/blog)",
+      "status": "PASS",
+      "message": "Single H1 tag found",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:10.992Z"
+    },
+    {
+      "name": "Page Speed (/blog)",
+      "status": "PASS",
+      "message": "Page loaded in 419ms",
+      "details": null,
+      "timestamp": "2025-05-26T12:36:11.411Z"
+    }
+  ],
+  "recommendations": []
+}
