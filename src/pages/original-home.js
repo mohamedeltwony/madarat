@@ -39,6 +39,8 @@ export default function OriginalHome({
   destinations = [],
   featuredAuthors = [],
   archives = [],
+  offerTrips = [],
+  tripsPagination,
 }) {
   const { metadata = {} } = useSite();
   const { title = 'مدارات الكون', description = 'موقع مدارات الكون' } =
@@ -207,6 +209,7 @@ export async function getStaticProps() {
 
     // Import WordPress API functions
     const { fetchDestinations, fetchOfferTrips } = require('@/lib/wordpress-api');
+    const { getAllPosts } = require('@/lib/posts');
 
     // Fetch destinations from WordPress API
     console.log('Starting to fetch destinations...');
@@ -215,15 +218,26 @@ export async function getStaticProps() {
 
     // Fetch offer trips from WordPress API
     console.log('Starting to fetch offer trips...');
-    const { trips: offerTrips, pagination } = await fetchOfferTrips({ perPage: 10 });
+    const { trips: offerTrips, pagination: tripsPagination } = await fetchOfferTrips({ perPage: 10 });
     console.log(`Fetched ${offerTrips.length} offer trips`);
+
+    // Fetch actual blog posts from WordPress API
+    console.log('Starting to fetch blog posts...');
+    const { posts } = await getAllPosts();
+    console.log(`Fetched ${posts.length} blog posts`);
 
     return {
       props: {
         metadata,
         destinations,
-        posts: offerTrips || [], // Use offer trips as posts for now
-        pagination,
+        posts: posts || [], // Use actual blog posts
+        pagination: {
+          totalPages: Math.ceil(posts.length / 10),
+          total: posts.length,
+          currentPage: 1,
+        },
+        offerTrips: offerTrips || [], // Keep offer trips separate
+        tripsPagination,
       },
       // Revalidate data every hour (3600 seconds)
       revalidate: 3600,
@@ -239,6 +253,12 @@ export async function getStaticProps() {
         destinations: [],
         posts: [],
         pagination: {
+          totalPages: 1,
+          total: 0,
+          currentPage: 1,
+        },
+        offerTrips: [],
+        tripsPagination: {
           totalPages: 1,
           total: 0,
           currentPage: 1,
