@@ -255,12 +255,73 @@ export async function getStaticProps() {
     const { metadata } = await getSiteMetadata();
     const { menus } = await getAllMenus();
 
+    // Fetch destinations from WordPress API
+    let destinations = [];
+    try {
+      const destinationsResponse = await fetch(
+        'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
+        {
+          headers: {
+            Accept: 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+          timeout: 30000, // 30 second timeout
+        }
+      );
+
+      if (destinationsResponse.ok) {
+        const destinationsData = await destinationsResponse.json();
+        
+        // Format destinations data
+        destinations = destinationsData.map((dest) => {
+          // Get the best image URL from thumbnail sizes
+          let imageUrl = null;
+          if (dest.thumbnail) {
+            // If destination-thumb-size exists, use it
+            if (dest.thumbnail.sizes && dest.thumbnail.sizes['destination-thumb-size']) {
+              imageUrl = dest.thumbnail.sizes['destination-thumb-size'].source_url;
+            } 
+            // Fallback to full image
+            else if (dest.thumbnail.sizes && dest.thumbnail.sizes.full) {
+              imageUrl = dest.thumbnail.sizes.full.source_url;
+            }
+            // Final fallback if no sizes are available
+            else if (dest.thumbnail.source_url) {
+              imageUrl = dest.thumbnail.source_url;
+            }
+          }
+
+          // Parse description from rendered HTML content
+          let description = '';
+          if (dest.description) {
+            description = dest.description;
+            // Remove HTML tags if needed
+            description = description.replace(/<[^>]*>?/gm, '');
+          }
+
+          return {
+            id: dest.id,
+            title: dest.name || '',
+            slug: dest.slug || '',
+            description: description,
+            image: imageUrl,
+            count: dest.count || 0, // Use count field for trip count
+          };
+        });
+      } else {
+        console.error('Failed to fetch destinations:', destinationsResponse.status);
+      }
+    } catch (destinationsError) {
+      console.error('Error fetching destinations:', destinationsError);
+    }
+
     return {
       props: {
         posts: posts || [],
         categories: categories || [],
         metadata: metadata || {},
         menus: menus || [],
+        destinations: destinations || [],
       },
       revalidate: 3600, // Revalidate every hour
     };
@@ -272,6 +333,7 @@ export async function getStaticProps() {
         categories: [],
         metadata: {},
         menus: [],
+        destinations: [],
       },
       revalidate: 3600,
     };

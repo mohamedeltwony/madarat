@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
-import usePageMetadata from '@/hooks/use-page-metadata';
+import { getSiteMetadata } from '@/lib/site';
+import { getAllMenus } from '@/lib/menus';
+import { getPostsByAuthorSlug } from '@/lib/posts';
 
 import Layout from '@/components/Layout';
 import Header from '@/components/Header';
@@ -14,92 +16,20 @@ import Image from 'next/legacy/image';
 import Link from 'next/link';
 import styles from '@/styles/pages/AuthorDashboard.module.scss';
 
-export default function AuthorDashboard() {
+export default function AuthorDashboard({ 
+  metadata, 
+  menus, 
+  author, 
+  recentPosts, 
+  draftPosts, 
+  isAuthenticated,
+  error 
+}) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const [author, setAuthor] = useState(null);
-  const [recentPosts, setRecentPosts] = useState([]);
-  const [draftPosts, setDraftPosts] = useState([]);
-  const [error, setError] = useState(null);
-
-  // Mock authentication - in a real app, this would check if the user is logged in
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    // Simulate checking authentication
-    const checkAuth = () => {
-      try {
-        // This is a mock - in a real app, you would check if the user is logged in
-        // For demo purposes, we'll just set it to true after a delay
-        setTimeout(() => {
-          setIsAuthenticated(true);
-
-          // Mock loading author data
-          setAuthor({
-            name: 'محمد أحمد',
-            slug: 'mohamed-ahmed',
-            description: 'كاتب ومحرر محتوى متخصص في السفر والسياحة',
-            avatar: 'https://via.placeholder.com/150',
-            postCount: 24,
-          });
-
-          // Mock recent posts
-          setRecentPosts([
-            {
-              id: 1,
-              title: 'أفضل الوجهات السياحية في مصر',
-              date: '2023-03-15',
-              views: 2340,
-              comments: 15,
-            },
-            {
-              id: 2,
-              title: 'دليل السفر إلى تركيا',
-              date: '2023-02-28',
-              views: 1890,
-              comments: 8,
-            },
-            {
-              id: 3,
-              title: 'نصائح للسفر بميزانية محدودة',
-              date: '2023-02-10',
-              views: 1560,
-              comments: 12,
-            },
-          ]);
-
-          // Mock draft posts
-          setDraftPosts([
-            { id: 4, title: 'أفضل الفنادق في دبي', lastEdited: '2023-03-20' },
-            {
-              id: 5,
-              title: 'تجربتي في السفر إلى المغرب',
-              lastEdited: '2023-03-18',
-            },
-          ]);
-
-          setIsLoading(false);
-        }, 1000);
-      } catch (err) {
-        console.error('Error loading dashboard data:', err);
-        setError('حدث خطأ أثناء تحميل البيانات');
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  const { metadata } = usePageMetadata({
-    metadata: {
-      title: 'لوحة تحكم المؤلف',
-      description: 'إدارة المقالات والإحصائيات الخاصة بك',
-    },
-  });
 
   if (error) {
     return (
-      <Layout metadata={metadata}>
+      <Layout metadata={metadata} menus={menus}>
         <Header>
           <Container>
             <h1>لوحة تحكم المؤلف</h1>
@@ -122,9 +52,9 @@ export default function AuthorDashboard() {
     );
   }
 
-  if (!isAuthenticated || isLoading) {
+  if (!isAuthenticated) {
     return (
-      <Layout metadata={metadata}>
+      <Layout metadata={metadata} menus={menus}>
         <Header>
           <Container>
             <h1>لوحة تحكم المؤلف</h1>
@@ -132,9 +62,19 @@ export default function AuthorDashboard() {
         </Header>
         <Section>
           <Container>
-            <div className={styles.loadingContainer}>
-              <div className={styles.spinner}></div>
-              <p>جاري التحميل...</p>
+            <div className={styles.authContainer}>
+              <div className={styles.authMessage}>
+                <h2>يجب تسجيل الدخول للوصول إلى لوحة التحكم</h2>
+                <p>يرجى تسجيل الدخول للوصول إلى لوحة تحكم المؤلف وإدارة مقالاتك.</p>
+                <div className={styles.authActions}>
+                  <Link href="/login" className={styles.actionButton}>
+                    تسجيل الدخول
+                  </Link>
+                  <Link href="/register" className={styles.actionButton}>
+                    إنشاء حساب جديد
+                  </Link>
+                </div>
+              </div>
             </div>
           </Container>
         </Section>
@@ -143,7 +83,7 @@ export default function AuthorDashboard() {
   }
 
   return (
-    <Layout metadata={metadata}>
+    <Layout metadata={metadata} menus={menus}>
       <Header>
         <Container>
           <div className={styles.dashboardHeader}>
@@ -152,7 +92,7 @@ export default function AuthorDashboard() {
               <div className={styles.authorInfo}>
                 <div className={styles.avatarContainer}>
                   <Image
-                    src={author.avatar}
+                    src={author.avatar || 'https://via.placeholder.com/60'}
                     alt={`صورة ${author.name}`}
                     width={60}
                     height={60}
@@ -202,28 +142,236 @@ export default function AuthorDashboard() {
                   )}
                 </div>
 
-                <PostsTable posts={recentPosts} type="published" />
+                {recentPosts && recentPosts.length > 0 ? (
+                  <div className={styles.postsGrid}>
+                    {recentPosts.map((post) => (
+                      <div key={post.id} className={styles.postCard}>
+                        <h4 className={styles.postTitle}>
+                          <Link href={`/posts/${post.slug}`}>
+                            {post.title}
+                          </Link>
+                        </h4>
+                        <div className={styles.postMeta}>
+                          <span className={styles.postDate}>
+                            {new Date(post.date).toLocaleDateString('ar-EG')}
+                          </span>
+                          <span className={styles.postViews}>
+                            {post.views || 0} مشاهدة
+                          </span>
+                          <span className={styles.postComments}>
+                            {post.comments || 0} تعليق
+                          </span>
+                        </div>
+                        <div className={styles.postActions}>
+                          <Link 
+                            href={`/posts/${post.slug}/edit`}
+                            className={styles.editLink}
+                          >
+                            تعديل
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className={styles.emptyState}>
+                    <p>لم تقم بنشر أي مقالات بعد.</p>
+                    <Link href="/posts/new" className={styles.actionButton}>
+                      إنشاء مقالة جديدة
+                    </Link>
+                  </div>
+                )}
               </div>
 
-              <div className={styles.postsSection}>
-                <div className={styles.sectionHeader}>
-                  <h3 className={styles.sectionTitle}>المسودات</h3>
-                  <Link href="/drafts" className={styles.viewAllLink}>
-                    عرض الكل
-                  </Link>
+              {draftPosts && draftPosts.length > 0 && (
+                <div className={styles.draftsSection}>
+                  <div className={styles.sectionHeader}>
+                    <h3 className={styles.sectionTitle}>المسودات</h3>
+                  </div>
+                  <div className={styles.draftsGrid}>
+                    {draftPosts.map((draft) => (
+                      <div key={draft.id} className={styles.draftCard}>
+                        <h4 className={styles.draftTitle}>{draft.title}</h4>
+                        <div className={styles.draftMeta}>
+                          <span className={styles.lastEdited}>
+                            آخر تعديل: {new Date(draft.lastEdited).toLocaleDateString('ar-EG')}
+                          </span>
+                        </div>
+                        <div className={styles.draftActions}>
+                          <Link 
+                            href={`/posts/${draft.id}/edit`}
+                            className={styles.editLink}
+                          >
+                            متابعة التحرير
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-
-                <PostsTable posts={draftPosts} type="drafts" />
-              </div>
+              )}
             </div>
 
             <div className={styles.sidebar}>
-              {author && <AuthorStats authorSlug={author.slug} />}
-              {author && <AuthorContributions authorSlug={author.slug} />}
+              {author && (
+                <>
+                  <AuthorStats 
+                    authorId={author.id}
+                    postCount={author.postCount}
+                    totalViews={author.totalViews || 0}
+                    totalComments={author.totalComments || 0}
+                  />
+                  <AuthorContributions authorSlug={author.slug} />
+                </>
+              )}
             </div>
           </div>
         </Container>
       </Section>
     </Layout>
   );
+}
+
+export async function getServerSideProps(context) {
+  try {
+    // Check authentication - In a real app, this would check session/JWT
+    // For now, we'll simulate authentication check
+    const { req } = context;
+    const isAuthenticated = checkAuthentication(req);
+    
+    if (!isAuthenticated) {
+      // Fetch basic metadata for unauthenticated users
+      const [{ metadata }, { menus }] = await Promise.all([
+        getSiteMetadata(),
+        getAllMenus(),
+      ]);
+
+      const pageMetadata = {
+        title: 'لوحة تحكم المؤلف - مدارات الكون',
+        description: 'إدارة المقالات والإحصائيات الخاصة بك',
+        robots: 'noindex, nofollow', // Don't index dashboard pages
+      };
+
+      return {
+        props: {
+          metadata: { ...metadata, ...pageMetadata },
+          menus: menus || [],
+          author: null,
+          recentPosts: [],
+          draftPosts: [],
+          isAuthenticated: false,
+          error: null,
+        },
+      };
+    }
+
+    // Get current user info - In a real app, this would come from session
+    const currentUser = getCurrentUser(req);
+    
+    if (!currentUser) {
+      throw new Error('User not found');
+    }
+
+    // Fetch user-specific data
+    const [
+      { metadata },
+      { menus },
+      { posts: recentPosts }
+    ] = await Promise.all([
+      getSiteMetadata(),
+      getAllMenus(),
+      getPostsByAuthorSlug({ slug: currentUser.slug, first: 10 })
+    ]);
+
+    // Mock draft posts - In a real app, this would fetch from API
+    const draftPosts = [
+      {
+        id: 'draft-1',
+        title: 'أفضل الفنادق في دبي',
+        lastEdited: new Date().toISOString(),
+      },
+      {
+        id: 'draft-2',
+        title: 'تجربتي في السفر إلى المغرب',
+        lastEdited: new Date(Date.now() - 86400000).toISOString(),
+      },
+    ];
+
+    const pageMetadata = {
+      title: 'لوحة تحكم المؤلف - مدارات الكون',
+      description: 'إدارة المقالات والإحصائيات الخاصة بك',
+      robots: 'noindex, nofollow', // Don't index dashboard pages
+    };
+
+    return {
+      props: {
+        metadata: { ...metadata, ...pageMetadata },
+        menus: menus || [],
+        author: {
+          id: currentUser.id,
+          name: currentUser.name,
+          slug: currentUser.slug,
+          description: currentUser.description || 'كاتب ومحرر محتوى متخصص في السفر والسياحة',
+          avatar: currentUser.avatar || 'https://via.placeholder.com/150',
+          postCount: recentPosts?.length || 0,
+          totalViews: currentUser.totalViews || 0,
+          totalComments: currentUser.totalComments || 0,
+        },
+        recentPosts: recentPosts || [],
+        draftPosts,
+        isAuthenticated: true,
+        error: null,
+      },
+    };
+  } catch (error) {
+    console.error('Error in dashboard getServerSideProps:', error);
+    
+    // Fetch basic metadata for error state
+    const [{ metadata }, { menus }] = await Promise.all([
+      getSiteMetadata().catch(() => ({ metadata: {} })),
+      getAllMenus().catch(() => ({ menus: [] })),
+    ]);
+
+    const pageMetadata = {
+      title: 'لوحة تحكم المؤلف - مدارات الكون',
+      description: 'إدارة المقالات والإحصائيات الخاصة بك',
+      robots: 'noindex, nofollow',
+    };
+
+    return {
+      props: {
+        metadata: { ...metadata, ...pageMetadata },
+        menus: menus || [],
+        author: null,
+        recentPosts: [],
+        draftPosts: [],
+        isAuthenticated: false,
+        error: 'حدث خطأ أثناء تحميل البيانات. يرجى المحاولة مرة أخرى.',
+      },
+    };
+  }
+}
+
+// Helper functions for authentication - In a real app, these would be more sophisticated
+function checkAuthentication(req) {
+  // Mock authentication check
+  // In a real app, this would check JWT token, session, etc.
+  const authHeader = req.headers.authorization;
+  const sessionCookie = req.cookies.session;
+  
+  // For demo purposes, return true if any auth indicator is present
+  return !!(authHeader || sessionCookie);
+}
+
+function getCurrentUser(req) {
+  // Mock user data - In a real app, this would decode JWT or fetch from session
+  return {
+    id: 1,
+    name: 'محمد أحمد',
+    slug: 'mohamed-ahmed',
+    description: 'كاتب ومحرر محتوى متخصص في السفر والسياحة',
+    avatar: 'https://via.placeholder.com/150',
+    totalViews: 15420,
+    totalComments: 89,
+  };
 }

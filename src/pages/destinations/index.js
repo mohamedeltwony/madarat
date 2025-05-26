@@ -1,22 +1,21 @@
 import { useState, useEffect } from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
+import { getSiteMetadata } from '@/lib/site';
+import { getAllMenus } from '@/lib/menus';
+
 import Layout from '../../components/Layout';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
-import Meta from '../../components/Meta';
+import Header from '../../components/Header';
+import Link from 'next/link';
 import styles from '../../styles/pages/Destinations.module.scss';
 
-export default function Destinations({ destinations = [] }) {
-  const [filteredDestinations, setFilteredDestinations] =
-    useState(destinations);
+export default function Destinations({ metadata, menus, destinations = [], error }) {
+  const [filteredDestinations, setFilteredDestinations] = useState(destinations);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!Array.isArray(destinations)) {
-      setError('Invalid destinations data');
       return;
     }
 
@@ -29,21 +28,30 @@ export default function Destinations({ destinations = [] }) {
         );
       });
       setFilteredDestinations(filtered);
-      setError(null);
     } catch (err) {
-      setError('Error filtering destinations');
       console.error('Error filtering destinations:', err);
     }
   }, [searchQuery, destinations]);
 
   if (error) {
     return (
-      <Layout>
+      <Layout metadata={metadata} menus={menus}>
+        <Header>
+          <Container>
+            <h1>الوجهات السياحية</h1>
+          </Container>
+        </Header>
         <Section>
           <Container>
             <div className={styles.error}>
               <h2>عذراً، حدث خطأ</h2>
               <p>{error}</p>
+              <button 
+                onClick={() => window.location.reload()}
+                className={styles.retryButton}
+              >
+                إعادة المحاولة
+              </button>
             </div>
           </Container>
         </Section>
@@ -52,39 +60,30 @@ export default function Destinations({ destinations = [] }) {
   }
 
   return (
-    <Layout>
-      <Head>
-        <title>الوجهات السياحية | مدارات الكون</title>
-        <Meta
-          title="الوجهات السياحية | مدارات الكون"
-          description="اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل الأماكن حول العالم"
-        />
-      </Head>
-
-      <Section className={styles.heroSection}>
-        <div className={styles.worldMap}>
-          <img src="/images/world-map.png" alt="World Map" />
-        </div>
+    <Layout metadata={metadata} menus={menus}>
+      <Header>
         <Container>
-          <h1 className={styles.pageTitle}>استكشف الوجهات السياحية</h1>
-          <p className={styles.pageDescription}>
-            اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل
-            الأماكن حول العالم مع مدارات الكون
-          </p>
-          <div className={styles.heroStats}>
-            <div className={styles.statItem}>
-              <span className={styles.statNumber}>{destinations.length}</span>
-              <span className={styles.statLabel}>وجهة سياحية</span>
-            </div>
-            <div className={styles.statItem}>
-              <span className={styles.statNumber}>
-                {destinations.reduce((sum, dest) => sum + dest.tripCount, 0)}
-              </span>
-              <span className={styles.statLabel}>رحلة متاحة</span>
+          <div className={styles.heroContent}>
+            <h1 className={styles.pageTitle}>استكشف الوجهات السياحية</h1>
+            <p className={styles.pageDescription}>
+              اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل
+              الأماكن حول العالم مع مدارات الكون
+            </p>
+            <div className={styles.heroStats}>
+              <div className={styles.statItem}>
+                <span className={styles.statNumber}>{destinations.length}</span>
+                <span className={styles.statLabel}>وجهة سياحية</span>
+              </div>
+              <div className={styles.statItem}>
+                <span className={styles.statNumber}>
+                  {destinations.reduce((sum, dest) => sum + (dest.tripCount || 0), 0)}
+                </span>
+                <span className={styles.statLabel}>رحلة متاحة</span>
+              </div>
             </div>
           </div>
         </Container>
-      </Section>
+      </Header>
 
       <Section className={styles.destinationsSection}>
         <Container>
@@ -147,6 +146,7 @@ export default function Destinations({ destinations = [] }) {
                         src={destination.image}
                         alt={destination.title}
                         className={styles.image}
+                        loading="lazy"
                       />
                     ) : (
                       <div className={styles.placeholderImage}>
@@ -167,7 +167,7 @@ export default function Destinations({ destinations = [] }) {
                         <svg viewBox="0 0 24 24" width="16" height="16">
                           <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"></path>
                         </svg>
-                        {destination.tripCount} رحلات متاحة
+                        {destination.tripCount || 0} رحلات متاحة
                       </span>
                       <span className={styles.exploreMore}>
                         اكتشف المزيد
@@ -181,7 +181,23 @@ export default function Destinations({ destinations = [] }) {
               ))}
             </div>
           ) : (
-            <div className={styles.noDestinations}>لم نجد وجهات تطابق بحثك</div>
+            <div className={styles.noDestinations}>
+              <h3>لم نجد وجهات تطابق بحثك</h3>
+              <p>جرب البحث بكلمات مختلفة أو تصفح جميع الوجهات المتاحة</p>
+              <button 
+                onClick={() => setSearchQuery('')}
+                className={styles.clearSearchButton}
+              >
+                عرض جميع الوجهات
+              </button>
+            </div>
+          )}
+
+          {destinations.length === 0 && !error && (
+            <div className={styles.emptyState}>
+              <h3>لا توجد وجهات متاحة حالياً</h3>
+              <p>نعمل على إضافة وجهات جديدة قريباً. تابعونا للحصول على آخر التحديثات.</p>
+            </div>
           )}
         </Container>
       </Section>
@@ -195,22 +211,31 @@ export async function getStaticProps() {
 
   while (currentTry < maxRetries) {
     try {
-      const response = await fetch(
-        'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
-        {
-          headers: {
-            Accept: 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-          timeout: 30000, // 30 second timeout
-        }
-      );
+      // Fetch metadata, menus, and destinations data
+      const [
+        { metadata },
+        { menus },
+        destinationsResponse
+      ] = await Promise.all([
+        getSiteMetadata(),
+        getAllMenus(),
+        fetch(
+          'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
+          {
+            headers: {
+              Accept: 'application/json',
+              'Access-Control-Allow-Origin': '*',
+            },
+            timeout: 30000, // 30 second timeout
+          }
+        )
+      ]);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (!destinationsResponse.ok) {
+        throw new Error(`HTTP error! status: ${destinationsResponse.status}`);
       }
 
-      const destinations = await response.json();
+      const destinations = await destinationsResponse.json();
 
       // Format destinations data
       const formattedDestinations = destinations.map((dest) => {
@@ -249,12 +274,36 @@ export async function getStaticProps() {
         };
       });
 
+      // Construct page metadata
+      const pageMetadata = {
+        title: 'الوجهات السياحية - مدارات الكون',
+        description: `اكتشف ${formattedDestinations.length} وجهة سياحية مميزة مع مدارات الكون. رحلات لا تُنسى في أجمل الأماكن حول العالم`,
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/destinations`,
+        robots: 'index, follow',
+        og: {
+          title: 'الوجهات السياحية - مدارات الكون',
+          description: `اكتشف ${formattedDestinations.length} وجهة سياحية مميزة مع مدارات الكون`,
+          type: 'website',
+          url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/destinations`,
+          siteName: 'مدارات الكون',
+          image: formattedDestinations[0]?.image || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/destinations-og.jpg`,
+        },
+        twitter: {
+          card: 'summary_large_image',
+          title: 'الوجهات السياحية - مدارات الكون',
+          description: `اكتشف ${formattedDestinations.length} وجهة سياحية مميزة مع مدارات الكون`,
+          image: formattedDestinations[0]?.image || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/destinations-og.jpg`,
+        },
+      };
+
       return {
         props: {
+          metadata: { ...metadata, ...pageMetadata },
+          menus: menus || [],
           destinations: formattedDestinations,
           error: null,
         },
-        revalidate: 3600, // Revalidate every hour
+        revalidate: 1800, // Revalidate every 30 minutes as per plan
       };
     } catch (error) {
       console.error(
@@ -264,11 +313,23 @@ export async function getStaticProps() {
       currentTry++;
 
       if (currentTry === maxRetries) {
+        // Fetch basic metadata for error state
+        const [{ metadata }, { menus }] = await Promise.all([
+          getSiteMetadata().catch(() => ({ metadata: {} })),
+          getAllMenus().catch(() => ({ menus: [] })),
+        ]);
+
+        const pageMetadata = {
+          title: 'الوجهات السياحية - مدارات الكون',
+          description: 'اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل الأماكن حول العالم',
+        };
+
         return {
           props: {
+            metadata: { ...metadata, ...pageMetadata },
+            menus: menus || [],
             destinations: [],
-            error:
-              'عذراً، حدث خطأ أثناء تحميل الوجهات. يرجى المحاولة مرة أخرى لاحقاً.',
+            error: 'عذراً، حدث خطأ أثناء تحميل الوجهات. يرجى المحاولة مرة أخرى لاحقاً.',
           },
           revalidate: 60, // Retry more frequently on error
         };

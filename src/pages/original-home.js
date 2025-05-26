@@ -13,6 +13,7 @@ import SparkleButton from '@/components/UI/SparkleButton';
 import styles from '@/styles/pages/Home.module.scss';
 import UIStyles from '@/components/UI/UI.module.scss';
 import { getSiteMetadataREST } from '@/lib/rest-api';
+import { getAllMenus } from '@/lib/menus';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import PostCard from '@/components/PostCard';
@@ -40,6 +41,8 @@ export default function OriginalHome({
   archives = [],
   offerTrips = [],
   tripsPagination,
+  metadata: pageMetadata,
+  menus,
 }) {
   const { metadata = {} } = useSite();
   const { title = 'مدارات الكون', description = 'موقع مدارات الكون' } =
@@ -80,7 +83,7 @@ export default function OriginalHome({
         <meta property="og:image" content="/Madarat-logo-768x238.png" />
       </Head>
 
-      <Layout>
+      <Layout metadata={pageMetadata} menus={menus}>
         <WebsiteJsonLd siteTitle={title} />
 
         <Hero
@@ -199,12 +202,18 @@ export default function OriginalHome({
 
 export async function getStaticProps() {
   try {
-    // Fetch site metadata
-    const metadata = (await getSiteMetadataREST()) || {
-      title: 'مدارات الكون',
-      siteTitle: 'مدارات الكون',
-      description: 'موقع مدارات الكون',
-    };
+    // Fetch site metadata and menus as per Phase 3 enhancement plan
+    const [
+      metadata,
+      { menus }
+    ] = await Promise.all([
+      getSiteMetadataREST().then(data => data || {
+        title: 'مدارات الكون',
+        siteTitle: 'مدارات الكون',
+        description: 'موقع مدارات الكون',
+      }),
+      getAllMenus()
+    ]);
 
     // Import WordPress API functions
     const { fetchDestinations, fetchOfferTrips } = require('@/lib/wordpress-api');
@@ -228,6 +237,7 @@ export async function getStaticProps() {
     return {
       props: {
         metadata,
+        menus: menus || [],
         destinations,
         posts: posts || [], // Use actual blog posts
         pagination: {
@@ -249,6 +259,7 @@ export async function getStaticProps() {
           title: 'مدارات الكون',
           description: 'موقع مدارات الكون',
         },
+        menus: [],
         destinations: [],
         posts: [],
         pagination: {

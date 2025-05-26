@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import { getSiteMetadata } from '@/lib/site';
+import { getAllMenus } from '@/lib/menus';
 import { 
   FaCalendarAlt, 
   FaMapMarkerAlt, 
@@ -326,7 +328,7 @@ const TripForm = ({ tripTitle, price }) => {
   );
 };
 
-export default function SingleTrip({ trip }) {
+export default function SingleTrip({ trip, metadata, menus }) {
   const router = useRouter();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isBookingCardExpanded, setIsBookingCardExpanded] = useState(false);
@@ -471,7 +473,7 @@ export default function SingleTrip({ trip }) {
   const handleBookNow = () => setIsBookingModalOpen(true);
   
   return (
-    <Layout>
+    <Layout metadata={metadata} menus={menus}>
       <Head>
         <title>{decodedTitle} | مدارات الكون</title>
         <meta name="description" content={description?.substring(0, 160)} />
@@ -661,6 +663,15 @@ export async function getStaticProps({ params }) {
   try {
     console.log('Fetching trip with slug:', params.slug);
     
+    // Fetch metadata and menus in parallel with trip data
+    const [
+      metadata,
+      { menus }
+    ] = await Promise.all([
+      getSiteMetadata(),
+      getAllMenus()
+    ]);
+    
     // Try multiple variations of the slug
     const originalSlug = params.slug;
     const encodedSlug = encodeURIComponent(params.slug);
@@ -718,9 +729,14 @@ export async function getStaticProps({ params }) {
     const trip = trips[0];
 
     if (!trip) {
+      // Clean metadata to remove undefined values
+      const cleanMetadata = JSON.parse(JSON.stringify(metadata || {}));
+
       return {
         props: {
           trip: null,
+          metadata: cleanMetadata,
+          menus: menus || [],
         },
         revalidate: 60,
       };
@@ -807,17 +823,34 @@ export async function getStaticProps({ params }) {
       wpte_gallery_id: trip.wpte_gallery_id || {},
     };
 
+    // Clean metadata to remove undefined values
+    const cleanMetadata = JSON.parse(JSON.stringify(metadata || {}));
+
     return {
       props: {
         trip: formattedTrip,
+        metadata: cleanMetadata,
+        menus: menus || [],
       },
       revalidate: 3600, // Revalidate every hour
     };
   } catch (error) {
     console.error('Error fetching trip:', error);
+    
+    // Fetch basic metadata for error state
+    const [metadata, { menus }] = await Promise.all([
+      getSiteMetadata().catch(() => ({})),
+      getAllMenus().catch(() => ({ menus: [] })),
+    ]);
+    
+    // Clean metadata to remove undefined values
+    const cleanMetadata = JSON.parse(JSON.stringify(metadata || {}));
+
     return {
       props: {
         trip: null,
+        metadata: cleanMetadata,
+        menus: menus || [],
       },
       revalidate: 60,
     };

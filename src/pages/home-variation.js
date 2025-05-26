@@ -1,5 +1,6 @@
 import { WebsiteJsonLd } from '@/lib/json-ld';
 import { getSiteMetadataREST } from '@/lib/rest-api';
+import { getAllMenus } from '@/lib/menus';
 import dynamic from 'next/dynamic';
 
 import Layout from '@/components/Layout';
@@ -76,6 +77,7 @@ export default function HomeVariation({
   featuredAuthors = [],
   archives = [],
   metadata = { title: 'مدارات الكون', description: 'موقع مدارات الكون' },
+  menus,
 }) {
   const { title = 'مدارات الكون', description = 'موقع مدارات الكون' } =
     metadata;
@@ -139,7 +141,7 @@ export default function HomeVariation({
         <meta property="og:image" content="/Madarat-logo-768x238.png" />
       </Head>
 
-      <Layout>
+      <Layout metadata={metadata} menus={menus}>
         <WebsiteJsonLd siteTitle={title} />
 
         {/* New Hero Section inspired by Page-1-2.tsx */}
@@ -457,12 +459,18 @@ export default function HomeVariation({
 
 export async function getStaticProps() {
   try {
-    // Fetch site metadata
-    const metadata = (await getSiteMetadataREST()) || {
-      title: 'مدارات الكون',
-      siteTitle: 'مدارات الكون',
-      description: 'موقع مدارات الكون',
-    };
+    // Fetch site metadata and menus as per Phase 3 enhancement plan
+    const [
+      metadata,
+      { menus }
+    ] = await Promise.all([
+      getSiteMetadataREST().then(data => data || {
+        title: 'مدارات الكون',
+        siteTitle: 'مدارات الكون',
+        description: 'موقع مدارات الكون',
+      }),
+      getAllMenus()
+    ]);
 
     // Fetch posts with REST API
     let posts = [];
@@ -519,6 +527,7 @@ export async function getStaticProps() {
     return {
       props: {
         metadata,
+        menus: menus || [],
         posts,
         pagination,
         destinations: [],
@@ -534,6 +543,7 @@ export async function getStaticProps() {
           siteTitle: 'مدارات الكون',
           description: 'موقع مدارات الكون',
         },
+        menus: [],
         posts: [],
         pagination: null,
         destinations: [],

@@ -415,28 +415,9 @@ export async function getPostsPerPage() {
     return Number(process.env.POSTS_PER_PAGE);
   }
 
-  try {
-    const response = await fetch(`${API_URL}/settings`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent':
-          'Mozilla/5.0 (compatible; MadaratBot/1.0; +https://madaratalkon.com)',
-      },
-    });
-
-    if (!response.ok) {
-      console.error(`[getPostsPerPage] HTTP error ${response.status}`);
-      return 10; // Default to 10 if we can't get the setting
-    }
-
-    const data = await response.json();
-    return Number(data.posts_per_page) || 10;
-  } catch (error) {
-    console.error(
-      `[getPostsPerPage] Failed to query post per page: ${error.message}`
-    );
-    return 10; // Default to 10 in case of errors
-  }
+  // Return default value since /settings endpoint requires authentication
+  // WordPress default is typically 10 posts per page
+  return 10;
 }
 
 /**

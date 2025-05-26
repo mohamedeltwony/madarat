@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useRouter } from 'next/router'; // Import useRouter
-import dynamic from 'next/dynamic'; // Import dynamic
+import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+import { getSiteMetadata } from '@/lib/site';
+import { getAllMenus } from '@/lib/menus';
+
+import Layout from '@/components/Layout';
+import styles from '@/styles/pages/LondonScotland.module.scss';
+import TripForm from '@/components/TripForm';
+
 const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
   ssr: false,
 });
-// import Chatbot from '@/components/Chatbot'; // Removed
-// import ExitPopup from '@/components/ExitPopup'; // Removed
-import styles from '@/styles/pages/LondonScotland.module.scss'; // Keep using the same styles for cloning
-// Removed getSiteMetadata import as it's no longer fetched here
-import TripForm from '@/components/TripForm';
 
 // Removed SVG Icon imports
 
@@ -29,9 +31,8 @@ import TripForm from '@/components/TripForm';
 // const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
 //   ssr: false,
 // });
-export default function SchengenVisaTrip() {
-  // Changed component name
-  const router = useRouter(); // Get router instance
+export default function SchengenVisaTrip({ metadata, menus }) {
+  const router = useRouter();
 
   // Remove all form-related state and handlers except for the redirect logic
   const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality }) => {
@@ -88,26 +89,27 @@ export default function SchengenVisaTrip() {
   ];
 
   return (
-    <div className={styles.container} dir="rtl">
-      <Head>
-        <title>احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر</title>
-        <meta
-          name="description"
-          content="خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 299 ريال سعودي فقط."
-        />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-        />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        {/* Removed redundant Google Font link - loaded in _document.js */}
-      </Head>
+    <Layout metadata={metadata} menus={menus}>
+      <div className={styles.container} dir="rtl">
+        <Head>
+          <title>احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر</title>
+          <meta
+            name="description"
+            content="خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 299 ريال سعودي فقط."
+          />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          />
+          <link rel="icon" href="/favicon.ico" />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+          {/* Removed redundant Google Font link - loaded in _document.js */}
+        </Head>
 
       <main className={styles.main}>
         {/* Hero Section */}
@@ -226,16 +228,65 @@ export default function SchengenVisaTrip() {
 
       {/* Removed Chatbot and ExitPopup */}
     </div>
+    </Layout>
   );
 }
 
 export async function getStaticProps() {
-  // No longer fetching getSiteMetadata here to improve build/revalidation speed.
-  // Ensure necessary <Head> tags (title, meta description, OG tags)
-  // are added directly within the SchengenVisaTrip component's JSX.
+  try {
+    // Fetch metadata and menus as per Phase 3 enhancement plan
+    const [
+      { metadata },
+      { menus }
+    ] = await Promise.all([
+      getSiteMetadata(),
+      getAllMenus()
+    ]);
 
-  return {
-    props: {}, // Return empty props
-    revalidate: 600, // Revalidate every 10 minutes (keeps ISR active)
-  };
+    // Construct page metadata for Schengen visa trip
+    const pageMetadata = {
+      title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
+      description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 299 ريال سعودي فقط.',
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/schengen-visa-trip`,
+      robots: 'index, follow',
+      og: {
+        title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
+        description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 299 ريال سعودي فقط.',
+        type: 'website',
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/schengen-visa-trip`,
+        siteName: 'مدارات الكون',
+        image: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/schengen-background.webp`,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
+        description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 299 ريال سعودي فقط.',
+        image: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/schengen-background.webp`,
+      },
+    };
+
+    return {
+      props: {
+        metadata: { ...metadata, ...pageMetadata },
+        menus: menus || [],
+      },
+      revalidate: 600, // Revalidate every 10 minutes (keeps ISR active)
+    };
+  } catch (error) {
+    console.error('Error in schengen-visa-trip getStaticProps:', error);
+    
+    // Fallback metadata for error state
+    const pageMetadata = {
+      title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
+      description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر.',
+    };
+
+    return {
+      props: {
+        metadata: pageMetadata,
+        menus: [],
+      },
+      revalidate: 60, // Retry more frequently on error
+    };
+  }
 }

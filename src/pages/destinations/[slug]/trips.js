@@ -266,47 +266,53 @@ export async function getStaticProps({ params }) {
       throw new Error(`HTTP error! status: ${tripsResponse.status}`);
     }
 
-    const trips = await tripsResponse.json();
+    const tripsData = await tripsResponse.json();
+    const trips = Array.isArray(tripsData) ? tripsData : [];
 
     // Format destination data
     const formattedDestination = {
-      id: destination.id,
+      id: destination.id || 0,
       title: destination.name || '',
       slug: destination.slug || '',
-      description: destination.description?.rendered || '',
-      image:
-        destination._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
+      description: (destination.description && destination.description.rendered) 
+        ? destination.description.rendered 
+        : '',
+      image: (destination._embedded && destination._embedded['wp:featuredmedia'] && destination._embedded['wp:featuredmedia'][0])
+        ? destination._embedded['wp:featuredmedia'][0].source_url
+        : null,
     };
 
     // Format trips data
     const formattedTrips = trips.map((trip) => {
       // Format duration
       let durationText = 'غير محدد';
-      if (trip.duration) {
+      if (trip.duration && typeof trip.duration === 'object') {
         // Safely destructure duration with defaults to prevent errors
-        const { days = 0, nights = 0, duration_unit = '', duration_type = 'days' } = trip.duration || {};
+        const duration = trip.duration || {};
+        const days = duration.days || 0;
+        const nights = duration.nights || 0;
+        const duration_type = duration.duration_type || 'days';
         
-        if (duration_type === 'days') {
+        if (duration_type === 'days' && days > 0) {
           durationText = `${days} أيام`;
-        } else if (duration_type === 'nights') {
+        } else if (duration_type === 'nights' && nights > 0) {
           durationText = `${nights} ليالٍ`;
-        } else if (duration_type === 'both') {
+        } else if (duration_type === 'both' && (days > 0 || nights > 0)) {
           durationText = `${days} أيام ${nights} ليالٍ`;
         }
       }
 
       return {
-        id: trip.id,
-        title: trip.title?.rendered || '',
-        description: trip.excerpt?.rendered || '',
+        id: trip.id || 0,
+        title: (trip.title && trip.title.rendered) ? trip.title.rendered : '',
+        description: (trip.excerpt && trip.excerpt.rendered) ? trip.excerpt.rendered : '',
         slug: trip.slug || '',
-        image: trip._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
+        image: (trip._embedded && trip._embedded['wp:featuredmedia'] && trip._embedded['wp:featuredmedia'][0]) 
+          ? trip._embedded['wp:featuredmedia'][0].source_url 
+          : null,
         duration: durationText,
-        price:
-          trip.wp_travel_engine_setting_trip_actual_price ||
-          trip.price ||
-          'غير محدد',
-        currency: trip.currency?.code || 'SAR',
+        price: trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'غير محدد',
+        currency: (trip.currency && trip.currency.code) ? trip.currency.code : 'SAR',
       };
     });
 
