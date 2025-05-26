@@ -15,7 +15,6 @@ import UIStyles from '@/components/UI/UI.module.scss';
 import { getSiteMetadataREST } from '@/lib/rest-api';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import ComingSoon from './coming-soon';
 import PostCard from '@/components/PostCard';
 import MorphPosts from '@/components/MorphPosts';
 import Pagination from '@/components/Pagination';

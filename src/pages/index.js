@@ -1,196 +1,270 @@
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import useSite from '@/hooks/use-site';
+import Layout from '@/components/Layout';
+import Section from '@/components/Section';
+import Container from '@/components/Container';
+import Hero from '@/components/Hero';
+import { WebsiteJsonLd } from '@/components/common/JsonLd';
+import OfferTrips from '@/components/OfferTrips';
+import BentoPosts from '@/components/BentoPosts';
+import BentoDestinations from '@/components/BentoDestinations';
+import SparkleButton from '@/components/UI/SparkleButton';
+import styles from '@/styles/pages/Home.module.scss';
+import UIStyles from '@/components/UI/UI.module.scss';
+import { getSiteMetadataREST } from '@/lib/rest-api';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import styles from '../styles/ComingSoon.module.scss';
-import LeadForm from '@/components/LeadMagnets/LeadForm';
+import PostCard from '@/components/PostCard';
+import MorphPosts from '@/components/MorphPosts';
+import Pagination from '@/components/Pagination';
+import Link from 'next/link';
+import Image from 'next/legacy/image';
 
-// Import the original home page component
-import OriginalHome from './original-home';
-
-export default function Home(props) {
-  const router = useRouter();
-  const { bypass, page } = router.query;
-  
-  // Define all state variables at the top level
-  const [days, setDays] = useState(0);
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  
-  // If this is a direct navigation to a specific page (not through the index)
-  // we shouldn't intercept it
-  const isDirect = typeof window !== "undefined" && 
-                  window.location.pathname !== "/" && 
-                  window.location.pathname !== "/index";
-  
-  // Handle page redirection when a specific page is requested
-  useEffect(() => {
-    if (page) {
-      router.replace(`/${page}`);
-    }
-  }, [page, router]);
-  
-  // Handle countdown timer
-  useEffect(() => {
-    // Only run the timer if we're showing the coming soon page
-    if (bypass === 'true' || page || isDirect) {
-      return;
-    }
-    
-    const launchDate = new Date();
-    launchDate.setDate(launchDate.getDate() + 30); // Launch in 30 days
-
-    const timer = setInterval(() => {
-      const now = new Date();
-      const difference = launchDate.getTime() - now.getTime();
-      
-      const d = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const s = Math.floor((difference % (1000 * 60)) / 1000);
-
-      setDays(d);
-      setHours(h);
-      setMinutes(m);
-      setSeconds(s);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [bypass, page, isDirect]);
-
-  const handleFormSuccess = (data) => {
-    console.log('Form submitted:', data);
-    // You can add additional tracking here
-  };
-  
-  // Check if we should bypass the coming soon page
-  // This allows accessing other landing pages with ?bypass=true or specific landing pages with ?page=landing-page-name
-  if (bypass === 'true' || page || isDirect) {
-    // If a specific page is requested, show loading or null
-    if (page) {
-      return null; // Return null while redirecting
-    }
-    
-    // Otherwise show the original home page
-    return <OriginalHome {...props} />;
+// Dynamic imports for heavy components
+const GoogleReviewsSection = dynamic(
+  () => import('@/components/GoogleReviewsSection'),
+  {
+    loading: () => (
+      <div className={styles.loadingContainer}>جاري تحميل التقييمات...</div>
+    ),
+    ssr: false, // Client-side render only to reduce initial load
   }
-  
-  // Display the coming soon page by default
+);
+
+export default function Home({
+  posts = [],
+  pagination,
+  destinations = [],
+  featuredAuthors = [],
+  archives = [],
+  offerTrips = [],
+  tripsPagination,
+}) {
+  const { metadata = {} } = useSite();
+  const { title = 'مدارات الكون', description = 'موقع مدارات الكون' } =
+    metadata;
+  const [showForm, setShowForm] = useState(false);
+
+  const handleShowForm = () => {
+    setShowForm(true);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+    };
+
+    console.log('Form data submitted:', data);
+    // Here you'd typically send this data to your backend
+    // For now, we'll just close the form
+    setShowForm(false);
+    alert('شكراً لك! سنتواصل معك قريباً');
+  };
+
   return (
-    <div className={styles.splitContainer} dir="rtl">
+    <div>
       <Head>
-        <title>قريباً | مدارات الكون للسفر والسياحة</title>
-        <meta name="description" content="مدارات الكون للسفر والسياحة - منصتكم المثالية لتخطيط رحلات سفر استثنائية مع خدمات متكاملة وباقات متنوعة. انضم إلينا في رحلة لن تنساها." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>{title} - موقع السفر والرحلات الأول في الوطن العربي</title>
+        <meta name="description" content={description} />
+        <meta
+          property="og:title"
+          content={`${title} - موقع السفر والرحلات الأول في الوطن العربي`}
+        />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/Madarat-logo-768x238.png" />
       </Head>
 
-      <div className={styles.imageSide}>
-        <div className={styles.imageContent}>
-          <div className={styles.logoContainerImage}>
-            <Image 
-              src="/Madarat_logo.png" 
-              alt="شعار مدارات الكون" 
-              width={220} 
-              height={68} 
-              priority
-            />
+      <Layout>
+        <WebsiteJsonLd siteTitle={title} />
+
+        <Hero
+          title="مدارات الكون"
+          description="اكتشف معنا أجمل الوجهات السياحية حول العالم. نقدم لك دليلاً شاملاً للسفر والسياحة، من التخطيط للرحلة إلى أفضل الأماكن للزيارة والإقامة."
+          backgroundImage="/images/hero-background-new.png" // Use correct .png extension
+          // backgroundVideo="https://res.cloudinary.com/dn4akr8gq/video/upload/v1744811869/samples/dance-2.mp4" // Remove video prop
+          featuredText="اكتشف المزيد"
+          featuredLink="/destinations"
+        />
+
+        {/* Offer Trips Section */}
+        <Section
+          style={{
+            padding: '2rem 0',
+            width: '100%',
+            maxWidth: '100%',
+          }}
+        >
+          <Container style={{ maxWidth: '1400px', width: '100%' }}>
+            <OfferTrips />
+          </Container>
+        </Section>
+
+        <Section className={styles.destinationsSection}>
+          <Container>
+            {!destinations || destinations.length === 0 ? (
+              <div className={styles.noDestinations}>
+                <p>جاري تحميل الوجهات السياحية...</p>
+              </div>
+            ) : (
+              <BentoDestinations destinations={destinations} />
+            )}
+          </Container>
+        </Section>
+
+        {/* Google Reviews Section */}
+        {/* Temporarily hidden until Google Places API is provided
+        <GoogleReviewsSection />
+        */}
+
+        {posts.length > 0 && (
+          <>
+            <Section>
+              <Container>
+                <h2 className={styles.sectionTitle}>Latest Stories</h2>
+                <BentoPosts posts={posts.slice(3, 9)} />
+              </Container>
+            </Section>
+          </>
+        )}
+
+        {/* New Features Section */}
+        {/* Removed Explore Our Site features section */}
+      </Layout>
+
+      {/* Lead Form Popup */}
+      {showForm && (
+        <div className={styles.formOverlay}>
+          <div className={`${UIStyles.glassCard} ${styles.formContainer}`}>
+            <button
+              className={styles.closeButton}
+              onClick={() => setShowForm(false)}
+            >
+              ×
+            </button>
+            <h3>انضم إلينا الآن</h3>
+            <p>اترك بياناتك ليصلك كل جديد</p>
+
+            <form onSubmit={handleSubmit}>
+              <div className={styles.formGroup}>
+                <label htmlFor="name">الاسم الكامل</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="أدخل اسمك الكامل"
+                  required
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="phone">رقم الهاتف</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="أدخل رقم هاتفك"
+                  required
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="email">البريد الإلكتروني</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="أدخل بريدك الإلكتروني"
+                  required
+                />
+              </div>
+
+              <div className={styles.formActions}>
+                <SparkleButton type="submit" fullWidth>
+                  إرسال
+                </SparkleButton>
+              </div>
+            </form>
           </div>
-          <h2 className={styles.imageTagline}>
-            اكتشف العالم مع <span className={styles.accentColor}>مدارات الكون</span>
-          </h2>
-          <p className={styles.imageDescription}>
-            وجهات متنوعة، خدمة متكاملة، تجارب فريدة
-          </p>
         </div>
-        <div className={styles.imageOverlay}></div>
-      </div>
-
-      <div className={styles.contentSide}>
-        <div className={styles.contentInner}>
-          <h1 className={styles.title}>
-            <span>تجربة سفر جديدة تنتظركم قريباً</span>
-            <div className={styles.subtitle}>نعمل بجد لجعل رحلات سفركم لا تُنسى وأكثر متعة مع مدارات الكون للسفر والسياحة</div>
-          </h1>
-
-          <div className={styles.countdown}>
-            <div className={styles.countdownItem}>
-              <span className={styles.countdownNumber}>{seconds}</span>
-              <span className={styles.countdownLabel}>ثواني</span>
-            </div>
-            <div className={styles.countdownItem}>
-              <span className={styles.countdownNumber}>{minutes}</span>
-              <span className={styles.countdownLabel}>دقائق</span>
-            </div>
-            <div className={styles.countdownItem}>
-              <span className={styles.countdownNumber}>{hours}</span>
-              <span className={styles.countdownLabel}>ساعات</span>
-            </div>
-            <div className={styles.countdownItem}>
-              <span className={styles.countdownNumber}>{days}</span>
-              <span className={styles.countdownLabel}>أيام</span>
-            </div>
-          </div>
-
-          <div className={styles.featuresGrid}>
-            <div className={styles.featureItem}>
-              <div className={styles.featureIcon}>✈️</div>
-              <h3>وجهات سياحية متنوعة</h3>
-              <p>اكتشف أفضل الوجهات السياحية حول العالم مع باقات سفر مصممة خصيصاً لتناسب تطلعاتك واهتماماتك</p>
-            </div>
-            <div className={styles.featureItem}>
-              <div className={styles.featureIcon}>🏨</div>
-              <h3>إقامات فاخرة وراحة تامة</h3>
-              <p>استمتع بإقامة في أفخم الفنادق والمنتجعات العالمية المختارة بعناية لضمان راحتك ورفاهيتك</p>
-            </div>
-            <div className={styles.featureItem}>
-              <div className={styles.featureIcon}>🧳</div>
-              <h3>تجارب سفر مميزة ومتكاملة</h3>
-              <p>برامج سياحية متكاملة تشمل النقل والإقامة والجولات السياحية مع مرشدين محترفين لتجربة سفر لا تُنسى</p>
-            </div>
-            <div className={styles.featureItem}>
-              <div className={styles.featureIcon}>💰</div>
-              <h3>أسعار تنافسية وقيمة استثنائية</h3>
-              <p>باقات سفر بأسعار مناسبة للجميع مع خيارات متعددة تناسب مختلف الميزانيات دون المساس بالجودة</p>
-            </div>
-          </div>
-
-          <div className={styles.formSection}>
-            <LeadForm
-              title="سجل اهتمامك واحصل على عروضنا الحصرية أولاً"
-              subtitle="انضم إلينا الآن وكن من أول المسافرين مع مدارات الكون. سنبقيك على اطلاع بأحدث العروض والوجهات والباقات الخاصة"
-              buttonText="أرسل بياناتك الآن"
-              onSuccess={handleFormSuccess}
-              formStyle="subscriptionForm"
-            />
-          </div>
-
-          <div className={styles.socialIcons}>
-            <a href="#" className={styles.socialIcon} aria-label="Instagram">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2.162c3.204 0 3.584.012 4.849.07 1.308.06 2.655.358 3.608 1.311.962.962 1.251 2.296 1.311 3.608.058 1.265.07 1.645.07 4.849s-.012 3.584-.07 4.849c-.06 1.308-.358 2.655-1.311 3.608-.962.962-2.296 1.251-3.608 1.311-1.265.058-1.645.07-4.849.07s-3.584-.012-4.849-.07c-1.308-.06-2.655-.358-3.608-1.311-.962-.962-1.251-2.296-1.311-3.608-.058-1.265-.07-1.645-.07-4.849s.012-3.584.07-4.849c.06-1.308.358-2.655 1.311-3.608.962-.962 2.296-1.251 3.608-1.311 1.265-.058 1.645-.07 4.849-.07M12 0C8.741 0 8.332.014 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942 1.28.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038.058-1.28.072-1.689.072-4.948 0-3.259-.014-3.668-.072-4.948-.085-1.855-.601-3.697-1.942-5.038C20.643.673 18.801.157 16.948.072 15.668.014 15.259 0 12 0z" fill="currentColor"/>
-                <path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8z" fill="currentColor"/>
-                <circle cx="18.406" cy="5.594" r="1.44" fill="currentColor"/>
-              </svg>
-            </a>
-            <a href="#" className={styles.socialIcon} aria-label="Facebook">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z" fill="currentColor"/>
-              </svg>
-            </a>
-            <a href="#" className={styles.socialIcon} aria-label="Twitter">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M23.954 4.569a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.691 8.094 4.066 6.13 1.64 3.161a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.061a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.937 4.937 0 004.604 3.417 9.868 9.868 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63a9.936 9.936 0 002.46-2.548l-.047-.02z" fill="currentColor"/>
-              </svg>
-            </a>
-          </div>
-
-          <footer className={styles.footer}>
-            <p>© {new Date().getFullYear()} مدارات الكون للسفر والسياحة. جميع الحقوق محفوظة.</p>
-          </footer>
-        </div>
-      </div>
+      )}
     </div>
   );
+}
+
+export async function getStaticProps() {
+  try {
+    // Fetch site metadata
+    const metadata = (await getSiteMetadataREST()) || {
+      title: 'مدارات الكون',
+      siteTitle: 'مدارات الكون',
+      description: 'موقع مدارات الكون',
+    };
+
+    // Import WordPress API functions
+    const { fetchDestinations, fetchOfferTrips } = require('@/lib/wordpress-api');
+    const { getAllPosts } = require('@/lib/posts');
+
+    // Fetch destinations from WordPress API
+    console.log('Starting to fetch destinations...');
+    const destinations = await fetchDestinations({ perPage: 100 });
+    console.log(`Fetched ${destinations.length} destinations`);
+
+    // Fetch offer trips from WordPress API
+    console.log('Starting to fetch offer trips...');
+    const { trips: offerTrips, pagination: tripsPagination } = await fetchOfferTrips({ perPage: 10 });
+    console.log(`Fetched ${offerTrips.length} offer trips`);
+
+    // Fetch actual blog posts from WordPress API
+    console.log('Starting to fetch blog posts...');
+    const { posts } = await getAllPosts();
+    console.log(`Fetched ${posts.length} blog posts`);
+
+    return {
+      props: {
+        metadata,
+        destinations,
+        posts: posts || [], // Use actual blog posts
+        pagination: {
+          totalPages: Math.ceil(posts.length / 10),
+          total: posts.length,
+          currentPage: 1,
+        },
+        offerTrips: offerTrips || [], // Keep offer trips separate
+        tripsPagination,
+      },
+      // Revalidate data every hour (3600 seconds)
+      revalidate: 3600,
+    };
+  } catch (error) {
+    console.error('Error in getStaticProps:', error);
+    return {
+      props: {
+        metadata: {
+          title: 'مدارات الكون',
+          description: 'موقع مدارات الكون',
+        },
+        destinations: [],
+        posts: [],
+        pagination: {
+          totalPages: 1,
+          total: 0,
+          currentPage: 1,
+        },
+        offerTrips: [],
+        tripsPagination: {
+          totalPages: 1,
+          total: 0,
+          currentPage: 1,
+        },
+      },
+      // Shorter revalidation time if there was an error
+      revalidate: 300,
+    };
+  }
 }

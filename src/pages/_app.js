@@ -11,7 +11,7 @@ import { getRecentPosts } from '../lib/posts';
 import { getCategories } from '../lib/categories';
 import NextNProgress from 'nextjs-progressbar';
 import FloatingButtons from '../components/WhatsAppButton/WhatsAppButton';
-import CookieConsent from '../components/CookieConsent/CookieConsent';
+
 import { trackPageView } from '../utils/facebookTracking';
 import { gtmPageView, initializeDataLayer } from '../lib/gtm';
 
@@ -172,8 +172,7 @@ function App({ Component, pageProps = {} }) {
         )}
       </SiteContext.Provider>
 
-      {/* Cookie Consent & GTM Integration */}
-      <CookieConsent />
+
 
       {/* Facebook Pixel Code */}
       <Script
