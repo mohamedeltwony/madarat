@@ -1,47 +1,105 @@
-# Allow all crawlers
+# Robots.txt for Madarat Alkawn Travel Website
+# Allow all search engines to crawl the site
+
 User-agent: *
 Allow: /
 
-# Allow all search engines to crawl the site
+# Block sensitive and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /login/
+Disallow: /dashboard/
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+
+# Block Next.js internal directories
+Disallow: /_next/static/
+Disallow: /_next/image/
+Disallow: /.next/
+
+# Block development and testing directories
+Disallow: /examples/
+Disallow: /test/
+Disallow: /tests/
+Disallow: /dev/
+Disallow: /staging/
+
+# Block draft and preview content
+Disallow: /drafts/
+Disallow: /preview/
+Disallow: /*preview=*
+Disallow: /*draft=*
+
+# Block search and filter pages that may cause duplicate content
+Disallow: /search?*
+Disallow: /*?search=*
+Disallow: /*?filter=*
+Disallow: /*?sort=*
+
+# Block pagination parameters that don't add value
+Disallow: /*?page=*
+Disallow: /*?p=*
+
+# Block tracking and analytics parameters
+Disallow: /*?utm_*
+Disallow: /*?fbclid=*
+Disallow: /*?gclid=*
+Disallow: /*?ref=*
+
+# Block common spam/bot patterns
+Disallow: /*?*&*&*
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /temp/
+
+# Allow important static resources (these are allowed by default with Allow: /)
+# But explicitly allowing them for clarity
+Allow: /sitemap.xml
+Allow: /favicon.ico
+Allow: /robots.txt
+Allow: /site.webmanifest
+
+# Allow important content directories (redundant but clear)
 Allow: /posts/
 Allow: /destinations/
 Allow: /trips/
-Allow: /categories/
-Allow: /authors/
+Allow: /blog/
+Allow: /about/
+Allow: /contact/
 
-# Disallow admin and private areas
-Disallow: /admin/
-Disallow: /api/
-Disallow: /_next/
-Disallow: /examples/
-Disallow: /drafts
-
-# Disallow search and filter pages to prevent duplicate content
-Disallow: /search?
-Disallow: /*?*
-
-# Allow important files
-Allow: /sitemap.xml
-Allow: /favicon.ico
-Allow: /*.css
-Allow: /*.js
-
-# Allow important directories
-Allow: /offers/
+# Allow media and asset files
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.webp$
+Allow: /*.ico$
+Allow: /*.woff$
+Allow: /*.woff2$
 
 # Sitemap location
 Sitemap: https://madaratalkon.com/sitemap.xml
 
-# Crawl delay (optional - helps prevent server overload)
-Crawl-delay: 1
+# Optional: Crawl delay for respectful crawling
+# Only use if you experience server load issues
+# Crawl-delay: 1
 
-# Allow media files
-Allow: /*.jpg$
-Allow: /*.jpeg$
-Allow: /*.gif$
-Allow: /*.png$
-Allow: /*.svg$
+# Specific rules for different search engines (if needed)
+# User-agent: Googlebot
+# Allow: /
 
-# Allow essential resources
-Allow: /site.webmanifest
-Allow: /robots.txt
+# User-agent: Bingbot
+# Allow: /
+
+# Block specific bots if needed (uncomment if necessary)
+# User-agent: BadBot
+# Disallow: /
+
+# User-agent: AhrefsBot
+# Crawl-delay: 10
+
+# User-agent: SemrushBot
+# Crawl-delay: 10
