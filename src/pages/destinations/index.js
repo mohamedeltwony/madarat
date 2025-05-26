@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getSiteMetadata } from '@/lib/site';
 import { getAllMenus } from '@/lib/menus';
+import Head from 'next/head';
 
 import Layout from '../../components/Layout';
 import Container from '../../components/Container';
@@ -61,6 +62,28 @@ export default function Destinations({ metadata, menus, destinations = [], error
 
   return (
     <Layout metadata={metadata} menus={menus}>
+      <Head>
+        <title>الوجهات السياحية - مدارات الكون</title>
+        <meta
+          name="description"
+          content="اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل الأماكن حول العالم مع مدارات الكون. وجهات متنوعة في أوروبا وآسيا وأفريقيا بأفضل الأسعار والخدمات السياحية المتميزة."
+        />
+        <link rel="canonical" href="https://madarat-alkawn.com/destinations" />
+        <meta property="og:title" content="الوجهات السياحية - مدارات الكون | اكتشف أجمل الوجهات حول العالم" />
+        <meta property="og:description" content="اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل الأماكن حول العالم مع مدارات الكون. وجهات متنوعة في أوروبا وآسيا وأفريقيا بأفضل الأسعار والخدمات." />
+        <meta property="og:url" content="https://madarat-alkawn.com/destinations" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://madarat-alkawn.com/images/destinations-og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="الوجهات السياحية - مدارات الكون" />
+        <meta name="twitter:description" content="اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل الأماكن حول العالم." />
+      </Head>
+      
+      {/* Backup H1 for SEO - Hidden visually but accessible to crawlers */}
+      <h1 style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
+        استكشف الوجهات السياحية
+      </h1>
+      
       <Header>
         <Container>
           <div className={styles.heroContent}>

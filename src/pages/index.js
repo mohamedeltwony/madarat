@@ -101,20 +101,25 @@ export default function Home({
   return (
     <div>
       <Head>
-        <title>{title} - موقع السفر والرحلات الأول في الوطن العربي</title>
-        <meta name="description" content={description} />
+        <title>مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي | أفضل العروض السياحية</title>
+        <meta name="description" content="اكتشف معنا أجمل الوجهات السياحية حول العالم مع مدارات الكون. نقدم لك أفضل العروض السياحية والرحلات المميزة إلى البوسنة وتركيا وجورجيا وأذربيجان بأسعار تنافسية وخدمات عالية الجودة." />
+        <link rel="canonical" href="https://madarat-alkawn.com/" />
         <meta
           property="og:title"
-          content={`${title} - موقع السفر والرحلات الأول في الوطن العربي`}
+          content="مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي | أفضل العروض السياحية"
         />
-        <meta property="og:description" content={description} />
+        <meta property="og:description" content="اكتشف معنا أجمل الوجهات السياحية حول العالم مع مدارات الكون. نقدم لك أفضل العروض السياحية والرحلات المميزة إلى البوسنة وتركيا وجورجيا وأذربيجان بأسعار تنافسية وخدمات عالية الجودة." />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="/Madarat-logo-768x238.png" />
+        <meta property="og:url" content="https://madarat-alkawn.com/" />
+        <meta property="og:image" content="https://madarat-alkawn.com/images/homepage-og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي" />
+        <meta name="twitter:description" content="اكتشف معنا أجمل الوجهات السياحية حول العالم مع مدارات الكون. أفضل العروض السياحية والرحلات المميزة." />
       </Head>
 
       <SEO
-        title={title}
-        description={description}
+        title="مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي"
+        description="اكتشف معنا أجمل الوجهات السياحية حول العالم مع مدارات الكون. نقدم لك أفضل العروض السياحية والرحلات المميزة إلى البوسنة وتركيا وجورجيا وأذربيجان بأسعار تنافسية وخدمات عالية الجودة."
         keywords="سياحة, سفر, رحلات, وجهات سياحية, مدارات الكون, حجز رحلات, عروض سياحية, البوسنة, تركيا, جورجيا, أذربيجان"
         image="/Madarat-logo-768x238.png"
         breadcrumbs={breadcrumbs}

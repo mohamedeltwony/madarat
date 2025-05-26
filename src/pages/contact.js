@@ -77,11 +77,20 @@ const ContactPage = () => {
   return (
     <>
       <Head>
-        <title>تواصل معنا | مدارات الكون للسفر والسياحة</title>
+        <title>تواصل معنا - مدارات الكون للسفر والسياحة | احجز رحلتك الآن</title>
         <meta
           name="description"
-          content="تواصل مع فريق مدارات الكون للسياحة والسفر واحصل على المساعدة في تخطيط رحلتك المثالية."
+          content="تواصل مع فريق مدارات الكون للسياحة والسفر واحصل على المساعدة في تخطيط رحلتك المثالية. اتصل بنا على 112137000 أو راسلنا عبر واتساب."
         />
+        <link rel="canonical" href="https://madarat-alkawn.com/contact" />
+        <meta property="og:title" content="تواصل معنا - مدارات الكون للسفر والسياحة | احجز رحلتك الآن" />
+        <meta property="og:description" content="تواصل مع فريق مدارات الكون للسياحة والسفر واحصل على المساعدة في تخطيط رحلتك المثالية. اتصل بنا على 112137000 أو راسلنا عبر واتساب للحصول على أفضل العروض السياحية." />
+        <meta property="og:url" content="https://madarat-alkawn.com/contact" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://madarat-alkawn.com/images/contact-og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="تواصل معنا - مدارات الكون للسفر والسياحة" />
+        <meta name="twitter:description" content="تواصل مع فريق مدارات الكون للسياحة والسفر واحصل على المساعدة في تخطيط رحلتك المثالية." />
       </Head>
 
       {/* Header */}

@@ -37,11 +37,20 @@ export default function About() {
   return (
     <>
       <Head>
-        <title>عن الشركة - مدارات الكون</title>
+        <title>عن مدارات الكون - شركة السياحة والسفر الرائدة في السعودية</title>
         <meta
           name="description"
-          content="تعرف على مدارات الكون للسياحة والسفر - شركة سعودية رائدة في مجال تنظيم الرحلات حول العالم"
+          content="تعرف على مدارات الكون للسياحة والسفر - شركة سعودية رائدة في تنظيم الرحلات حول العالم. نقدم تجارب سفر فريدة ومخصصة تلبي كافة احتياجاتك."
         />
+        <link rel="canonical" href="https://madarat-alkawn.com/about" />
+        <meta property="og:title" content="عن مدارات الكون - شركة السياحة والسفر الرائدة في السعودية" />
+        <meta property="og:description" content="تعرف على مدارات الكون للسياحة والسفر - شركة سعودية رائدة في تنظيم الرحلات حول العالم. نقدم تجارب سفر فريدة ومخصصة تلبي كافة احتياجاتك مع خبرة سنوات في مجال السياحة والسفر." />
+        <meta property="og:url" content="https://madarat-alkawn.com/about" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://madarat-alkawn.com/images/about-og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="عن مدارات الكون - شركة السياحة والسفر الرائدة في السعودية" />
+        <meta name="twitter:description" content="تعرف على مدارات الكون للسياحة والسفر - شركة سعودية رائدة في تنظيم الرحلات حول العالم." />
       </Head>
 
       {/* Header */}
@@ -86,7 +95,7 @@ export default function About() {
 
       {/* Main Content */}
       <div className={styles.aboutContainer}>
-        <h1 className={styles.mainTitle}>اكتشف الكون مع مدارات الكون</h1>
+        <h2 className={styles.mainTitle}>اكتشف الكون مع مدارات الكون</h2>
 
         <div className={styles.bentoContainer}>
           {/* Intro Box */}

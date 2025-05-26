@@ -98,11 +98,20 @@ export default function TripsPage({
   return (
     <Layout metadata={metadata} menus={menus}>
       <Head>
-        <title>الرحلات السياحية | مدارات الكون</title>
-        <Meta
-          title="الرحلات السياحية | مدارات الكون"
-          description="اكتشف رحلاتنا السياحية المميزة واستمتع بتجربة لا تُنسى في أجمل الأماكن حول العالم"
+        <title>الرحلات السياحية - مدارات الكون</title>
+        <meta
+          name="description"
+          content="اكتشف رحلاتنا السياحية المميزة واستمتع بتجربة لا تُنسى في أجمل الأماكن حول العالم. عروض سياحية متنوعة بأسعار تنافسية وخدمات عالية الجودة مع مدارات الكون للسياحة والسفر. احجز رحلتك الآن واستمتع بأفضل الخدمات السياحية."
         />
+        <link rel="canonical" href="https://madarat-alkawn.com/trips" />
+        <meta property="og:title" content="الرحلات السياحية - مدارات الكون | أفضل العروض السياحية حول العالم" />
+        <meta property="og:description" content="اكتشف رحلاتنا السياحية المميزة واستمتع بتجربة لا تُنسى في أجمل الأماكن حول العالم. عروض سياحية متنوعة بأسعار تنافسية وخدمات عالية الجودة." />
+        <meta property="og:url" content="https://madarat-alkawn.com/trips" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://madarat-alkawn.com/images/trips-og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="الرحلات السياحية - مدارات الكون" />
+        <meta name="twitter:description" content="اكتشف رحلاتنا السياحية المميزة واستمتع بتجربة لا تُنسى في أجمل الأماكن حول العالم." />
       </Head>
 
       {/* Hero Section with hardcoded image */}

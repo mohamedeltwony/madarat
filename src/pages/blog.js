@@ -13,11 +13,20 @@ export default function Blog() {
   return (
     <LegalLayout>
       <Head>
-        <title>المدونة - مدارات الكون</title>
+        <title>مدونة مدارات الكون - نصائح السفر والسياحة والوجهات المميزة</title>
         <meta
           name="description"
-          content="تصفح أحدث المقالات والمحتوى التعليمي من مدارات الكون للسياحة والسفر"
+          content="تصفح أحدث المقالات والنصائح حول السفر والسياحة من خبراء مدارات الكون. اكتشف الوجهات المميزة، نصائح التخطيط للرحلات، وأفضل العروض السياحية حول العالم."
         />
+        <link rel="canonical" href="https://madarat-alkawn.com/blog" />
+        <meta property="og:title" content="مدونة مدارات الكون - نصائح السفر والسياحة والوجهات المميزة" />
+        <meta property="og:description" content="تصفح أحدث المقالات والنصائح حول السفر والسياحة من خبراء مدارات الكون. اكتشف الوجهات المميزة، نصائح التخطيط للرحلات، وأفضل العروض السياحية حول العالم." />
+        <meta property="og:url" content="https://madarat-alkawn.com/blog" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://madarat-alkawn.com/images/blog-og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="مدونة مدارات الكون - نصائح السفر والسياحة" />
+        <meta name="twitter:description" content="تصفح أحدث المقالات والنصائح حول السفر والسياحة من خبراء مدارات الكون." />
       </Head>
 
       {/* Hero Section */}
