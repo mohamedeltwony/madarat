@@ -63,6 +63,7 @@
   "devDependencies": {
     "@next/bundle-analyzer": "^15.4.0-canary.51",
     "@svgr/webpack": "^8.1.0",
+    "compression-webpack-plugin": "^11.1.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.4.0-canary.51",
     "eslint-config-prettier": "^10.1.1",
@@ -72,7 +73,8 @@
     "lint-staged": "^15.5.0",
     "playwright": "^1.33.0",
     "prettier": "^3.5.3",
-    "sharp": "^0.33.5"
+    "sharp": "^0.33.5",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "repository": {
     "type": "git",

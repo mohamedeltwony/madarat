@@ -14,54 +14,26 @@ class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
 
-          {/* Favicon and App Icons */}
-          <link
-            rel="icon"
-            type="image/png"
-            href="/favicon.png"
-          />
-          <link 
-            rel="apple-touch-icon" 
-            href="/images/icons/apple-touch-icon.png" 
-          />
-          <link 
-            rel="apple-touch-icon" 
-            sizes="180x180" 
-            href="/images/icons/apple-touch-icon.png" 
-          />
-          <link 
-            rel="icon" 
-            type="image/png" 
-            sizes="32x32" 
-            href="/favicon.png" 
-          />
-          <link 
-            rel="icon" 
-            type="image/png" 
-            sizes="16x16" 
-            href="/favicon.png" 
-          />
-
-          {/* Web App Manifest */}
-          <link rel="manifest" href="/site.webmanifest" />
-          <meta name="theme-color" content="#1a365d" />
-          <meta name="msapplication-TileColor" content="#1a365d" />
-
-          {/* Google Fonts with proper preconnect and optimization */}
+          {/* Critical Resource Hints - Load First */}
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="anonymous"
-          />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://en4ha1dlwxxhwad.madaratalkon.com" />
+          
+          {/* DNS Prefetch for external domains */}
+          <link rel="dns-prefetch" href="//www.google-analytics.com" />
+          <link rel="dns-prefetch" href="//connect.facebook.net" />
+          <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+          <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
 
-          {/* Combined font loading for both Cairo and Tajawal - optimized with preload and media */}
-          <link
-            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap"
-            rel="stylesheet"
+          {/* Preload Critical Assets for LCP */}
+          <link 
+            rel="preload" 
+            href="/logo.png" 
+            as="image" 
+            fetchPriority="high"
           />
-
-          {/* Preload critical Cairo font files directly */}
+          
+          {/* Preload Critical Fonts */}
           <link
             rel="preload"
             href="https://fonts.gstatic.com/s/cairo/v28/SLXgc1nY6HkvangtZmpQdkhzfH5lkSs2SgRjCAGMQ1z0hGA-W1ToLQ-HqUvBHw.woff2"
@@ -69,33 +41,56 @@ class MyDocument extends Document {
             type="font/woff2"
             crossOrigin="anonymous"
           />
+          <link
+            rel="preload"
+            href="https://fonts.gstatic.com/s/tajawal/v9/Iura6YBj_oCad4k1l_6gLuvPDSNmhqTOjsOKOw.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
 
-          {/* Bootstrap Icons - deferred loading */}
-          <link 
-            rel="stylesheet" 
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+          {/* Optimized Font Loading with font-display: swap */}
+          <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap"
+            rel="stylesheet"
             media="print"
             onLoad="this.media='all'"
           />
+          <noscript>
+            <link
+              href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap"
+              rel="stylesheet"
+            />
+          </noscript>
 
-          {/* Preload critical assets - logo for LCP */}
+          {/* Favicon and App Icons */}
+          <link rel="icon" type="image/png" href="/favicon.png" />
+          <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+
+          {/* Web App Manifest for PWA */}
+          <link rel="manifest" href="/site.webmanifest" />
+          <meta name="theme-color" content="#1a365d" />
+          <meta name="msapplication-TileColor" content="#1a365d" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta name="apple-mobile-web-app-title" content="مدارات الكون" />
+
+          {/* Bootstrap Icons - Deferred Loading */}
           <link 
-            rel="preload" 
-            href="/logo.png" 
-            as="image" 
-            fetchPriority="high"
+            rel="preload"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+            as="style"
+            onLoad="this.onload=null;this.rel='stylesheet'"
           />
-
-          {/* DNS Prefetch for external domains */}
-          <link rel="dns-prefetch" href="//www.google-analytics.com" />
-          <link rel="dns-prefetch" href="//connect.facebook.net" />
-          <link rel="dns-prefetch" href="//www.googletagmanager.com" />
-          <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-          <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-          <link rel="dns-prefetch" href="//en4ha1dlwxxhwad.madaratalkon.com" />
-
-          {/* Preconnect to WordPress API */}
-          <link rel="preconnect" href="https://en4ha1dlwxxhwad.madaratalkon.com" />
+          <noscript>
+            <link 
+              rel="stylesheet" 
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+            />
+          </noscript>
 
           {/* SEO Meta Tags */}
           <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -118,8 +113,31 @@ class MyDocument extends Document {
           
           {/* Performance Hints */}
           <meta httpEquiv="Accept-CH" content="DPR, Width, Viewport-Width" />
+          <meta name="format-detection" content="telephone=no" />
 
-
+          {/* Critical CSS Inline - Add this for above-the-fold content */}
+          <style dangerouslySetInnerHTML={{
+            __html: `
+              /* Critical CSS for faster rendering */
+              body { 
+                font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
+                margin: 0;
+                padding: 0;
+                direction: rtl;
+                text-align: right;
+              }
+              .loading-spinner {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+              }
+              /* Prevent layout shift */
+              img { max-width: 100%; height: auto; }
+              .hero-section { min-height: 60vh; }
+            `
+          }} />
 
           {/* Structured Data for Organization */}
           <script
@@ -154,6 +172,18 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
+          {/* Loading Spinner for Better UX */}
+          <div id="loading-spinner" className="loading-spinner" style={{ display: 'none' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              border: '4px solid #f3f3f3',
+              borderTop: '4px solid #1a365d',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite'
+            }}></div>
+          </div>
+
           {/* Google Tag Manager (noscript) */}
           <noscript>
             <iframe 
@@ -163,10 +193,29 @@ class MyDocument extends Document {
               style={{ display: 'none', visibility: 'hidden' }}
             />
           </noscript>
-          {/* End Google Tag Manager (noscript) */}
           
           <Main />
           <NextScript />
+
+          {/* Inline script for loading optimization */}
+          <script dangerouslySetInnerHTML={{
+            __html: `
+              // Show loading spinner during navigation
+              window.addEventListener('beforeunload', function() {
+                document.getElementById('loading-spinner').style.display = 'block';
+              });
+              
+              // Hide loading spinner when page loads
+              window.addEventListener('load', function() {
+                document.getElementById('loading-spinner').style.display = 'none';
+              });
+              
+              // Add CSS animation for spinner
+              const style = document.createElement('style');
+              style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
+              document.head.appendChild(style);
+            `
+          }} />
         </body>
       </Html>
     );

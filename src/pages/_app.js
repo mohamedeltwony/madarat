@@ -1,7 +1,8 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, Suspense, lazy } from 'react';
 import { useRouter } from 'next/router';
 import NextApp from 'next/app';
 import Script from 'next/script';
+import dynamic from 'next/dynamic';
 
 import { SiteContext, useSiteContext } from '../hooks/use-site';
 import { SearchProvider } from '../hooks/use-search';
@@ -9,22 +10,46 @@ import { SearchProvider } from '../hooks/use-search';
 import { getSiteMetadata } from '../lib/site';
 import { getRecentPosts } from '../lib/posts';
 import { getCategories } from '../lib/categories';
-import NextNProgress from 'nextjs-progressbar';
-import FloatingButtons from '../components/WhatsAppButton/WhatsAppButton';
-
 import { trackPageView } from '../utils/facebookTracking';
 import { gtmPageView, initializeDataLayer } from '../lib/gtm';
+import { 
+  initPerformanceMonitoring, 
+  addResourceHints, 
+  optimizeImageLoading,
+  preloadCriticalResources 
+} from '../utils/performance';
 
+// Lazy load heavy components
+const NextNProgress = dynamic(() => import('nextjs-progressbar'), {
+  ssr: false,
+  loading: () => null,
+});
+
+const FloatingButtons = dynamic(() => import('../components/WhatsAppButton/WhatsAppButton'), {
+  ssr: false,
+  loading: () => null,
+});
+
+// Import styles with proper optimization
 import '../styles/globals.scss';
 import '../styles/wordpress.scss';
 import '../styles/global-overrides.css';
 import variables from '../styles/variables';
 
+// Performance monitoring
+const reportWebVitals = (metric) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', metric.name, {
+      event_category: 'Web Vitals',
+      value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+      event_label: metric.id,
+      non_interaction: true,
+    });
+  }
+};
+
 function App({ Component, pageProps = {} }) {
-  // Initialize site context potentially empty or based on pageProps if provided by page
-  // Individual pages are now responsible for fetching necessary data (like metadata, menus)
-  // and potentially passing it via pageProps if needed by context/layout.
-  // For now, initialize with what might come from pageProps, otherwise empty.
+  // Initialize site context with optimized data
   const site = useSiteContext({
     metadata: pageProps.metadata || {},
     recentPosts: pageProps.recentPosts || [],
@@ -34,88 +59,152 @@ function App({ Component, pageProps = {} }) {
 
   const router = useRouter();
 
-  // Check if current page is a trip landing page
-  const isTripPage = router.pathname.includes('-trip') || 
-                     router.pathname.startsWith('/trips/') ||
-                     router.pathname === '/generic-trip' ||
-                     router.pathname === '/international-licence-trip' ||
-                     router.pathname === '/schengen-visa-trip' ||
-                     router.pathname === '/bosnia-trip' ||
-                     router.pathname === '/georgia-trip' ||
-                     router.pathname === '/azerbaijan-trip' ||
-                     router.pathname === '/poland-trip' ||
-                     router.pathname === '/italy-trip' ||
-                     router.pathname === '/russia-trip' ||
-                     router.pathname === '/turkey-trip' ||
-                     router.pathname === '/trabzon-wider-north-turkey' ||
-                     router.pathname === '/cruise-italy-spain-france' ||
-                     router.pathname === '/london-scotland-trip';
+  // Optimized trip page detection
+  const isTripPage = useCallback(() => {
+    const tripPaths = [
+      '-trip', '/trips/', '/generic-trip', '/international-licence-trip',
+      '/schengen-visa-trip', '/bosnia-trip', '/georgia-trip', '/azerbaijan-trip',
+      '/poland-trip', '/italy-trip', '/russia-trip', '/turkey-trip',
+      '/trabzon-wider-north-turkey', '/cruise-italy-spain-france', '/london-scotland-trip'
+    ];
+    return tripPaths.some(path => router.pathname.includes(path));
+  }, [router.pathname]);
 
+  // Optimized initialization with performance monitoring
   useEffect(() => {
-    // Set RTL direction
+    // Set RTL direction and language
     document.documentElement.dir = 'rtl';
     document.documentElement.lang = 'ar';
+
+    // Initialize performance monitoring
+    initPerformanceMonitoring();
+
+    // Add resource hints for better performance
+    addResourceHints();
+
+    // Preload critical resources
+    preloadCriticalResources();
 
     // Initialize GTM dataLayer
     initializeDataLayer();
 
-    // Register service worker
-    if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker
-          .register('/service-worker.js')
-          .then((registration) => {
-            console.log(
-              'Service Worker registered with scope:',
-              registration.scope
-            );
-          })
-          .catch((error) => {
-            console.error('Service Worker registration failed:', error);
-          });
-      });
-    }
+    // Register service worker with better error handling (client-side only)
+    // Temporarily disabled to fix build issues
+    // if (typeof window !== 'undefined' && 'serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+    //   const registerSW = async () => {
+    //     try {
+    //       const registration = await navigator.serviceWorker.register('/service-worker.js');
+    //       console.log('Service Worker registered:', registration.scope);
+    //       
+    //       // Update service worker when new version is available
+    //       registration.addEventListener('updatefound', () => {
+    //         const newWorker = registration.installing;
+    //         if (newWorker) {
+    //           newWorker.addEventListener('statechange', () => {
+    //             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+    //               // New service worker is available, prompt user to refresh
+    //               if (confirm('تحديث جديد متاح. هل تريد إعادة تحميل الصفحة؟')) {
+    //                 window.location.reload();
+    //               }
+    //             }
+    //           });
+    //         }
+    //       });
+    //     } catch (error) {
+    //       console.error('Service Worker registration failed:', error);
+    //     }
+    //   };
+    //   
+    //   if (document.readyState === 'complete') {
+    //     registerSW();
+    //   } else {
+    //     window.addEventListener('load', registerSW);
+    //   }
+    // }
     
-    // Update Facebook parameters on route change
+    // Update Facebook parameters
     if (typeof window !== 'undefined') {
       updateFbParams();
     }
+
+    // Optimize image loading after page load
+    const optimizeImages = () => {
+      optimizeImageLoading();
+    };
+
+    if (document.readyState === 'complete') {
+      optimizeImages();
+    } else {
+      window.addEventListener('load', optimizeImages);
+    }
+
+    // Performance observer for Core Web Vitals
+    if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
+      try {
+        const observer = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.entryType === 'navigation') {
+              // Track navigation timing
+              if (window.gtag) {
+                window.gtag('event', 'page_load_time', {
+                  event_category: 'Performance',
+                  value: Math.round(entry.loadEventEnd - entry.loadEventStart),
+                });
+              }
+            }
+          }
+        });
+        observer.observe({ entryTypes: ['navigation'] });
+      } catch (e) {
+        console.warn('Performance Observer not supported');
+      }
+    }
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('load', optimizeImages);
+    };
   }, []);
   
-  // Listen for route changes to update FB parameters and track page views
+  // Optimized route change tracking
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      updateFbParams();
-      
-      // Track page view with Facebook Pixel
-      if (window.fbq) {
-        // Let the page finish loading before tracking the page view
-        const timer = setTimeout(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleRouteChange = () => {
+      // Debounced tracking to avoid multiple calls
+      const trackingTimer = setTimeout(() => {
+        updateFbParams();
+        
+        // Facebook Pixel tracking
+        if (window.fbq) {
           trackPageView({
             content_name: document.title,
             content_category: router.pathname.split('/')[1] || 'home'
           });
+        }
+
+        // GTM tracking
+        if (window.gtag) {
+          gtmPageView({
+            page_category: router.pathname.split('/')[1] || 'home',
+            page_type: router.pathname === '/' ? 'homepage' : 'page',
+            user_language: 'ar'
+          });
+        }
+
+        // Re-optimize images on route change
+        setTimeout(() => {
+          optimizeImageLoading();
         }, 500);
-        
-        return () => clearTimeout(timer);
-      }
+      }, 100);
 
-      // Track page view with GTM
-      const gtmTimer = setTimeout(() => {
-        gtmPageView({
-          page_category: router.pathname.split('/')[1] || 'home',
-          page_type: router.pathname === '/' ? 'homepage' : 'page',
-          user_language: 'ar'
-        });
-      }, 300);
+      return () => clearTimeout(trackingTimer);
+    };
 
-      return () => {
-        clearTimeout(gtmTimer);
-      };
-    }
+    handleRouteChange();
   }, [router.asPath, router.pathname]);
 
-  // Track Google Ads page navigation
+  // Google Ads tracking
   useEffect(() => {
     const handleRouteChange = (url) => {
       if (window.gtag) {
@@ -131,53 +220,48 @@ function App({ Component, pageProps = {} }) {
     };
   }, [router.events]);
 
-  // Helper function to get cookie value by name (wrapped in useCallback)
+  // Optimized cookie helper
   const getCookieValue = useCallback((name) => {
-    if (typeof document === 'undefined') {
-      return null; // Return null on server-side
-    }
+    if (typeof document === 'undefined') return null;
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return null;
+    return parts.length === 2 ? parts.pop().split(';').shift() : null;
   }, []);
+
+  // Determine if SearchProvider is needed
+  const needsSearchProvider = ['/search', '/advanced-search', '/posts', '/blog']
+    .some(path => router.pathname.startsWith(path));
+
+  const AppContent = () => (
+    <>
+      <Suspense fallback={<div style={{ height: '4px', backgroundColor: variables.progressbarColor }} />}>
+        <NextNProgress height={4} color={variables.progressbarColor} />
+      </Suspense>
+      <Component {...pageProps} />
+      {!isTripPage() && (
+        <Suspense fallback={null}>
+          <FloatingButtons />
+        </Suspense>
+      )}
+    </>
+  );
 
   return (
     <>
       <SiteContext.Provider value={site}>
-        {/* Conditionally render SearchProvider */}
-        {[
-          '/search',
-          '/advanced-search',
-          '/posts',
-          '/blog',
-          // Add other paths that need SearchProvider if necessary
-        ].some(
-          (
-            path // Break after arrow
-          ) => router.pathname.startsWith(path) // Condition on new line
-        ) ? (
+        {needsSearchProvider ? (
           <SearchProvider>
-            <NextNProgress height={4} color={variables.progressbarColor} />
-            <Component {...pageProps} />
-            {!isTripPage && <FloatingButtons />}
+            <AppContent />
           </SearchProvider>
         ) : (
-          <>
-            {/* Render without SearchProvider for other pages (e.g., landing pages) */}
-            <NextNProgress height={4} color={variables.progressbarColor} />
-            <Component {...pageProps} />
-            {!isTripPage && <FloatingButtons />}
-          </>
+          <AppContent />
         )}
       </SiteContext.Provider>
 
-
-
-      {/* Facebook Pixel Code */}
+      {/* Optimized Facebook Pixel Code */}
       <Script
         id="fb-pixel"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             !function(f,b,e,v,n,t,s)
@@ -189,74 +273,42 @@ function App({ Component, pageProps = {} }) {
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
             
-            // Initialize with additional parameters for better matching
             fbq('init', '330286163283402', {
               external_id: getUserExternalId()
             });
             
-            // Track PageView on all pages with event ID for deduplication
             const pageViewEventId = 'pv_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
             fbq('track', 'PageView', {}, {eventID: pageViewEventId});
             
-            // Helper function to get user ID if available
             function getUserExternalId() {
-              // Return user ID from your auth system if available
-              return localStorage.getItem('userId') || '';
-            }
-            
-            // Capture and store fbp and fbc parameters
-            function updateFbParams() {
               try {
-                // Get fbp from cookie
-                const fbp = document.cookie.split(';').find(c => c.trim().startsWith('_fbp='));
-                if (fbp) {
-                  localStorage.setItem('_fbp', fbp.split('=')[1]);
-                }
-                
-                // Extract fbc from URL if present
-                const url = new URL(window.location.href);
-                const fbclid = url.searchParams.get('fbclid');
-                if (fbclid) {
-                  const fbc = 'fb.1.' + Date.now() + '.' + fbclid;
-                  localStorage.setItem('_fbc', fbc);
-                  
-                  // Also store in cookie for better cross-page tracking
-                  document.cookie = '_fbc=' + fbc + '; path=/; max-age=7776000; SameSite=Lax';
-                }
-                
-                // Check for other standard UTM parameters
-                const utm_source = url.searchParams.get('utm_source');
-                const utm_medium = url.searchParams.get('utm_medium');
-                const utm_campaign = url.searchParams.get('utm_campaign');
-                
-                if (utm_source) localStorage.setItem('utm_source', utm_source);
-                if (utm_medium) localStorage.setItem('utm_medium', utm_medium);
-                if (utm_campaign) localStorage.setItem('utm_campaign', utm_campaign);
+                return localStorage.getItem('userId') || '';
               } catch (e) {
-                console.error('Error capturing FB parameters:', e);
+                return '';
               }
             }
-            
-            // Call on page load
-            updateFbParams();
           `,
         }}
       />
 
-      {/* Google tag (gtag.js) */}
+      {/* Optimized Google Analytics */}
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=AW-16691848441"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
       />
       <Script
         id="google-analytics"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'AW-16691848441');
+            gtag('config', 'AW-16691848441', {
+              page_title: document.title,
+              page_location: window.location.href,
+              send_page_view: true
+            });
           `,
         }}
       />
@@ -264,15 +316,15 @@ function App({ Component, pageProps = {} }) {
   );
 }
 
-// Add global function for updateFbParams
+// Optimized Facebook parameters function
 function updateFbParams() {
+  if (typeof window === 'undefined') return;
+  
   try {
-    if (typeof window === 'undefined') return;
-    
     // Get fbp from cookie
-    const fbp = document.cookie.split(';').find(c => c.trim().startsWith('_fbp='));
-    if (fbp) {
-      localStorage.setItem('_fbp', fbp.split('=')[1]);
+    const fbpCookie = document.cookie.split(';').find(c => c.trim().startsWith('_fbp='));
+    if (fbpCookie) {
+      localStorage.setItem('_fbp', fbpCookie.split('=')[1]);
     }
     
     // Extract fbc from URL if present
@@ -281,12 +333,10 @@ function updateFbParams() {
     if (fbclid) {
       const fbc = 'fb.1.' + Date.now() + '.' + fbclid;
       localStorage.setItem('_fbc', fbc);
-      
-      // Also set as cookie for better cross-page tracking
-      document.cookie = '_fbc=' + fbc + '; path=/; max-age=7776000; SameSite=Lax';
+      document.cookie = `_fbc=${fbc}; path=/; max-age=7776000; SameSite=Lax`;
     }
     
-    // Store UTM parameters
+    // Store UTM parameters efficiently
     const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
     utmParams.forEach(param => {
       const value = url.searchParams.get(param);
@@ -297,4 +347,6 @@ function updateFbParams() {
   }
 }
 
+// Export reportWebVitals for Next.js
+export { reportWebVitals };
 export default App;
