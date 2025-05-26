@@ -12,7 +12,7 @@ const nextConfig = {
   reactStrictMode: true,
   
   // Modern browsers target
-  swcMinify: true,
+  // swcMinify: true, // Removed as it's deprecated in Next.js 15
   
   // i18n configuration for Arabic support
   i18n: {

@@ -1,11 +1,11 @@
 {
-  "name": "مدارات الكون",
-  "short_name": "مدارات",
-  "description": "اكتشف معنا أجمل الوجهات السياحية حول العالم",
+  "name": "مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي",
+  "short_name": "مدارات الكون",
+  "description": "اكتشف معنا أجمل الوجهات السياحية حول العالم. نقدم لك دليلاً شاملاً للسفر والسياحة، من التخطيط للرحلة إلى أفضل الأماكن للزيارة والإقامة.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "theme_color": "#1a365d",
   "orientation": "portrait-primary",
   "dir": "rtl",
   "lang": "ar",
@@ -37,6 +37,15 @@
       "description": "Browse posts by category",
       "url": "/categories",
       "icons": [{ "src": "/images/مدارات-2.png", "sizes": "192x192" }]
+    }
+  ],
+  "categories": ["travel", "tourism", "lifestyle"],
+  "screenshots": [
+    {
+      "src": "/images/hero-background-new.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "الصفحة الرئيسية لموقع مدارات الكون"
     }
   ]
 }

@@ -413,7 +413,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   
   &:hover {
-    background-color: darken($primary-color, 5%);
+    background-color: color.adjust($primary-color, $lightness: -5%);
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   }
@@ -474,7 +474,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   transition: background-color 0.3s;
   
   &:hover {
-    background-color: darken($primary-color, 10%);
+    background-color: color.adjust($primary-color, $lightness: -10%);
   }
 }
 
@@ -520,7 +520,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
     font-size: 0.8rem;
     
     &:hover {
-      background-color: darken(#ff9800, 10%);
+      background-color: color.adjust(#ff9800, $lightness: -10%);
     }
   }
 }

@@ -292,7 +292,7 @@ export default function Post({ post, socialImage, related, recentPosts }) {
                         key={relatedPost.title}
                         className={styles.relatedItem}
                       >
-                        {relatedPost.featuredImage && (
+                        {relatedPost.featuredImage?.sourceUrl && (
                           <img
                             src={relatedPost.featuredImage.sourceUrl}
                             alt={relatedPost.title}

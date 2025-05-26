@@ -9,6 +9,7 @@ import Main from '@/components/Main';
 import Footer from '@/components/Footer';
 import Meta from '@/components/Meta';
 import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton'; // Import the new component
+import Analytics from '@/components/Analytics';
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -113,6 +114,7 @@ const Layout = ({ children }) => {
   return (
     <div className={styles.layoutContainer}>
       <Meta {...metaSettings} />
+      <Analytics />
       <Header />
       <Main>{children}</Main>
       <Footer />

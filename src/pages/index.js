@@ -20,6 +20,12 @@ import MorphPosts from '@/components/MorphPosts';
 import Pagination from '@/components/Pagination';
 import Link from 'next/link';
 import Image from 'next/legacy/image';
+import SEO from '@/components/SEO';
+import { getPaginatedPosts } from 'lib/posts';
+import { getCategories } from 'lib/categories';
+import { getSiteMetadata } from 'lib/site';
+import { getAllMenus } from 'lib/menus';
+
 
 // Dynamic imports for heavy components
 const GoogleReviewsSection = dynamic(
@@ -66,6 +72,32 @@ export default function Home({
     alert('شكراً لك! سنتواصل معك قريباً');
   };
 
+  // Track page view on mount
+  useEffect(() => {
+    // Facebook Pixel tracking
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'ViewContent', {
+        content_name: 'Homepage',
+        content_category: 'homepage',
+        content_type: 'website'
+      });
+    }
+
+    // GTM tracking
+    if (typeof window !== 'undefined' && window.dataLayer) {
+      window.dataLayer.push({
+        event: 'page_view',
+        page_title: title,
+        page_location: window.location.href,
+        page_category: 'homepage'
+      });
+    }
+  }, [title]);
+
+  const breadcrumbs = [
+    { name: 'الرئيسية', url: '/' }
+  ];
+
   return (
     <div>
       <Head>
@@ -79,6 +111,14 @@ export default function Home({
         <meta property="og:type" content="website" />
         <meta property="og:image" content="/Madarat-logo-768x238.png" />
       </Head>
+
+      <SEO
+        title={title}
+        description={description}
+        keywords="سياحة, سفر, رحلات, وجهات سياحية, مدارات الكون, حجز رحلات, عروض سياحية, البوسنة, تركيا, جورجيا, أذربيجان"
+        image="/Madarat-logo-768x238.png"
+        breadcrumbs={breadcrumbs}
+      />
 
       <Layout>
         <WebsiteJsonLd siteTitle={title} />
@@ -135,6 +175,13 @@ export default function Home({
 
         {/* New Features Section */}
         {/* Removed Explore Our Site features section */}
+
+        {/* Popular Destinations Section - Coming Soon */}
+        {/* <Section>
+          <Container>
+            <PopularDestinations destinations={destinations} />
+          </Container>
+        </Section> */}
       </Layout>
 
       {/* Lead Form Popup */}
@@ -199,72 +246,34 @@ export default function Home({
 
 export async function getStaticProps() {
   try {
-    // Fetch site metadata
-    const metadata = (await getSiteMetadataREST()) || {
-      title: 'مدارات الكون',
-      siteTitle: 'مدارات الكون',
-      description: 'موقع مدارات الكون',
-    };
+    const { posts } = await getPaginatedPosts({
+      queryIncludes: 'archive',
+    });
+    const { categories } = await getCategories();
 
-    // Import WordPress API functions
-    const { fetchDestinations, fetchOfferTrips } = require('@/lib/wordpress-api');
-    const { getAllPosts } = require('@/lib/posts');
-
-    // Fetch destinations from WordPress API
-    console.log('Starting to fetch destinations...');
-    const destinations = await fetchDestinations({ perPage: 100 });
-    console.log(`Fetched ${destinations.length} destinations`);
-
-    // Fetch offer trips from WordPress API
-    console.log('Starting to fetch offer trips...');
-    const { trips: offerTrips, pagination: tripsPagination } = await fetchOfferTrips({ perPage: 10 });
-    console.log(`Fetched ${offerTrips.length} offer trips`);
-
-    // Fetch actual blog posts from WordPress API
-    console.log('Starting to fetch blog posts...');
-    const { posts } = await getAllPosts();
-    console.log(`Fetched ${posts.length} blog posts`);
+    // Get site metadata
+    const { metadata } = await getSiteMetadata();
+    const { menus } = await getAllMenus();
 
     return {
       props: {
-        metadata,
-        destinations,
-        posts: posts || [], // Use actual blog posts
-        pagination: {
-          totalPages: Math.ceil(posts.length / 10),
-          total: posts.length,
-          currentPage: 1,
-        },
-        offerTrips: offerTrips || [], // Keep offer trips separate
-        tripsPagination,
+        posts: posts || [],
+        categories: categories || [],
+        metadata: metadata || {},
+        menus: menus || [],
       },
-      // Revalidate data every hour (3600 seconds)
-      revalidate: 3600,
+      revalidate: 3600, // Revalidate every hour
     };
   } catch (error) {
     console.error('Error in getStaticProps:', error);
     return {
       props: {
-        metadata: {
-          title: 'مدارات الكون',
-          description: 'موقع مدارات الكون',
-        },
-        destinations: [],
         posts: [],
-        pagination: {
-          totalPages: 1,
-          total: 0,
-          currentPage: 1,
-        },
-        offerTrips: [],
-        tripsPagination: {
-          totalPages: 1,
-          total: 0,
-          currentPage: 1,
-        },
+        categories: [],
+        metadata: {},
+        menus: [],
       },
-      // Shorter revalidation time if there was an error
-      revalidate: 300,
+      revalidate: 3600,
     };
   }
 }

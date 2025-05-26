@@ -4,25 +4,56 @@ import { authorPathByName } from '@/lib/users';
 import { postPathBySlug } from '@/lib/posts';
 import { pagePathBySlug } from '@/lib/pages';
 
-export function ArticleJsonLd({ post = {}, siteTitle = '' }) {
+export function ArticleJsonLd({ 
+  post = {}, 
+  siteTitle = '',
+  title,
+  slug,
+  excerpt,
+  datePublished,
+  dateModified,
+  authorName,
+  description,
+  images = []
+}) {
   const { homepage = '' } = SITE_CONFIG;
-  const {
-    title,
-    slug,
-    excerpt,
-    date,
-    author,
-    categories,
-    modified,
-    featuredImage,
-  } = post;
-  const path = postPathBySlug(slug);
-  const datePublished = !!date && new Date(date);
-  const dateModified = !!modified && new Date(modified);
-
-  /** TODO - As image is a recommended field,
-   * we should set this to the image URL when implemented.
-   */
+  
+  // Support both old post object format and new individual props format
+  const articleTitle = title || post.title;
+  const articleSlug = slug || post.slug;
+  const articleExcerpt = excerpt || description || post.excerpt;
+  const articleAuthor = authorName || post.author?.name;
+  const articleImages = images.length > 0 ? images : (post.featuredImage?.sourceUrl ? [post.featuredImage.sourceUrl] : []);
+  
+  // Handle date formatting safely
+  const formatDate = (dateValue) => {
+    if (!dateValue) return '';
+    
+    try {
+      // If it's already a Date object
+      if (dateValue instanceof Date) {
+        return dateValue.toISOString();
+      }
+      
+      // If it's a string, try to parse it
+      if (typeof dateValue === 'string') {
+        const parsedDate = new Date(dateValue);
+        if (!isNaN(parsedDate.getTime())) {
+          return parsedDate.toISOString();
+        }
+      }
+      
+      return '';
+    } catch (error) {
+      console.warn('Error formatting date:', error);
+      return '';
+    }
+  };
+  
+  const publishedDate = formatDate(datePublished || post.date);
+  const modifiedDate = formatDate(dateModified || post.modified) || publishedDate;
+  
+  const path = postPathBySlug(articleSlug);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -31,13 +62,11 @@ export function ArticleJsonLd({ post = {}, siteTitle = '' }) {
       '@type': 'WebPage',
       '@id': `${homepage}${path}`,
     },
-    headline: title,
-    datePublished: datePublished ? datePublished.toISOString() : '',
-    dateModified: dateModified
-      ? dateModified.toISOString()
-      : (datePublished?.toISOString() ?? ''),
-    description: excerpt,
-    image: featuredImage?.sourceUrl ? [featuredImage.sourceUrl] : [],
+    headline: articleTitle,
+    datePublished: publishedDate,
+    dateModified: modifiedDate,
+    description: articleExcerpt,
+    image: articleImages,
     publisher: {
       '@type': 'Organization',
       name: siteTitle,
@@ -48,10 +77,10 @@ export function ArticleJsonLd({ post = {}, siteTitle = '' }) {
     },
   };
 
-  if (author) {
+  if (articleAuthor) {
     jsonLd.author = {
       '@type': 'Person',
-      name: author.name,
+      name: articleAuthor,
     };
   }
 
