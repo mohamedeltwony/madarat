@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { getCsrfToken } from '@/utils/csrf';
+import { trackFormSubmission, trackTripBooking, sendGTMEvent } from '../../lib/gtm';
 // Lazy load the SparkleButton component
 const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), { 
   ssr: false,
@@ -193,6 +194,60 @@ export default function TripForm({
       
       console.log('Zapier submission successful, preparing redirect data...');
       
+      // Add GTM tracking for successful form submission
+      const formTrackingData = {
+        form_location: window.location.pathname,
+        form_type: 'trip_booking',
+        user_nationality: formData.nationality,
+        user_type: formData.nationality === 'مواطن' ? 'citizen' : 'resident',
+        trip_destination: zapierConfig.extraPayload?.destination || 'Unknown',
+        trip_name: zapierConfig.extraPayload?.tripName || 'Trip Booking',
+        trip_value: zapierConfig.extraPayload?.price || 0,
+        currency: 'SAR',
+        external_id: externalId,
+        lead_event_id: leadEventId,
+        timestamp: new Date().toISOString(),
+        ...clientData
+      };
+
+      // Track form submission
+      trackFormSubmission('trip_booking_form', formTrackingData);
+
+      // Track trip booking event
+      if (zapierConfig.extraPayload?.destination) {
+        trackTripBooking({
+          tripName: zapierConfig.extraPayload.tripName || 'Trip Booking',
+          destination: zapierConfig.extraPayload.destination,
+          price: zapierConfig.extraPayload.price || '0',
+          duration: zapierConfig.extraPayload.duration || '',
+          category: 'international',
+          bookingStep: 'lead_submitted',
+          nationality: formData.nationality,
+          userType: formData.nationality === 'مواطن' ? 'citizen' : 'resident'
+        });
+      }
+
+      // Send enhanced ecommerce event for trip booking
+      sendGTMEvent({
+        event: 'purchase_intent',
+        ecommerce: {
+          currency: 'SAR',
+          value: zapierConfig.extraPayload?.price || 0,
+          items: [{
+            item_id: zapierConfig.extraPayload?.itemId || 'trip-booking',
+            item_name: zapierConfig.extraPayload?.tripName || 'Trip Booking',
+            item_category: 'Travel',
+            item_variant: formData.nationality === 'مواطن' ? 'Citizen' : 'Resident',
+            price: zapierConfig.extraPayload?.price || 0,
+            quantity: 1
+          }]
+        },
+        user_data: {
+          nationality: formData.nationality,
+          user_type: formData.nationality === 'مواطن' ? 'citizen' : 'resident'
+        }
+      });
+
       // Prepare cleaned user data for thank-you page
       const cleanedEmail = formData.email ? formData.email.toLowerCase().trim() : '';
       const cleanedPhone = formData.phone ? formData.phone.replace(/\D/g, '') : '';
@@ -226,6 +281,16 @@ export default function TripForm({
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
+      
+      // Track form submission error
+      sendGTMEvent({
+        event: 'form_submission_error',
+        form_name: 'trip_booking_form',
+        error_message: error.message,
+        form_location: window.location.pathname,
+        timestamp: new Date().toISOString()
+      });
+      
       alert('حدث خطأ في تقديم النموذج. يرجى المحاولة مرة أخرى.');
     }
   };

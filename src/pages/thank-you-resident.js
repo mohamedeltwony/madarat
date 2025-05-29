@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import styles from '@/styles/pages/ThankYou.module.scss';
 import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti';
+import { sendGTMEvent, trackFormSubmission } from '@/lib/gtm';
 
 export default function ThankYouResident() {
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function ThankYouResident() {
     fire(0.1, { spread: 120, startVelocity: 45 });
   };
 
-  // Fire confetti on component mount
+  // Fire confetti on component mount and track conversion
   useEffect(() => {
     // Add a slight delay to ensure canvas is ready
     const timer = setTimeout(() => {
@@ -48,9 +49,63 @@ export default function ThankYouResident() {
       return () => clearInterval(interval);
     }, 100); // 100ms delay
 
+    // Track GTM conversion for resident
+    if (router.isReady) {
+      const eventId = router.query.eventId || `resident_${Date.now()}`;
+      
+      // Add GTM tracking for successful conversion
+      sendGTMEvent({
+        event: 'conversion',
+        conversion_type: 'lead',
+        conversion_value: 8,
+        currency: 'SAR',
+        user_type: 'resident',
+        nationality: 'مقيم',
+        form_name: 'resident_form',
+        page_type: 'thank_you',
+        lead_source: 'website',
+        external_id: router.query.external_id || '',
+        event_id: eventId,
+        timestamp: new Date().toISOString()
+      });
+
+      // Track as completed form submission
+      trackFormSubmission('resident_form_complete', {
+        form_location: 'thank-you-resident',
+        conversion_value: 8,
+        currency: 'SAR',
+        user_type: 'resident',
+        lead_quality: 'medium',
+        completion_time: new Date().toISOString()
+      });
+
+      // Enhanced ecommerce tracking for lead conversion
+      sendGTMEvent({
+        event: 'purchase',
+        ecommerce: {
+          transaction_id: router.query.external_id || eventId,
+          value: 8,
+          currency: 'SAR',
+          items: [{
+            item_id: 'resident-lead',
+            item_name: 'Resident Lead Conversion',
+            item_category: 'Lead Generation',
+            item_variant: 'Resident',
+            price: 8,
+            quantity: 1
+          }]
+        },
+        user_data: {
+          nationality: 'مقيم',
+          user_type: 'resident',
+          lead_source: 'website'
+        }
+      });
+    }
+
     // Return cleanup for the timeout itself
     return () => clearTimeout(timer);
-  }, []); // Empty dependency array, fire only once on mount + intervals
+  }, [router.isReady, router.query]); // Track when router is ready and query params change
 
   return (
     <div className={styles.container} dir="rtl">

@@ -6,6 +6,7 @@ import styles from '@/styles/pages/ThankYou.module.scss';
 import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti';
 import { trackLeadEvent, getFacebookParams } from '@/utils/facebookTracking'; // Import tracking functions
+import { sendGTMEvent, trackFormSubmission } from '@/lib/gtm';
 
 // Helper function to get cookie value by name
 const getCookieValue = (name) => {
@@ -183,6 +184,55 @@ export default function ThankYouCitizen() {
       });
       
       console.log('Tracking result:', result);
+
+      // Add GTM tracking for successful conversion
+      sendGTMEvent({
+        event: 'conversion',
+        conversion_type: 'lead',
+        conversion_value: 10,
+        currency: 'SAR',
+        user_type: 'citizen',
+        nationality: 'مواطن',
+        form_name: 'citizenship_form',
+        page_type: 'thank_you',
+        lead_source: 'website',
+        external_id: router.query.external_id || '',
+        event_id: eventId,
+        timestamp: new Date().toISOString()
+      });
+
+      // Track as completed form submission
+      trackFormSubmission('citizenship_form_complete', {
+        form_location: 'thank-you-citizen',
+        conversion_value: 10,
+        currency: 'SAR',
+        user_type: 'citizen',
+        lead_quality: 'high',
+        completion_time: new Date().toISOString()
+      });
+
+      // Enhanced ecommerce tracking for lead conversion
+      sendGTMEvent({
+        event: 'purchase',
+        ecommerce: {
+          transaction_id: router.query.external_id || eventId,
+          value: 10,
+          currency: 'SAR',
+          items: [{
+            item_id: 'citizen-lead',
+            item_name: 'Citizen Lead Conversion',
+            item_category: 'Lead Generation',
+            item_variant: 'Citizen',
+            price: 10,
+            quantity: 1
+          }]
+        },
+        user_data: {
+          nationality: 'مواطن',
+          user_type: 'citizen',
+          lead_source: 'website'
+        }
+      });
     };
 
     // Use a small delay to ensure fbq might be ready if loaded async
