@@ -378,4 +378,317 @@ Enable debug logging in development:
 // In gtm.js
 const DEBUG = process.env.NODE_ENV === 'development';
 if (DEBUG) console.log('GTM Event:', eventData);
-``` 
+```
+
+## Persistent User Identification System
+
+### Overview
+
+The website now includes a comprehensive persistent user identification system that stores user data across visits and recognizes returning users. This system enhances all dataLayer events with persistent user information while maintaining privacy compliance through encryption.
+
+### Key Features
+
+- **Persistent User ID**: Each user gets a unique, persistent identifier that survives across sessions
+- **Encrypted Data Storage**: All PII (email, phone, name) is SHA-256 hashed before storage
+- **Visit Tracking**: Complete history of user visits and interactions
+- **Form Submission History**: Track all form submissions with metadata
+- **Interest Tracking**: Automatically infer user interests from page visits
+- **Device Fingerprinting**: Generate unique device signatures for better identification
+- **GDPR Compliance**: Full data export and deletion capabilities
+
+### Enhanced DataLayer Events
+
+All GTM events now include additional persistent user data:
+
+```javascript
+{
+  event: 'conversion',
+  // ... existing event data ...
+  
+  // Persistent user identification
+  persistent_user_id: 'user_abc123def456',
+  is_returning_user: true,
+  visit_count: 5,
+  form_interactions_count: 3,
+  
+  // Encrypted persistent data
+  persistent_encrypted_email: 'a1b2c3d4e5f6...',
+  persistent_encrypted_phone: 'f6e5d4c3b2a1...',
+  persistent_encrypted_name: '123456789abc...',
+  
+  // Behavioral data
+  user_interests: ['italy', 'travel', 'cruise'],
+  total_visits: 8,
+  total_form_submissions: 2,
+  
+  // Classification data
+  persistent_user_type: 'citizen',
+  persistent_nationality: 'مواطن',
+  preferred_language: 'ar',
+  
+  // Technical data
+  device_fingerprint: 'fp_xyz789abc123',
+  first_visit: '2024-01-15T10:00:00.000Z',
+  last_visit: '2024-01-20T14:30:00.000Z',
+  
+  // Facebook tracking data
+  persistent_fbp: '_fbp_value',
+  persistent_fbc: '_fbc_value',
+  
+  // UTM data (latest)
+  persistent_utm_source: 'google',
+  persistent_utm_medium: 'cpc',
+  persistent_utm_campaign: 'italy_trip_2024',
+  persistent_utm_content: 'ad_variant_1',
+  persistent_utm_term: 'italy travel',
+  
+  // Event metadata
+  event_timestamp: '2024-01-20T14:35:00.000Z'
+}
+```
+
+### User Identification Events
+
+#### Initial User Identification
+Fired when a user first visits or returns to the site:
+
+```javascript
+{
+  event: 'user_identification',
+  user_id: 'user_abc123def456',
+  is_returning_user: false,
+  visit_count: 1,
+  first_visit: '2024-01-15T10:00:00.000Z',
+  last_visit: null,
+  form_interactions_count: 0,
+  user_type: 'unknown',
+  nationality: 'unknown',
+  interests: [],
+  device_fingerprint: 'fp_xyz789abc123',
+  timestamp: '2024-01-15T10:00:00.000Z'
+}
+```
+
+#### User Profile Update
+Fired when user profile data is updated (e.g., after form submission):
+
+```javascript
+{
+  event: 'user_profile_update',
+  user_id: 'user_abc123def456',
+  has_email: true,
+  has_phone: true,
+  has_name: true,
+  form_interactions_count: 1,
+  user_type: 'citizen',
+  nationality: 'مواطن',
+  interests: ['italy', 'travel'],
+  last_updated: '2024-01-15T10:30:00.000Z',
+  timestamp: '2024-01-15T10:30:00.000Z'
+}
+```
+
+### Storage Structure
+
+The system uses localStorage with the following keys:
+
+| Key | Description | Data Type |
+|-----|-------------|-----------|
+| `madarat_user_id` | Persistent user identifier | String |
+| `madarat_user_profile` | Encrypted user profile data | JSON Object |
+| `madarat_visit_history` | Array of visit records | JSON Array |
+| `madarat_form_submissions` | Array of form submission records | JSON Array |
+| `madarat_tracking_data` | Additional tracking metadata | JSON Object |
+| `madarat_last_visit` | Timestamp of last visit | ISO String |
+| `madarat_visit_count` | Total number of visits | Number |
+| `madarat_first_visit` | Timestamp of first visit | ISO String |
+
+### User Profile Data Structure
+
+```javascript
+{
+  lastUpdated: '2024-01-15T10:30:00.000Z',
+  
+  // Encrypted PII (SHA-256 hashed)
+  encrypted_email: 'a1b2c3d4e5f6...',
+  encrypted_phone: 'f6e5d4c3b2a1...',
+  encrypted_name: '123456789abc...',
+  
+  // Classification data
+  nationality: 'مواطن',
+  user_type: 'citizen',
+  preferred_language: 'ar',
+  
+  // Behavioral data
+  form_interactions: 3,
+  last_form_submission: '2024-01-15T10:30:00.000Z',
+  interests: ['italy', 'travel', 'cruise'],
+  
+  // Technical data
+  device_fingerprint: 'fp_xyz789abc123'
+}
+```
+
+### Visit History Structure
+
+```javascript
+[
+  {
+    timestamp: '2024-01-15T10:00:00.000Z',
+    url: 'https://madaratalkon.com/italy-trip',
+    referrer: 'https://google.com',
+    userAgent: 'Mozilla/5.0...',
+    visitNumber: 1
+  },
+  // ... more visits
+]
+```
+
+### Form Submission History Structure
+
+```javascript
+[
+  {
+    timestamp: '2024-01-15T10:30:00.000Z',
+    form_name: 'trip_form',
+    page_url: 'https://madaratalkon.com/italy-trip',
+    external_id: 'uuid-external-id',
+    event_id: 'uuid-event-id',
+    nationality: 'مواطن',
+    user_type: 'citizen',
+    conversion_value: 10,
+    trip_destination: 'italy'
+  },
+  // ... more submissions
+]
+```
+
+### API Functions
+
+#### Initialization
+```javascript
+import { initializeUserTracking } from '@/utils/userIdentification';
+
+// Initialize the system (auto-called on import)
+await initializeUserTracking();
+```
+
+#### Save User Profile
+```javascript
+import { saveUserProfile } from '@/utils/userIdentification';
+
+await saveUserProfile({
+  email: 'user@example.com',
+  phone: '0501234567',
+  name: 'John Doe',
+  nationality: 'مواطن',
+  user_type: 'citizen',
+  form_submission: true,
+  form_name: 'trip_form',
+  external_id: 'uuid-external-id',
+  event_id: 'uuid-event-id',
+  conversion_value: 10,
+  trip_destination: 'italy'
+});
+```
+
+#### Get User Data
+```javascript
+import { getUserTrackingData } from '@/utils/userIdentification';
+
+const userData = await getUserTrackingData();
+console.log(userData);
+```
+
+#### Check User Criteria
+```javascript
+import { matchesUserCriteria } from '@/utils/userIdentification';
+
+const isTargetUser = matchesUserCriteria({
+  min_visits: 2,
+  user_type: 'citizen',
+  interests: ['italy', 'travel']
+});
+```
+
+#### Data Management
+```javascript
+import { exportUserData, clearAllUserData } from '@/utils/userIdentification';
+
+// Export all user data (GDPR compliance)
+const exportedData = exportUserData();
+
+// Clear all user data
+clearAllUserData();
+```
+
+### User Data Dashboard
+
+A comprehensive dashboard component is available to view and manage user data:
+
+```javascript
+import UserDataDashboard from '@/components/UserDataDashboard';
+
+// Use in any page or component
+<UserDataDashboard />
+```
+
+The dashboard includes:
+- **Overview**: Basic user information and statistics
+- **Encrypted Data**: View encrypted PII data (hashed)
+- **Behavioral Data**: User behavior and interests
+- **Tracking Data**: Facebook and UTM tracking information
+- **Form Submissions**: History of all form submissions
+- **Visit History**: Complete visit tracking
+- **Data Export**: Download all user data as JSON
+- **Data Clearing**: Remove all stored data
+
+### Privacy and Compliance
+
+#### Data Encryption
+- All PII is SHA-256 hashed before storage
+- Original data is never stored in localStorage
+- Hashing is consistent for matching purposes
+
+#### GDPR Compliance
+- **Right to Access**: Full data export functionality
+- **Right to Erasure**: Complete data deletion
+- **Data Minimization**: Only necessary data is stored
+- **Purpose Limitation**: Data used only for tracking and analytics
+
+#### Data Retention
+- Visit history: Last 50 visits
+- Form submissions: Last 20 submissions
+- User profile: Persistent until manually cleared
+- Interests: Last 10 interests
+
+### Integration with Existing Systems
+
+#### GTM Enhancement
+All existing GTM events are automatically enhanced with persistent user data without requiring code changes.
+
+#### Facebook Pixel
+Persistent user data improves Facebook's advanced matching capabilities.
+
+#### Analytics Platforms
+Enhanced user identification improves attribution and user journey tracking.
+
+### Benefits
+
+1. **Better User Recognition**: Identify returning users across sessions
+2. **Enhanced Attribution**: Improved conversion attribution and user journey tracking
+3. **Personalization**: Enable personalized experiences based on user history
+4. **Privacy Compliance**: GDPR-compliant data handling with encryption
+5. **Analytics Enhancement**: Richer data for analytics and optimization
+6. **Cross-Session Tracking**: Maintain user context across multiple visits
+7. **Interest Targeting**: Automatic interest inference for better targeting
+
+### Implementation Notes
+
+- System auto-initializes on page load
+- All existing tracking continues to work unchanged
+- Backward compatible with existing implementations
+- No server-side storage required
+- Works entirely in the browser with localStorage
+
+// ... existing documentation continues ... 

@@ -6,6 +6,7 @@ import styles from '@/styles/pages/ThankYou.module.scss';
 import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti';
 import { sendGTMEvent, trackFormSubmission } from '@/lib/gtm';
+import { saveUserProfile, getUserTrackingData } from '@/utils/userIdentification';
 
 // Helper function to hash data using SHA-256
 async function sha256(str) {
@@ -75,6 +76,29 @@ export default function ThankYouResident() {
         const email = router.query.email || null;
         const phone = router.query.phone || null;
         const name = router.query.name || null;
+        const firstName = router.query.firstName || null;
+        const lastName = router.query.lastName || null;
+        const external_id = router.query.external_id || null;
+        
+        // --- Save user profile for persistence ---
+        try {
+          await saveUserProfile({
+            email: email,
+            phone: phone,
+            name: name || (firstName && lastName ? `${firstName} ${lastName}` : firstName),
+            nationality: 'مقيم',
+            user_type: 'resident',
+            form_submission: true,
+            form_name: 'resident_form',
+            external_id: external_id,
+            event_id: eventId,
+            conversion_value: 8,
+            trip_destination: 'general_inquiry'
+          });
+          console.log('User profile saved for persistence');
+        } catch (error) {
+          console.error('Error saving user profile:', error);
+        }
         
         // Hash user data for privacy compliance
         const encryptedEmail = email ? await sha256(email) : null;
@@ -106,22 +130,27 @@ export default function ThankYouResident() {
           page_title: document.title,
           page_path: window.location.pathname,
           page_category: 'thank-you-resident',
-          user_language: 'ar'
+          user_language: 'ar',
+          // Add user data for profile saving
+          email: email,
+          phone: phone,
+          name: name || (firstName && lastName ? `${firstName} ${lastName}` : firstName),
+          nationality: 'مقيم'
         };
         
-        // Add GTM tracking for successful conversion
-        sendGTMEvent({
+        // Add GTM tracking for successful conversion (now enhanced with persistent data)
+        await sendGTMEvent({
           event: 'conversion',
           ...baseEventData
         });
 
-        // Track as completed form submission
-        trackFormSubmission('resident_form_complete', {
+        // Track as completed form submission (now enhanced with persistent data)
+        await trackFormSubmission('resident_form_complete', {
           ...baseEventData
         });
 
-        // Enhanced ecommerce tracking for lead conversion
-        sendGTMEvent({
+        // Enhanced ecommerce tracking for lead conversion (now enhanced with persistent data)
+        await sendGTMEvent({
           event: 'purchase',
           ...baseEventData,
           ecommerce: {

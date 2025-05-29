@@ -7,6 +7,7 @@ import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti';
 import { trackLeadEvent, getFacebookParams } from '@/utils/facebookTracking'; // Import tracking functions
 import { sendGTMEvent, trackFormSubmission } from '@/lib/gtm';
+import { saveUserProfile, getUserTrackingData } from '@/utils/userIdentification';
 
 // Helper function to get cookie value by name
 const getCookieValue = (name) => {
@@ -146,6 +147,26 @@ export default function ThankYouCitizen() {
         return;
       }
       
+      // --- Save user profile for persistence ---
+      try {
+        await saveUserProfile({
+          email: email,
+          phone: phone,
+          name: name || (firstName && lastName ? `${firstName} ${lastName}` : firstName),
+          nationality: 'مواطن',
+          user_type: 'citizen',
+          form_submission: true,
+          form_name: 'citizenship_form',
+          external_id: external_id,
+          event_id: eventId,
+          conversion_value: 10,
+          trip_destination: 'general_inquiry'
+        });
+        console.log('User profile saved for persistence');
+      } catch (error) {
+        console.error('Error saving user profile:', error);
+      }
+      
       // --- Get Facebook Tracking Parameters ---
       const fbParams = getFacebookParams();
       // Also check URL parameters as fallback
@@ -185,8 +206,8 @@ export default function ThankYouCitizen() {
       
       console.log('Tracking result:', result);
 
-      // Add GTM tracking for successful conversion
-      sendGTMEvent({
+      // Add GTM tracking for successful conversion (now enhanced with persistent data)
+      await sendGTMEvent({
         event: 'conversion',
         conversion_type: 'lead',
         conversion_value: 10,
@@ -215,8 +236,8 @@ export default function ThankYouCitizen() {
         completion_time: new Date().toISOString()
       });
 
-      // Track as completed form submission
-      trackFormSubmission('citizenship_form_complete', {
+      // Track as completed form submission (now enhanced with persistent data)
+      await trackFormSubmission('citizenship_form_complete', {
         form_location: 'thank-you-citizen',
         conversion_value: 10,
         currency: 'SAR',
@@ -236,11 +257,16 @@ export default function ThankYouCitizen() {
         user_language: 'ar',
         external_id: router.query.external_id || '',
         event_id: eventId,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        // Add user data for profile saving
+        email: userData.email,
+        phone: userData.phone,
+        name: userData.name || (userData.firstName && userData.lastName ? `${userData.firstName} ${userData.lastName}` : userData.firstName),
+        nationality: 'مواطن'
       });
 
-      // Enhanced ecommerce tracking for lead conversion
-      sendGTMEvent({
+      // Enhanced ecommerce tracking for lead conversion (now enhanced with persistent data)
+      await sendGTMEvent({
         event: 'purchase',
         ecommerce: {
           transaction_id: router.query.external_id || eventId,

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { getCsrfToken } from '@/utils/csrf';
 import { trackFormSubmission, trackTripBooking, sendGTMEvent } from '../../lib/gtm';
+import { saveUserProfile, getUserTrackingData } from '@/utils/userIdentification';
 // Lazy load the SparkleButton component
 const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), { 
   ssr: false,
@@ -132,8 +133,30 @@ export default function TripForm({
         setIsLoading(false);
         return;
       }
+      
       const leadEventId = crypto.randomUUID();
       const externalId = crypto.randomUUID();
+      
+      // --- Save user profile for persistence ---
+      try {
+        await saveUserProfile({
+          email: formData.email,
+          phone: formData.phone,
+          name: formData.name,
+          nationality: formData.nationality,
+          user_type: formData.nationality === 'مواطن' ? 'citizen' : 'resident',
+          form_submission: true,
+          form_name: 'trip_form',
+          external_id: externalId,
+          event_id: leadEventId,
+          conversion_value: formData.nationality === 'مواطن' ? 10 : 8,
+          trip_destination: zapierConfig.extraPayload?.destination || 'unknown'
+        });
+        console.log('User profile saved for persistence from TripForm');
+      } catch (error) {
+        console.error('Error saving user profile from TripForm:', error);
+      }
+      
       let processedPhone = formData.phone ? formData.phone.replace(/[^0-9]/g, '') : '';
       if (processedPhone.startsWith('966') && processedPhone.length >= 12) {
         processedPhone = '0' + processedPhone.substring(3);
@@ -194,48 +217,52 @@ export default function TripForm({
       
       console.log('Zapier submission successful, preparing redirect data...');
       
-      // Add GTM tracking for successful form submission
+      // Add GTM tracking for successful form submission (now enhanced with persistent data)
       const formTrackingData = {
         form_location: window.location.pathname,
         form_type: 'trip_booking',
         user_nationality: formData.nationality,
         user_type: formData.nationality === 'مواطن' ? 'citizen' : 'resident',
-        trip_destination: zapierConfig.extraPayload?.destination || 'Unknown',
-        trip_name: zapierConfig.extraPayload?.tripName || 'Trip Booking',
+        trip_destination: zapierConfig.extraPayload?.destination || 'unknown',
+        trip_name: zapierConfig.extraPayload?.tripName || 'unknown',
         trip_value: zapierConfig.extraPayload?.price || 0,
-        currency: 'SAR',
         external_id: externalId,
         lead_event_id: leadEventId,
         timestamp: new Date().toISOString(),
-        ...clientData
+        // Add user data for profile saving
+        email: formData.email,
+        phone: formData.phone,
+        name: formData.name,
+        nationality: formData.nationality,
+        ...clientData,
       };
 
-      // Track form submission
-      trackFormSubmission('trip_booking_form', formTrackingData);
+      // Track form submission with enhanced data
+      await trackFormSubmission('trip_booking_form', formTrackingData);
 
-      // Track trip booking event
-      if (zapierConfig.extraPayload?.destination) {
-        trackTripBooking({
-          tripName: zapierConfig.extraPayload.tripName || 'Trip Booking',
-          destination: zapierConfig.extraPayload.destination,
-          price: zapierConfig.extraPayload.price || '0',
-          duration: zapierConfig.extraPayload.duration || '',
-          category: 'international',
-          bookingStep: 'lead_submitted',
-          nationality: formData.nationality,
-          userType: formData.nationality === 'مواطن' ? 'citizen' : 'resident'
-        });
-      }
+      // Track trip booking with enhanced data
+      await trackTripBooking(zapierConfig.extraPayload?.tripName || 'unknown', {
+        destination: zapierConfig.extraPayload?.destination || 'unknown',
+        price: zapierConfig.extraPayload?.price || 0,
+        nationality: formData.nationality,
+        user_type: formData.nationality === 'مواطن' ? 'citizen' : 'resident',
+        external_id: externalId,
+        lead_event_id: leadEventId,
+        // Add user data for profile saving
+        email: formData.email,
+        phone: formData.phone,
+        name: formData.name
+      });
 
-      // Send enhanced ecommerce event for trip booking
-      sendGTMEvent({
+      // Enhanced ecommerce tracking
+      await sendGTMEvent({
         event: 'purchase_intent',
         ecommerce: {
           currency: 'SAR',
           value: zapierConfig.extraPayload?.price || 0,
           items: [{
-            item_id: zapierConfig.extraPayload?.itemId || 'trip-booking',
-            item_name: zapierConfig.extraPayload?.tripName || 'Trip Booking',
+            item_id: `${zapierConfig.extraPayload?.tripName || 'unknown'}-${new Date().getFullYear()}`,
+            item_name: `${zapierConfig.extraPayload?.destination || 'Unknown'} Trip Package`,
             item_category: 'Travel',
             item_variant: formData.nationality === 'مواطن' ? 'Citizen' : 'Resident',
             price: zapierConfig.extraPayload?.price || 0,
@@ -244,39 +271,28 @@ export default function TripForm({
         },
         user_data: {
           nationality: formData.nationality,
-          user_type: formData.nationality === 'مواطن' ? 'citizen' : 'resident'
-        }
+          user_type: formData.nationality === 'مواطن' ? 'citizen' : 'resident',
+          // Add user data for profile saving
+          email: formData.email,
+          phone: formData.phone,
+          name: formData.name
+        },
+        ...formTrackingData
       });
 
-      // Prepare cleaned user data for thank-you page
-      const cleanedEmail = formData.email ? formData.email.toLowerCase().trim() : '';
-      const cleanedPhone = formData.phone ? formData.phone.replace(/\D/g, '') : '';
-      const nameParts = formData.name ? formData.name.trim().split(' ') : [];
-      const firstName = nameParts.length > 0 ? nameParts[0] : '';
-      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-      
-      // Collect Facebook browser and click IDs
-      const fbp = getCookie('_fbp') || localStorage.getItem('_fbp') || '';
-      const fbc = getCookie('_fbc') || localStorage.getItem('_fbc') || '';
-      
-      const successData = {
-        processedPhone: cleanedPhone,
+      // Call onSuccess with comprehensive data
+      onSuccess({
+        processedPhone,
         externalId,
         leadEventId,
         nationality: formData.nationality,
-        email: cleanedEmail,
-        name: formData.name || '',
-        firstName: firstName,
-        lastName: lastName,
-        fbp,
-        fbc
-      };
-      
-      console.log('Calling onSuccess with data:', successData);
-      
-      // Pass all needed data to the success handler
-      onSuccess(successData);
-      
+        email: formData.email,
+        name: formData.name,
+        firstName: formData.name ? formData.name.split(' ')[0] : null,
+        lastName: formData.name && formData.name.includes(' ') ? formData.name.substring(formData.name.indexOf(' ') + 1) : null,
+        ...formData
+      });
+
       // Set loading to false after onSuccess to avoid interfering with redirect
       setIsLoading(false);
     } catch (error) {

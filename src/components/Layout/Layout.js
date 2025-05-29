@@ -115,9 +115,9 @@ const Layout = ({ children }) => {
     <div className={styles.layoutContainer}>
       <Meta {...metaSettings} />
       <Analytics />
-      <Header />
+      {!isTripPage && <Header />}
       <Main>{children}</Main>
-      <Footer />
+      {!isTripPage && <Footer />}
       {/* Conditionally render WhatsApp button - hide on trip pages */}
       {!isTripPage && <WhatsAppButton />}
     </div>
