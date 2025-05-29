@@ -134,8 +134,7 @@ export default function ThankYouResident() {
           // Add user data for profile saving
           email: email,
           phone: phone,
-          name: name || (firstName && lastName ? `${firstName} ${lastName}` : firstName),
-          nationality: 'مقيم'
+          name: name || (firstName && lastName ? `${firstName} ${lastName}` : firstName)
         };
         
         // Add GTM tracking for successful conversion (now enhanced with persistent data)
