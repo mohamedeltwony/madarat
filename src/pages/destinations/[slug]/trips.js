@@ -270,6 +270,14 @@ export async function getStaticProps({ params }) {
     const trips = Array.isArray(tripsData) ? tripsData : [];
 
     // Format destination data
+    let destinationImageUrl = null;
+    if (destination._embedded && 
+        destination._embedded['wp:featuredmedia'] && 
+        destination._embedded['wp:featuredmedia'][0] && 
+        destination._embedded['wp:featuredmedia'][0].source_url) {
+      destinationImageUrl = destination._embedded['wp:featuredmedia'][0].source_url;
+    }
+
     const formattedDestination = {
       id: destination.id || 0,
       title: destination.name || '',
@@ -277,9 +285,7 @@ export async function getStaticProps({ params }) {
       description: (destination.description && destination.description.rendered) 
         ? destination.description.rendered 
         : '',
-      image: (destination._embedded && destination._embedded['wp:featuredmedia'] && destination._embedded['wp:featuredmedia'][0])
-        ? destination._embedded['wp:featuredmedia'][0].source_url
-        : null,
+      image: destinationImageUrl,
     };
 
     // Format trips data
@@ -302,14 +308,21 @@ export async function getStaticProps({ params }) {
         }
       }
 
+      // Safely extract image URL
+      let imageUrl = null;
+      if (trip._embedded && 
+          trip._embedded['wp:featuredmedia'] && 
+          trip._embedded['wp:featuredmedia'][0] && 
+          trip._embedded['wp:featuredmedia'][0].source_url) {
+        imageUrl = trip._embedded['wp:featuredmedia'][0].source_url;
+      }
+
       return {
         id: trip.id || 0,
         title: (trip.title && trip.title.rendered) ? trip.title.rendered : '',
         description: (trip.excerpt && trip.excerpt.rendered) ? trip.excerpt.rendered : '',
         slug: trip.slug || '',
-        image: (trip._embedded && trip._embedded['wp:featuredmedia'] && trip._embedded['wp:featuredmedia'][0]) 
-          ? trip._embedded['wp:featuredmedia'][0].source_url 
-          : null,
+        image: imageUrl,
         duration: durationText,
         price: trip.wp_travel_engine_setting_trip_actual_price || trip.price || 'غير محدد',
         currency: (trip.currency && trip.currency.code) ? trip.currency.code : 'SAR',

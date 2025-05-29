@@ -25,6 +25,14 @@ class MyDocument extends Document {
           <link rel="dns-prefetch" href="//www.googletagmanager.com" />
           <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
 
+          {/* Google Tag Manager - Initialize dataLayer first */}
+          <script dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+            `
+          }} />
+
           {/* Google Tag Manager */}
           <script dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -39,7 +47,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             rel="preload" 
             href="/logo.png" 
             as="image" 
-            fetchpriority="high"
+            fetchPriority="high"
           />
           
           {/* Optimized Font Loading with font-display: swap */}
@@ -131,6 +139,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               /* Prevent layout shift */
               img { max-width: 100%; height: auto; }
               .hero-section { min-height: 60vh; }
+              @keyframes spin { 
+                0% { transform: rotate(0deg); } 
+                100% { transform: rotate(360deg); } 
+              }
             `
           }} />
 
@@ -197,17 +209,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             __html: `
               // Show loading spinner during navigation
               window.addEventListener('beforeunload', function() {
-                document.getElementById('loading-spinner').style.display = 'block';
+                var spinner = document.getElementById('loading-spinner');
+                if (spinner) spinner.style.display = 'block';
               });
               
               // Hide loading spinner when page loads
               window.addEventListener('load', function() {
-                document.getElementById('loading-spinner').style.display = 'none';
+                var spinner = document.getElementById('loading-spinner');
+                if (spinner) spinner.style.display = 'none';
                 
                 // Defer third-party scripts after page load
                 setTimeout(function() {
-                  // Load Google Analytics after page load
-                  if (typeof gtag === 'undefined') {
+                  // Load additional analytics after page load if needed
+                  if (typeof gtag === 'undefined' && window.location.hostname !== 'localhost') {
                     var script = document.createElement('script');
                     script.async = true;
                     script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-16669734019';
@@ -216,17 +230,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 }, 2000);
               });
               
-              // Add CSS animation for spinner
-              const style = document.createElement('style');
-              style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-              document.head.appendChild(style);
-              
               // Optimize font loading
               if ('fonts' in document) {
                 document.fonts.ready.then(function() {
                   document.body.classList.add('fonts-loaded');
                 });
               }
+              
+              // Initialize GTM dataLayer if not already done
+              window.dataLayer = window.dataLayer || [];
             `
           }} />
         </body>
