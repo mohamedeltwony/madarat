@@ -190,6 +190,112 @@ export default function ThankYouCitizen() {
         nationality
       });
       
+      // --- Google Ads Enhanced Conversion Tracking ---
+      if (typeof window !== 'undefined' && window.gtag) {
+        try {
+          // Prepare enhanced conversion data with all available user information
+          const enhancedConversionData = {
+            'send_to': 'AW-16691848441/Y1RHCJuO-dUZEPnJpZc-',
+            'value': 10.0,
+            'currency': 'SAR',
+            'transaction_id': external_id || eventId || `citizen_${Date.now()}`,
+            'custom_parameters': {
+              'user_type': 'citizen',
+              'nationality': 'مواطن',
+              'form_name': 'citizenship_form',
+              'lead_quality': 'high',
+              'page_type': 'thank_you',
+              'lead_source': 'website',
+              'conversion_type': 'lead_generation',
+              'event_id': eventId || `citizen_${Date.now()}`,
+              'external_id': external_id || '',
+              'timestamp': new Date().toISOString(),
+              'page_url': window.location.href,
+              'page_title': document.title,
+              'user_language': 'ar'
+            }
+          };
+
+          // Add enhanced conversion user data for better matching (hashed automatically by gtag)
+          if (userData.email || userData.phone || userData.firstName || userData.lastName) {
+            enhancedConversionData.user_data = {};
+            
+            if (userData.email) {
+              enhancedConversionData.user_data.email_address = userData.email;
+            }
+            
+            if (userData.phone) {
+              // Format phone number for enhanced conversions (remove non-digits and add country code if needed)
+              let formattedPhone = userData.phone.replace(/\D/g, '');
+              if (formattedPhone.startsWith('5') && formattedPhone.length === 9) {
+                formattedPhone = '966' + formattedPhone; // Add Saudi Arabia country code
+              }
+              enhancedConversionData.user_data.phone_number = '+' + formattedPhone;
+            }
+            
+            if (userData.firstName) {
+              enhancedConversionData.user_data.first_name = userData.firstName;
+            }
+            
+            if (userData.lastName) {
+              enhancedConversionData.user_data.last_name = userData.lastName;
+            }
+            
+            // Add address data if available (helps with enhanced conversions)
+            enhancedConversionData.user_data.country = 'SA'; // Saudi Arabia
+            
+            console.log('Enhanced conversion data prepared with user data for better matching');
+          }
+
+          // Fire the optimized Google Ads conversion event
+          window.gtag('event', 'conversion', enhancedConversionData);
+          
+          console.log('Google Ads enhanced conversion tracked successfully:', {
+            conversion_id: 'AW-16691848441/Y1RHCJuO-dUZEPnJpZc-',
+            value: 10.0,
+            currency: 'SAR',
+            transaction_id: enhancedConversionData.transaction_id,
+            has_user_data: !!enhancedConversionData.user_data,
+            user_data_fields: enhancedConversionData.user_data ? Object.keys(enhancedConversionData.user_data) : []
+          });
+
+          // Also push to dataLayer for GTM if needed
+          if (window.dataLayer) {
+            window.dataLayer.push({
+              'event': 'google_ads_conversion',
+              'google_ads_conversion_id': 'AW-16691848441',
+              'google_ads_conversion_label': 'Y1RHCJuO-dUZEPnJpZc-',
+              'conversion_value': 10.0,
+              'currency': 'SAR',
+              'transaction_id': enhancedConversionData.transaction_id,
+              'user_type': 'citizen',
+              'nationality': 'مواطن',
+              'form_name': 'citizenship_form',
+              'lead_quality': 'high',
+              'conversion_type': 'lead_generation',
+              'enhanced_conversion_enabled': !!enhancedConversionData.user_data,
+              'timestamp': new Date().toISOString()
+            });
+          }
+
+        } catch (error) {
+          console.error('Error tracking Google Ads conversion:', error);
+          
+          // Fallback to basic conversion tracking if enhanced conversion fails
+          if (window.gtag) {
+            window.gtag('event', 'conversion', {
+              'send_to': 'AW-16691848441/Y1RHCJuO-dUZEPnJpZc-',
+              'value': 10.0,
+              'currency': 'SAR',
+              'transaction_id': external_id || eventId || `citizen_${Date.now()}`
+            });
+            console.log('Fallback Google Ads conversion tracked');
+          }
+        }
+      } else {
+        console.warn('Google Ads gtag not available for conversion tracking');
+      }
+      
       // --- Send event to Facebook ---
       const result = await trackLeadEvent({
         ...userData,
@@ -314,7 +420,7 @@ export default function ThankYouCitizen() {
     // Use a small delay to ensure fbq might be ready if loaded async
     const timer = setTimeout(trackLeadEventWithData, 500);
     return () => clearTimeout(timer);
-  }, [router.isReady, router.query]); // Re-run if router becomes ready or query params change
+  }, [router.isReady, router.query]);
   
   // Direct server event for Conversion API
   const sendServerEvent = async (eventName, eventData, eventId) => {
