@@ -7,6 +7,23 @@ import SparkleButton from '@/components/UI/SparkleButton';
 import confetti from 'canvas-confetti';
 import { sendGTMEvent, trackFormSubmission } from '@/lib/gtm';
 
+// Helper function to hash data using SHA-256
+async function sha256(str) {
+  if (!str || typeof str !== 'string') return null;
+  try {
+    const buffer = new TextEncoder().encode(str.toLowerCase().trim());
+    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+    return hashHex;
+  } catch (error) {
+    console.error('SHA-256 Hashing Error:', error);
+    return null;
+  }
+}
+
 export default function ThankYouResident() {
   const router = useRouter();
 
@@ -49,59 +66,90 @@ export default function ThankYouResident() {
       return () => clearInterval(interval);
     }, 100); // 100ms delay
 
-    // Track GTM conversion for resident
-    if (router.isReady) {
-      const eventId = router.query.eventId || `resident_${Date.now()}`;
-      
-      // Add GTM tracking for successful conversion
-      sendGTMEvent({
-        event: 'conversion',
-        conversion_type: 'lead',
-        conversion_value: 8,
-        currency: 'SAR',
-        user_type: 'resident',
-        nationality: 'مقيم',
-        form_name: 'resident_form',
-        page_type: 'thank_you',
-        lead_source: 'website',
-        external_id: router.query.external_id || '',
-        event_id: eventId,
-        timestamp: new Date().toISOString()
-      });
-
-      // Track as completed form submission
-      trackFormSubmission('resident_form_complete', {
-        form_location: 'thank-you-resident',
-        conversion_value: 8,
-        currency: 'SAR',
-        user_type: 'resident',
-        lead_quality: 'medium',
-        completion_time: new Date().toISOString()
-      });
-
-      // Enhanced ecommerce tracking for lead conversion
-      sendGTMEvent({
-        event: 'purchase',
-        ecommerce: {
-          transaction_id: router.query.external_id || eventId,
-          value: 8,
+    // Track GTM conversion for resident with encrypted user data
+    const trackConversionWithEncryptedData = async () => {
+      if (router.isReady) {
+        const eventId = router.query.eventId || `resident_${Date.now()}`;
+        
+        // Get user data from URL parameters
+        const email = router.query.email || null;
+        const phone = router.query.phone || null;
+        const name = router.query.name || null;
+        
+        // Hash user data for privacy compliance
+        const encryptedEmail = email ? await sha256(email) : null;
+        const encryptedPhone = phone ? await sha256(phone.replace(/\D/g, '')) : null;
+        const encryptedName = name ? await sha256(name) : null;
+        
+        // Base event data with encrypted user information
+        const baseEventData = {
+          conversion_type: 'lead',
+          conversion_value: 8,
           currency: 'SAR',
-          items: [{
-            item_id: 'resident-lead',
-            item_name: 'Resident Lead Conversion',
-            item_category: 'Lead Generation',
-            item_variant: 'Resident',
-            price: 8,
-            quantity: 1
-          }]
-        },
-        user_data: {
-          nationality: 'مقيم',
           user_type: 'resident',
-          lead_source: 'website'
-        }
-      });
-    }
+          nationality: 'مقيم',
+          form_name: 'resident_form',
+          page_type: 'thank_you',
+          lead_source: 'website',
+          external_id: router.query.external_id || '',
+          event_id: eventId,
+          timestamp: new Date().toISOString(),
+          form_location: 'thank-you-resident',
+          lead_quality: 'medium',
+          completion_time: new Date().toISOString(),
+          // Add encrypted user data
+          encrypted_email: encryptedEmail,
+          encrypted_phone: encryptedPhone,
+          encrypted_name: encryptedName,
+          // Add page context
+          url: window.location.href,
+          page_title: document.title,
+          page_path: window.location.pathname,
+          page_category: 'thank-you-resident',
+          user_language: 'ar'
+        };
+        
+        // Add GTM tracking for successful conversion
+        sendGTMEvent({
+          event: 'conversion',
+          ...baseEventData
+        });
+
+        // Track as completed form submission
+        trackFormSubmission('resident_form_complete', {
+          ...baseEventData
+        });
+
+        // Enhanced ecommerce tracking for lead conversion
+        sendGTMEvent({
+          event: 'purchase',
+          ...baseEventData,
+          ecommerce: {
+            transaction_id: router.query.external_id || eventId,
+            value: 8,
+            currency: 'SAR',
+            items: [{
+              item_id: 'resident-lead',
+              item_name: 'Resident Lead Conversion',
+              item_category: 'Lead Generation',
+              item_variant: 'Resident',
+              price: 8,
+              quantity: 1
+            }]
+          },
+          user_data: {
+            nationality: 'مقيم',
+            user_type: 'resident',
+            lead_source: 'website',
+            encrypted_email: encryptedEmail,
+            encrypted_phone: encryptedPhone,
+            encrypted_name: encryptedName
+          }
+        });
+      }
+    };
+
+    trackConversionWithEncryptedData();
 
     // Return cleanup for the timeout itself
     return () => clearTimeout(timer);

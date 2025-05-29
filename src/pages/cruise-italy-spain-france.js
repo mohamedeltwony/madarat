@@ -141,12 +141,16 @@ export default function CruiseItalySpainFrance() {
   // }, []);
 
   // Handle form submission success from TripForm component
-  const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality }) => {
+  const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality, email, name, firstName, lastName }) => {
     const thankYouUrl = nationality === 'مواطن' ? '/thank-you-citizen' : '/thank-you-resident';
     
     // Build query parameters
     const queryParams = new URLSearchParams();
     if (processedPhone) queryParams.set('phone', processedPhone);
+    if (email) queryParams.set('email', email);
+    if (name) queryParams.set('name', name);
+    if (firstName) queryParams.set('firstName', firstName);
+    if (lastName) queryParams.set('lastName', lastName);
     if (externalId) queryParams.set('external_id', externalId);
     if (leadEventId) queryParams.set('eventId', leadEventId);
     

@@ -36,8 +36,8 @@ export default function ItalyTrip() {
   const router = useRouter(); // Get router instance
 
   // Remove all form-related state and handlers except for the redirect logic
-  const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality }) => {
-    console.log('handleFormSuccess called with:', { processedPhone, externalId, leadEventId, nationality });
+  const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality, email, name, firstName, lastName }) => {
+    console.log('handleFormSuccess called with:', { processedPhone, externalId, leadEventId, nationality, email, name, firstName, lastName });
     
     // Determine redirect path based on nationality
     const redirectPath =
@@ -48,6 +48,10 @@ export default function ItalyTrip() {
     // Build query parameters
     const queryParams = new URLSearchParams();
     if (processedPhone) queryParams.set('phone', processedPhone);
+    if (email) queryParams.set('email', email);
+    if (name) queryParams.set('name', name);
+    if (firstName) queryParams.set('firstName', firstName);
+    if (lastName) queryParams.set('lastName', lastName);
     if (externalId) queryParams.set('external_id', externalId);
     if (leadEventId) queryParams.set('eventId', leadEventId);
     

@@ -198,7 +198,21 @@ export default function ThankYouCitizen() {
         lead_source: 'website',
         external_id: router.query.external_id || '',
         event_id: eventId,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        // Add encrypted user data
+        encrypted_email: userData.email ? await sha256(userData.email) : null,
+        encrypted_phone: userData.phone ? await sha256(userData.phone) : null,
+        encrypted_name: userData.firstName && userData.lastName ? await sha256(`${userData.firstName} ${userData.lastName}`) : 
+                       userData.name ? await sha256(userData.name) : null,
+        // Add page context
+        url: window.location.href,
+        page_title: document.title,
+        page_path: window.location.pathname,
+        page_category: 'thank-you-citizen',
+        user_language: 'ar',
+        form_location: 'thank-you-citizen',
+        lead_quality: 'high',
+        completion_time: new Date().toISOString()
       });
 
       // Track as completed form submission
@@ -208,7 +222,21 @@ export default function ThankYouCitizen() {
         currency: 'SAR',
         user_type: 'citizen',
         lead_quality: 'high',
-        completion_time: new Date().toISOString()
+        completion_time: new Date().toISOString(),
+        // Add encrypted user data
+        encrypted_email: userData.email ? await sha256(userData.email) : null,
+        encrypted_phone: userData.phone ? await sha256(userData.phone) : null,
+        encrypted_name: userData.firstName && userData.lastName ? await sha256(`${userData.firstName} ${userData.lastName}`) : 
+                       userData.name ? await sha256(userData.name) : null,
+        // Add page context
+        url: window.location.href,
+        page_title: document.title,
+        page_path: window.location.pathname,
+        page_category: 'thank-you-citizen',
+        user_language: 'ar',
+        external_id: router.query.external_id || '',
+        event_id: eventId,
+        timestamp: new Date().toISOString()
       });
 
       // Enhanced ecommerce tracking for lead conversion
@@ -230,8 +258,30 @@ export default function ThankYouCitizen() {
         user_data: {
           nationality: 'مواطن',
           user_type: 'citizen',
-          lead_source: 'website'
-        }
+          lead_source: 'website',
+          encrypted_email: userData.email ? await sha256(userData.email) : null,
+          encrypted_phone: userData.phone ? await sha256(userData.phone) : null,
+          encrypted_name: userData.firstName && userData.lastName ? await sha256(`${userData.firstName} ${userData.lastName}`) : 
+                         userData.name ? await sha256(userData.name) : null
+        },
+        // Add additional context
+        conversion_type: 'lead',
+        conversion_value: 10,
+        currency: 'SAR',
+        form_name: 'citizenship_form',
+        page_type: 'thank_you',
+        lead_source: 'website',
+        external_id: router.query.external_id || '',
+        event_id: eventId,
+        timestamp: new Date().toISOString(),
+        url: window.location.href,
+        page_title: document.title,
+        page_path: window.location.pathname,
+        page_category: 'thank-you-citizen',
+        user_language: 'ar',
+        form_location: 'thank-you-citizen',
+        lead_quality: 'high',
+        completion_time: new Date().toISOString()
       });
     };
 

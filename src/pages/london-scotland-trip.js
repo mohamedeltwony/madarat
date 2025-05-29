@@ -120,42 +120,26 @@ export default function LondonScotlandTrip() {
   // }, []);
 
   // Handle form submission success from TripForm component
-  const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality }) => {
-    console.log('handleFormSuccess called with:', { processedPhone, externalId, leadEventId, nationality });
-    
+  const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality, email, name, firstName, lastName }) => {
     const thankYouUrl = nationality === 'مواطن' ? '/thank-you-citizen' : '/thank-you-resident';
     
     // Build query parameters
     const queryParams = new URLSearchParams();
     if (processedPhone) queryParams.set('phone', processedPhone);
+    if (email) queryParams.set('email', email);
+    if (name) queryParams.set('name', name);
+    if (firstName) queryParams.set('firstName', firstName);
+    if (lastName) queryParams.set('lastName', lastName);
     if (externalId) queryParams.set('external_id', externalId);
     if (leadEventId) queryParams.set('eventId', leadEventId);
     
     // Construct the full redirect URL
     const redirectUrl = `${thankYouUrl}?${queryParams.toString()}`;
     
-    console.log(`Attempting redirect to: ${redirectUrl}`);
-    console.log('Current window location:', window.location.href);
+    console.log(`Redirecting to: ${redirectUrl}`);
     
-    // Add a small delay to ensure all async operations complete
-    setTimeout(() => {
-      console.log('Executing redirect now...');
-      try {
-        // Try router.push first as it's more reliable in Next.js
-        if (router) {
-          console.log('Using router.push for redirect...');
-          router.push(redirectUrl);
-        } else {
-          console.log('Router not available, using window.location.href...');
-          window.location.href = redirectUrl;
-        }
-      } catch (error) {
-        console.error('Redirect failed:', error);
-        // Final fallback: try window.location.replace
-        console.log('Trying window.location.replace as final fallback...');
-        window.location.replace(redirectUrl);
-      }
-    }, 100);
+    // Use window.location.href for reliable redirect
+    window.location.href = redirectUrl;
   };
 
   const handleInputChange = (e) => {

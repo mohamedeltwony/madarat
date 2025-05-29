@@ -105,7 +105,22 @@ When a user successfully submits a trip booking form, the following events are p
   lead_source: 'website',
   external_id: 'unique-external-id',
   event_id: 'unique-event-id',
-  timestamp: '2024-01-15T10:31:00.000Z'
+  timestamp: '2024-01-15T10:31:00.000Z',
+  form_location: 'thank-you-citizen',
+  lead_quality: 'high',
+  completion_time: '2024-01-15T10:31:00.000Z',
+  
+  // Encrypted user data (SHA-256 hashed for privacy compliance)
+  encrypted_email: 'a1b2c3d4e5f6...', // SHA-256 hash of user email
+  encrypted_phone: 'f6e5d4c3b2a1...', // SHA-256 hash of user phone
+  encrypted_name: '123456789abc...', // SHA-256 hash of user name
+  
+  // Page context
+  url: 'https://madaratalkon.com/thank-you-citizen',
+  page_title: 'شكراً لك! | مدارات الكون',
+  page_path: '/thank-you-citizen',
+  page_category: 'thank-you-citizen',
+  user_language: 'ar'
 }
 ```
 
@@ -119,7 +134,22 @@ When a user successfully submits a trip booking form, the following events are p
   currency: 'SAR',
   user_type: 'citizen',
   lead_quality: 'high',
-  completion_time: '2024-01-15T10:31:00.000Z'
+  completion_time: '2024-01-15T10:31:00.000Z',
+  
+  // Encrypted user data (SHA-256 hashed for privacy compliance)
+  encrypted_email: 'a1b2c3d4e5f6...', // SHA-256 hash of user email
+  encrypted_phone: 'f6e5d4c3b2a1...', // SHA-256 hash of user phone
+  encrypted_name: '123456789abc...', // SHA-256 hash of user name
+  
+  // Page context
+  url: 'https://madaratalkon.com/thank-you-citizen',
+  page_title: 'شكراً لك! | مدارات الكون',
+  page_path: '/thank-you-citizen',
+  page_category: 'thank-you-citizen',
+  user_language: 'ar',
+  external_id: 'unique-external-id',
+  event_id: 'unique-event-id',
+  timestamp: '2024-01-15T10:31:00.000Z'
 }
 ```
 
@@ -143,8 +173,29 @@ When a user successfully submits a trip booking form, the following events are p
   user_data: {
     nationality: 'مواطن',
     user_type: 'citizen',
-    lead_source: 'website'
-  }
+    lead_source: 'website',
+    encrypted_email: 'a1b2c3d4e5f6...', // SHA-256 hash of user email
+    encrypted_phone: 'f6e5d4c3b2a1...', // SHA-256 hash of user phone
+    encrypted_name: '123456789abc...' // SHA-256 hash of user name
+  },
+  // Additional context fields
+  conversion_type: 'lead',
+  conversion_value: 10,
+  currency: 'SAR',
+  form_name: 'citizenship_form',
+  page_type: 'thank_you',
+  lead_source: 'website',
+  external_id: 'unique-external-id',
+  event_id: 'unique-event-id',
+  timestamp: '2024-01-15T10:31:00.000Z',
+  url: 'https://madaratalkon.com/thank-you-citizen',
+  page_title: 'شكراً لك! | مدارات الكون',
+  page_path: '/thank-you-citizen',
+  page_category: 'thank-you-citizen',
+  user_language: 'ar',
+  form_location: 'thank-you-citizen',
+  lead_quality: 'high',
+  completion_time: '2024-01-15T10:31:00.000Z'
 }
 ```
 
@@ -156,6 +207,10 @@ Similar structure but with different values:
 - `nationality: 'مقيم'`
 - `lead_quality: 'medium'` (instead of 'high')
 - `item_variant: 'Resident'`
+- `page_category: 'thank-you-resident'`
+- `form_location: 'thank-you-resident'`
+
+All encrypted user data fields (`encrypted_email`, `encrypted_phone`, `encrypted_name`) are included in the same format.
 
 ### 3. Error Tracking
 
@@ -272,14 +327,29 @@ node scripts/test-gtm-tracking.js
 ## Privacy and Compliance
 
 ### PII Data Handling
-- **No PII is sent to dataLayer**: Names, emails, and phone numbers are not included
-- **Hashed IDs only**: Only external_id and lead_event_id are sent
-- **Nationality tracking**: Only general nationality status (citizen/resident)
+- **Encrypted PII in dataLayer**: User emails, names, and phone numbers are SHA-256 hashed before being sent to dataLayer
+- **No plain text PII**: Raw personal information is never sent to GTM or Google Analytics
+- **Hashed IDs only**: Only external_id and lead_event_id are sent in plain text for tracking purposes
+- **Nationality tracking**: Only general nationality status (citizen/resident) is tracked
+
+### Encryption Details
+- **Algorithm**: SHA-256 hashing
+- **Data processed**: Email addresses, phone numbers, and full names
+- **Format**: Lowercase and trimmed before hashing
+- **Purpose**: Enables advanced matching while maintaining privacy compliance
+
+### Encrypted Fields in DataLayer
+| Field | Description | Example |
+|-------|-------------|---------|
+| `encrypted_email` | SHA-256 hash of user email | `a1b2c3d4e5f6...` |
+| `encrypted_phone` | SHA-256 hash of user phone (digits only) | `f6e5d4c3b2a1...` |
+| `encrypted_name` | SHA-256 hash of user full name | `123456789abc...` |
 
 ### GDPR Compliance
 - All tracking respects user consent preferences
-- Data can be filtered or blocked based on consent status
+- Encrypted data can be filtered or blocked based on consent status
 - No cross-site tracking without consent
+- Data minimization through hashing ensures privacy protection
 
 ## Integration with Other Platforms
 
