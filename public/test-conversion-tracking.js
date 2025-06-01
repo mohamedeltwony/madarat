@@ -28,284 +28,270 @@ window.ConversionTrackingTester = {
     console.log('✅ Setup Results:', results);
     
     if (!results.gtag_available) {
-      console.error('❌ gtag is not available. Check if Google Ads script is loaded.');
+      console.warn('⚠️ gtag function not available - Google Ads may not be loaded');
     }
     
     if (!results.dataLayer_available) {
-      console.error('❌ dataLayer is not available. Check if GTM is properly initialized.');
+      console.warn('⚠️ dataLayer not available - GTM may not be loaded');
     }
     
     return results;
   },
 
   /**
-   * Test conversion tracking with sample data
+   * Monitor dataLayer for lead events
    */
-  testConversionTracking(testData = {}) {
-    console.log('🧪 Testing Conversion Tracking...\n');
+  monitorLeadEvents() {
+    console.log('👀 Monitoring dataLayer for lead events...\n');
     
-    const defaultTestData = {
+    if (!window.dataLayer) {
+      console.error('❌ dataLayer not available');
+      return;
+    }
+
+    // Check existing events
+    const existingLeadEvents = window.dataLayer.filter(event => 
+      event.event === 'lead' || 
+      event.event === 'google_ads_conversion' ||
+      event.event === 'conversion'
+    );
+
+    console.log('📊 Existing Lead/Conversion Events:', existingLeadEvents);
+
+    // Monitor new events
+    const originalPush = window.dataLayer.push;
+    window.dataLayer.push = function(...args) {
+      const event = args[0];
+      
+      if (event && (event.event === 'lead' || event.event === 'google_ads_conversion' || event.event === 'conversion')) {
+        console.log('🎯 NEW LEAD/CONVERSION EVENT DETECTED:');
+        console.log('Event Type:', event.event);
+        console.log('Full Event Data:', event);
+        
+        if (event.event === 'lead') {
+          console.log('✅ LEAD EVENT FOUND! This should show up in GTM debug.');
+          console.log('Lead Type:', event.lead_type);
+          console.log('Conversion Value:', event.conversion_value);
+          console.log('User Type:', event.user_type);
+          console.log('Transaction ID:', event.transaction_id);
+        }
+      }
+      
+      return originalPush.apply(window.dataLayer, args);
+    };
+
+    console.log('✅ Lead event monitoring activated. Any new lead events will be logged above.');
+  },
+
+  /**
+   * Test the conversion tracking manually
+   */
+  testConversionTracking() {
+    console.log('🧪 Testing Conversion Tracking Manually...\n');
+    
+    const testData = {
       email: 'test@example.com',
       phone: '0501234567',
-      firstName: 'أحمد',
-      lastName: 'محمد',
+      firstName: 'Test',
+      lastName: 'User',
       external_id: 'test_' + Date.now(),
-      event_id: 'test_event_' + Date.now()
+      eventId: 'test_event_' + Date.now()
     };
-    
-    const userData = { ...defaultTestData, ...testData };
-    
-    console.log('📊 Test Data:', userData);
-    
-    if (typeof window.gtag === 'function') {
-      try {
-        // Format phone number
-        let formattedPhone = userData.phone.replace(/\D/g, '');
-        if (formattedPhone.startsWith('5') && formattedPhone.length === 9) {
-          formattedPhone = '966' + formattedPhone;
-        }
-        
-        const conversionData = {
-          'send_to': 'AW-16691848441/Y1RHCJuO-dUZEPnJpZc-',
-          'value': 10.0,
-          'currency': 'SAR',
-          'transaction_id': userData.external_id,
-          'user_data': {
-            'email_address': userData.email,
-            'phone_number': '+' + formattedPhone,
-            'first_name': userData.firstName,
-            'last_name': userData.lastName,
-            'country': 'SA'
-          },
-          'custom_parameters': {
-            'user_type': 'citizen',
-            'nationality': 'مواطن',
-            'form_name': 'citizenship_form',
-            'lead_quality': 'high',
-            'page_type': 'thank_you',
-            'lead_source': 'website',
-            'conversion_type': 'lead_generation',
-            'event_id': userData.event_id,
-            'external_id': userData.external_id,
-            'timestamp': new Date().toISOString(),
-            'page_url': window.location.href,
-            'page_title': document.title,
-            'user_language': 'ar'
-          }
-        };
-        
-        console.log('🚀 Firing test conversion with data:', conversionData);
-        
-        window.gtag('event', 'conversion', conversionData);
-        
-        console.log('✅ Test conversion fired successfully!');
-        
-        // Also test dataLayer push
-        if (window.dataLayer) {
-          window.dataLayer.push({
-            'event': 'google_ads_conversion_test',
-            'google_ads_conversion_id': 'AW-16691848441',
-            'google_ads_conversion_label': 'Y1RHCJuO-dUZEPnJpZc-',
-            'conversion_value': 10.0,
-            'currency': 'SAR',
-            'transaction_id': userData.external_id,
-            'user_type': 'citizen',
-            'nationality': 'مواطن',
-            'form_name': 'citizenship_form',
-            'lead_quality': 'high',
-            'conversion_type': 'lead_generation',
-            'enhanced_conversion_enabled': true,
-            'timestamp': new Date().toISOString(),
-            'test_mode': true
-          });
-          
-          console.log('✅ Test data pushed to dataLayer successfully!');
-        }
-        
-        return { success: true, data: conversionData };
-        
-      } catch (error) {
-        console.error('❌ Error firing test conversion:', error);
-        return { success: false, error: error.message };
-      }
-    } else {
-      console.error('❌ gtag not available for testing');
-      return { success: false, error: 'gtag not available' };
-    }
-  },
 
-  /**
-   * Check current page data availability
-   */
-  checkPageData() {
-    console.log('📋 Checking Page Data Availability...\n');
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const pageData = {
-      url: window.location.href,
-      pathname: window.location.pathname,
-      search: window.location.search,
-      title: document.title,
-      query_params: {
-        email: urlParams.get('email'),
-        phone: urlParams.get('phone'),
-        firstName: urlParams.get('firstName'),
-        lastName: urlParams.get('lastName'),
-        name: urlParams.get('name'),
-        external_id: urlParams.get('external_id'),
-        eventId: urlParams.get('eventId'),
-        nationality: urlParams.get('nationality'),
-        fbc: urlParams.get('fbc'),
-        fbp: urlParams.get('fbp')
-      }
-    };
-    
-    console.log('📊 Page Data:', pageData);
-    
-    // Check which data is available for enhanced conversions
-    const availableData = Object.entries(pageData.query_params)
-      .filter(([key, value]) => value !== null)
-      .map(([key, value]) => key);
-    
-    console.log('✅ Available Data Fields:', availableData);
-    
-    if (availableData.length === 0) {
-      console.warn('⚠️ No query parameters found. Enhanced conversions may not work properly.');
-    }
-    
-    return pageData;
-  },
+    console.log('📝 Test Data:', testData);
 
-  /**
-   * Monitor dataLayer events
-   */
-  monitorDataLayer(duration = 30000) {
-    console.log(`👀 Monitoring dataLayer events for ${duration/1000} seconds...\n`);
-    
-    const originalPush = window.dataLayer.push;
-    const events = [];
-    
-    window.dataLayer.push = function() {
-      const event = arguments[0];
-      events.push({
-        timestamp: new Date().toISOString(),
-        event: event
+    // Test Google Ads conversion
+    if (window.gtag) {
+      console.log('🎯 Firing test Google Ads conversion...');
+      
+      window.gtag('event', 'conversion', {
+        'send_to': 'AW-16691848441/Y1RHCJuO-dUZEPnJpZc-',
+        'value': 10.0,
+        'currency': 'SAR',
+        'transaction_id': testData.external_id,
+        'user_data': {
+          'email_address': testData.email,
+          'phone_number': '+966501234567',
+          'first_name': testData.firstName,
+          'last_name': testData.lastName,
+          'country': 'SA'
+        }
       });
       
-      if (event.event && event.event.includes('conversion')) {
-        console.log('🎯 Conversion Event Detected:', event);
-      }
+      console.log('✅ Google Ads conversion fired');
+    } else {
+      console.warn('⚠️ gtag not available for testing');
+    }
+
+    // Test lead event to dataLayer
+    if (window.dataLayer) {
+      console.log('📊 Pushing test lead event to dataLayer...');
       
-      return originalPush.apply(window.dataLayer, arguments);
-    };
-    
-    setTimeout(() => {
-      window.dataLayer.push = originalPush;
-      console.log(`📊 Monitoring Complete. Total events captured: ${events.length}`);
-      console.log('📋 All Events:', events);
-    }, duration);
-    
-    return events;
+      window.dataLayer.push({
+        'event': 'lead',
+        'lead_type': 'quick_test',
+        'conversion_value': 10.0,
+        'currency': 'SAR',
+        'user_type': 'citizen',
+        'timestamp': new Date().toISOString(),
+        'test': true
+      });
+      
+      console.log('✅ Test lead event pushed to dataLayer');
+      console.log('🎯 Check GTM debug - you should see this "lead" event');
+    } else {
+      console.warn('⚠️ dataLayer not available for testing');
+    }
   },
 
   /**
-   * Check network requests for Google Ads
+   * Check current page parameters
    */
-  checkNetworkRequests() {
-    console.log('🌐 Checking Network Requests...\n');
+  checkPageParameters() {
+    console.log('📋 Checking Current Page Parameters...\n');
     
-    if (typeof window.performance === 'undefined') {
-      console.warn('⚠️ Performance API not available');
-      return [];
+    const urlParams = new URLSearchParams(window.location.search);
+    const params = {};
+    
+    for (const [key, value] of urlParams) {
+      params[key] = value;
     }
     
-    const entries = window.performance.getEntriesByType('resource');
-    const googleAdsRequests = entries.filter(entry => 
-      entry.name.includes('googletagmanager.com') || 
-      entry.name.includes('google-analytics.com') ||
-      entry.name.includes('doubleclick.net')
-    );
+    console.log('🔗 URL Parameters:', params);
     
-    console.log('📊 Google Ads Related Requests:', googleAdsRequests.length);
-    googleAdsRequests.forEach((request, index) => {
-      console.log(`${index + 1}. ${request.name} (${request.duration.toFixed(2)}ms)`);
-    });
+    const requiredParams = ['email', 'phone', 'firstName', 'lastName', 'external_id'];
+    const missingParams = requiredParams.filter(param => !params[param]);
     
-    return googleAdsRequests;
-  },
-
-  /**
-   * Validate phone number formatting
-   */
-  validatePhoneFormatting(phone) {
-    console.log(`📞 Validating Phone Number: ${phone}\n`);
-    
-    const original = phone;
-    let formatted = phone.replace(/\D/g, '');
-    
-    console.log('🔄 Processing steps:');
-    console.log(`1. Original: ${original}`);
-    console.log(`2. Digits only: ${formatted}`);
-    
-    if (formatted.startsWith('5') && formatted.length === 9) {
-      formatted = '966' + formatted;
-      console.log(`3. Added country code: ${formatted}`);
+    if (missingParams.length > 0) {
+      console.warn('⚠️ Missing Parameters:', missingParams);
+      console.log('💡 For full testing, visit with parameters like:');
+      console.log('?email=test@example.com&phone=0501234567&firstName=Test&lastName=User&external_id=12345');
+    } else {
+      console.log('✅ All required parameters present');
     }
     
-    const final = '+' + formatted;
-    console.log(`4. Final format: ${final}`);
-    
-    const isValid = /^\+966[5][0-9]{8}$/.test(final);
-    console.log(`✅ Valid Saudi number: ${isValid}`);
-    
-    return {
-      original,
-      formatted: final,
-      isValid
-    };
+    return params;
   },
 
   /**
-   * Run comprehensive test suite
+   * Check GTM container status
+   */
+  checkGTMStatus() {
+    console.log('🏷️ Checking GTM Status...\n');
+    
+    const gtmStatus = {
+      dataLayer_exists: typeof window.dataLayer !== 'undefined',
+      dataLayer_length: window.dataLayer ? window.dataLayer.length : 0,
+      gtm_loaded: typeof window.google_tag_manager !== 'undefined',
+      gtag_available: typeof window.gtag === 'function'
+    };
+    
+    console.log('📊 GTM Status:', gtmStatus);
+    
+    if (window.dataLayer && window.dataLayer.length > 0) {
+      console.log('📋 Recent dataLayer Events:');
+      window.dataLayer.slice(-5).forEach((event, index) => {
+        console.log(`Event ${index + 1}:`, event);
+      });
+    }
+    
+    return gtmStatus;
+  },
+
+  /**
+   * Run comprehensive test
    */
   runFullTest() {
-    console.log('🚀 Running Comprehensive Conversion Tracking Test Suite...\n');
+    console.log('🚀 Running Full Conversion Tracking Test...\n');
     console.log('=' .repeat(60));
     
-    const results = {
-      setup: this.testGoogleAdsSetup(),
-      pageData: this.checkPageData(),
-      networkRequests: this.checkNetworkRequests()
-    };
+    // Test 1: Setup
+    console.log('\n1️⃣ TESTING SETUP');
+    this.testGoogleAdsSetup();
+    
+    // Test 2: GTM Status
+    console.log('\n2️⃣ CHECKING GTM STATUS');
+    this.checkGTMStatus();
+    
+    // Test 3: Page Parameters
+    console.log('\n3️⃣ CHECKING PAGE PARAMETERS');
+    this.checkPageParameters();
+    
+    // Test 4: Monitor Events
+    console.log('\n4️⃣ MONITORING LEAD EVENTS');
+    this.monitorLeadEvents();
+    
+    // Test 5: Manual Test
+    console.log('\n5️⃣ RUNNING MANUAL TEST');
+    this.testConversionTracking();
     
     console.log('\n' + '=' .repeat(60));
-    console.log('📊 Test Suite Results:');
-    console.log('✅ Setup Test:', results.setup.gtag_available && results.setup.dataLayer_available ? 'PASS' : 'FAIL');
-    console.log('✅ Page Data:', Object.values(results.pageData.query_params).some(v => v !== null) ? 'PASS' : 'FAIL');
-    console.log('✅ Network Requests:', results.networkRequests.length > 0 ? 'PASS' : 'FAIL');
+    console.log('✅ Full test completed!');
+    console.log('🎯 Check GTM debug console for the "lead" event');
+    console.log('📊 Monitor the console above for any new events');
     
-    console.log('\n🧪 To test actual conversion tracking, run:');
-    console.log('ConversionTrackingTester.testConversionTracking()');
+    return {
+      message: 'Full test completed - check console output above',
+      next_steps: [
+        'Open GTM debug mode',
+        'Look for "lead" event in GTM',
+        'Verify conversion data in Google Ads',
+        'Check dataLayer events in browser console'
+      ]
+    };
+  },
+
+  /**
+   * Quick lead event test
+   */
+  quickLeadTest() {
+    console.log('⚡ Quick Lead Event Test...\n');
     
-    console.log('\n👀 To monitor live events, run:');
-    console.log('ConversionTrackingTester.monitorDataLayer()');
+    if (!window.dataLayer) {
+      console.error('❌ dataLayer not available');
+      return;
+    }
+
+    const testLeadEvent = {
+      'event': 'lead',
+      'lead_type': 'quick_test',
+      'conversion_value': 10.0,
+      'currency': 'SAR',
+      'user_type': 'citizen',
+      'timestamp': new Date().toISOString(),
+      'test': true
+    };
+
+    window.dataLayer.push(testLeadEvent);
     
-    return results;
+    console.log('✅ Quick lead event fired!');
+    console.log('Event:', testLeadEvent);
+    console.log('🎯 Check GTM debug - you should see this "lead" event');
+    
+    return testLeadEvent;
   }
 };
 
-// Auto-run basic checks if on thank you page
-if (window.location.pathname.includes('thank-you')) {
-  console.log('🎯 Thank You Page Detected - Running Basic Checks...\n');
-  window.ConversionTrackingTester.runFullTest();
-}
+// Auto-run basic checks when script loads
+console.log('🔧 Google Ads Conversion Tracking Tester Loaded!');
+console.log('📖 Available functions:');
+console.log('  - ConversionTrackingTester.runFullTest()');
+console.log('  - ConversionTrackingTester.quickLeadTest()');
+console.log('  - ConversionTrackingTester.monitorLeadEvents()');
+console.log('  - ConversionTrackingTester.testConversionTracking()');
+console.log('\n💡 Run ConversionTrackingTester.runFullTest() to start testing');
 
-console.log('🛠️ Conversion Tracking Tester Loaded!');
-console.log('📖 Available methods:');
-console.log('- ConversionTrackingTester.testGoogleAdsSetup()');
-console.log('- ConversionTrackingTester.testConversionTracking()');
-console.log('- ConversionTrackingTester.checkPageData()');
-console.log('- ConversionTrackingTester.monitorDataLayer()');
-console.log('- ConversionTrackingTester.checkNetworkRequests()');
-console.log('- ConversionTrackingTester.validatePhoneFormatting(phone)');
-console.log('- ConversionTrackingTester.runFullTest()'); 
+// Quick status check
+if (window.dataLayer) {
+  const leadEvents = window.dataLayer.filter(event => event.event === 'lead');
+  if (leadEvents.length > 0) {
+    console.log(`✅ Found ${leadEvents.length} existing lead event(s) in dataLayer`);
+    leadEvents.forEach((event, index) => {
+      console.log(`Lead Event ${index + 1}:`, event);
+    });
+  } else {
+    console.log('ℹ️ No lead events found in dataLayer yet');
+  }
+} else {
+  console.warn('⚠️ dataLayer not available - GTM may not be loaded');
+} 

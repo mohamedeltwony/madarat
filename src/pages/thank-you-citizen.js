@@ -259,8 +259,39 @@ export default function ThankYouCitizen() {
             user_data_fields: enhancedConversionData.user_data ? Object.keys(enhancedConversionData.user_data) : []
           });
 
-          // Also push to dataLayer for GTM if needed
+          // IMPORTANT: Push specific "lead" event to dataLayer for GTM
           if (window.dataLayer) {
+            // 1. Lead Event - This is what you should see in GTM
+            window.dataLayer.push({
+              'event': 'lead',
+              'lead_type': 'citizen_form_submission',
+              'conversion_id': 'AW-16691848441',
+              'conversion_label': 'Y1RHCJuO-dUZEPnJpZc-',
+              'conversion_value': 10.0,
+              'currency': 'SAR',
+              'transaction_id': enhancedConversionData.transaction_id,
+              'user_type': 'citizen',
+              'nationality': 'مواطن',
+              'form_name': 'citizenship_form',
+              'lead_quality': 'high',
+              'conversion_type': 'lead_generation',
+              'enhanced_conversion_enabled': !!enhancedConversionData.user_data,
+              'page_type': 'thank_you',
+              'lead_source': 'website',
+              'event_id': eventId || `citizen_${Date.now()}`,
+              'external_id': external_id || '',
+              'timestamp': new Date().toISOString(),
+              'page_url': window.location.href,
+              'page_title': document.title,
+              'user_language': 'ar',
+              // Add user data indicators (not actual data for privacy)
+              'has_email': !!userData.email,
+              'has_phone': !!userData.phone,
+              'has_name': !!(userData.firstName || userData.lastName || userData.name),
+              'phone_formatted': userData.phone ? userData.phone.replace(/\D/g, '').startsWith('5') ? '+966' + userData.phone.replace(/\D/g, '') : userData.phone : null
+            });
+
+            // 2. Google Ads Conversion Event for GTM
             window.dataLayer.push({
               'event': 'google_ads_conversion',
               'google_ads_conversion_id': 'AW-16691848441',
@@ -276,6 +307,8 @@ export default function ThankYouCitizen() {
               'enhanced_conversion_enabled': !!enhancedConversionData.user_data,
               'timestamp': new Date().toISOString()
             });
+
+            console.log('Lead and Google Ads conversion events pushed to dataLayer for GTM tracking');
           }
 
         } catch (error) {
@@ -291,9 +324,38 @@ export default function ThankYouCitizen() {
             });
             console.log('Fallback Google Ads conversion tracked');
           }
+
+          // Also push fallback lead event to dataLayer
+          if (window.dataLayer) {
+            window.dataLayer.push({
+              'event': 'lead',
+              'lead_type': 'citizen_form_submission_fallback',
+              'conversion_value': 10.0,
+              'currency': 'SAR',
+              'user_type': 'citizen',
+              'nationality': 'مواطن',
+              'form_name': 'citizenship_form',
+              'timestamp': new Date().toISOString()
+            });
+          }
         }
       } else {
         console.warn('Google Ads gtag not available for conversion tracking');
+        
+        // Push lead event to dataLayer even if gtag is not available
+        if (window.dataLayer) {
+          window.dataLayer.push({
+            'event': 'lead',
+            'lead_type': 'citizen_form_submission_no_gtag',
+            'conversion_value': 10.0,
+            'currency': 'SAR',
+            'user_type': 'citizen',
+            'nationality': 'مواطن',
+            'form_name': 'citizenship_form',
+            'timestamp': new Date().toISOString(),
+            'note': 'gtag not available'
+          });
+        }
       }
       
       // --- Send event to Facebook ---

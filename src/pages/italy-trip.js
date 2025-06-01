@@ -164,10 +164,10 @@ export default function ItalyTrip() {
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>استكشف ايطاليا مع مدارات الكون | رحلة ساحرة</title>
+        <title>استكشف ايطاليا مع مدارات الكون | رحلة ساحرة - السعر لا يشمل الطيران</title>
         <meta
           name="description"
-          content="رحلة سياحية استثنائية إلى ايطاليا مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة الايطالية الساحرة."
+          content="رحلة سياحية استثنائية إلى ايطاليا مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة الايطالية الساحرة. السعر 4499 ريال لا يشمل تذاكر الطيران."
         />
         <meta
           name="viewport"
@@ -218,6 +218,21 @@ export default function ItalyTrip() {
               السعر للشخص في الغرفة المزدوجة
               <br />
               <span className={styles.highlight}>4499</span> ر.س
+              <br />
+              <span style={{ 
+                fontSize: '0.9em', 
+                color: '#cc9c64', 
+                fontWeight: '600',
+                backgroundColor: 'rgba(204, 156, 100, 0.15)',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                marginTop: '10px',
+                display: 'inline-block',
+                border: '1px solid rgba(204, 156, 100, 0.3)',
+                backdropFilter: 'blur(10px)'
+              }}>
+                ⚠️ السعر لا يشمل تذاكر الطيران
+              </span>
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}

@@ -105,10 +105,10 @@ export default function BosniaTrip() {
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>استكشف البوسنة مع مدارات الكون | رحلة ساحرة</title>
+        <title>استكشف البوسنة مع مدارات الكون | رحلة ساحرة - السعر لا يشمل الطيران</title>
         <meta
           name="description"
-          content="رحلة سياحية استثنائية إلى البوسنة مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة في سراييفو وموستار وبيهاتش."
+          content="رحلة سياحية استثنائية إلى البوسنة مع شركة مدارات الكون للسياحة والسفر. اكتشف جمال الطبيعة والتاريخ والثقافة في سراييفو وموستار وبيهاتش. السعر 4599 ريال لا يشمل تذاكر الطيران."
         />
         <meta
           name="viewport"
@@ -162,6 +162,21 @@ export default function BosniaTrip() {
               السعر للشخص في الغرفة المزدوجة
               <br />
               <span className={styles.highlight}>4599</span> ر.س
+              <br />
+              <span style={{ 
+                fontSize: '0.9em', 
+                color: '#cc9c64', 
+                fontWeight: '600',
+                backgroundColor: 'rgba(204, 156, 100, 0.15)',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                marginTop: '10px',
+                display: 'inline-block',
+                border: '1px solid rgba(204, 156, 100, 0.3)',
+                backdropFilter: 'blur(10px)'
+              }}>
+                ⚠️ السعر لا يشمل تذاكر الطيران
+              </span>
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}

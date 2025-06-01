@@ -132,10 +132,10 @@ export default function TurkeyTrip() {
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>استكشف تركيا مع مدارات الكون | طربزون وايدر</title>
+        <title>استكشف تركيا مع مدارات الكون | طربزون وايدر - السعر لا يشمل الطيران</title>
         <meta
           name="description"
-          content="رحلة فاخرة الى  تركيا مع شركة مدارات الكون للسياحة والسفر. استمتع بإقامة فاخرة في أكواخ طبيعية خلابة وتجربة سياحية مميزة في طربزون وايدر."
+          content="رحلة فاخرة الى تركيا مع شركة مدارات الكون للسياحة والسفر. استمتع بإقامة فاخرة في أكواخ طبيعية خلابة وتجربة سياحية مميزة في طربزون وايدر. السعر 2699 ريال لا يشمل تذاكر الطيران."
         />
         <meta
           name="viewport"
@@ -194,6 +194,21 @@ export default function TurkeyTrip() {
               السعر للشخص في الغرفة المزدوجة
               <br />
               <span className={styles.highlight}>2699</span> ر.س
+              <br />
+              <span style={{ 
+                fontSize: '0.9em', 
+                color: '#cc9c64', 
+                fontWeight: '600',
+                backgroundColor: 'rgba(204, 156, 100, 0.15)',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                marginTop: '10px',
+                display: 'inline-block',
+                border: '1px solid rgba(204, 156, 100, 0.3)',
+                backdropFilter: 'blur(10px)'
+              }}>
+                ⚠️ السعر لا يشمل تذاكر الطيران
+              </span>
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}

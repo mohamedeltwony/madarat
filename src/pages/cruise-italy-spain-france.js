@@ -480,11 +480,10 @@ export default function CruiseItalySpainFrance() {
   return (
     <div className={styles.container} dir="rtl">
       <Head>
-        <title>عرض كروز الأحلام: إيطاليا، إسبانيا، فرنسا | مدارات الكون</title>{' '}
-        {/* Updated Title */}
+        <title>عرض كروز الأحلام: إيطاليا، إسبانيا، فرنسا | مدارات الكون - الأسعار لا تشمل الطيران</title>
         <meta
           name="description"
-          content="انطلق في رحلة بحرية لا تُنسى لمدة 8 أيام عبر إيطاليا وإسبانيا وفرنسا مع مدارات الكون. إقامة ووجبات وترفيه بـ 3700 ريال فقط!" // Updated Description
+          content="انطلق في رحلة بحرية لا تُنسى لمدة 8 أيام عبر إيطاليا وإسبانيا وفرنسا مع مدارات الكون. إقامة ووجبات وترفيه ابتداءً من 3655 ريال. الأسعار لا تشمل تذاكر الطيران."
         />
         <meta
           name="viewport"
@@ -547,8 +546,23 @@ export default function CruiseItalySpainFrance() {
               كروز النرويج – من كوبنهاغن وإليها (الدنمارك)
               <br />
               ابتداءً من <span className={styles.highlight}>5,330</span> ريال سعودي للشخص الواحد
-            </p>{' '}
-            {/* Updated Description */}
+              <br />
+              <br />
+              <span style={{ 
+                fontSize: '0.9em', 
+                color: '#cc9c64', 
+                fontWeight: '600',
+                backgroundColor: 'rgba(204, 156, 100, 0.15)',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                marginTop: '10px',
+                display: 'inline-block',
+                border: '1px solid rgba(204, 156, 100, 0.3)',
+                backdropFilter: 'blur(10px)'
+              }}>
+                ⚠️ الأسعار لا تشمل تذاكر الطيران
+              </span>
+            </p>
             {/* Features Section - Copied from London/Scotland page */}
             <div className={styles.featuresSection}>
               <div className={styles.featuresGrid}>
