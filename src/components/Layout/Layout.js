@@ -77,10 +77,6 @@ const Layout = ({ children }) => {
           href: '/site.webmanifest',
         },
         {
-          rel: 'canonical',
-          href: metadata.og.url,
-        },
-        {
           rel: 'preload',
           href: 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap',
           as: 'style',

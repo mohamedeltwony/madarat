@@ -95,7 +95,6 @@ export default function Posts({
           name="description"
           content="اكتشف أحدث المقالات حول السفر والسياحة والترحال والوجهات السياحية المميزة"
         />
-        <link rel="canonical" href="https://madaratalkon.com/posts" />
       </Head>
 
       <div className="ar">

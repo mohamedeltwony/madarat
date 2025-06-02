@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import {
   FaMapMarkerAlt,
   FaPhone,
@@ -42,16 +43,25 @@ export default function About() {
           name="description"
           content="تعرف على مدارات الكون للسياحة والسفر - شركة سعودية رائدة في تنظيم الرحلات حول العالم. نقدم تجارب سفر فريدة ومخصصة تلبي كافة احتياجاتك."
         />
-        <link rel="canonical" href="https://madarat-alkawn.com/about" />
         <meta property="og:title" content="عن مدارات الكون - شركة السياحة والسفر الرائدة في السعودية" />
         <meta property="og:description" content="تعرف على مدارات الكون للسياحة والسفر - شركة سعودية رائدة في تنظيم الرحلات حول العالم. نقدم تجارب سفر فريدة ومخصصة تلبي كافة احتياجاتك مع خبرة سنوات في مجال السياحة والسفر." />
-        <meta property="og:url" content="https://madarat-alkawn.com/about" />
+        <meta property="og:url" content="https://madaratalkon.com/about" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://madarat-alkawn.com/images/about-og-image.jpg" />
+        <meta property="og:image" content="https://madaratalkon.com/images/about-og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="عن مدارات الكون - شركة السياحة والسفر الرائدة في السعودية" />
         <meta name="twitter:description" content="تعرف على مدارات الكون للسياحة والسفر - شركة سعودية رائدة في تنظيم الرحلات حول العالم." />
       </Head>
+
+      <SEO
+        title="عن مدارات الكون - شركة السياحة والسفر الرائدة في السعودية"
+        description="تعرف على مدارات الكون للسياحة والسفر - شركة سعودية رائدة في تنظيم الرحلات حول العالم. نقدم تجارب سفر فريدة ومخصصة تلبي كافة احتياجاتك."
+        keywords="مدارات الكون, شركة سياحة, السفر السعودية, رحلات, سياحة"
+        breadcrumbs={[
+          { name: 'الرئيسية', url: '/' },
+          { name: 'عن الشركة', url: '/about' }
+        ]}
+      />
 
       {/* Header */}
       <Header />

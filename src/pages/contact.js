@@ -20,6 +20,7 @@ import {
 // Import layout components
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 import styles from '../styles/pages/Contact.module.scss';
 
 const ContactPage = () => {
@@ -77,21 +78,30 @@ const ContactPage = () => {
   return (
     <>
       <Head>
-        <title>تواصل معنا - مدارات الكون للسفر والسياحة | احجز رحلتك الآن</title>
+        <title>تواصل معنا - مدارات الكون | خدمة عملاء متميزة</title>
         <meta
           name="description"
-          content="تواصل مع فريق مدارات الكون للسياحة والسفر واحصل على المساعدة في تخطيط رحلتك المثالية. اتصل بنا على 112137000 أو راسلنا عبر واتساب."
+          content="تواصل مع فريق مدارات الكون للسياحة والسفر. نحن هنا لمساعدتك في تخطيط رحلتك القادمة وتقديم أفضل الخدمات السياحية. اتصل بنا الآن للحصول على استشارة مجانية."
         />
-        <link rel="canonical" href="https://madarat-alkawn.com/contact" />
-        <meta property="og:title" content="تواصل معنا - مدارات الكون للسفر والسياحة | احجز رحلتك الآن" />
-        <meta property="og:description" content="تواصل مع فريق مدارات الكون للسياحة والسفر واحصل على المساعدة في تخطيط رحلتك المثالية. اتصل بنا على 112137000 أو راسلنا عبر واتساب للحصول على أفضل العروض السياحية." />
-        <meta property="og:url" content="https://madarat-alkawn.com/contact" />
+        <meta property="og:title" content="تواصل معنا - مدارات الكون | خدمة عملاء متميزة" />
+        <meta property="og:description" content="تواصل مع فريق مدارات الكون للسياحة والسفر. نحن هنا لمساعدتك في تخطيط رحلتك القادمة وتقديم أفضل الخدمات السياحية. اتصل بنا الآن للحصول على استشارة مجانية." />
+        <meta property="og:url" content="https://madaratalkon.com/contact" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://madarat-alkawn.com/images/contact-og-image.jpg" />
+        <meta property="og:image" content="https://madaratalkon.com/images/contact-og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="تواصل معنا - مدارات الكون للسفر والسياحة" />
-        <meta name="twitter:description" content="تواصل مع فريق مدارات الكون للسياحة والسفر واحصل على المساعدة في تخطيط رحلتك المثالية." />
+        <meta name="twitter:title" content="تواصل معنا - مدارات الكون" />
+        <meta name="twitter:description" content="تواصل مع فريق مدارات الكون للسياحة والسفر للحصول على أفضل الخدمات السياحية." />
       </Head>
+
+      <SEO
+        title="تواصل معنا - مدارات الكون"
+        description="تواصل مع فريق مدارات الكون للسياحة والسفر. نحن هنا لمساعدتك في تخطيط رحلتك القادمة وتقديم أفضل الخدمات السياحية. اتصل بنا الآن للحصول على استشارة مجانية."
+        keywords="تواصل, اتصال, مدارات الكون, خدمة عملاء, استشارة سياحية"
+        breadcrumbs={[
+          { name: 'الرئيسية', url: '/' },
+          { name: 'تواصل معنا', url: '/contact' }
+        ]}
+      />
 
       {/* Header */}
       <Header />

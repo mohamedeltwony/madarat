@@ -1,0 +1,68 @@
+{
+  "timestamp": "2025-06-02T19:22:25.342Z",
+  "summary": {
+    "passed": 0,
+    "failed": 0,
+    "warnings": 0,
+    "errors": 8,
+    "total": 8
+  },
+  "results": [
+    {
+      "name": "Canonical URL (Homepage)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:18:43.320Z"
+    },
+    {
+      "name": "Canonical URL (About)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:19:13.846Z"
+    },
+    {
+      "name": "Canonical URL (Contact)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:19:44.354Z"
+    },
+    {
+      "name": "Canonical URL (Destinations)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:20:15.084Z"
+    },
+    {
+      "name": "Canonical URL (Trips)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:20:46.170Z"
+    },
+    {
+      "name": "Canonical URL (Blog)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:21:17.213Z"
+    },
+    {
+      "name": "Canonical URL (Posts)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:21:48.737Z"
+    },
+    {
+      "name": "Canonical URL (Categories)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:22:25.302Z"
+    }
+  ]
+}

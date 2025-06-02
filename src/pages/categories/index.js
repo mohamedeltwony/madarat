@@ -13,12 +13,11 @@ export default function Categories({ categories, metadata, menus }) {
   return (
     <Layout menus={menus}>
       <Head>
-        <title>الفئات - مدارات الكون</title>
+        <title>التصنيفات - مدارات الكون</title>
         <meta
           name="description"
-          content="استعرض فئات المقالات المختلفة في موقع مدارات الكون للسفر والسياحة"
+          content="استكشف مواضيع السفر والسياحة المختلفة حسب التصنيفات مع مدارات الكون"
         />
-        <link rel="canonical" href="https://madaratalkon.com/categories" />
       </Head>
 
       <div className="ar">

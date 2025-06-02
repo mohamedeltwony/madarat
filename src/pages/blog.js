@@ -5,6 +5,7 @@ import Container from '@/components/Container';
 import Section from '@/components/Section';
 import PageHero from '@/components/PageHero';
 import BlogPosts from '@/components/BlogPosts';
+import SEO from '@/components/SEO';
 import styles from '@/styles/pages/Blog.module.scss';
 import Link from 'next/link';
 import { FiArrowRight } from 'react-icons/fi';
@@ -18,16 +19,25 @@ export default function Blog() {
           name="description"
           content="تصفح أحدث المقالات والنصائح حول السفر والسياحة من خبراء مدارات الكون. اكتشف الوجهات المميزة، نصائح التخطيط للرحلات، وأفضل العروض السياحية حول العالم."
         />
-        <link rel="canonical" href="https://madarat-alkawn.com/blog" />
         <meta property="og:title" content="مدونة مدارات الكون - نصائح السفر والسياحة والوجهات المميزة" />
         <meta property="og:description" content="تصفح أحدث المقالات والنصائح حول السفر والسياحة من خبراء مدارات الكون. اكتشف الوجهات المميزة، نصائح التخطيط للرحلات، وأفضل العروض السياحية حول العالم." />
-        <meta property="og:url" content="https://madarat-alkawn.com/blog" />
+        <meta property="og:url" content="https://madaratalkon.com/blog" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://madarat-alkawn.com/images/blog-og-image.jpg" />
+        <meta property="og:image" content="https://madaratalkon.com/images/blog-og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="مدونة مدارات الكون - نصائح السفر والسياحة" />
         <meta name="twitter:description" content="تصفح أحدث المقالات والنصائح حول السفر والسياحة من خبراء مدارات الكون." />
       </Head>
+
+      <SEO
+        title="مدونة مدارات الكون - نصائح السفر والسياحة والوجهات المميزة"
+        description="تصفح أحدث المقالات والنصائح حول السفر والسياحة من خبراء مدارات الكون. اكتشف الوجهات المميزة، نصائح التخطيط للرحلات، وأفضل العروض السياحية حول العالم."
+        keywords="مدونة السفر, نصائح سياحية, مدارات الكون, مقالات سفر, وجهات سياحية"
+        breadcrumbs={[
+          { name: 'الرئيسية', url: '/' },
+          { name: 'المدونة', url: '/blog' }
+        ]}
+      />
 
       {/* Hero Section */}
       <div className={styles.heroSection}>

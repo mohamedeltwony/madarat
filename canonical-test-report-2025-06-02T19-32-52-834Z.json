@@ -1,0 +1,68 @@
+{
+  "timestamp": "2025-06-02T19:32:52.835Z",
+  "summary": {
+    "passed": 0,
+    "failed": 1,
+    "warnings": 0,
+    "errors": 7,
+    "total": 8
+  },
+  "results": [
+    {
+      "name": "Canonical URL (Homepage)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:27:38.822Z"
+    },
+    {
+      "name": "Canonical URL (About)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:28:10.565Z"
+    },
+    {
+      "name": "Canonical URL (Contact)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:28:42.732Z"
+    },
+    {
+      "name": "Canonical URL (Destinations)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:30:44.209Z"
+    },
+    {
+      "name": "Canonical URL (Trips)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigating frame was detached",
+      "details": null,
+      "timestamp": "2025-06-02T19:31:46.027Z"
+    },
+    {
+      "name": "Canonical URL (Blog)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigation timeout of 30000 ms exceeded",
+      "details": null,
+      "timestamp": "2025-06-02T19:32:23.452Z"
+    },
+    {
+      "name": "Canonical URL (Posts)",
+      "status": "ERROR",
+      "message": "Failed to test page: Navigating frame was detached",
+      "details": null,
+      "timestamp": "2025-06-02T19:32:47.470Z"
+    },
+    {
+      "name": "Canonical URL (Categories)",
+      "status": "FAIL",
+      "message": "No canonical URL found",
+      "details": null,
+      "timestamp": "2025-06-02T19:32:51.474Z"
+    }
+  ]
+}

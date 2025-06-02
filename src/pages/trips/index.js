@@ -3,6 +3,7 @@ import Layout from '@/components/Layout';
 import AllTrips from '@/components/AllTrips';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorMessage from '@/components/ErrorMessage';
+import SEO from '@/components/SEO';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Meta from '../../components/Meta';
@@ -98,21 +99,30 @@ export default function TripsPage({
   return (
     <Layout metadata={metadata} menus={menus}>
       <Head>
-        <title>الرحلات السياحية - مدارات الكون</title>
+        <title>الرحلات السياحية - مدارات الكون | أفضل العروض السياحية والرحلات المميزة</title>
         <meta
           name="description"
-          content="اكتشف رحلاتنا السياحية المميزة واستمتع بتجربة لا تُنسى في أجمل الأماكن حول العالم. عروض سياحية متنوعة بأسعار تنافسية وخدمات عالية الجودة مع مدارات الكون للسياحة والسفر. احجز رحلتك الآن واستمتع بأفضل الخدمات السياحية."
+          content="اكتشف مجموعتنا المتنوعة من الرحلات السياحية والعروض المميزة مع مدارات الكون. رحلات إلى أجمل الوجهات العالمية بأسعار تنافسية وخدمات عالية الجودة."
         />
-        <link rel="canonical" href="https://madarat-alkawn.com/trips" />
-        <meta property="og:title" content="الرحلات السياحية - مدارات الكون | أفضل العروض السياحية حول العالم" />
-        <meta property="og:description" content="اكتشف رحلاتنا السياحية المميزة واستمتع بتجربة لا تُنسى في أجمل الأماكن حول العالم. عروض سياحية متنوعة بأسعار تنافسية وخدمات عالية الجودة." />
-        <meta property="og:url" content="https://madarat-alkawn.com/trips" />
+        <meta property="og:title" content="الرحلات السياحية - مدارات الكون | أفضل العروض السياحية والرحلات المميزة" />
+        <meta property="og:description" content="اكتشف مجموعتنا المتنوعة من الرحلات السياحية والعروض المميزة مع مدارات الكون. رحلات إلى أجمل الوجهات العالمية بأسعار تنافسية وخدمات عالية الجودة." />
+        <meta property="og:url" content="https://madaratalkon.com/trips" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://madarat-alkawn.com/images/trips-og-image.jpg" />
+        <meta property="og:image" content="https://madaratalkon.com/images/trips-og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="الرحلات السياحية - مدارات الكون" />
-        <meta name="twitter:description" content="اكتشف رحلاتنا السياحية المميزة واستمتع بتجربة لا تُنسى في أجمل الأماكن حول العالم." />
+        <meta name="twitter:description" content="اكتشف مجموعتنا المتنوعة من الرحلات السياحية والعروض المميزة مع مدارات الكون." />
       </Head>
+
+      <SEO
+        title="الرحلات السياحية - مدارات الكون"
+        description="اكتشف مجموعتنا المتنوعة من الرحلات السياحية والعروض المميزة مع مدارات الكون. رحلات إلى أجمل الوجهات العالمية بأسعار تنافسية وخدمات عالية الجودة."
+        keywords="رحلات سياحية, عروض سفر, مدارات الكون, حجز رحلات, سياحة"
+        breadcrumbs={[
+          { name: 'الرئيسية', url: '/' },
+          { name: 'الرحلات', url: '/trips' }
+        ]}
+      />
 
       {/* Hero Section with hardcoded image */}
       <div
