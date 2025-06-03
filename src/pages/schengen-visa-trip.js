@@ -95,7 +95,7 @@ export default function SchengenVisaTrip({ metadata, menus }) {
           <title>احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر</title>
           <meta
             name="description"
-            content="خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 299 ريال سعودي فقط."
+            content="خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 399 ريال سعودي فقط."
           />
           <meta
             name="viewport"
@@ -145,7 +145,7 @@ export default function SchengenVisaTrip({ metadata, menus }) {
               <br />
               السعر
               <br />
-              <span className={styles.highlight}>299</span> ر.س فقط
+              <span className={styles.highlight}>399</span> ر.س فقط
             </p>
 
             {/* Features Section - Moved Inside Hero & Made Marquee */}
@@ -212,7 +212,7 @@ export default function SchengenVisaTrip({ metadata, menus }) {
                 extraPayload: {
                   destination: 'تأشيرة شنغن',
                   tripName: 'Schengen Visa',
-                  price: 299,
+                  price: 399,
                 },
               }}
               onSuccess={handleFormSuccess}
@@ -246,12 +246,12 @@ export async function getStaticProps() {
     // Construct page metadata for Schengen visa trip
     const pageMetadata = {
       title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
-      description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 299 ريال سعودي فقط.',
+      description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 399 ريال سعودي فقط.',
       canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/schengen-visa-trip`,
       robots: 'index, follow',
       og: {
         title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
-        description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 299 ريال سعودي فقط.',
+        description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 399 ريال سعودي فقط.',
         type: 'website',
         url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/schengen-visa-trip`,
         siteName: 'مدارات الكون',
@@ -260,7 +260,7 @@ export async function getStaticProps() {
       twitter: {
         card: 'summary_large_image',
         title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
-        description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 299 ريال سعودي فقط.',
+        description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 399 ريال سعودي فقط.',
         image: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/schengen-background.webp`,
       },
     };
