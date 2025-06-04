@@ -91,26 +91,10 @@ const TripGallery = ({ images }) => {
   const featuredImage = images[0];
   
   // The rest of the images for the grid (up to 4)
-  // If we don't have enough images, we'll pad the array with duplicates
-  // but only for display purposes
   let gridImages = images.slice(1, 5);
   
-  // If we have fewer than 4 grid images, duplicate the last one to fill the grid
-  // but only if we have at least one grid image
-  if (gridImages.length > 0 && gridImages.length < 4) {
-    const lastImage = gridImages[gridImages.length - 1];
-    while (gridImages.length < 4) {
-      gridImages.push({...lastImage});
-    }
-  } else if (gridImages.length === 0) {
-    // If we have no grid images, use the featured image
-    gridImages = [
-      {...featuredImage},
-      {...featuredImage},
-      {...featuredImage},
-      {...featuredImage}
-    ];
-  }
+  // Only show the grid if we have additional images beyond the featured image
+  const hasAdditionalImages = gridImages.length > 0;
   
   // All images for the lightbox
   const allImages = images;
@@ -136,42 +120,44 @@ const TripGallery = ({ images }) => {
           </div>
         </div>
 
-        {/* Grid of smaller images - right side */}
-        <div className={styles.galleryGridCol}>
-          <div className={styles.galleryGrid}>
-            {gridImages.map((image, idx) => {
-              // If this is the third image (index 2) and we have more than 4 total images
-              const isViewMoreButton = idx === 2 && images.length > 5;
+        {/* Grid of smaller images - right side - only show if we have additional images */}
+        {hasAdditionalImages && (
+          <div className={styles.galleryGridCol}>
+            <div className={styles.galleryGrid}>
+              {gridImages.map((image, idx) => {
+                // If this is the third image (index 2) and we have more than 4 total images
+                const isViewMoreButton = idx === 2 && images.length > 5;
 
-              return (
-                <div key={idx} className={styles.galleryGridItem}>
-                  <div 
-                    className={`${styles.galleryImgWrap} ${isViewMoreButton ? styles.active : ''}`}
-                    onClick={() => isViewMoreButton ? setIndex(0) : setIndex(idx + 1)}
-                  >
-                    <Image
-                      src={image.src}
-                      alt={image.alt || "Trip gallery image"}
-                      fill
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                      className={styles.galleryImage}
-                      loading="lazy"
-                    />
-                    <div className={styles.imageOverlay}>
-                      {isViewMoreButton ? (
-                        <button className={styles.viewMoreBtn}>
-                          <i className="bi bi-plus-lg"></i> View More Images
-                        </button>
-                      ) : (
-                        <span className={styles.viewIcon}><i className="bi bi-eye"></i></span>
-                      )}
+                return (
+                  <div key={idx} className={styles.galleryGridItem}>
+                    <div 
+                      className={`${styles.galleryImgWrap} ${isViewMoreButton ? styles.active : ''}`}
+                      onClick={() => isViewMoreButton ? setIndex(0) : setIndex(idx + 1)}
+                    >
+                      <Image
+                        src={image.src}
+                        alt={image.alt || "Trip gallery image"}
+                        fill
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        className={styles.galleryImage}
+                        loading="lazy"
+                      />
+                      <div className={styles.imageOverlay}>
+                        {isViewMoreButton ? (
+                          <button className={styles.viewMoreBtn}>
+                            <i className="bi bi-plus-lg"></i> View More Images
+                          </button>
+                        ) : (
+                          <span className={styles.viewIcon}><i className="bi bi-eye"></i></span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <Lightbox
@@ -661,51 +647,88 @@ export async function getStaticProps({ params }) {
     // Extract all possible gallery images from the API response
     const galleryImages = [];
     
-    // Featured image
+    console.log('Trip featured media:', trip?.featured_media);
+    console.log('Trip embedded featuredmedia:', trip?._embedded?.['wp:featuredmedia']);
+    console.log('Trip featured_image:', trip?.featured_image);
+    
+    // Featured image from embedded data
     if (trip?._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
+      console.log('Adding featured image from embedded data');
       galleryImages.push({
         src: trip._embedded['wp:featuredmedia'][0].source_url,
         alt: trip._embedded['wp:featuredmedia'][0]?.alt_text || trip.title?.rendered || 'Trip image'
       });
     }
     
-    // Additional gallery images if available
-    if (trip?.wpte_gallery_id) {
-      // Process gallery image IDs
-      const galleryIds = Object.entries(trip.wpte_gallery_id)
-        .filter(([key, value]) => !isNaN(parseInt(key)) && value)
-        .map(([_, value]) => value);
-
-      // Fetch all media items for the gallery
-      if (galleryIds.length > 0) {
-        // In a production environment, we would fetch each media item individually
-        // or use a batch endpoint if available
-        for (const id of galleryIds) {
-          try {
-            const mediaResponse = await fetch(`https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/media/${id}`);
-            if (mediaResponse.ok) {
-              const media = await mediaResponse.json();
-              
-              // Add the media to our gallery
-              if (media?.source_url) {
+    // Fetch attachment images using the wp:attachment endpoint
+    if (trip?._links?.['wp:attachment']?.[0]?.href) {
+      try {
+        console.log('Fetching attachments from:', trip._links['wp:attachment'][0].href);
+        const attachmentResponse = await fetch(trip._links['wp:attachment'][0].href);
+        if (attachmentResponse.ok) {
+          const attachments = await attachmentResponse.json();
+          console.log('Found attachments:', attachments.length);
+          
+          // Add all attachment images to the gallery
+          for (const attachment of attachments) {
+            if (attachment?.source_url && (attachment.media_type === 'image' || attachment.type === 'image' || attachment.mime_type?.startsWith('image/'))) {
+              // Avoid duplicating the featured image
+              const isDuplicate = galleryImages.some(img => img.src === attachment.source_url);
+              if (!isDuplicate) {
+                console.log('Adding attachment image:', attachment.source_url);
                 galleryImages.push({
-                  src: media.source_url,
-                  alt: media.alt_text || `${trip.title?.rendered || 'Trip'} - Gallery image`
+                  src: attachment.source_url,
+                  alt: attachment.alt_text || `${trip.title?.rendered || 'Trip'} - Gallery image`
                 });
               }
             }
-          } catch (mediaError) {
-            console.error(`Error fetching media item ${id}:`, mediaError);
-            
-            // Fallback to using a constructed URL if the media endpoint fails
-            galleryImages.push({
-              src: `https://madaratalkon.com/wp-content/uploads/2025/04/gallery-${id}.jpg`,
-              alt: `${trip.title?.rendered || 'Trip'} - Gallery image ${id}`
-            });
+          }
+        }
+      } catch (attachmentError) {
+        console.error('Error fetching trip attachments:', attachmentError);
+      }
+    }
+    
+    // If no gallery images found, try to get images from ACF or other custom fields
+    if (galleryImages.length <= 1 && trip?.acf) {
+      console.log('Checking ACF fields for gallery images');
+      // Check for common ACF gallery field names
+      const possibleGalleryFields = ['gallery', 'trip_gallery', 'images', 'photo_gallery'];
+      
+      for (const fieldName of possibleGalleryFields) {
+        if (trip.acf[fieldName] && Array.isArray(trip.acf[fieldName])) {
+          console.log(`Found ACF gallery field: ${fieldName}`);
+          for (const image of trip.acf[fieldName]) {
+            if (image?.url || image?.source_url) {
+              const imageUrl = image.url || image.source_url;
+              const isDuplicate = galleryImages.some(img => img.src === imageUrl);
+              if (!isDuplicate) {
+                galleryImages.push({
+                  src: imageUrl,
+                  alt: image.alt || `${trip.title?.rendered || 'Trip'} - Gallery image`
+                });
+              }
+            }
           }
         }
       }
     }
+    
+    // If still no images found, check if featured_image object has image data
+    if (galleryImages.length === 0 && trip?.featured_image?.sizes?.large?.source_url) {
+      console.log('Adding fallback from featured_image object');
+      galleryImages.push({
+        src: trip.featured_image.sizes.large.source_url,
+        alt: trip.title?.rendered || 'Trip image'
+      });
+    }
+    
+    // Final fallback: Use a placeholder or don't show gallery
+    if (galleryImages.length === 0) {
+      console.log('No gallery images found for trip:', trip.id);
+    }
+    
+    console.log('Final gallery images count:', galleryImages.length);
     
     // Format trip data with safe defaults
     const formattedTrip = {

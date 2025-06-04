@@ -152,6 +152,11 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   @media (max-width: 768px) {
     width: 100%;
   }
+  
+  // When there's no grid column, take full width
+  &:only-child {
+    flex: 1 1 100%;
+  }
 }
 
 .galleryMainImage {
