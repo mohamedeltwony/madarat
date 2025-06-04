@@ -1,5 +1,13 @@
 // Performance monitoring utilities for Core Web Vitals and other metrics
 // Client-side only implementation
+//
+// FIXES APPLIED (2025-01-04):
+// 1. Rate limiting: Maximum reports per metric type to prevent spam
+// 2. Deduplication: Prevents identical metric reports
+// 3. Resource monitoring throttling: Limited to 5 slow resource reports per page
+// 4. Observer cleanup: Automatic disconnect after 30 seconds for resource monitoring
+// 5. Increased thresholds: Slow resources now require >2s load time (was >1s)
+// 6. Enhanced tracking: Better resource identification and context
 
 // Core Web Vitals thresholds
 const THRESHOLDS = {
@@ -10,12 +18,42 @@ const THRESHOLDS = {
   TTFB: { good: 800, poor: 1800 },
 };
 
+// Track reported metrics to prevent duplicates
+const reportedMetrics = new Set();
+const slowResourcesReported = new Set();
+let slowResourceCount = 0;
+const MAX_SLOW_RESOURCE_REPORTS = 5; // Limit to 5 slow resource reports per page load
+
+// Rate limiting for metrics reporting
+const metricsReportCount = new Map();
+const MAX_REPORTS_PER_METRIC = {
+  'Slow Resource': 5,
+  'Long Task': 10,
+  'LCP': 3,
+  'FID': 3,
+  'CLS': 5,
+  'FCP': 3,
+  'TTFB': 3
+};
+
+// Store observer references for cleanup
+let performanceObservers = [];
+
 // Performance observer for Core Web Vitals
 export function initPerformanceMonitoring() {
   // Ensure this only runs on the client
   if (typeof window === 'undefined' || typeof document === 'undefined' || !('PerformanceObserver' in window)) {
     return;
   }
+
+  // Clear previous observers
+  stopPerformanceMonitoring();
+
+  // Clear previous session data
+  reportedMetrics.clear();
+  slowResourcesReported.clear();
+  slowResourceCount = 0;
+  metricsReportCount.clear();
 
   // Largest Contentful Paint (LCP)
   observeLCP();
@@ -35,7 +73,7 @@ export function initPerformanceMonitoring() {
   // Long Tasks
   observeLongTasks();
   
-  // Resource Loading Performance
+  // Resource Loading Performance (with proper throttling)
   observeResourceTiming();
 }
 
@@ -62,6 +100,7 @@ function observeLCP() {
     });
     
     observer.observe({ type: 'largest-contentful-paint', buffered: true });
+    performanceObservers.push(observer);
   } catch (e) {
     console.warn('LCP observation not supported');
   }
@@ -89,6 +128,7 @@ function observeFID() {
     });
     
     observer.observe({ type: 'first-input', buffered: true });
+    performanceObservers.push(observer);
   } catch (e) {
     console.warn('FID observation not supported');
   }
@@ -123,6 +163,7 @@ function observeCLS() {
     });
     
     observer.observe({ type: 'layout-shift', buffered: true });
+    performanceObservers.push(observer);
     
     // Report final CLS value when page is hidden
     document.addEventListener('visibilitychange', () => {
@@ -167,6 +208,7 @@ function observeFCP() {
     });
     
     observer.observe({ type: 'paint', buffered: true });
+    performanceObservers.push(observer);
   } catch (e) {
     console.warn('FCP observation not supported');
   }
@@ -196,6 +238,7 @@ function observeTTFB() {
     });
     
     observer.observe({ type: 'navigation', buffered: true });
+    performanceObservers.push(observer);
   } catch (e) {
     console.warn('TTFB observation not supported');
   }
@@ -220,6 +263,7 @@ function observeLongTasks() {
     });
     
     observer.observe({ type: 'longtask', buffered: true });
+    performanceObservers.push(observer);
   } catch (e) {
     console.warn('Long Task observation not supported');
   }
@@ -233,27 +277,62 @@ function observeResourceTiming() {
     const observer = new PerformanceObserver((list) => {
       const entries = list.getEntries();
       
+      // Filter and process only new entries to avoid duplicates
       entries.forEach((entry) => {
+        // Create unique identifier for the resource
+        const resourceId = `${entry.name}-${entry.startTime}`;
+        
+        // Skip if already reported
+        if (slowResourcesReported.has(resourceId)) {
+          return;
+        }
+        
+        // Check if we've reached the limit
+        if (slowResourceCount >= MAX_SLOW_RESOURCE_REPORTS) {
+          return;
+        }
+        
         // Track slow resources
         const loadTime = entry.responseEnd - entry.startTime;
         
-        if (loadTime > 1000) { // Resources taking more than 1 second
+        // Only report resources taking more than 2 seconds (increased threshold)
+        if (loadTime > 2000) {
+          slowResourcesReported.add(resourceId);
+          slowResourceCount++;
+          
           reportMetric({
             name: 'Slow Resource',
-            value: loadTime,
-            rating: 'poor',
+            value: Math.round(loadTime),
+            rating: loadTime > 4000 ? 'poor' : 'needs-improvement',
             entries: [entry],
             details: {
               name: entry.name,
               type: entry.initiatorType,
-              size: entry.transferSize,
+              size: entry.transferSize || 0,
             },
           });
         }
       });
     });
     
-    observer.observe({ type: 'resource', buffered: true });
+    // Only observe new resources, not buffered ones to prevent duplicate reports
+    observer.observe({ type: 'resource', buffered: false });
+    performanceObservers.push(observer);
+    
+    // Clean up observer after 30 seconds to prevent continuous monitoring
+    setTimeout(() => {
+      try {
+        observer.disconnect();
+        // Remove from performanceObservers array
+        const index = performanceObservers.indexOf(observer);
+        if (index > -1) {
+          performanceObservers.splice(index, 1);
+        }
+      } catch (e) {
+        // Ignore errors during cleanup
+      }
+    }, 30000);
+    
   } catch (e) {
     console.warn('Resource timing observation not supported');
   }
@@ -271,9 +350,30 @@ function reportMetric(metric) {
   // Ensure this only runs on the client
   if (typeof window === 'undefined') return;
   
-  // Send to Google Analytics
+  // Create unique identifier for this metric report
+  const metricId = `${metric.name}-${Math.round(metric.value)}-${metric.rating}`;
+  
+  // Skip if this exact metric has already been reported
+  if (reportedMetrics.has(metricId)) {
+    return;
+  }
+  
+  // Check rate limits per metric type
+  const currentCount = metricsReportCount.get(metric.name) || 0;
+  const maxReports = MAX_REPORTS_PER_METRIC[metric.name] || 3;
+  
+  if (currentCount >= maxReports) {
+    console.warn(`Rate limit reached for ${metric.name}, skipping report`);
+    return;
+  }
+  
+  // Update counters
+  reportedMetrics.add(metricId);
+  metricsReportCount.set(metric.name, currentCount + 1);
+  
+  // Send to Google Analytics with enhanced data
   if (window.gtag) {
-    window.gtag('event', metric.name, {
+    const eventData = {
       event_category: 'Web Vitals',
       value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
       event_label: metric.rating,
@@ -282,15 +382,26 @@ function reportMetric(metric) {
         metric_rating: metric.rating,
         metric_value: metric.value,
       },
-    });
+    };
+    
+    // Add additional context for Slow Resource events
+    if (metric.name === 'Slow Resource' && metric.details) {
+      eventData.custom_map.resource_type = metric.details.type;
+      eventData.custom_map.resource_name = metric.details.name.split('/').pop(); // Get filename only
+    }
+    
+    window.gtag('event', metric.name, eventData);
   }
   
-  // Send to console for debugging
-  console.log(`${metric.name}:`, {
-    value: metric.value,
-    rating: metric.rating,
-    isFinal: metric.isFinal || false,
-  });
+  // Send to console for debugging (limited)
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`${metric.name}:`, {
+      value: metric.value,
+      rating: metric.rating,
+      isFinal: metric.isFinal || false,
+      count: currentCount + 1,
+    });
+  }
   
   // Send to custom analytics endpoint if needed
   if (process.env.NODE_ENV === 'production') {
@@ -467,4 +578,27 @@ export function preloadCriticalResources() {
       document.head.appendChild(link);
     }
   });
+}
+
+// Stop performance monitoring and clean up observers
+export function stopPerformanceMonitoring() {
+  if (typeof window === 'undefined') return;
+  
+  performanceObservers.forEach(observer => {
+    try {
+      observer.disconnect();
+    } catch (e) {
+      // Ignore errors during cleanup
+    }
+  });
+  
+  performanceObservers = [];
+}
+
+// Reset performance monitoring counters
+export function resetPerformanceCounters() {
+  reportedMetrics.clear();
+  slowResourcesReported.clear();
+  slowResourceCount = 0;
+  metricsReportCount.clear();
 } 
