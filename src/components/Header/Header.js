@@ -17,7 +17,7 @@ import LocalizedLink from '../LocalizedLink';
 import { AnimatedBorderButton } from '../UI';
 import Image from 'next/image';
 
-const Header = () => {
+const Header = ({ menus }) => {
   const router = useRouter();
   const { pathname } = router;
   const isHomePage = pathname === '/';
@@ -310,15 +310,16 @@ const Header = () => {
                   تواصل معنا
                 </LocalizedLink>
               </li>
+              
+              {/* CTA Button positioned after menu items */}
+              <li className={styles.sidebarCta}>
+                <AnimatedBorderButton
+                  text="تواصل مع مستشارك السياحي"
+                  variant="gold"
+                  dropdownItems={getCtaDropdownItems()}
+                />
+              </li>
             </ul>
-
-            <div className={styles.sidebarCta}>
-              <AnimatedBorderButton
-                text="تواصل مع مستشارك السياحي"
-                variant="gold"
-                dropdownItems={getCtaDropdownItems()}
-              />
-            </div>
           </div>
 
           {/* Overlay */}

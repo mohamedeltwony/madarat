@@ -71,23 +71,6 @@ $breakpoint-large: 1200px;
       transition: all 0.3s ease;
       backdrop-filter: blur(3px);
     }
-
-    .menuButton {
-      color: white;
-      font-size: 1.5rem;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s ease;
-
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
   }
 
   // Scrolled state styles for all headers
@@ -357,21 +340,27 @@ $breakpoint-large: 1200px;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, 
+    rgba(12, 68, 68, 0.4) 0%, 
+    rgba(0, 0, 0, 0.6) 50%, 
+    rgba(12, 68, 68, 0.3) 100%
+  );
   z-index: 1490;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(8px);
   cursor: pointer;
   touch-action: none; /* Prevents scrolling on touch devices */
   -webkit-tap-highlight-color: transparent; /* Removes tap highlight on mobile */
-  animation: overlayFadeIn 0.5s forwards;
+  animation: overlayFadeIn 0.4s ease forwards;
 }
 
 @keyframes overlayFadeIn {
   from {
     opacity: 0;
+    backdrop-filter: blur(0px);
   }
   to {
     opacity: 1;
+    backdrop-filter: blur(8px);
   }
 }
 
@@ -411,19 +400,43 @@ $breakpoint-large: 1200px;
   position: fixed;
   top: 0;
   right: -100%;
-  width: 80%;
-  max-width: 350px;
+  width: 85%;
+  max-width: 380px;
   height: 100vh;
-  background-color: white;
+  background: linear-gradient(135deg, 
+    rgba(12, 68, 68, 0.98) 0%, 
+    rgba(12, 68, 68, 0.95) 50%, 
+    rgba(16, 76, 76, 0.98) 100%
+  );
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(204, 156, 100, 0.3);
   z-index: 1500;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0.8, 0.2, 1);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  box-shadow: -4px 0 25px rgba(0, 0, 0, 0.15);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
 
   &.active {
     right: 0;
+  }
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(204, 156, 100, 0.6);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgba(204, 156, 100, 0.8);
+    }
   }
 }
 
@@ -431,41 +444,63 @@ $breakpoint-large: 1200px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid $color-gray-200;
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid rgba(204, 156, 100, 0.2);
+  background: linear-gradient(90deg, 
+    rgba(204, 156, 100, 0.1) 0%, 
+    rgba(204, 156, 100, 0.05) 100%
+  );
 
   .logo {
     flex-grow: 1;
     text-align: center;
+    
+    // Add subtle glow to logo
+    img {
+      filter: drop-shadow(0 2px 8px rgba(204, 156, 100, 0.3));
+    }
   }
 
   .closeButton {
-    background: none;
-    border: none;
-    color: $color-gray-500;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(204, 156, 100, 0.3);
+    color: rgba(255, 255, 255, 0.9);
     font-size: 1.2rem;
     cursor: pointer;
-    padding: 0.5rem;
-    transition: color 0.2s ease;
+    padding: 0.75rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover {
-      color: $color-secondary;
+      background: rgba(204, 156, 100, 0.2);
+      color: #cc9c64;
+      transform: rotate(90deg) scale(1.1);
+      border-color: rgba(204, 156, 100, 0.6);
+    }
+
+    &:active {
+      transform: rotate(90deg) scale(0.95);
     }
   }
 }
 
 .sidebarMenu {
   list-style: none;
-  padding: 0.75rem 0;
+  padding: 1rem 0;
   margin: 0;
   flex-grow: 1;
 }
 
 .sidebarMenuItem {
-  border-bottom: 1px solid $color-gray-100;
-
+  margin-bottom: 0.5rem;
+  
   &:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
   }
 }
 
@@ -474,23 +509,67 @@ $breakpoint-large: 1200px;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  color: $color-gray-800;
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  border-radius: 0;
+  margin: 0 0.75rem;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+
+  // Subtle gradient background on hover
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(204, 156, 100, 0.15) 50%, 
+      transparent 100%
+    );
+    transition: left 0.5s ease;
+    z-index: 0;
+  }
 
   &:hover {
-    color: $color-secondary;
-    background-color: $color-gray-50;
+    color: #cc9c64;
+    background: rgba(204, 156, 100, 0.1);
+    transform: translateX(8px);
+    border-left: 3px solid #cc9c64;
+    
+    &::before {
+      left: 100%;
+    }
   }
 
   &.active {
-    color: $color-secondary;
-    background-color: $color-gray-50;
+    color: #cc9c64;
+    background: rgba(204, 156, 100, 0.15);
+    border-left: 3px solid #cc9c64;
+    font-weight: 600;
 
     .dropdownIcon {
       transform: rotate(180deg);
+      color: #cc9c64;
     }
+  }
+
+  // Ensure text is above the gradient overlay
+  span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .dropdownIcon {
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+    opacity: 0.8;
   }
 }
 
@@ -498,22 +577,44 @@ $breakpoint-large: 1200px;
   list-style: none;
   padding: 0;
   margin: 0;
-  background-color: $color-gray-50;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin: 0.5rem 0.75rem;
+  overflow: hidden;
 
   li {
-    border-top: 1px solid $color-gray-100;
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba(204, 156, 100, 0.1);
+    }
 
     a {
       display: block;
-      padding: 0.75rem 1.5rem 0.75rem 3rem;
-      color: $color-gray-700;
+      padding: 0.75rem 1.25rem 0.75rem 2.5rem;
+      color: rgba(255, 255, 255, 0.8);
       text-decoration: none;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      position: relative;
+
+      &::before {
+        content: '→';
+        position: absolute;
+        left: 1.25rem;
+        color: rgba(204, 156, 100, 0.6);
+        transition: all 0.3s ease;
+        transform: translateX(-4px);
+        opacity: 0;
+      }
 
       &:hover {
-        color: $color-secondary;
-        background-color: $color-gray-100;
+        color: #cc9c64;
+        background: rgba(204, 156, 100, 0.1);
+        transform: translateX(8px);
+        
+        &::before {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
     }
   }
@@ -524,15 +625,44 @@ $breakpoint-large: 1200px;
 }
 
 .sidebarCta {
-  padding: 1.5rem;
-  background-color: $color-gray-50;
-  border-top: 1px solid $color-gray-100;
+  padding: 1.25rem 1rem;
+  margin: 1rem 0.75rem 0.5rem 0.75rem;
+  background: linear-gradient(135deg, 
+    rgba(204, 156, 100, 0.2) 0%, 
+    rgba(204, 156, 100, 0.1) 100%
+  );
+  border-radius: 16px;
+  border: 1px solid rgba(204, 156, 100, 0.3);
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  
+  // Animated background effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(204, 156, 100, 0.1) 50%, 
+      transparent 100%
+    );
+    transition: left 0.8s ease;
+  }
+  
+  &:hover::before {
+    left: 100%;
+  }
 
   // Add some space for the button
   a,
   div {
     width: 100%;
+    position: relative;
+    z-index: 1;
   }
 
   // Ensure dropdown appears in the correct position
@@ -543,6 +673,30 @@ $breakpoint-large: 1200px;
       left: 0;
       right: 0;
       margin: 0 auto;
+    }
+  }
+  
+  // Style the AnimatedBorderButton inside
+  :global(.AnimatedBorderButton_button___VfPp) {
+    background: linear-gradient(135deg, #cc9c64 0%, #b8885a 100%) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.9rem 1.5rem !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(204, 156, 100, 0.3) !important;
+    transition: all 0.3s ease !important;
+    
+    &:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 6px 16px rgba(204, 156, 100, 0.4) !important;
+      background: linear-gradient(135deg, #b8885a 0%, #cc9c64 100%) !important;
+    }
+    
+    &:active {
+      transform: translateY(0) !important;
+      box-shadow: 0 2px 8px rgba(204, 156, 100, 0.3) !important;
     }
   }
 }
@@ -707,6 +861,7 @@ $breakpoint-large: 1200px;
 .tripHeaderActions {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
 }
 
 // Search container styles
@@ -1108,5 +1263,48 @@ $breakpoint-large: 1200px;
         padding-right: 1.3rem;
       }
     }
+  }
+}
+
+// Trip page menu button - improved styling
+.menuButton {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.3rem;
+  background: rgba(204, 156, 100, 0.2);
+  border: 1px solid rgba(204, 156, 100, 0.4);
+  cursor: pointer;
+  padding: 0.6rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  width: 44px;
+  height: 44px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  // Ensure icon is visible
+  svg {
+    color: rgba(255, 255, 255, 0.95);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  }
+
+  &:hover {
+    background: rgba(204, 156, 100, 0.3);
+    border-color: rgba(204, 156, 100, 0.7);
+    transform: scale(1.1);
+    color: #cc9c64;
+    box-shadow: 0 4px 12px rgba(204, 156, 100, 0.4);
+    
+    svg {
+      color: #cc9c64;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 4px rgba(204, 156, 100, 0.3);
   }
 }
