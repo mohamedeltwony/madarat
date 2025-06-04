@@ -235,6 +235,9 @@ export default function ThankYouCitizen() {
 
       console.log('Thank you page loaded with query params:', router.query);
       
+      // --- Detect trip source and get dynamic pricing (MOVED TO TOP) ---
+      const tripPricing = detectTripSource(router);
+      
       // --- Get User Data ---
       // 1. From Query Parameters
       const email = router.query.email || null;
@@ -298,9 +301,6 @@ export default function ThankYouCitizen() {
       // --- Google Ads Enhanced Conversion Tracking ---
       if (typeof window !== 'undefined' && window.gtag) {
         try {
-          // Detect trip source and get dynamic pricing
-          const tripPricing = detectTripSource(router);
-          
           // Prepare enhanced conversion data with all available user information and dynamic pricing
           const enhancedConversionData = {
             'send_to': 'AW-16691848441/Y1RHCJuO-dUZEPnJpZc-',
@@ -475,9 +475,6 @@ export default function ThankYouCitizen() {
       // --- Snapchat CUSTOM_EVENT_1 Conversion Tracking ---
       if (typeof window !== 'undefined' && window.snaptr) {
         try {
-          // Detect trip source and get dynamic pricing
-          const tripPricing = detectTripSource(router);
-          
           // Hash functions for user data
           const sha256Hash = async (str) => {
             if (!str) return null;
