@@ -192,7 +192,7 @@ const ContactForm = ({ price }) => {
         <FaCreditCard className={styles.installmentIcon} />
         <h3>الدفع بالتقسيط على أربع دفعات</h3>
         <div className={styles.installmentAmount}>
-          <span>{installmentAmount.toLocaleString('ar-SA')}</span> ريال / شهرياً
+          <span>{installmentAmount.toLocaleString('en-US')}</span> ريال / شهرياً
         </div>
       </div>
 
@@ -371,7 +371,7 @@ export default function SingleTrip({ trip, metadata, menus }) {
   const hasItineraries = trip.itineraries && Array.isArray(trip.itineraries) && trip.itineraries.length > 0;
   const hasFaqs = trip.faqs && Array.isArray(trip.faqs) && trip.faqs.length > 0;
   const featuredImage = trip.gallery && trip.gallery.length > 0 ? trip.gallery[0].src : '/images/placeholder.jpg';
-  const price = (trip.wp_travel_engine_setting_trip_actual_price || trip.price || 4999).toLocaleString('ar-SA');
+  const price = (trip.wp_travel_engine_setting_trip_actual_price || trip.price || 4999).toLocaleString('en-US');
   const handleBookNow = () => setIsBookingModalOpen(true);
   
   return (
@@ -539,7 +539,7 @@ export default function SingleTrip({ trip, metadata, menus }) {
               <FaCreditCard className={styles.installmentIcon} />
               <h3>الدفع بالتقسيط على أربع دفعات</h3>
               <div className={styles.installmentAmount}>
-                <span>{Math.ceil(parseInt(price.replace(/,/g, '')) / 4).toLocaleString('ar-SA')}</span> ريال / شهرياً
+                <span>{Math.ceil(parseInt(price.replace(/,/g, '')) / 4).toLocaleString('en-US')}</span> ريال / شهرياً
               </div>
             </div>
 

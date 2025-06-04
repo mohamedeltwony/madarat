@@ -171,7 +171,7 @@ export default function GeorgiaTrip() {
               تبليسي - برجومي - باتومي
               <br />
               السعر للشخص في الغرفة المزدوجة{' '}
-              <span className={styles.highlight}>{tripConfig?.price?.toLocaleString() || '3800'}</span> ريال
+              <span className={styles.highlight}>{tripConfig?.price?.toLocaleString('en-US') || '3,800'}</span> ريال
               <br />
               <span style={{ 
                 fontSize: '0.9em', 

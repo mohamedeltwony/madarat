@@ -138,6 +138,7 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 .galleryRow {
   display: flex;
   gap: 1rem;
+  align-items: stretch;
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -148,6 +149,7 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 .galleryMainCol {
   flex: 1;
   min-width: 0; // Prevent flex item from overflowing
+  display: flex; // Add this to make the container flexible
   
   @media (max-width: 768px) {
     width: 100%;
@@ -162,7 +164,8 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 .galleryMainImage {
   position: relative;
   width: 100%;
-  aspect-ratio: 16/9;
+  height: 100%; // Make it take full height of the container
+  // Remove aspect-ratio to let it match the grid height
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;

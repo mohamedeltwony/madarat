@@ -195,7 +195,7 @@ export function getTripsByCategory(category) {
 // Helper function to format price with currency
 export function formatTripPrice(trip) {
   if (!trip) return 'غير محدد';
-  return `${trip.price.toLocaleString()} ${trip.currency}`;
+  return `${trip.price.toLocaleString('en-US')} ${trip.currency}`;
 }
 
 // Helper function to get Snapchat tracking data for a trip
