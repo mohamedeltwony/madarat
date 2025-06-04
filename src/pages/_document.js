@@ -42,6 +42,88 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-5PQ58CMB');`
           }} />
 
+          {/* Snap Pixel Code */}
+          <script dangerouslySetInnerHTML={{
+            __html: `
+              (function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function()
+              {a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};
+              a.queue=[];var s='script';r=t.createElement(s);r.async=!0;
+              r.src=n;var u=t.getElementsByTagName(s)[0];
+              u.parentNode.insertBefore(r,u);})(window,document,
+              'https://sc-static.net/scevent.min.js');
+
+              snaptr('init', 'a9d0612f-6ca4-4b9a-a9a8-74310e3a4462', {
+                'user_email': '__INSERT_USER_EMAIL__'
+              });
+
+              // Enhanced PAGE_VIEW tracking with user data detection
+              function trackEnhancedPageView() {
+                try {
+                  // Get user data from localStorage or URL params
+                  let userData = {};
+                  
+                  // Try to get data from localStorage
+                  if (typeof localStorage !== 'undefined') {
+                    try {
+                      const profile = localStorage.getItem('userProfile');
+                      if (profile) {
+                        const parsedProfile = JSON.parse(profile);
+                        userData.user_email = parsedProfile.email;
+                        userData.user_phone_number = parsedProfile.phone;
+                        userData.firstname = parsedProfile.firstName;
+                        userData.uuid_c1 = parsedProfile.external_id || 'page_' + Date.now();
+                      }
+                    } catch (e) {
+                      console.warn('Error reading user profile for Snapchat PAGE_VIEW');
+                    }
+                  }
+                  
+                  // Get URL params for additional context
+                  const urlParams = new URLSearchParams(window.location.search);
+                  if (urlParams.get('email')) userData.user_email = urlParams.get('email');
+                  if (urlParams.get('phone')) userData.user_phone_number = urlParams.get('phone');
+                  if (urlParams.get('firstName')) userData.firstname = urlParams.get('firstName');
+                  if (urlParams.get('external_id')) userData.uuid_c1 = urlParams.get('external_id');
+                  
+                  // Add geographic data for Saudi Arabia
+                  userData.geo_country = 'SA';
+                  userData.geo_region = 'Riyadh';
+                  userData.geo_city = 'Riyadh';
+                  
+                  // Determine page category based on URL path
+                  const path = window.location.pathname;
+                  let item_category = 'website';
+                  if (path.includes('trip') || path.includes('destination')) {
+                    item_category = 'travel_packages';
+                  } else if (path.includes('blog') || path.includes('post')) {
+                    item_category = 'content';
+                  } else if (path.includes('thank-you')) {
+                    item_category = 'conversion';
+                  }
+                  
+                  userData.item_category = item_category;
+                  
+                  // Track enhanced PAGE_VIEW
+                  snaptr('track', 'PAGE_VIEW', userData);
+                  
+                  console.log('Enhanced Snapchat PAGE_VIEW tracked:', {
+                    page_path: path,
+                    item_category: item_category,
+                    has_user_data: !!(userData.user_email || userData.user_phone_number)
+                  });
+                  
+                } catch (error) {
+                  // Fallback to basic PAGE_VIEW
+                  snaptr('track', 'PAGE_VIEW');
+                  console.warn('Fallback to basic PAGE_VIEW due to error:', error);
+                }
+              }
+              
+              // Track on page load
+              trackEnhancedPageView();
+            `
+          }} />
+
           {/* Preload Critical Assets for LCP */}
           <link 
             rel="preload" 

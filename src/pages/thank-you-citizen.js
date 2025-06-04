@@ -358,6 +358,94 @@ export default function ThankYouCitizen() {
         }
       }
       
+      // --- Snapchat CUSTOM_EVENT_1 Conversion Tracking ---
+      if (typeof window !== 'undefined' && window.snaptr) {
+        try {
+          // Hash functions for user data
+          const sha256Hash = async (str) => {
+            if (!str) return null;
+            try {
+              const buffer = new TextEncoder().encode(str.toLowerCase().trim());
+              const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+              const hashArray = Array.from(new Uint8Array(hashBuffer));
+              return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            } catch (error) {
+              console.error('SHA-256 Hashing Error:', error);
+              return null;
+            }
+          };
+
+          // Prepare Snapchat conversion data
+          const snapchatData = {
+            uuid_c1: external_id || `citizen_conversion_${Date.now()}`,
+            transaction_id: eventId || `tx_${Date.now()}`,
+            item_ids: ['citizenship_service', 'travel_consultation'],
+            data_use: 'marketing',
+            user_email: email || null,
+            user_phone_number: phone ? phone.replace(/\D/g, '') : null,
+            firstname: firstName || (name ? name.split(' ')[0] : null),
+            lastname: lastName || (name && name.split(' ').length > 1 ? name.split(' ').slice(1).join(' ') : null),
+            age: null, // Not collected in the form
+            geo_city: 'Riyadh',
+            geo_country: 'SA',
+            geo_postal_code: null,
+            geo_region: 'Riyadh',
+            currency: 'SAR',
+            price: '10.00',
+            item_category: 'citizenship_services'
+          };
+
+          // Add hashed email and phone if available
+          if (email) {
+            snapchatData.user_hashed_email = await sha256Hash(email);
+          }
+          
+          if (phone) {
+            const cleanPhone = phone.replace(/\D/g, '');
+            // Add Saudi country code if not present
+            const formattedPhone = cleanPhone.startsWith('966') ? cleanPhone : `966${cleanPhone.replace(/^0/, '')}`;
+            snapchatData.user_phone_number = formattedPhone;
+            snapchatData.user_hashed_phone_number = await sha256Hash(formattedPhone);
+          }
+
+          // Remove null/undefined values
+          Object.keys(snapchatData).forEach(key => {
+            if (snapchatData[key] === null || snapchatData[key] === undefined) {
+              delete snapchatData[key];
+            }
+          });
+
+          // Track Snapchat CUSTOM_EVENT_1
+          window.snaptr('track', 'CUSTOM_EVENT_1', snapchatData);
+          
+          console.log('Snapchat CUSTOM_EVENT_1 tracked successfully:', {
+            uuid_c1: snapchatData.uuid_c1,
+            transaction_id: snapchatData.transaction_id,
+            has_email: !!snapchatData.user_email,
+            has_phone: !!snapchatData.user_phone_number,
+            has_name: !!(snapchatData.firstname || snapchatData.lastname),
+            item_category: snapchatData.item_category
+          });
+          
+        } catch (snapchatError) {
+          console.error('Snapchat CUSTOM_EVENT_1 Tracking Failed:', snapchatError);
+          
+          // Fallback to basic tracking
+          try {
+            window.snaptr('track', 'CUSTOM_EVENT_1', {
+              uuid_c1: external_id || `citizen_fallback_${Date.now()}`,
+              item_category: 'citizenship_services',
+              geo_country: 'SA'
+            });
+            console.log('Snapchat CUSTOM_EVENT_1 fallback tracking successful');
+          } catch (fallbackError) {
+            console.error('Snapchat fallback tracking also failed:', fallbackError);
+          }
+        }
+      } else {
+        console.warn('Snapchat pixel not loaded, CUSTOM_EVENT_1 tracking skipped');
+      }
+      
       // --- Send event to Facebook ---
       const result = await trackLeadEvent({
         ...userData,
