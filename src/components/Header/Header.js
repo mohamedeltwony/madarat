@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
@@ -92,21 +92,25 @@ const Header = ({ menus }) => {
   }, [isMobile]);
 
   // Handle scroll effect for transparent header on all pages
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
+  const handleScroll = useCallback(() => {
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    if (scrollY > 50) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  }, []);
 
-    window.addEventListener('scroll', handleScroll);
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Call once to set initial state
+    handleScroll();
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll, { passive: true });
     };
-  }, []);
+  }, [handleScroll]);
 
   // Auto-collapse header after 10 seconds of inactivity when expanded (desktop only)
   useEffect(() => {
@@ -203,8 +207,10 @@ const Header = ({ menus }) => {
 
   // For trip pages, use a simplified header with just logo and hamburger menu
   if (isTripPage) {
+    const headerClasses = `${styles.header} ${styles.tripHeader} ${scrolled ? styles.scrolled : ''}`;
+    
     return (
-      <header className={`${styles.header} ${styles.tripHeader}`}>
+      <header className={headerClasses}>
         <div className={styles.container}>
           <div className={styles.logo}>
             <LocalizedLink href="/">

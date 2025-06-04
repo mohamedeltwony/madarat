@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { getCsrfToken } from '@/utils/csrf';
 import { trackFormSubmission, trackTripBooking, sendGTMEvent } from '../../lib/gtm';
@@ -15,11 +15,15 @@ export default function TripForm({
   zapierConfig = {},
   onSuccess = () => {},
 }) {
-  // Build initial state from fields
-  const initialFormData = fields.reduce((acc, field) => {
-    acc[field.name] = field.defaultValue || '';
-    return acc;
-  }, { nationality: '' });
+  // Memoize initial form data to prevent infinite renders
+  const initialFormData = useMemo(() => {
+    const initial = fields.reduce((acc, field) => {
+      acc[field.name] = field.defaultValue || '';
+      return acc;
+    }, { nationality: '' });
+    return initial;
+  }, [fields]);
+
   const [formData, setFormData] = useState(initialFormData);
   const [formStarted, setFormStarted] = useState(false);
   const [phoneTouched, setPhoneTouched] = useState(false);
@@ -29,9 +33,12 @@ export default function TripForm({
 
   useEffect(() => {
     setCsrfToken(getCsrfToken());
+  }, []);
+
+  // Update form data only when initialFormData changes
+  useEffect(() => {
     setFormData(initialFormData);
-    // eslint-disable-next-line
-  }, [fields]);
+  }, [initialFormData]);
 
   const getBrowserAndDeviceInfo = (userAgent) => {
     const info = { browser: 'Unknown', os: 'Unknown', device: 'Unknown' };

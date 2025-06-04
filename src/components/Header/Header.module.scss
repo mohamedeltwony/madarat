@@ -55,7 +55,7 @@ $breakpoint-large: 1200px;
 
   // Trip page header styles
   &.tripHeader {
-    position: absolute; // Not fixed/sticky, just absolute for trip pages
+    position: fixed; // Changed from absolute to fixed so it stays in place during scroll
 
     .container {
       padding: 8px 16px;
@@ -70,6 +70,16 @@ $breakpoint-large: 1200px;
       max-width: calc(100% - 20px);
       transition: all 0.3s ease;
       backdrop-filter: blur(3px);
+    }
+
+    // Scrolled state for trip header - this needs to be inside tripHeader for specificity
+    &.scrolled {
+      .container {
+        background-color: rgba(16, 76, 68, 0.9) !important; // More opaque for trip pages
+        border-radius: 35px; // Keep the original trip header border radius
+        backdrop-filter: blur(20px) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+      }
     }
   }
 
