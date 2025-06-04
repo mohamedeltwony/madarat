@@ -8,6 +8,7 @@ import confetti from 'canvas-confetti';
 import { trackLeadEvent, getFacebookParams } from '@/utils/facebookTracking'; // Import tracking functions
 import { sendGTMEvent, trackFormSubmission } from '@/lib/gtm';
 import { saveUserProfile, getUserTrackingData } from '@/utils/userIdentification';
+import { getTripConfig, getTripConfigByPath, formatTripPrice } from '@/data/trips'; // Import trip configuration
 
 // Helper function to get cookie value by name
 const getCookieValue = (name) => {
@@ -74,6 +75,110 @@ function cleanUserData(data) {
   cleaned.nationality = data.nationality || null;
   
   return cleaned;
+}
+
+// Function to detect trip source and get dynamic pricing
+function detectTripSource(router) {
+  const result = {
+    tripConfig: null,
+    price: '10.00', // Default price for general inquiries
+    currency: 'SAR',
+    item_category: 'citizenship_services',
+    item_ids: ['citizenship_service'],
+    trip_destination: 'general_inquiry'
+  };
+
+  // Check URL parameters for trip source
+  if (router && router.query) {
+    const tripSource = router.query.trip_source || router.query.source;
+    
+    if (tripSource) {
+      const tripConfig = getTripConfig(tripSource);
+      if (tripConfig) {
+        result.tripConfig = tripConfig;
+        result.price = tripConfig.price.toString();
+        result.currency = tripConfig.currency;
+        result.item_category = tripConfig.category;
+        result.item_ids = [tripConfig.id, tripConfig.nameEn || tripConfig.name];
+        result.trip_destination = tripConfig.destination;
+        
+        console.log('Dynamic trip pricing detected:', {
+          trip_id: tripConfig.id,
+          trip_name: tripConfig.name,
+          price: result.price,
+          currency: result.currency
+        });
+        
+        return result;
+      }
+    }
+  }
+
+  // Check referrer for trip pages
+  if (typeof window !== 'undefined' && document.referrer) {
+    try {
+      const referrerUrl = new URL(document.referrer);
+      const referrerPath = referrerUrl.pathname;
+      
+      // Check if referrer is a trip page
+      const tripConfig = getTripConfigByPath(referrerPath);
+      if (tripConfig) {
+        result.tripConfig = tripConfig;
+        result.price = tripConfig.price.toString();
+        result.currency = tripConfig.currency;
+        result.item_category = tripConfig.category;
+        result.item_ids = [tripConfig.id, tripConfig.nameEn || tripConfig.name];
+        result.trip_destination = tripConfig.destination;
+        
+        console.log('Dynamic trip pricing detected from referrer:', {
+          referrer: referrerPath,
+          trip_id: tripConfig.id,
+          trip_name: tripConfig.name,
+          price: result.price,
+          currency: result.currency
+        });
+        
+        return result;
+      }
+    } catch (error) {
+      console.warn('Error parsing referrer URL for trip detection:', error);
+    }
+  }
+
+  // Check localStorage for recent trip page visits
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      const recentTrip = localStorage.getItem('lastVisitedTrip');
+      if (recentTrip) {
+        const tripData = JSON.parse(recentTrip);
+        const tripConfig = getTripConfig(tripData.tripId);
+        
+        if (tripConfig && tripData.timestamp && (Date.now() - tripData.timestamp < 30 * 60 * 1000)) { // 30 minutes
+          result.tripConfig = tripConfig;
+          result.price = tripConfig.price.toString();
+          result.currency = tripConfig.currency;
+          result.item_category = tripConfig.category;
+          result.item_ids = [tripConfig.id, tripConfig.nameEn || tripConfig.name];
+          result.trip_destination = tripConfig.destination;
+          
+          console.log('Dynamic trip pricing detected from localStorage:', {
+            trip_id: tripConfig.id,
+            trip_name: tripConfig.name,
+            price: result.price,
+            currency: result.currency,
+            last_visit: new Date(tripData.timestamp).toLocaleString()
+          });
+          
+          return result;
+        }
+      }
+    } catch (error) {
+      console.warn('Error reading trip data from localStorage:', error);
+    }
+  }
+
+  console.log('No specific trip detected, using default pricing for general inquiry');
+  return result;
 }
 
 export default function ThankYouCitizen() {
@@ -193,11 +298,14 @@ export default function ThankYouCitizen() {
       // --- Google Ads Enhanced Conversion Tracking ---
       if (typeof window !== 'undefined' && window.gtag) {
         try {
-          // Prepare enhanced conversion data with all available user information
+          // Detect trip source and get dynamic pricing
+          const tripPricing = detectTripSource(router);
+          
+          // Prepare enhanced conversion data with all available user information and dynamic pricing
           const enhancedConversionData = {
             'send_to': 'AW-16691848441/Y1RHCJuO-dUZEPnJpZc-',
-            'value': 10.0,
-            'currency': 'SAR',
+            'value': parseFloat(tripPricing.price),
+            'currency': tripPricing.currency,
             'transaction_id': external_id || eventId || `citizen_${Date.now()}`,
             'custom_parameters': {
               'user_type': 'citizen',
@@ -212,7 +320,13 @@ export default function ThankYouCitizen() {
               'timestamp': new Date().toISOString(),
               'page_url': window.location.href,
               'page_title': document.title,
-              'user_language': 'ar'
+              'user_language': 'ar',
+              // Add trip-specific data
+              'trip_detected': !!tripPricing.tripConfig,
+              'trip_name': tripPricing.tripConfig?.name || 'General Inquiry',
+              'trip_destination': tripPricing.trip_destination,
+              'trip_category': tripPricing.item_category,
+              'dynamic_pricing': tripPricing.price !== '10.00' // Flag if non-default pricing was used
             }
           };
 
@@ -252,8 +366,8 @@ export default function ThankYouCitizen() {
           
           console.log('Google Ads enhanced conversion tracked successfully:', {
             conversion_id: 'AW-16691848441/Y1RHCJuO-dUZEPnJpZc-',
-            value: 10.0,
-            currency: 'SAR',
+            value: parseFloat(tripPricing.price),
+            currency: tripPricing.currency,
             transaction_id: enhancedConversionData.transaction_id,
             has_user_data: !!enhancedConversionData.user_data,
             user_data_fields: enhancedConversionData.user_data ? Object.keys(enhancedConversionData.user_data) : []
@@ -267,8 +381,8 @@ export default function ThankYouCitizen() {
               'lead_type': 'citizen_form_submission',
               'conversion_id': 'AW-16691848441',
               'conversion_label': 'Y1RHCJuO-dUZEPnJpZc-',
-              'conversion_value': 10.0,
-              'currency': 'SAR',
+              'conversion_value': parseFloat(tripPricing.price),
+              'currency': tripPricing.currency,
               'transaction_id': enhancedConversionData.transaction_id,
               'user_type': 'citizen',
               'nationality': 'مواطن',
@@ -296,8 +410,8 @@ export default function ThankYouCitizen() {
               'event': 'google_ads_conversion',
               'google_ads_conversion_id': 'AW-16691848441',
               'google_ads_conversion_label': 'Y1RHCJuO-dUZEPnJpZc-',
-              'conversion_value': 10.0,
-              'currency': 'SAR',
+              'conversion_value': parseFloat(tripPricing.price),
+              'currency': tripPricing.currency,
               'transaction_id': enhancedConversionData.transaction_id,
               'user_type': 'citizen',
               'nationality': 'مواطن',
@@ -318,8 +432,8 @@ export default function ThankYouCitizen() {
           if (window.gtag) {
             window.gtag('event', 'conversion', {
               'send_to': 'AW-16691848441/Y1RHCJuO-dUZEPnJpZc-',
-              'value': 10.0,
-              'currency': 'SAR',
+              'value': parseFloat(tripPricing.price),
+              'currency': tripPricing.currency,
               'transaction_id': external_id || eventId || `citizen_${Date.now()}`
             });
             console.log('Fallback Google Ads conversion tracked');
@@ -330,8 +444,8 @@ export default function ThankYouCitizen() {
             window.dataLayer.push({
               'event': 'lead',
               'lead_type': 'citizen_form_submission_fallback',
-              'conversion_value': 10.0,
-              'currency': 'SAR',
+              'conversion_value': parseFloat(tripPricing.price),
+              'currency': tripPricing.currency,
               'user_type': 'citizen',
               'nationality': 'مواطن',
               'form_name': 'citizenship_form',
@@ -347,8 +461,8 @@ export default function ThankYouCitizen() {
           window.dataLayer.push({
             'event': 'lead',
             'lead_type': 'citizen_form_submission_no_gtag',
-            'conversion_value': 10.0,
-            'currency': 'SAR',
+            'conversion_value': parseFloat(tripPricing.price),
+            'currency': tripPricing.currency,
             'user_type': 'citizen',
             'nationality': 'مواطن',
             'form_name': 'citizenship_form',
@@ -361,6 +475,9 @@ export default function ThankYouCitizen() {
       // --- Snapchat CUSTOM_EVENT_1 Conversion Tracking ---
       if (typeof window !== 'undefined' && window.snaptr) {
         try {
+          // Detect trip source and get dynamic pricing
+          const tripPricing = detectTripSource(router);
+          
           // Hash functions for user data
           const sha256Hash = async (str) => {
             if (!str) return null;
@@ -375,11 +492,11 @@ export default function ThankYouCitizen() {
             }
           };
 
-          // Prepare Snapchat conversion data
+          // Prepare Snapchat conversion data with dynamic pricing
           const snapchatData = {
             uuid_c1: external_id || `citizen_conversion_${Date.now()}`,
             transaction_id: eventId || `tx_${Date.now()}`,
-            item_ids: ['citizenship_service', 'travel_consultation'],
+            item_ids: tripPricing.item_ids,
             data_use: 'marketing',
             user_email: email || null,
             user_phone_number: phone ? phone.replace(/\D/g, '') : null,
@@ -390,9 +507,16 @@ export default function ThankYouCitizen() {
             geo_country: 'SA',
             geo_postal_code: null,
             geo_region: 'Riyadh',
-            currency: 'SAR',
-            price: '10.00',
-            item_category: 'citizenship_services'
+            currency: tripPricing.currency,
+            price: tripPricing.price,
+            item_category: tripPricing.item_category,
+            // Add trip-specific data if available
+            ...(tripPricing.tripConfig && {
+              trip_id: tripPricing.tripConfig.id,
+              trip_name: tripPricing.tripConfig.name,
+              trip_destination: tripPricing.trip_destination,
+              trip_duration: tripPricing.tripConfig.duration_days
+            })
           };
 
           // Add hashed email and phone if available
@@ -415,29 +539,35 @@ export default function ThankYouCitizen() {
             }
           });
 
-          // Track Snapchat CUSTOM_EVENT_1
+          // Track Snapchat CUSTOM_EVENT_1 with dynamic pricing
           window.snaptr('track', 'CUSTOM_EVENT_1', snapchatData);
           
-          console.log('Snapchat CUSTOM_EVENT_1 tracked successfully:', {
+          console.log('Snapchat CUSTOM_EVENT_1 tracked successfully with dynamic pricing:', {
             uuid_c1: snapchatData.uuid_c1,
             transaction_id: snapchatData.transaction_id,
+            price: snapchatData.price,
+            currency: snapchatData.currency,
+            item_category: snapchatData.item_category,
+            trip_detected: !!tripPricing.tripConfig,
+            trip_name: tripPricing.tripConfig?.name || 'General Inquiry',
             has_email: !!snapchatData.user_email,
             has_phone: !!snapchatData.user_phone_number,
-            has_name: !!(snapchatData.firstname || snapchatData.lastname),
-            item_category: snapchatData.item_category
+            has_name: !!(snapchatData.firstname || snapchatData.lastname)
           });
           
         } catch (snapchatError) {
           console.error('Snapchat CUSTOM_EVENT_1 Tracking Failed:', snapchatError);
           
-          // Fallback to basic tracking
+          // Fallback to basic tracking with default pricing
           try {
             window.snaptr('track', 'CUSTOM_EVENT_1', {
               uuid_c1: external_id || `citizen_fallback_${Date.now()}`,
               item_category: 'citizenship_services',
-              geo_country: 'SA'
+              geo_country: 'SA',
+              price: '10.00',
+              currency: 'SAR'
             });
-            console.log('Snapchat CUSTOM_EVENT_1 fallback tracking successful');
+            console.log('Snapchat CUSTOM_EVENT_1 fallback tracking successful with default pricing');
           } catch (fallbackError) {
             console.error('Snapchat fallback tracking also failed:', fallbackError);
           }
@@ -456,8 +586,8 @@ export default function ThankYouCitizen() {
         content_name: 'Citizenship Form Submission',
         lead_event_source: 'thank-you-page',
         form_id: 'citizen-form',
-        value: 10, // Estimated value of this lead
-        currency: 'SAR'
+        value: parseFloat(tripPricing.price),
+        currency: tripPricing.currency
       });
       
       console.log('Tracking result:', result);
@@ -466,8 +596,8 @@ export default function ThankYouCitizen() {
       await sendGTMEvent({
         event: 'conversion',
         conversion_type: 'lead',
-        conversion_value: 10,
-        currency: 'SAR',
+        conversion_value: parseFloat(tripPricing.price),
+        currency: tripPricing.currency,
         user_type: 'citizen',
         nationality: 'مواطن',
         form_name: 'citizenship_form',
@@ -495,8 +625,8 @@ export default function ThankYouCitizen() {
       // Track as completed form submission (now enhanced with persistent data)
       await trackFormSubmission('citizenship_form_complete', {
         form_location: 'thank-you-citizen',
-        conversion_value: 10,
-        currency: 'SAR',
+        conversion_value: parseFloat(tripPricing.price),
+        currency: tripPricing.currency,
         user_type: 'citizen',
         lead_quality: 'high',
         completion_time: new Date().toISOString(),
@@ -526,14 +656,14 @@ export default function ThankYouCitizen() {
         event: 'purchase',
         ecommerce: {
           transaction_id: router.query.external_id || eventId,
-          value: 10,
-          currency: 'SAR',
+          value: parseFloat(tripPricing.price),
+          currency: tripPricing.currency,
           items: [{
             item_id: 'citizen-lead',
             item_name: 'Citizen Lead Conversion',
             item_category: 'Lead Generation',
             item_variant: 'Citizen',
-            price: 10,
+            price: parseFloat(tripPricing.price),
             quantity: 1
           }]
         },
@@ -548,8 +678,8 @@ export default function ThankYouCitizen() {
         },
         // Add additional context
         conversion_type: 'lead',
-        conversion_value: 10,
-        currency: 'SAR',
+        conversion_value: parseFloat(tripPricing.price),
+        currency: tripPricing.currency,
         form_name: 'citizenship_form',
         page_type: 'thank_you',
         lead_source: 'website',

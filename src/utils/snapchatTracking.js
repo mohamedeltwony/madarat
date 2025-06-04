@@ -195,4 +195,23 @@ export function getUserDataFromSources(router = null) {
   userData.uuid_c1 = userData.external_id || `user_${Date.now()}`;
   
   return userData;
+}
+
+// Store trip page visit for later price detection
+export function storeLastVisitedTrip(tripId) {
+  if (typeof window !== 'undefined' && window.localStorage && tripId) {
+    try {
+      const tripData = {
+        tripId: tripId,
+        timestamp: Date.now(),
+        url: window.location.href,
+        pathname: window.location.pathname
+      };
+      
+      localStorage.setItem('lastVisitedTrip', JSON.stringify(tripData));
+      console.log('Last visited trip stored for dynamic pricing:', tripId);
+    } catch (error) {
+      console.warn('Error storing last visited trip:', error);
+    }
+  }
 } 

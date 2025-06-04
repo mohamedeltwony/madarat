@@ -12,7 +12,7 @@ import styles from '@/styles/pages/LondonScotland.module.scss';
 // Removed getSiteMetadata import as it's no longer fetched here
 import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though unused in getStaticProps
 import TripForm from '../components/TripForm/TripForm';
-import { trackSnapchatViewContent, getUserDataFromSources } from '@/utils/snapchatTracking';
+import { trackSnapchatViewContent, getUserDataFromSources, storeLastVisitedTrip } from '@/utils/snapchatTracking';
 import { getTripConfig, getSnapchatTripData } from '@/data/trips';
 
 // Removed SVG Icon imports
@@ -58,6 +58,9 @@ export default function LondonScotlandTrip() {
   useEffect(() => {
     const trackViewContent = async () => {
       const userData = getUserDataFromSources(router);
+      
+      // Store this trip visit for dynamic pricing detection
+      storeLastVisitedTrip('london-scotland-trip');
       
       await trackSnapchatViewContent({
         userData,

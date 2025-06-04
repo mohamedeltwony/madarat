@@ -35,6 +35,8 @@ import Layout from '../../components/Layout';
 import Container from '../../components/Container';
 import Section from '../../components/Section';
 import styles from '../../styles/pages/SimpleTripPage.module.scss';
+import { getTripConfig, getSnapchatTripData } from '@/data/trips';
+import { getUserDataFromSources, storeLastVisitedTrip } from '@/utils/snapchatTracking';
 import { useRouter } from 'next/router';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
@@ -44,6 +46,8 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
 import jwt_decode from 'jwt-decode';
+import TripForm from '@/components/TripForm';
+import { trackSnapchatViewContent } from '@/utils/snapchatTracking';
 
 // Function to decode HTML entities
 const decodeHtmlEntities = (text) => {
@@ -217,117 +221,6 @@ const ContactForm = ({ price }) => {
   );
 };
 
-// Add this before the SingleTrip component
-const TripForm = ({ tripTitle, price }) => {
-  const [formData, setFormData] = useState({
-    phone: '',
-    name: '',
-    email: '',
-    nationality: ''
-  });
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Here you can handle the form submission
-    console.log('Form submitted:', { ...formData, tripTitle });
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  return (
-    <form className={styles.tripForm} onSubmit={handleSubmit}>
-      <div className={`${styles.formGroup} ${styles.phoneGroup}`}>
-        <label htmlFor="phone" className={styles.formLabel}>الجوال</label>
-        <div className={styles.phoneInput}>
-          <input
-            type="tel"
-            id="phone"
-            className={styles.formInput}
-            name="phone"
-            placeholder=" "
-            autoComplete="tel"
-            required
-            value={formData.phone}
-            onChange={handleChange}
-          />
-          <span className={styles.countryCode}>+966</span>
-        </div>
-      </div>
-
-      <div className={styles.formGroup}>
-        <input
-          type="text"
-          id="name"
-          className={styles.formInput}
-          name="name"
-          placeholder=" "
-          autoComplete="name"
-          value={formData.name}
-          onChange={handleChange}
-        />
-        <label htmlFor="name" className={styles.formLabel}>الاسم الكامل (اختياري)</label>
-      </div>
-
-      <div className={styles.formGroup}>
-        <input
-          type="email"
-          id="email"
-          className={styles.formInput}
-          name="email"
-          placeholder=" "
-          autoComplete="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <label htmlFor="email" className={styles.formLabel}>البريد الإلكتروني (اختياري)</label>
-      </div>
-
-      <div className={`${styles.formGroup} ${styles.nationalityGroup}`}>
-        <div className={styles.radioGroup}>
-          <label className={styles.radioLabel}>
-            <input
-              type="radio"
-              name="nationality"
-              required
-              value="مواطن"
-              checked={formData.nationality === "مواطن"}
-              onChange={handleChange}
-            />
-            <span>مواطن</span>
-          </label>
-          <label className={styles.radioLabel}>
-            <input
-              type="radio"
-              name="nationality"
-              required
-              value="مقيم"
-              checked={formData.nationality === "مقيم"}
-              onChange={handleChange}
-            />
-            <span>مقيم</span>
-          </label>
-        </div>
-      </div>
-
-      <div className={styles.formActions}>
-        <button className={styles.sparkleButton} type="submit" dir="auto">
-          <div className={styles.buttonGlow}></div>
-          <span className={styles.buttonContent}>
-            <div></div>
-            <span>اضغط هنا وارسل بياناتك وبيتواصل معاك واحد من متخصصين السياحة عندنا</span>
-          </span>
-        </button>
-      </div>
-    </form>
-  );
-};
-
 export default function SingleTrip({ trip, metadata, menus }) {
   const router = useRouter();
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -430,6 +323,29 @@ export default function SingleTrip({ trip, metadata, menus }) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isBookingCardExpanded]);
+
+  // Track Snapchat VIEW_CONTENT event on page load
+  useEffect(() => {
+    if (!trip || !getSnapchatTripData(trip.slug)) return;
+    
+    // Store this trip visit for dynamic pricing detection
+    if (trip?.slug) {
+      storeLastVisitedTrip(trip.slug);
+    }
+    
+    const trackViewContent = async () => {
+      const userData = getUserDataFromSources(router);
+      
+      await trackSnapchatViewContent({
+        userData,
+        ...getSnapchatTripData(trip.slug)
+      });
+    };
+    
+    // Track after a short delay to ensure page is loaded
+    const timer = setTimeout(trackViewContent, 1000);
+    return () => clearTimeout(timer);
+  }, [trip?.slug, router]);
 
   // Show loading state during fallback
   if (router.isFallback) {
