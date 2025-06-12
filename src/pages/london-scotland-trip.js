@@ -12,6 +12,7 @@ import styles from '@/styles/pages/LondonScotland.module.scss';
 // Removed getSiteMetadata import as it's no longer fetched here
 import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though unused in getStaticProps
 import TripForm from '../components/TripForm/TripForm';
+import { getCsrfToken } from '@/utils/csrf';
 
 // Removed SVG Icon imports
 
@@ -45,6 +46,9 @@ export default function LondonScotlandTrip() {
   const [phoneTouched, setPhoneTouched] = useState(false); // Track if phone field was interacted with
   const [isPhoneValid, setIsPhoneValid] = useState(true); // Track phone validity, assume valid initially
   const [isLoading, setIsLoading] = useState(false); // Add loading state
+
+  // Get CSRF token
+  const csrfToken = getCsrfToken();
 
   // Helper function to send events to the backend API
   const sendFbEvent = async (eventName, data, eventId = null) => {
@@ -357,6 +361,7 @@ export default function LondonScotlandTrip() {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'csrf-token': csrfToken,
             },
             body: JSON.stringify(zapierPayload),
           });

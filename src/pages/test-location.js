@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import { useGeolocation } from '@/hooks/useGeolocation';
+import { getCsrfToken } from '@/utils/csrf';
 import LocationIndicator from '@/components/LocationIndicator/LocationIndicator';
 import styles from '@/styles/pages/TestLocation.module.scss';
 
@@ -16,6 +17,9 @@ const TestLocationPage = () => {
   });
   const [submissionResult, setSubmissionResult] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Get CSRF token
+  const csrfToken = getCsrfToken();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -48,6 +52,7 @@ const TestLocationPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'csrf-token': csrfToken,
         },
         body: JSON.stringify(payload),
       });

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useGeolocation } from '@/hooks/useGeolocation';
+import { getCsrfToken } from '@/utils/csrf';
 import {
   FaMapMarkerAlt,
   FaPhone,
@@ -37,7 +38,31 @@ const ContactPage = () => {
   const [submitStatus, setSubmitStatus] = useState(null);
 
   // Get geolocation data
-  const { getLocationForForm, getDisplayLocation } = useGeolocation();
+  const { location, loading: locationLoading, error: locationError } = useGeolocation();
+
+  // Get location data for form submission
+  const getLocationForForm = () => {
+    if (!location) return {};
+    
+    return {
+      client_city: location.city,
+      client_region: location.region, 
+      client_country: location.country,
+      client_country_code: location.country_code,
+      client_latitude: location.latitude,
+      client_longitude: location.longitude,
+      client_timezone: location.timezone,
+      client_isp: location.isp,
+      client_location_display: location.display,
+      client_location_valid: location.valid,
+      client_location_source: location.source,
+      client_local_time: location.local_time,
+      client_timezone_offset: location.timezone_offset,
+    };
+  };
+
+  // Get CSRF token
+  const csrfToken = getCsrfToken();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,6 +105,7 @@ const ContactPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'csrf-token': csrfToken,
         },
         body: JSON.stringify(submissionData),
       });

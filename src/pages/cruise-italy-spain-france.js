@@ -13,6 +13,7 @@ import styles from '@/styles/pages/LondonScotland.module.scss'; // Keep using th
 import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though unused in getStaticProps
 // Removed getSiteMetadata import as it's no longer fetched here
 import TripForm from '../components/TripForm/TripForm';
+import { getCsrfToken } from '@/utils/csrf';
 
 // Removed SVG Icon imports
 
@@ -239,6 +240,9 @@ export default function CruiseItalySpainFrance() {
     }
   };
 
+  // Get CSRF token
+  const csrfToken = getCsrfToken();
+
   const handleSubmit = async (e) => {
     // Make handleSubmit async
     e.preventDefault();
@@ -341,6 +345,7 @@ export default function CruiseItalySpainFrance() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'csrf-token': csrfToken,
           },
           body: JSON.stringify(zapierPayload),
         });
