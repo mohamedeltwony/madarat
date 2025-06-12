@@ -53,9 +53,9 @@ $breakpoint-large: 1200px;
     }
   }
 
-  // Trip page header styles
+  // Trip page header styles - now with absolute positioning for single trip pages
   &.tripHeader {
-    position: fixed; // Changed from absolute to fixed so it stays in place during scroll
+    position: absolute; // Changed to absolute - header overlays hero but doesn't stick
 
     .container {
       padding: 8px 16px;
