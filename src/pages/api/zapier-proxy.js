@@ -1,6 +1,7 @@
 // Zapier proxy API endpoint to avoid CORS issues
 // This will relay requests from the form to Zapier's webhook
 import { csrf } from '@/utils/csrf';
+import { getLocationWithFallback, formatLocationForDisplay, getLocationAwareTimestamp, isValidLocation } from '@/utils/geolocation';
 
 // Create a handler that will be wrapped with CSRF protection
 async function handler(req, res) {
@@ -42,12 +43,44 @@ async function handler(req, res) {
     } else {
       console.log('Client IP address:', ip);
     }
+
+    // Get location data from IP address
+    console.log('Getting location data for form submission...');
+    const locationData = await getLocationWithFallback(ip);
+    const locationTimestamps = getLocationAwareTimestamp(locationData);
+    const displayLocation = formatLocationForDisplay(locationData);
+    const validLocation = isValidLocation(locationData);
+
+    console.log('Location data retrieved:', {
+      city: locationData.city,
+      country: locationData.country,
+      display: displayLocation,
+      valid: validLocation,
+      source: locationData.source
+    });
     
-    // Add IP address to the payload without overriding client data
+    // Add IP address and geolocation to the payload without overriding client data
     const enhancedPayload = {
       ...req.body,
       // Only set IP if not already provided by client
       ip_address: req.body.ip_address || ip || 'unknown',
+      
+      // Add geolocation data
+      client_city: locationData.city,
+      client_region: locationData.region,
+      client_country: locationData.country,
+      client_country_code: locationData.country_code,
+      client_latitude: locationData.latitude,
+      client_longitude: locationData.longitude,
+      client_timezone: locationData.timezone,
+      client_isp: locationData.isp,
+      client_location_display: displayLocation,
+      client_location_valid: validLocation,
+      client_location_source: locationData.source,
+      
+      // Add timezone-aware timestamps
+      client_local_time: locationTimestamps.local,
+      client_timezone_offset: locationTimestamps.timezone,
       
       // Add server-side headers if not provided by client
       server_user_agent: req.headers['user-agent'] || 'unknown',

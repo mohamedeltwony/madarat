@@ -1,0 +1,79 @@
+// Styles for the LocationIndicator component
+
+.locationIndicator {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: rgba(12, 68, 68, 0.05);
+  border: 1px solid rgba(12, 68, 68, 0.1);
+  font-family: 'Cairo', sans-serif;
+  
+  .locationContent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .icon {
+      color: #0c4444;
+      font-size: 14px;
+      
+      &.spinning {
+        animation: spin 1s linear infinite;
+      }
+    }
+    
+    .text {
+      color: #0c4444;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+  
+  .privacy {
+    margin-top: 4px;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+}
+
+// Spinning animation for loading state
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Variants for different contexts
+.locationIndicator.compact {
+  padding: 4px 8px;
+  margin: 4px 0;
+  
+  .locationContent {
+    .icon {
+      font-size: 12px;
+    }
+    
+    .text {
+      font-size: 12px;
+    }
+  }
+}
+
+.locationIndicator.inForm {
+  background-color: rgba(204, 156, 100, 0.1);
+  border-color: rgba(204, 156, 100, 0.2);
+  
+  .locationContent {
+    .icon {
+      color: #cc9c64;
+    }
+    
+    .text {
+      color: #cc9c64;
+    }
+  }
+} 

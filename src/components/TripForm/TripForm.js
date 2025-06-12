@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { getCsrfToken } from '@/utils/csrf';
 import { trackFormSubmission, trackTripBooking, sendGTMEvent } from '../../lib/gtm';
 import { saveUserProfile, getUserTrackingData } from '@/utils/userIdentification';
+import { useGeolocation } from '@/hooks/useGeolocation';
 // Lazy load the SparkleButton component
 const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), { 
   ssr: false,
@@ -30,6 +31,9 @@ export default function TripForm({
   const [isPhoneValid, setIsPhoneValid] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [csrfToken, setCsrfToken] = useState('');
+
+  // Get geolocation data
+  const { locationData, loading: locationLoading, getLocationForForm, getDisplayLocation } = useGeolocation();
 
   useEffect(() => {
     setCsrfToken(getCsrfToken());
@@ -192,6 +196,9 @@ export default function TripForm({
       if (formData.nationality === 'مواطن') {
         sendFbEvent('Lead', formData, leadEventId).catch(() => {});
       }
+      // Get location data for form submission
+      const formLocationData = getLocationForForm();
+
       // Build payload from all fields, nationality, and extraPayload
       const zapierPayload = {
         ...fields.reduce((acc, field) => {
@@ -211,6 +218,8 @@ export default function TripForm({
           'hesham@madaratalkon.com',
         ],
         ...clientData,
+        // Add geolocation data
+        ...formLocationData,
       };
       const response = await fetch(zapierConfig.endpoint || '/api/zapier-proxy', {
         method: 'POST',

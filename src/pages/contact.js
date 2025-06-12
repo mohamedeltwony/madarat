@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useGeolocation } from '@/hooks/useGeolocation';
 import {
   FaMapMarkerAlt,
   FaPhone,
@@ -35,6 +36,9 @@ const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
+  // Get geolocation data
+  const { getLocationForForm, getDisplayLocation } = useGeolocation();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -48,19 +52,51 @@ const ContactPage = () => {
     setIsSubmitting(true);
 
     try {
-      // Here you would send the data to your backend
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Get location data for submission
+      const locationData = getLocationForForm();
 
-      // Simulate successful submission
-      setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
+      // Prepare submission data
+      const submissionData = {
+        ...formData,
+        formSource: 'contact-form',
+        formName: 'Contact Form',
+        pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+        timestamp: new Date().toISOString(),
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        externalId: crypto.randomUUID(),
+        // Add geolocation data
+        ...locationData,
+      };
+
+      console.log('Contact form submission with location:', {
+        city: locationData?.client_city,
+        country: locationData?.client_country,
+        display: locationData?.client_location_display
       });
+
+      // Send to Zapier via the proxy
+      const response = await fetch('/api/zapier-proxy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      });
+
+      if (response.ok) {
+        console.log('Contact form submitted successfully with location data');
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: '',
+        });
+      } else {
+        throw new Error('Failed to submit contact form');
+      }
     } catch (error) {
       console.error('Error submitting message:', error);
       setSubmitStatus('error');

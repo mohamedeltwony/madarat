@@ -1,6 +1,7 @@
 // Zapier partial submission API endpoint
 // This sends partial form data to Zapier as users are filling out the form
 import { csrf } from '@/utils/csrf';
+import { getLocationWithFallback, formatLocationForDisplay, getLocationAwareTimestamp, isValidLocation } from '@/utils/geolocation';
 
 // Create a handler that will be wrapped with CSRF protection
 async function handler(req, res) {
@@ -30,11 +31,45 @@ async function handler(req, res) {
     console.log('Using Zapier partial webhook URL from environment variables:', 
       zapierPartialWebhookUrl.substring(0, 20) + '...');
 
+    // Get client IP address
+    const forwarded = req.headers['x-forwarded-for'];
+    let ip = forwarded ? forwarded.split(/, /)[0] : req.socket.remoteAddress;
+    
+    // Handle localhost IP addresses
+    if (ip === '::1' || ip === '127.0.0.1') {
+      ip = 'localhost (development)';
+    }
+
+    // Get location data for partial submission
+    console.log('Getting location data for partial submission...');
+    const locationData = await getLocationWithFallback(ip);
+    const locationTimestamps = getLocationAwareTimestamp(locationData);
+    const displayLocation = formatLocationForDisplay(locationData);
+    const validLocation = isValidLocation(locationData);
+
     // Add metadata to identify this as a partial submission
     const enhancedData = {
       ...req.body,
       is_partial: true,
       partial_timestamp: new Date().toISOString(),
+      
+      // Add geolocation data for partial submissions
+      ip_address: ip,
+      client_city: locationData.city,
+      client_region: locationData.region,
+      client_country: locationData.country,
+      client_country_code: locationData.country_code,
+      client_latitude: locationData.latitude,
+      client_longitude: locationData.longitude,
+      client_timezone: locationData.timezone,
+      client_isp: locationData.isp,
+      client_location_display: displayLocation,
+      client_location_valid: validLocation,
+      client_location_source: locationData.source,
+      
+      // Add timezone-aware timestamps
+      client_local_time: locationTimestamps.local,
+      client_timezone_offset: locationTimestamps.timezone,
     };
 
     try {
