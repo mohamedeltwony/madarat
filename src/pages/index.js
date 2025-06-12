@@ -269,7 +269,7 @@ export async function getStaticProps() {
             Accept: 'application/json',
             'Access-Control-Allow-Origin': '*',
           },
-          timeout: 30000, // 30 second timeout
+          timeout: 5000, // Reduced to 5 second timeout
         }
       );
 

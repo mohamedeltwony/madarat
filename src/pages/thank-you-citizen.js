@@ -472,7 +472,7 @@ export default function ThankYouCitizen() {
         }
       }
       
-      // --- Snapchat CUSTOM_EVENT_1 Conversion Tracking ---
+      // --- Snapchat SIGN_UP Conversion Tracking ---
       if (typeof window !== 'undefined' && window.snaptr) {
         try {
           // Hash functions for user data
@@ -489,24 +489,23 @@ export default function ThankYouCitizen() {
             }
           };
 
-          // Prepare Snapchat conversion data with dynamic pricing
+          // Prepare Snapchat SIGN_UP data with complete user information
           const snapchatData = {
-            uuid_c1: external_id || `citizen_conversion_${Date.now()}`,
+            sign_up_method: 'citizenship_form',
+            uuid_c1: external_id || `citizen_signup_${Date.now()}`,
+            price: tripPricing.price,
+            currency: tripPricing.currency,
             transaction_id: eventId || `tx_${Date.now()}`,
             item_ids: tripPricing.item_ids,
-            data_use: 'marketing',
+            item_category: tripPricing.item_category,
             user_email: email || null,
             user_phone_number: phone ? phone.replace(/\D/g, '') : null,
             firstname: firstName || (name ? name.split(' ')[0] : null),
             lastname: lastName || (name && name.split(' ').length > 1 ? name.split(' ').slice(1).join(' ') : null),
-            age: null, // Not collected in the form
             geo_city: 'Riyadh',
             geo_country: 'SA',
             geo_postal_code: null,
             geo_region: 'Riyadh',
-            currency: tripPricing.currency,
-            price: tripPricing.price,
-            item_category: tripPricing.item_category,
             // Add trip-specific data if available
             ...(tripPricing.tripConfig && {
               trip_id: tripPricing.tripConfig.id,
@@ -536,10 +535,11 @@ export default function ThankYouCitizen() {
             }
           });
 
-          // Track Snapchat CUSTOM_EVENT_1 with dynamic pricing
-          window.snaptr('track', 'CUSTOM_EVENT_1', snapchatData);
+          // Track Snapchat SIGN_UP with dynamic pricing
+          window.snaptr('track', 'SIGN_UP', snapchatData);
           
-          console.log('Snapchat CUSTOM_EVENT_1 tracked successfully with dynamic pricing:', {
+          console.log('Snapchat SIGN_UP tracked successfully with dynamic pricing:', {
+            sign_up_method: snapchatData.sign_up_method,
             uuid_c1: snapchatData.uuid_c1,
             transaction_id: snapchatData.transaction_id,
             price: snapchatData.price,
@@ -549,28 +549,31 @@ export default function ThankYouCitizen() {
             trip_name: tripPricing.tripConfig?.name || 'General Inquiry',
             has_email: !!snapchatData.user_email,
             has_phone: !!snapchatData.user_phone_number,
-            has_name: !!(snapchatData.firstname || snapchatData.lastname)
+            has_name: !!(snapchatData.firstname || snapchatData.lastname),
+            has_hashed_email: !!snapchatData.user_hashed_email,
+            has_hashed_phone: !!snapchatData.user_hashed_phone_number
           });
           
         } catch (snapchatError) {
-          console.error('Snapchat CUSTOM_EVENT_1 Tracking Failed:', snapchatError);
+          console.error('Snapchat SIGN_UP Tracking Failed:', snapchatError);
           
           // Fallback to basic tracking with default pricing
           try {
-            window.snaptr('track', 'CUSTOM_EVENT_1', {
+            window.snaptr('track', 'SIGN_UP', {
+              sign_up_method: 'citizenship_form_fallback',
               uuid_c1: external_id || `citizen_fallback_${Date.now()}`,
               item_category: 'citizenship_services',
               geo_country: 'SA',
               price: '10.00',
               currency: 'SAR'
             });
-            console.log('Snapchat CUSTOM_EVENT_1 fallback tracking successful with default pricing');
+            console.log('Snapchat SIGN_UP fallback tracking successful with default pricing');
           } catch (fallbackError) {
             console.error('Snapchat fallback tracking also failed:', fallbackError);
           }
         }
       } else {
-        console.warn('Snapchat pixel not loaded, CUSTOM_EVENT_1 tracking skipped');
+        console.warn('Snapchat pixel not loaded, SIGN_UP tracking skipped');
       }
       
       // --- Send event to Facebook ---

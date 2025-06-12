@@ -143,8 +143,13 @@ export default async function handler(req, res) {
     
     // Ensure we have an access token
     if (!accessToken) {
-      console.error('Missing Facebook access token in environment variables!');
-      return res.status(500).json({ error: 'Server configuration error - missing access token' });
+      console.warn('Missing Facebook access token in environment variables! Skipping Facebook CAPI call.');
+      return res.status(200).json({ 
+        success: true, 
+        skipped: true, 
+        reason: 'No Facebook access token configured',
+        eventId: finalEventId 
+      });
     }
     
     // Make the API request to Facebook

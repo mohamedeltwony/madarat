@@ -61,6 +61,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 try {
                   // Get user data from localStorage or URL params
                   let userData = {};
+                  let hasUserData = false;
                   
                   // Try to get data from localStorage
                   if (typeof localStorage !== 'undefined') {
@@ -68,10 +69,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                       const profile = localStorage.getItem('userProfile');
                       if (profile) {
                         const parsedProfile = JSON.parse(profile);
-                        userData.user_email = parsedProfile.email;
-                        userData.user_phone_number = parsedProfile.phone;
-                        userData.firstname = parsedProfile.firstName;
-                        userData.uuid_c1 = parsedProfile.external_id || 'page_' + Date.now();
+                        if (parsedProfile.email) {
+                          userData.user_email = parsedProfile.email;
+                          hasUserData = true;
+                        }
+                        if (parsedProfile.phone) {
+                          userData.user_phone_number = parsedProfile.phone;
+                          hasUserData = true;
+                        }
+                        if (parsedProfile.firstName) {
+                          userData.firstname = parsedProfile.firstName;
+                        }
+                        if (parsedProfile.external_id) {
+                          userData.uuid_c1 = parsedProfile.external_id;
+                          hasUserData = true;
+                        }
                       }
                     } catch (e) {
                       console.warn('Error reading user profile for Snapchat PAGE_VIEW');
@@ -80,15 +92,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   
                   // Get URL params for additional context
                   const urlParams = new URLSearchParams(window.location.search);
-                  if (urlParams.get('email')) userData.user_email = urlParams.get('email');
-                  if (urlParams.get('phone')) userData.user_phone_number = urlParams.get('phone');
-                  if (urlParams.get('firstName')) userData.firstname = urlParams.get('firstName');
-                  if (urlParams.get('external_id')) userData.uuid_c1 = urlParams.get('external_id');
+                  if (urlParams.get('email')) {
+                    userData.user_email = urlParams.get('email');
+                    hasUserData = true;
+                  }
+                  if (urlParams.get('phone')) {
+                    userData.user_phone_number = urlParams.get('phone');
+                    hasUserData = true;
+                  }
+                  if (urlParams.get('firstName')) {
+                    userData.firstname = urlParams.get('firstName');
+                  }
+                  if (urlParams.get('external_id')) {
+                    userData.uuid_c1 = urlParams.get('external_id');
+                    hasUserData = true;
+                  }
                   
-                  // Add geographic data for Saudi Arabia
-                  userData.geo_country = 'SA';
-                  userData.geo_region = 'Riyadh';
-                  userData.geo_city = 'Riyadh';
+                  // Add geographic data for Saudi Arabia (only if we have user data)
+                  if (hasUserData) {
+                    userData.geo_country = 'SA';
+                    userData.geo_region = 'Riyadh';
+                    userData.geo_city = 'Riyadh';
+                  }
                   
                   // Determine page category based on URL path
                   const path = window.location.pathname;
@@ -103,14 +128,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   
                   userData.item_category = item_category;
                   
-                  // Track enhanced PAGE_VIEW
-                  snaptr('track', 'PAGE_VIEW', userData);
-                  
-                  console.log('Enhanced Snapchat PAGE_VIEW tracked:', {
-                    page_path: path,
-                    item_category: item_category,
-                    has_user_data: !!(userData.user_email || userData.user_phone_number)
-                  });
+                  // Only track enhanced PAGE_VIEW if we have user data, otherwise basic
+                  if (hasUserData) {
+                    snaptr('track', 'PAGE_VIEW', userData);
+                    console.log('Enhanced Snapchat PAGE_VIEW tracked:', {
+                      page_path: path,
+                      item_category: item_category,
+                      has_user_data: true
+                    });
+                  } else {
+                    // Basic PAGE_VIEW without user data
+                    snaptr('track', 'PAGE_VIEW', { item_category: item_category });
+                    console.log('Basic Snapchat PAGE_VIEW tracked:', {
+                      page_path: path,
+                      item_category: item_category,
+                      has_user_data: false
+                    });
+                  }
                   
                 } catch (error) {
                   // Fallback to basic PAGE_VIEW
@@ -184,7 +218,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           
           {/* Security Headers */}
           <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
-          <meta httpEquiv="X-Frame-Options" content="DENY" />
+          {/* X-Frame-Options should be set as HTTP header, not meta tag */}
           <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
           
           {/* Performance Hints */}

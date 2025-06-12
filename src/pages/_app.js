@@ -19,6 +19,9 @@ import {
   preloadCriticalResources 
 } from '../utils/performance';
 
+// Import global Snapchat utilities for testing
+import '../utils/snapchatGlobal';
+
 // Lazy load heavy components
 const NextNProgress = dynamic(() => import('nextjs-progressbar'), {
   ssr: false,

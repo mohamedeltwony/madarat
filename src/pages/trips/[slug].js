@@ -214,10 +214,59 @@ export default function SingleTrip({ trip, metadata, menus }) {
   const [showHint, setShowHint] = useState(false);
   const [hasShownHint, setHasShownHint] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isSticky, setIsSticky] = useState(false);
+  const [sidebarPosition, setSidebarPosition] = useState({ left: 0, width: 0 });
   
   // Add touch handling for mobile booking card
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
+
+  // JavaScript-based sticky implementation
+  useEffect(() => {
+    const handleScroll = () => {
+      const sidebarElement = document.querySelector(`.${styles.sidebarContent}`);
+      const mainContentElement = document.querySelector(`.${styles.mainContent}`);
+      
+      if (!sidebarElement || !mainContentElement) return;
+      
+      const mainContentRect = mainContentElement.getBoundingClientRect();
+      
+      // Check if we're on desktop (width >= 992px)
+      if (window.innerWidth >= 992) {
+        // Capture the original position when not sticky
+        if (!isSticky) {
+          const sidebarRect = sidebarElement.getBoundingClientRect();
+          setSidebarPosition({
+            left: sidebarRect.left,
+            width: sidebarRect.width
+          });
+        }
+        
+        // Calculate when to start sticking
+        const shouldStick = mainContentRect.top <= 32; // 2rem = 32px
+        
+        if (shouldStick !== isSticky) {
+          setIsSticky(shouldStick);
+        }
+      } else {
+        // Reset for mobile
+        if (isSticky) {
+          setIsSticky(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    
+    // Initial check
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [isSticky]);
 
   // Handle scroll position and hint visibility
   useEffect(() => {
@@ -332,6 +381,32 @@ export default function SingleTrip({ trip, metadata, menus }) {
     const timer = setTimeout(trackViewContent, 1000);
     return () => clearTimeout(timer);
   }, [trip?.slug, router]);
+
+  // Handle form success - redirect to thank you pages
+  const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality, email, name, firstName, lastName }) => {
+    const thankYouUrl = nationality === 'مواطن' ? '/thank-you-citizen' : '/thank-you-resident';
+    
+    // Build query parameters
+    const queryParams = new URLSearchParams();
+    if (processedPhone) queryParams.set('phone', processedPhone);
+    if (email) queryParams.set('email', email);
+    if (name) queryParams.set('name', name);
+    if (firstName) queryParams.set('firstName', firstName);
+    if (lastName) queryParams.set('lastName', lastName);
+    if (externalId) queryParams.set('external_id', externalId);
+    if (leadEventId) queryParams.set('eventId', leadEventId);
+    
+    // Add trip source for proper tracking
+    queryParams.set('trip_source', trip?.slug || 'generic-trip');
+    
+    // Construct the full redirect URL
+    const redirectUrl = `${thankYouUrl}?${queryParams.toString()}`;
+    
+    console.log(`Redirecting to: ${redirectUrl}`);
+    
+    // Use window.location.href for reliable redirect
+    window.location.href = redirectUrl;
+  };
 
   // Show loading state during fallback
   if (router.isFallback) {
@@ -514,7 +589,13 @@ export default function SingleTrip({ trip, metadata, menus }) {
         </div>
 
         {/* Right Column - Booking Card */}
-        <div className={styles.sidebarContent}>
+        <div 
+          className={`${styles.sidebarContent} ${isSticky ? styles.sticky : ''}`}
+          style={isSticky ? {
+            left: `${sidebarPosition.left}px`,
+            width: `${sidebarPosition.width}px`
+          } : {}}
+        >
           <div 
             className={`${styles.bookingCard} ${isBookingCardExpanded ? styles.expanded : ''}`}
             onTouchStart={handleTouchStart}
@@ -544,8 +625,42 @@ export default function SingleTrip({ trip, metadata, menus }) {
             </div>
 
             <TripForm 
-              tripTitle={decodedTitle}
-              price={price}
+              fields={[
+                {
+                  name: 'phone',
+                  label: 'الجوال',
+                  type: 'tel',
+                  required: true,
+                  autoComplete: 'tel',
+                  floatingLabel: true,
+                  showCountryCode: true,
+                },
+                {
+                  name: 'name',
+                  label: 'الاسم الكامل (اختياري)',
+                  type: 'text',
+                  required: false,
+                  autoComplete: 'name',
+                  floatingLabel: true,
+                },
+                {
+                  name: 'email',
+                  label: 'البريد الإلكتروني (اختياري)',
+                  type: 'email',
+                  required: false,
+                  autoComplete: 'email',
+                  floatingLabel: true,
+                },
+              ]}
+              zapierConfig={{
+                endpoint: '/api/zapier-proxy',
+                extraPayload: {
+                  destination: decodedTitle || 'رحلة سياحية',
+                  tripName: trip?.slug || 'dynamic-trip',
+                  price: parseInt(price.replace(/,/g, '')) || 0,
+                },
+              }}
+              onSuccess={handleFormSuccess}
             />
           </div>
         </div>

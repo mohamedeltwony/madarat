@@ -319,9 +319,12 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   max-width: 1248px;
   margin: 0 auto;
   padding: 0 1rem;
+  min-height: 100vh; /* Ensure sufficient height for sticky to work */
+  overflow: visible; /* Explicitly set overflow to visible */
   
   @media (max-width: 991px) {
     grid-template-columns: 1fr;
+    min-height: auto; /* Reset for mobile */
   }
 }
 
@@ -439,9 +442,16 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 // ======== Sidebar Content ========
 .sidebarContent {
   @media (min-width: 992px) {
-    position: sticky;
-    top: 2rem;
-    height: fit-content;
+    position: relative;
+    align-self: flex-start;
+    z-index: 100;
+    transition: all 0.3s ease;
+    
+    &.sticky {
+      position: fixed;
+      top: 2rem;
+      /* Position and width will be set via inline styles from JavaScript */
+    }
   }
 }
 
@@ -453,7 +463,7 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   position: relative;
   margin-bottom: 2rem;
-
+  
   @media (max-width: 768px) {
     position: fixed;
     bottom: 0;

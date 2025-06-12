@@ -218,10 +218,15 @@ const sendToConversionAPI = async (eventName, eventData, eventId) => {
     });
     
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Conversion API error:', errorData);
+      const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
+      console.warn('Conversion API error (will continue with pixel only):', errorData);
     } else {
-      console.log('[Server] Event sent to Conversion API');
+      const result = await response.json();
+      if (result.skipped) {
+        console.log('[Server] Conversion API call skipped:', result.reason);
+      } else {
+        console.log('[Server] Event sent to Conversion API successfully');
+      }
     }
   } catch (error) {
     console.error('Error sending to Conversion API:', error);
