@@ -537,6 +537,97 @@ $font-family: 'Cairo', sans-serif;
 
   .heroContent {
     padding: 1.5rem;
+    max-width: 95%; // Ensure it doesn't touch screen edges
+    margin: 0 auto; // Center the content
+  }
+
+  // Fix features section on mobile
+  .featuresSection {
+    margin-bottom: 2rem;
+    max-width: 100%;
+    padding: 0 1rem;
+    overflow-x: auto; // Allow horizontal scroll if needed
+    -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+  }
+
+  .featuresGrid {
+    animation-duration: 30s; // Faster animation on mobile
+  }
+
+  .featureItem {
+    width: 100px; // Reduce width on mobile
+    margin: 0 0.5rem; // Reduce margin on mobile
+  }
+
+  .featureText {
+    font-size: 0.8rem; // Smaller text on mobile
+    line-height: 1.2;
+  }
+
+  // Improve form on mobile
+  .formContainer {
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .formGroup {
+    margin-top: 0.75rem;
+  }
+
+  .formInput {
+    padding: 1rem 0.75rem 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .formLabel {
+    right: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .formInput:focus + .formLabel,
+  .formInput:not(:placeholder-shown) + .formLabel {
+    font-size: 0.7rem;
+  }
+}
+
+// Tablet and mid-size screen improvements
+@media (max-width: 768px) and (min-width: 481px) {
+  .featuresSection {
+    padding: 0 1rem;
+  }
+
+  .featureItem {
+    width: 110px; // Slightly smaller width for tablets
+    margin: 0 0.75rem; // Adjust margin for tablets
+  }
+
+  .featureText {
+    font-size: 0.85rem; // Adjust text size for tablets
+  }
+}
+
+// Additional mobile breakpoint for very small screens
+@media (max-width: 360px) {
+  .featuresSection {
+    padding: 0 0.5rem;
+  }
+
+  .featuresGrid {
+    animation-duration: 25s; // Even faster animation on very small screens
+  }
+
+  .featureItem {
+    width: 80px; // Even smaller width for very small screens
+    margin: 0 0.3rem;
+  }
+
+  .featureText {
+    font-size: 0.75rem;
+  }
+
+  .heroContent {
+    padding: 1rem;
+    max-width: 98%; // Even tighter margins on very small screens
   }
 }
 

@@ -3,10 +3,8 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import { getSiteMetadata } from '@/lib/site';
-import { getAllMenus } from '@/lib/menus';
+// Removed getSiteMetadata and getAllMenus imports as they're not needed for this page layout
 
-import Layout from '@/components/Layout';
 import styles from '@/styles/pages/LondonScotland.module.scss';
 import TripForm from '@/components/TripForm';
 
@@ -31,7 +29,7 @@ const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
 // const ExitPopup = dynamic(() => import('@/components/ExitPopup'), {
 //   ssr: false,
 // });
-export default function SchengenVisaTrip({ metadata, menus }) {
+export default function SchengenVisaTrip() {
   const router = useRouter();
 
   // Remove all form-related state and handlers except for the redirect logic
@@ -89,8 +87,7 @@ export default function SchengenVisaTrip({ metadata, menus }) {
   ];
 
   return (
-    <Layout metadata={metadata} menus={menus}>
-      <div className={styles.container} dir="rtl">
+    <div className={styles.container} dir="rtl">
         <Head>
           <title>احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر</title>
           <meta
@@ -228,65 +225,17 @@ export default function SchengenVisaTrip({ metadata, menus }) {
 
       {/* Removed Chatbot and ExitPopup */}
     </div>
-    </Layout>
   );
 }
 
 export async function getStaticProps() {
-  try {
-    // Fetch metadata and menus as per Phase 3 enhancement plan
-    const [
-      { metadata },
-      { menus }
-    ] = await Promise.all([
-      getSiteMetadata(),
-      getAllMenus()
-    ]);
+  // No longer fetching getSiteMetadata here to improve build/revalidation speed.
+  // Ensure necessary <Head> tags (title, meta description, OG tags)
+  // are added directly within the SchengenVisaTrip component's JSX.
+  // Also removed getAllMenus() call.
 
-    // Construct page metadata for Schengen visa trip
-    const pageMetadata = {
-      title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
-      description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 399 ريال سعودي فقط.',
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/schengen-visa-trip`,
-      robots: 'index, follow',
-      og: {
-        title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
-        description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 399 ريال سعودي فقط.',
-        type: 'website',
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/schengen-visa-trip`,
-        siteName: 'مدارات الكون',
-        image: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/schengen-background.webp`,
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
-        description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر. استمتع بخدمة احترافية وسريعة للحصول على تأشيرة شنغن بسعر 399 ريال سعودي فقط.',
-        image: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/schengen-background.webp`,
-      },
-    };
-
-    return {
-      props: {
-        metadata: { ...metadata, ...pageMetadata },
-        menus: menus || [],
-      },
-      revalidate: 600, // Revalidate every 10 minutes (keeps ISR active)
-    };
-  } catch (error) {
-    console.error('Error in schengen-visa-trip getStaticProps:', error);
-    
-    // Fallback metadata for error state
-    const pageMetadata = {
-      title: 'احصل على تأشيرة شنغن | مدارات الكون للسياحة والسفر',
-      description: 'خدمات تأشيرة شنغن المميزة من مدارات الكون للسياحة والسفر.',
-    };
-
-    return {
-      props: {
-        metadata: pageMetadata,
-        menus: [],
-      },
-      revalidate: 60, // Retry more frequently on error
-    };
-  }
+  return {
+    props: {}, // Return empty props
+    revalidate: 600, // Revalidate every 10 minutes (keeps ISR active)
+  };
 }
