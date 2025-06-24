@@ -167,35 +167,7 @@ $font-family: 'Cairo', sans-serif;
   }
 }
 
-// Social Media Links
-.socialLinks {
-  margin-bottom: 2rem;
-}
-
-.socialTitle {
-  color: $color-gold;
-  font-size: 1.3rem;
-  margin-bottom: 0.8rem;
-}
-
-.socialIcons {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-
-.socialIcon {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  padding: 0.8rem;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: rgba($color-gold, 0.3);
-    transform: translateY(-3px);
-  }
-}
+// Social Media Links - Removed as they are no longer used in thank you pages
 
 .buttonGroup {
   display: flex;

@@ -778,24 +778,7 @@ export default function ThankYouCitizen() {
             </p>
           </div>
           
-          {/* Social Media Links */}
-          <div className={styles.socialLinks}>
-            <h3 className={styles.socialTitle}>تابعنا على مواقع التواصل الاجتماعي</h3>
-            <div className={styles.socialIcons}>
-              <a href="https://www.instagram.com/madaraatalkon/" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
-                <Image src="/icons/instagram.svg" alt="Instagram" width={30} height={30} />
-              </a>
-              <a href="https://www.youtube.com/@MadaratAlkon" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
-                <Image src="/icons/youtube.svg" alt="YouTube" width={30} height={30} />
-              </a>
-              <a href="https://www.tiktok.com/@madaraatalkon" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
-                <Image src="/icons/tiktok.svg" alt="TikTok" width={30} height={30} />
-              </a>
-              <a href="http://www.linkedin.com/company/madaraatalkon" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}>
-                <Image src="/icons/linkedin.svg" alt="LinkedIn" width={30} height={30} />
-              </a>
-            </div>
-          </div>
+
 
           {/* Add sparkle button to return to homepage */}
           <div className={styles.buttonWrapper}>

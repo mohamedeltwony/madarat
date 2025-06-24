@@ -26,7 +26,7 @@ const Layout = ({ children, metadata: propsMetadata, menus: propsMenus }) => {
 
   metadata.og.url = `${homepage}${asPath}`;
 
-  // Check if current page is a trip landing page
+  // Check if current page is a trip landing page or thank you page
   const isTripPage = router.pathname.includes('-trip') || 
                      router.pathname.startsWith('/trips/') ||
                      router.pathname === '/generic-trip' ||
@@ -42,6 +42,9 @@ const Layout = ({ children, metadata: propsMetadata, menus: propsMenus }) => {
                      router.pathname === '/trabzon-wider-north-turkey' ||
                      router.pathname === '/cruise-italy-spain-france' ||
                      router.pathname === '/london-scotland-trip';
+
+  // Check if current page is a thank you page
+  const isThankYouPage = router.pathname.includes('thank-you');
 
   const metaSettings = {
     title: metadata.title,
@@ -117,8 +120,8 @@ const Layout = ({ children, metadata: propsMetadata, menus: propsMenus }) => {
       <Header menus={propsMenus} />
       <Main>{children}</Main>
       {!isTripPage && <Footer />}
-      {/* Conditionally render WhatsApp button - hide on trip pages */}
-      {!isTripPage && <WhatsAppButton />}
+      {/* Conditionally render WhatsApp button - hide on trip pages and thank you pages */}
+      {!isTripPage && !isThankYouPage && <WhatsAppButton />}
     </div>
   );
 };
