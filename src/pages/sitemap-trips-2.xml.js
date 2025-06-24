@@ -1,6 +1,6 @@
 import { getAllTrips } from '@/lib/trips';
 
-const createTripsSitemap = async () => {
+const createTripsPage2Sitemap = async () => {
   const baseUrl = 'https://madaratalkon.sa';
   const currentDate = new Date().toISOString();
   
@@ -8,19 +8,20 @@ const createTripsSitemap = async () => {
   let trips = [];
   
   try {
-    // Fetch all trips (109 total) with higher per_page limit
     const tripsData = await getAllTrips({ per_page: 200 });
     trips = tripsData.trips || [];
-    console.log(`[Sitemap] Fetched ${trips.length} trips from REST API`);
+    console.log(`[Sitemap-2] Fetched ${trips.length} trips from REST API`);
   } catch (error) {
-    console.error('Error fetching trips for sitemap:', error);
+    console.error('Error fetching trips for sitemap page 2:', error);
   }
   
-  // Get only first 50 trips for this sitemap (page 1)
-  const tripsPage1 = trips.slice(0, 50);
+  // Get trips 51-100 (page 2)
+  const startIndex = 50;
+  const endIndex = 100;
+  const tripsPage2 = trips.slice(startIndex, endIndex);
   
-  // Create URLs for first 50 trips with proper URL decoding
-  const tripUrls = tripsPage1.map(trip => {
+  // Create URLs for trips page 2 with proper URL decoding
+  const tripUrls = tripsPage2.map(trip => {
     // Decode the URL-encoded slug for proper sitemap URLs
     const decodedSlug = decodeURIComponent(trip.slug);
     return {
@@ -31,33 +32,9 @@ const createTripsSitemap = async () => {
     };
   });
   
-  // Add static trip-related pages
-  const staticTripPages = [
-    {
-      url: '/trip',
-      changefreq: 'daily',
-      priority: '0.9',
-      lastmod: currentDate
-    },
-    {
-      url: '/book-now',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/offers',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    }
-  ];
-  
-  const allTripPages = [...staticTripPages, ...tripUrls];
-  
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${allTripPages.map(page => `  <url>
+${tripUrls.map(page => `  <url>
     <loc>${baseUrl}${page.url}</loc>
     <lastmod>${page.lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
@@ -66,14 +43,14 @@ ${allTripPages.map(page => `  <url>
 </urlset>`;
 };
 
-export default function TripsSitemapXml() {
+export default function TripsPage2SitemapXml() {
   return null;
 }
 
 export async function getServerSideProps({ res }) {
   try {
-    // Generate the trips XML sitemap
-    const sitemap = await createTripsSitemap();
+    // Generate the trips page 2 XML sitemap
+    const sitemap = await createTripsPage2Sitemap();
 
     // Set proper headers for XML sitemap
     res.setHeader('Content-Type', 'text/xml; charset=utf-8');
@@ -91,7 +68,7 @@ export async function getServerSideProps({ res }) {
       props: {},
     };
   } catch (error) {
-    console.error('Error generating trips sitemap:', error);
+    console.error('Error generating trips page 2 sitemap:', error);
     
     res.statusCode = 500;
     res.setHeader('Content-Type', 'text/plain');

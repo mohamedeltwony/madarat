@@ -100,32 +100,62 @@ export const QUERY_TRIP_BY_SLUG = `
 `;
 
 /**
- * Get all trips
+ * Get all trips via REST API
  */
-export async function getAllTrips({ first = 100 } = {}) {
-  const apolloClient = getApolloClient();
-
+export async function getAllTrips({ first = 100, per_page = 100 } = {}) {
   try {
-    const { data } = await apolloClient.query({
-      query: QUERY_ALL_TRIPS,
-      variables: {
-        first,
-      },
-    });
-
-    const trips = data?.trips?.edges?.map(({ node }) => ({
-      ...node,
-      featuredImage: node.featuredImage?.node,
-    })) || [];
+    // Use REST API endpoint for trips
+    const response = await fetch(`https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/trip?per_page=${per_page}&_fields=id,title,slug,date,modified,status,link,excerpt`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const tripsData = await response.json();
+    
+    // Filter only published trips and format them
+    const trips = tripsData
+      .filter(trip => trip.status === 'publish')
+      .map(trip => ({
+        id: trip.id,
+        title: trip.title?.rendered || trip.title,
+        slug: trip.slug,
+        date: trip.date,
+        modified: trip.modified,
+        excerpt: trip.excerpt?.rendered || trip.excerpt,
+        link: trip.link
+      }));
 
     return {
       trips,
     };
   } catch (error) {
-    console.error('Error fetching trips:', error);
-    return {
-      trips: [],
-    };
+    console.error('Error fetching trips via REST API:', error);
+    
+    // Fallback to GraphQL if REST API fails
+    try {
+      const apolloClient = getApolloClient();
+      const { data } = await apolloClient.query({
+        query: QUERY_ALL_TRIPS,
+        variables: {
+          first,
+        },
+      });
+
+      const trips = data?.trips?.edges?.map(({ node }) => ({
+        ...node,
+        featuredImage: node.featuredImage?.node,
+      })) || [];
+
+      return {
+        trips,
+      };
+    } catch (fallbackError) {
+      console.error('Error with GraphQL fallback:', fallbackError);
+      return {
+        trips: [],
+      };
+    }
   }
 }
 

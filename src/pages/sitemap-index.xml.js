@@ -15,7 +15,7 @@ const createSitemapIndex = () => {
       priority: 0.8
     },
     {
-      loc: `${baseUrl}/sitemap-trips.xml`,
+      loc: `${baseUrl}/sitemap-trips-index.xml`,
       lastmod: currentDate,
       priority: 0.9
     },

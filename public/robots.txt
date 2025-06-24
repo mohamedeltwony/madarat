@@ -151,6 +151,9 @@ Sitemap: https://madaratalkon.sa/sitemap-index.xml
 # Individual sitemaps for different content types
 Sitemap: https://madaratalkon.sa/sitemap.xml
 Sitemap: https://madaratalkon.sa/sitemap-posts.xml
+Sitemap: https://madaratalkon.sa/sitemap-trips-index.xml
 Sitemap: https://madaratalkon.sa/sitemap-trips.xml
+Sitemap: https://madaratalkon.sa/sitemap-trips-2.xml
+Sitemap: https://madaratalkon.sa/sitemap-trips-3.xml
 Sitemap: https://madaratalkon.sa/sitemap-destinations.xml
 
