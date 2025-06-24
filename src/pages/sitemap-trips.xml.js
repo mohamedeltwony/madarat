@@ -8,8 +8,8 @@ const createTripsSitemap = async () => {
   let trips = [];
   
   try {
-    // Fetch all trips (109 total) with higher per_page limit
-    const tripsData = await getAllTrips({ per_page: 200 });
+    // Fetch all trips (109 total) 
+    const tripsData = await getAllTrips({ per_page: 100 });
     trips = tripsData.trips || [];
     console.log(`[Sitemap] Fetched ${trips.length} trips from REST API`);
   } catch (error) {

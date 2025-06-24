@@ -104,17 +104,58 @@ export const QUERY_TRIP_BY_SLUG = `
  */
 export async function getAllTrips({ first = 100, per_page = 100 } = {}) {
   try {
-    // Use REST API endpoint for trips
-    const response = await fetch(`https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/trip?per_page=${per_page}&_fields=id,title,slug,date,modified,status,link,excerpt`);
+    // WordPress API has a max limit of 100 per page, so we need to make multiple requests
+    let allTrips = [];
+    let page = 1;
+    const maxPerPage = Math.min(per_page, 100); // WordPress limit is 100
     
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    // Keep fetching pages until we get all trips
+    while (true) {
+      const apiUrl = `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/trip?per_page=${maxPerPage}&page=${page}&_fields=id,title,slug,date,modified,status,link,excerpt`;
+      console.log(`[getAllTrips] Fetching page ${page} from:`, apiUrl);
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'User-Agent': 'Madarat-Sitemap-Generator/1.0'
+        },
+        timeout: 10000 // 10 second timeout
+      });
+      
+      console.log(`[getAllTrips] Page ${page} response status:`, response.status);
+      
+      if (!response.ok) {
+        if (response.status === 400 && page > 1) {
+          // No more pages available
+          console.log(`[getAllTrips] No more pages at page ${page}, stopping`);
+          break;
+        }
+        throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+      }
+      
+      const tripsData = await response.json();
+      console.log(`[getAllTrips] Page ${page} fetched ${tripsData.length} trips`);
+      
+      if (tripsData.length === 0) {
+        // No more trips
+        break;
+      }
+      
+      allTrips = [...allTrips, ...tripsData];
+      page++;
+      
+      // Safety break if we have enough trips or too many pages
+      if (allTrips.length >= 150 || page > 3) {
+        break;
+      }
     }
     
-    const tripsData = await response.json();
+    console.log(`[getAllTrips] Total raw trips fetched: ${allTrips.length}`);
     
     // Filter only published trips and format them
-    const trips = tripsData
+    const trips = allTrips
       .filter(trip => trip.status === 'publish')
       .map(trip => ({
         id: trip.id,
@@ -126,11 +167,13 @@ export async function getAllTrips({ first = 100, per_page = 100 } = {}) {
         link: trip.link
       }));
 
+    console.log(`[getAllTrips] Returning ${trips.length} published trips`);
     return {
       trips,
     };
   } catch (error) {
-    console.error('Error fetching trips via REST API:', error);
+    console.error('Error fetching trips via REST API:', error.message);
+    console.error('Full error:', error);
     
     // Fallback to GraphQL if REST API fails
     try {

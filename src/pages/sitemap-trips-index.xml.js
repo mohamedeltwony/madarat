@@ -16,7 +16,9 @@ const createTripsSitemapIndex = async () => {
   
   // Calculate number of sitemap files needed (50 trips per sitemap)
   const tripsPerSitemap = 50;
-  const numberOfSitemaps = Math.ceil(totalTrips / tripsPerSitemap);
+  const numberOfSitemaps = Math.max(1, Math.ceil(totalTrips / tripsPerSitemap));
+  
+  console.log(`[Trips Index] Total trips: ${totalTrips}, Number of sitemaps: ${numberOfSitemaps}`);
   
   // Create sitemap entries for trips
   const tripSitemaps = [];
@@ -34,6 +36,8 @@ const createTripsSitemapIndex = async () => {
       lastmod: currentDate
     });
   }
+  
+  console.log(`[Trips Index] Created ${tripSitemaps.length} sitemap entries`);
   
   return `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

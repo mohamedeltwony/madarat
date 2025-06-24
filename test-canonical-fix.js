@@ -102,7 +102,7 @@ class CanonicalTestSuite {
       { url: '/about', name: 'About' },
       { url: '/contact', name: 'Contact' },
       { url: '/destinations', name: 'Destinations' },
-      { url: '/trips', name: 'Trips' },
+      { url: '/trip', name: 'Trips' },
       { url: '/blog', name: 'Blog' },
       { url: '/posts', name: 'Posts' },
       { url: '/categories', name: 'Categories' }

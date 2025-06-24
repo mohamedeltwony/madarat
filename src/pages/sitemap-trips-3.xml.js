@@ -8,7 +8,7 @@ const createTripsPage3Sitemap = async () => {
   let trips = [];
   
   try {
-    const tripsData = await getAllTrips({ per_page: 200 });
+    const tripsData = await getAllTrips({ per_page: 100 });
     trips = tripsData.trips || [];
     console.log(`[Sitemap-3] Fetched ${trips.length} trips from REST API`);
   } catch (error) {
