@@ -11,8 +11,8 @@ const BASE_URL = 'https://madaratalkon.com';
 const ENDPOINTS = [
   '/',
   '/api/health',
-  '/trips/من-براغ-إلى-باريس',
-  '/destinations/spain',
+      '/trip/من-براغ-إلى-باريس',
+      '/destination/spain',
   '/schengen-visa-trip'
 ];
 

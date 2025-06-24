@@ -176,9 +176,9 @@ export async function getStaticPaths() {
         return false;
       }
 
-      // Filter out destinations page
-      if (uri === '/destinations/') {
-        console.log(`[getStaticPaths] Skipping destinations page`);
+      // Filter out destination page (singular)
+      if (uri === '/destination/') {
+        console.log(`[getStaticPaths] Skipping destination page`);
         return false;
       }
 

@@ -292,12 +292,12 @@ const Header = ({ menus }) => {
                 </div>
                 {activeDropdown === 'destinations' && (
                   <ul className={styles.sidebarSubmenu}>
-                    <li><LocalizedLink href="/destinations">جميع الوجهات</LocalizedLink></li>
-                    <li><LocalizedLink href="/destinations/europe">أوروبا</LocalizedLink></li>
-                    <li><LocalizedLink href="/destinations/middle-east">الشرق الأوسط</LocalizedLink></li>
-                    <li><LocalizedLink href="/destinations/asia">آسيا</LocalizedLink></li>
-                    <li><LocalizedLink href="/destinations/americas">الأمريكتين</LocalizedLink></li>
-                    <li><LocalizedLink href="/destinations/africa">أفريقيا</LocalizedLink></li>
+                                          <li><LocalizedLink href="/destination">جميع الوجهات</LocalizedLink></li>
+                                    <li><LocalizedLink href="/destination/europe">أوروبا</LocalizedLink></li>
+                <li><LocalizedLink href="/destination/middle-east">الشرق الأوسط</LocalizedLink></li>
+                <li><LocalizedLink href="/destination/asia">آسيا</LocalizedLink></li>
+                <li><LocalizedLink href="/destination/americas">الأمريكتين</LocalizedLink></li>
+                <li><LocalizedLink href="/destination/africa">أفريقيا</LocalizedLink></li>
                   </ul>
                 )}
               </li>

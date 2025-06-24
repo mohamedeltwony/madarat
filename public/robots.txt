@@ -114,7 +114,7 @@ Disallow: /_next/
 # Allow important content directories
 # Allow: /post/
 # Allow: /posts/
-# Allow: /destinations/
+# Allow: /destination/
 # Allow: /trips/
 # Allow: /blog/
 # Allow: /about/
