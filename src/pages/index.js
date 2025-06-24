@@ -133,7 +133,7 @@ export default function Home({
           backgroundImage="/images/hero-background-new.png" // Use correct .png extension
           // backgroundVideo="https://res.cloudinary.com/dn4akr8gq/video/upload/v1744811869/samples/dance-2.mp4" // Remove video prop
           featuredText="اكتشف المزيد"
-          featuredLink="/destinations"
+                        featuredLink="/destination"
         />
 
         {/* Offer Trips Section */}

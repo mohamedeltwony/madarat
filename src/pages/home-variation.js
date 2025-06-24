@@ -169,7 +169,7 @@ export default function HomeVariation({
                 للزيارة والإقامة.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/destinations">
+                <Link href="/destination">
                   <SparkleButton className="px-8 py-6 text-lg !rounded-button whitespace-nowrap cursor-pointer">
                     استكشف الرحلات
                   </SparkleButton>

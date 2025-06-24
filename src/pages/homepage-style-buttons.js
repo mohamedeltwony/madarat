@@ -96,7 +96,7 @@ const HomepageStyleButtonsPage = () => {
             >
               <HomepageStyleButton
                 text="اكتشف المزيد"
-                href="/destinations"
+                href="/destination"
                 variant="featured"
               />
             </div>

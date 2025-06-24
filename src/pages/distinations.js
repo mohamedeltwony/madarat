@@ -5,7 +5,7 @@ export default function RedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/destinations');
+    router.replace('/destination');
   }, [router]);
 
   return null;

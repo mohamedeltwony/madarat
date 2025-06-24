@@ -59,7 +59,7 @@ const Destinations = () => {
       </div>
       <div className={styles.destinationsGrid}>
         {destinations.map((destination) => (
-          <Link href={`/destinations/${destination.slug}`} key={destination.id}>
+          <Link href={`/destination/${destination.slug}`} key={destination.id}>
             <div className={styles.destinationImageWrapper}>
               <div className={styles.destinationImage}>
                 <Image
@@ -83,7 +83,7 @@ const Destinations = () => {
         ))}
       </div>
       <div className={styles.viewAllContainer}>
-        <Link href="/destinations" className={styles.viewAllButton}>
+        <Link href="/destination" className={styles.viewAllButton}>
           عرض جميع الوجهات
           <svg
             xmlns="http://www.w3.org/2000/svg"

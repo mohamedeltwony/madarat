@@ -98,7 +98,7 @@ const SimpleGoldButtonsPage = () => {
             <h3 style={{ color: 'white', marginBottom: '15px' }}>
               Homepage Style Button:
             </h3>
-            <SimpleGoldButton text="اكتشف المزيد" href="/destinations" />
+            <SimpleGoldButton text="اكتشف المزيد" href="/destination" />
           </div>
 
           <div

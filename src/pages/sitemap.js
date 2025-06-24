@@ -56,25 +56,25 @@ export default function Sitemap({ metadata, menus, posts, pages, trips }) {
               <h2 className={styles.sectionTitle}>الوجهات</h2>
               <ul className={styles.sitemapList}>
                 <li>
-                  <Link href="/destinations">جميع الوجهات</Link>
+                  <Link href="/destination">جميع الوجهات</Link>
                   <ul>
                     <li>
-                      <Link href="/destinations/europe">أوروبا</Link>
+                                              <Link href="/destination/europe">أوروبا</Link>
                     </li>
                     <li>
-                      <Link href="/destinations/middle-east">الشرق الأوسط</Link>
-                    </li>
-                    <li>
-                      <Link href="/destinations/asia">آسيا</Link>
-                    </li>
-                    <li>
-                      <Link href="/destinations/americas">الأمريكتين</Link>
-                    </li>
-                    <li>
-                      <Link href="/destinations/africa">أفريقيا</Link>
-                    </li>
-                    <li>
-                      <Link href="/destinations/oceania">أوقيانوسيا</Link>
+                                              <Link href="/destination/middle-east">الشرق الأوسط</Link>
+                      </li>
+                      <li>
+                        <Link href="/destination/asia">آسيا</Link>
+                      </li>
+                      <li>
+                        <Link href="/destination/americas">الأمريكتين</Link>
+                      </li>
+                      <li>
+                        <Link href="/destination/africa">أفريقيا</Link>
+                      </li>
+                      <li>
+                        <Link href="/destination/oceania">أوقيانوسيا</Link>
                     </li>
                   </ul>
                 </li>

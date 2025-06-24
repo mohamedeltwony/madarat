@@ -36,12 +36,18 @@ const nextConfig = {
     ];
   },
 
-  // 301 Redirects for SEO - Old destination URLs to new structure
+  // 301 Redirects for SEO - Old URLs to new structure
   async redirects() {
     return [
+      // Redirect from destinations to destination (singular)
       {
-        source: '/destinations/:slug/trips',
-        destination: '/destinations/:slug',
+        source: '/destinations',
+        destination: '/destination',
+        permanent: true, // 301 redirect
+      },
+      {
+        source: '/destinations/:slug*',
+        destination: '/destination/:slug*',
         permanent: true, // 301 redirect
       },
       // Redirect from trips to trip (singular)

@@ -14,7 +14,7 @@ const createSitemap = () => {
     
     // Main navigation pages - high priority
     {
-      url: '/destinations',
+      url: '/destination',
       changefreq: 'weekly',
       priority: '0.9',
       lastmod: currentDate
@@ -168,37 +168,37 @@ const createSitemap = () => {
     
     // Popular destination pages - high priority for SEO
     {
-      url: '/destinations/turkey',
+              url: '/destination/turkey',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
     },
     {
-      url: '/destinations/georgia',
+      url: '/destination/georgia',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
     },
     {
-      url: '/destinations/azerbaijan',
+      url: '/destination/azerbaijan',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
     },
     {
-      url: '/destinations/italy',
+      url: '/destination/italy',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
     },
     {
-      url: '/destinations/bosnia',
+      url: '/destination/bosnia',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
     },
     {
-      url: '/destinations/poland',
+      url: '/destination/poland',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
