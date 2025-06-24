@@ -135,9 +135,10 @@ export default function AllTrips({ trips, pagination, onPageChange }) {
                   <Image
                     src={trip.featuredImage.sourceUrl}
                     alt={trip.title || 'رحلة سياحية'}
-                    width={400}
-                    height={250}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className={styles.tripImage}
+                    style={{ objectFit: 'cover' }}
                   />
                 ) : (
                   <div className={styles.placeholderImage}>

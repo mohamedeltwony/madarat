@@ -542,13 +542,30 @@ $glass-border: rgba(255, 255, 255, 0.12);
   width: 100%;
   height: 200px;
   overflow: hidden;
+  
+  @media (max-width: 768px) {
+    height: 200px;
+  }
 }
 
 .tripImage {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
   transition: transform 0.5s ease;
+  
+  .tripCard:hover & {
+    transform: scale(1.05);
+  }
 }
 
 .placeholderImage {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-color: #f0f0f0;
