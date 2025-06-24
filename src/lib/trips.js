@@ -110,7 +110,8 @@ export async function getAllTrips({ first = 100, per_page = 100 } = {}) {
     const maxPerPage = Math.min(per_page, 100); // WordPress limit is 100
     
     // Keep fetching pages until we get all trips
-    while (true) {
+    let hasMorePages = true;
+    while (hasMorePages && page <= 3) { // Max 3 pages for safety
       const apiUrl = `https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/trip?per_page=${maxPerPage}&page=${page}&_fields=id,title,slug,date,modified,status,link,excerpt`;
       console.log(`[getAllTrips] Fetching page ${page} from:`, apiUrl);
       
@@ -130,6 +131,7 @@ export async function getAllTrips({ first = 100, per_page = 100 } = {}) {
         if (response.status === 400 && page > 1) {
           // No more pages available
           console.log(`[getAllTrips] No more pages at page ${page}, stopping`);
+          hasMorePages = false;
           break;
         }
         throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
@@ -140,14 +142,16 @@ export async function getAllTrips({ first = 100, per_page = 100 } = {}) {
       
       if (tripsData.length === 0) {
         // No more trips
+        hasMorePages = false;
         break;
       }
       
       allTrips = [...allTrips, ...tripsData];
       page++;
       
-      // Safety break if we have enough trips or too many pages
-      if (allTrips.length >= 150 || page > 3) {
+      // Safety break if we have enough trips
+      if (allTrips.length >= 150) {
+        hasMorePages = false;
         break;
       }
     }
