@@ -1,5 +1,7 @@
-// Define API URL constant
-const API_URL = 'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2';
+import config from './config';
+import { decodeHtmlEntitiesSafe } from './util';
+
+const { API_URL } = config;
 
 import { updateUserAvatar } from '@/lib/users';
 import { sortObjectsByDate } from '@/lib/datetime';
@@ -37,9 +39,9 @@ export async function getPostBySlug(slug) {
     return {
       post: {
         id: post.id,
-        title: post.title.rendered,
+        title: decodeHtmlEntitiesSafe(post.title.rendered),
         content: post.content.rendered,
-        excerpt: post.excerpt.rendered,
+        excerpt: decodeHtmlEntitiesSafe(post.excerpt.rendered),
         date: post.date,
         modified: post.modified,
         slug: post.slug,
@@ -54,7 +56,7 @@ export async function getPostBySlug(slug) {
         categories:
           post._embedded?.['wp:term']?.[0]?.map((category) => ({
             id: category.id,
-            name: category.name,
+            name: decodeHtmlEntitiesSafe(category.name),
             slug: category.slug,
           })) || [],
         author: post._embedded?.['author']?.[0]
@@ -68,9 +70,10 @@ export async function getPostBySlug(slug) {
             }
           : null,
         og: {
-          title: post.yoast_head_json?.og_title || post.title.rendered,
-          description:
-            post.yoast_head_json?.og_description || post.excerpt.rendered,
+          title: decodeHtmlEntitiesSafe(post.yoast_head_json?.og_title || post.title.rendered),
+          description: decodeHtmlEntitiesSafe(
+            post.yoast_head_json?.og_description || post.excerpt.rendered
+          ),
           image: post.yoast_head_json?.og_image?.[0]?.url || '',
         },
       },
@@ -105,11 +108,11 @@ export async function getAllPosts(options = {}) {
     const posts = data.map((post) => ({
       id: post.id,
       databaseId: post.id,
-      title: post.title.rendered,
+      title: decodeHtmlEntitiesSafe(post.title.rendered),
       slug: post.slug,
       date: post.date,
       modified: post.modified,
-      excerpt: post.excerpt?.rendered,
+      excerpt: decodeHtmlEntitiesSafe(post.excerpt?.rendered || ''),
       author: post._embedded?.author?.[0]
         ? {
             name: post._embedded.author[0].name,
@@ -123,7 +126,7 @@ export async function getAllPosts(options = {}) {
         post._embedded?.['wp:term']?.[0]?.map((cat) => ({
           id: cat.id,
           databaseId: cat.id,
-          name: cat.name,
+          name: decodeHtmlEntitiesSafe(cat.name),
           slug: cat.slug,
         })) || [],
       featuredImage: post._embedded?.['wp:featuredmedia']?.[0]

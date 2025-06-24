@@ -23,6 +23,7 @@ import { extractHeadings, addHeadingIds } from 'lib/headings';
 import { fixInternalLinks, processHeadingAnchors } from 'lib/fixWpLinks';
 import useSite from 'hooks/use-site';
 import usePageMetadata from 'hooks/use-page-metadata';
+import { generateSEOTitle, generateSEODescription } from '@/utils/seo-helpers';
 
 import Layout from 'components/Layout';
 import Section from 'components/Section';
@@ -56,57 +57,26 @@ export default function Post({ post, socialImage, related, recentPosts }) {
   const { metadata: siteMetadata = {}, homepage } = useSite();
 
   // Generate optimized SEO title with fallbacks
-  const generateSEOTitle = () => {
-    // Priority order: metaTitle > title > fallback
-    let baseTitle = metaTitle || title || 'مقال جديد';
-    
-    // Clean the title from HTML entities and extra spaces
-    baseTitle = baseTitle.replace(/&[^;]+;/g, '').trim();
-    
-    // Add category context if available
-    const categoryName = categories?.[0]?.name;
-    if (categoryName && !baseTitle.includes(categoryName)) {
-      baseTitle = `${baseTitle} - ${categoryName}`;
-    }
-    
-    // Add brand name if not already included
-    const siteName = siteMetadata.title || 'مدارات الكون';
-    if (!baseTitle.includes(siteName)) {
-      baseTitle = `${baseTitle} | ${siteName}`;
-    }
-    
-    // Ensure title length is optimal (max 60 characters for Arabic)
-    if (baseTitle.length > 60) {
-      const parts = baseTitle.split(' | ');
-      if (parts[0].length > 45) {
-        parts[0] = parts[0].substring(0, 42) + '...';
-      }
-      baseTitle = parts.join(' | ');
-    }
-    
-    return baseTitle;
+  const generatePostSEOTitle = () => {
+    return generateSEOTitle({
+      title: metaTitle || title || '',
+      category: categories?.[0]?.name || '',
+      type: 'post'
+    });
   };
 
   // Generate optimized meta description
-  const generateMetaDescription = () => {
-    if (description) return description;
-    
-    // Extract description from content if available
-    if (content) {
-      const textContent = content.replace(/<[^>]*>/g, '').trim();
-      const firstSentence = textContent.split('.')[0];
-      if (firstSentence.length > 20) {
-        return firstSentence.length > 155 
-          ? firstSentence.substring(0, 152) + '...'
-          : firstSentence + '.';
-      }
-    }
-    
-    return `اقرأ المزيد عن ${title || 'هذا المقال'} في مدارات الكون - دليلك الشامل للسفر والسياحة.`;
+  const generatePostMetaDescription = () => {
+    return generateSEODescription({
+      title: title || '',
+      category: categories?.[0]?.name || '',
+      type: 'post',
+      description: description || ''
+    });
   };
 
-  const optimizedTitle = generateSEOTitle();
-  const optimizedDescription = generateMetaDescription();
+  const optimizedTitle = generatePostSEOTitle();
+  const optimizedDescription = generatePostMetaDescription();
 
   useEffect(() => {
     setShareUrl(window.location.href);
