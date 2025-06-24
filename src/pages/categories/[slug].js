@@ -3,6 +3,7 @@ import { getPostsByCategoryId } from '@/lib/posts';
 import usePageMetadata from '@/hooks/use-page-metadata';
 import { getSiteMetadata } from '@/lib/site';
 import { getAllMenus } from '@/lib/menus';
+import Head from 'next/head';
 
 import ArchiveTemplate from '@/templates/archive';
 import Title from '@/components/Title';
@@ -10,26 +11,118 @@ import Title from '@/components/Title';
 export default function Category({ category, posts, siteMetadata, menus }) {
   const { name, description, slug } = category;
 
+  // Generate optimized SEO title for category
+  const generateCategorySEOTitle = () => {
+    const siteName = siteMetadata?.title || 'مدارات الكون';
+    let categoryTitle = name || 'فئة';
+    
+    // Clean category name from HTML entities
+    categoryTitle = categoryTitle.replace(/&[^;]+;/g, '').trim();
+    
+    // Create descriptive title based on category
+    const postsCount = posts?.length || 0;
+    let seoTitle = '';
+    
+    if (postsCount > 0) {
+      seoTitle = `${categoryTitle} - ${postsCount} مقال | ${siteName}`;
+    } else {
+      seoTitle = `${categoryTitle} - مقالات السفر والسياحة | ${siteName}`;
+    }
+    
+    // Ensure optimal length
+    if (seoTitle.length > 60) {
+      const parts = seoTitle.split(' | ');
+      if (parts[0].length > 45) {
+        parts[0] = parts[0].substring(0, 42) + '...';
+      }
+      seoTitle = parts.join(' | ');
+    }
+    
+    return seoTitle;
+  };
+
+  // Generate meta description for category
+  const generateCategoryDescription = () => {
+    if (description) {
+      return description.replace(/<[^>]*>/g, '').trim();
+    }
+    
+    const postsCount = posts?.length || 0;
+    return `استكشف ${postsCount} مقال في فئة ${name}. اكتشف أفضل النصائح والمعلومات حول ${name} مع مدارات الكون - دليلك الشامل للسفر والسياحة.`;
+  };
+
+  const optimizedTitle = generateCategorySEOTitle();
+  const optimizedDescription = generateCategoryDescription();
+
+  // Generate keywords for category
+  const generateKeywords = () => {
+    const baseKeywords = [name, 'مدارات الكون', 'سياحة', 'سفر', 'مقالات'];
+    
+    // Add related keywords based on category name
+    if (name.includes('البوسنة')) {
+      baseKeywords.push('البوسنة والهرسك', 'سراييفو', 'رحلات البوسنة');
+    } else if (name.includes('تركيا')) {
+      baseKeywords.push('اسطنبول', 'رحلات تركيا', 'السياحة في تركيا');
+    } else if (name.includes('السياحة')) {
+      baseKeywords.push('وجهات سياحية', 'عروض سفر', 'حجز رحلات');
+    }
+    
+    return baseKeywords.join(', ');
+  };
+
   const { metadata } = usePageMetadata({
     metadata: {
       ...category,
-      description:
-        description ||
-        category.og?.description ||
-        `Read ${posts.length} posts from ${name}`,
+      title: optimizedTitle,
+      description: optimizedDescription,
     },
   });
 
+  // Override metadata for better SEO
+  metadata.title = optimizedTitle;
+  metadata.description = optimizedDescription;
+  metadata.og.title = optimizedTitle;
+  metadata.og.description = optimizedDescription;
+  metadata.twitter.title = optimizedTitle;
+  metadata.twitter.description = optimizedDescription;
+
   return (
-    <ArchiveTemplate
-      title={name}
-      Title={<Title title={name} />}
-      posts={posts}
-      slug={slug}
-      metadata={metadata}
-      siteMetadata={siteMetadata}
-      menus={menus}
-    />
+    <>
+      <Head>
+        <title>{optimizedTitle}</title>
+        <meta name="description" content={optimizedDescription} />
+        <meta name="keywords" content={generateKeywords()} />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content={optimizedTitle} />
+        <meta property="og:description" content={optimizedDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://madaratalkon.sa/categories/${slug}`} />
+        <meta property="og:site_name" content="مدارات الكون" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={optimizedTitle} />
+        <meta name="twitter:description" content={optimizedDescription} />
+        
+        {/* Canonical URL */}
+        <link rel="canonical" href={`https://madaratalkon.sa/categories/${slug}`} />
+        
+        {/* Additional SEO */}
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="مدارات الكون" />
+      </Head>
+      
+      <ArchiveTemplate
+        title={name}
+        Title={<Title title={name} />}
+        posts={posts}
+        slug={slug}
+        metadata={metadata}
+        siteMetadata={siteMetadata}
+        menus={menus}
+      />
+    </>
   );
 }
 

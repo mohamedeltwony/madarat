@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet';
 import { useEffect, useState } from 'react';
+import Head from 'next/head';
 import {
   FaTwitter,
   FaFacebook,
@@ -54,6 +55,59 @@ export default function Post({ post, socialImage, related, recentPosts }) {
 
   const { metadata: siteMetadata = {}, homepage } = useSite();
 
+  // Generate optimized SEO title with fallbacks
+  const generateSEOTitle = () => {
+    // Priority order: metaTitle > title > fallback
+    let baseTitle = metaTitle || title || 'مقال جديد';
+    
+    // Clean the title from HTML entities and extra spaces
+    baseTitle = baseTitle.replace(/&[^;]+;/g, '').trim();
+    
+    // Add category context if available
+    const categoryName = categories?.[0]?.name;
+    if (categoryName && !baseTitle.includes(categoryName)) {
+      baseTitle = `${baseTitle} - ${categoryName}`;
+    }
+    
+    // Add brand name if not already included
+    const siteName = siteMetadata.title || 'مدارات الكون';
+    if (!baseTitle.includes(siteName)) {
+      baseTitle = `${baseTitle} | ${siteName}`;
+    }
+    
+    // Ensure title length is optimal (max 60 characters for Arabic)
+    if (baseTitle.length > 60) {
+      const parts = baseTitle.split(' | ');
+      if (parts[0].length > 45) {
+        parts[0] = parts[0].substring(0, 42) + '...';
+      }
+      baseTitle = parts.join(' | ');
+    }
+    
+    return baseTitle;
+  };
+
+  // Generate optimized meta description
+  const generateMetaDescription = () => {
+    if (description) return description;
+    
+    // Extract description from content if available
+    if (content) {
+      const textContent = content.replace(/<[^>]*>/g, '').trim();
+      const firstSentence = textContent.split('.')[0];
+      if (firstSentence.length > 20) {
+        return firstSentence.length > 155 
+          ? firstSentence.substring(0, 152) + '...'
+          : firstSentence + '.';
+      }
+    }
+    
+    return `اقرأ المزيد عن ${title || 'هذا المقال'} في مدارات الكون - دليلك الشامل للسفر والسياحة.`;
+  };
+
+  const optimizedTitle = generateSEOTitle();
+  const optimizedDescription = generateMetaDescription();
+
   useEffect(() => {
     setShareUrl(window.location.href);
 
@@ -96,16 +150,18 @@ export default function Post({ post, socialImage, related, recentPosts }) {
   const { metadata } = usePageMetadata({
     metadata: {
       ...post,
-      title: metaTitle,
-      description:
-        description || post.og?.description || `Read more about ${title}`,
+      title: optimizedTitle,
+      description: optimizedDescription,
     },
   });
 
   if (process.env.WORDPRESS_PLUGIN_SEO !== true) {
-    metadata.title = `${title} - ${siteMetadata.title}`;
-    metadata.og.title = metadata.title;
-    metadata.twitter.title = metadata.title;
+    metadata.title = optimizedTitle;
+    metadata.og.title = optimizedTitle;
+    metadata.twitter.title = optimizedTitle;
+    metadata.description = optimizedDescription;
+    metadata.og.description = optimizedDescription;
+    metadata.twitter.description = optimizedDescription;
   }
 
   const helmetSettings = helmetSettingsFromMetadata(metadata);
@@ -149,6 +205,39 @@ export default function Post({ post, socialImage, related, recentPosts }) {
 
   return (
     <Layout>
+      {/* Primary SEO with Next.js Head */}
+      <Head>
+        <title>{optimizedTitle}</title>
+        <meta name="description" content={optimizedDescription} />
+        <meta name="keywords" content={`${title}, ${categories?.map(cat => cat.name).join(', ')}, مدارات الكون, سياحة, سفر`} />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content={optimizedTitle} />
+        <meta property="og:description" content={optimizedDescription} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={shareUrl} />
+        <meta property="og:image" content={post.og.imageUrl} />
+        <meta property="og:site_name" content="مدارات الكون" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={optimizedTitle} />
+        <meta name="twitter:description" content={optimizedDescription} />
+        <meta name="twitter:image" content={post.og.imageUrl} />
+        
+        {/* Article specific meta */}
+        {author && <meta name="author" content={author.name} />}
+        {date && <meta property="article:published_time" content={date} />}
+        {modified && <meta property="article:modified_time" content={modified} />}
+        {categories?.map((category, index) => (
+          <meta key={index} property="article:section" content={category.name} />
+        ))}
+        
+        {/* Canonical URL */}
+        <link rel="canonical" href={shareUrl} />
+      </Head>
+      
+      {/* Fallback Helmet for compatibility */}
       <Helmet {...helmetSettings} />
       <ArticleJsonLd post={post} siteTitle={siteMetadata.title} />
 

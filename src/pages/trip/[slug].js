@@ -48,13 +48,11 @@ import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
 import jwt_decode from 'jwt-decode';
 import TripForm from '@/components/TripForm';
 import { trackSnapchatViewContent } from '@/utils/snapchatTracking';
+import { decodeHtmlEntitiesSafe } from '@/lib/util';
 
-// Function to decode HTML entities
+// Function to decode HTML entities using enhanced utility
 const decodeHtmlEntities = (text) => {
-  if (!text) return '';
-  const textArea = document.createElement('textarea');
-  textArea.innerHTML = text;
-  return textArea.value;
+  return decodeHtmlEntitiesSafe(text);
 };
 
 // Simple accordion component
@@ -449,11 +447,120 @@ export default function SingleTrip({ trip, metadata, menus }) {
   const price = (trip.wp_travel_engine_setting_trip_actual_price || trip.price || 4999).toLocaleString('en-US');
   const handleBookNow = () => setIsBookingModalOpen(true);
   
+  // Generate optimized SEO title for trip
+  const generateTripSEOTitle = () => {
+    let title = decodedTitle || trip.title || 'رحلة سياحية';
+    
+    // Clean the title from HTML entities and extra spaces
+    title = title.replace(/&[^;]+;/g, '').trim();
+    
+    // Add destination context if available
+    if (trip.destination && !title.includes(trip.destination)) {
+      title = `${title} - ${trip.destination}`;
+    }
+    
+    // Add duration if available
+    if (trip.duration && !title.includes(trip.duration)) {
+      title = `${title} ${trip.duration}`;
+    }
+    
+    // Add brand name
+    if (!title.includes('مدارات الكون')) {
+      title = `${title} | مدارات الكون`;
+    }
+    
+    // Ensure optimal length (max 60 characters for Arabic)
+    if (title.length > 60) {
+      const parts = title.split(' | ');
+      if (parts[0].length > 45) {
+        parts[0] = parts[0].substring(0, 42) + '...';
+      }
+      title = parts.join(' | ');
+    }
+    
+    return title;
+  };
+
+  // Generate meta description for trip
+  const generateTripDescription = () => {
+    if (description) {
+      const cleanDesc = description.replace(/<[^>]*>/g, '').trim();
+      return cleanDesc.length > 155 ? cleanDesc.substring(0, 152) + '...' : cleanDesc;
+    }
+    
+    let desc = `احجز رحلة ${decodedTitle || trip.title || 'سياحية مميزة'}`;
+    
+    if (trip.destination) {
+      desc += ` إلى ${trip.destination}`;
+    }
+    
+    if (trip.duration) {
+      desc += ` لمدة ${trip.duration}`;
+    }
+    
+    if (trip.price) {
+      desc += ` بسعر ${trip.price.toLocaleString('en-US')} ريال`;
+    }
+    
+    desc += ' مع مدارات الكون. أفضل العروض السياحية والخدمات المتميزة.';
+    
+    return desc.length > 155 ? desc.substring(0, 152) + '...' : desc;
+  };
+
+  // Generate keywords for trip
+  const generateTripKeywords = () => {
+    const keywords = ['مدارات الكون', 'رحلات سياحية', 'حجز رحلة', 'عروض سفر'];
+    
+    if (trip.destination) {
+      keywords.push(trip.destination, `رحلات ${trip.destination}`, `السياحة في ${trip.destination}`);
+    }
+    
+    if (trip.title) {
+      keywords.push(trip.title.replace(/&[^;]+;/g, '').trim());
+    }
+    
+    // Add relevant travel keywords
+    keywords.push('سياحة', 'سفر', 'عطلات', 'إجازات', 'فنادق', 'طيران');
+    
+    return keywords.join(', ');
+  };
+
   return (
     <Layout metadata={metadata} menus={menus}>
+      {/* Comprehensive SEO Head Section */}
       <Head>
-        <title>{decodedTitle} | مدارات الكون</title>
-        <meta name="description" content={description?.substring(0, 160)} />
+        <title>{generateTripSEOTitle()}</title>
+        <meta name="description" content={generateTripDescription()} />
+        <meta name="keywords" content={generateTripKeywords()} />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content={generateTripSEOTitle()} />
+        <meta property="og:description" content={generateTripDescription()} />
+        <meta property="og:type" content="product" />
+        <meta property="og:url" content={`https://madaratalkon.sa/trip/${trip.slug}`} />
+        <meta property="og:image" content={trip.images?.[0]?.src || '/images/default-trip.jpg'} />
+        <meta property="og:site_name" content="مدارات الكون" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={generateTripSEOTitle()} />
+        <meta name="twitter:description" content={generateTripDescription()} />
+        <meta name="twitter:image" content={trip.images?.[0]?.src || '/images/default-trip.jpg'} />
+        
+        {/* Product/Trip Specific Meta */}
+        <meta name="product:price:amount" content={trip.price} />
+        <meta name="product:price:currency" content="SAR" />
+        <meta name="product:availability" content="InStock" />
+        
+        {/* Location Meta */}
+        {trip.destination && <meta name="geo.placename" content={trip.destination} />}
+        
+        {/* Canonical URL */}
+        <link rel="canonical" href={`https://madaratalkon.sa/trip/${trip.slug}`} />
+        
+        {/* Additional SEO */}
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="مدارات الكون" />
       </Head>
       
       {/* Hero Section */}

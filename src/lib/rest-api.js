@@ -3,6 +3,8 @@
  * These functions replace the GraphQL functions with REST API equivalents
  */
 
+import { decodeHtmlEntitiesSafe } from './util';
+
 const API_URL = 'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json';
 
 // Check if we're building the site
@@ -187,12 +189,12 @@ export async function getAllPostsREST() {
 
     const posts = data.map((post) => ({
       id: post.id,
-      title: post.title.rendered,
+      title: decodeHtmlEntitiesSafe(post.title.rendered),
       slug: post.slug,
       date: post.date,
       modified: post.modified,
       content: post.content.rendered,
-      excerpt: post.excerpt?.rendered,
+      excerpt: decodeHtmlEntitiesSafe(post.excerpt?.rendered || ''),
       author: post._embedded?.author?.[0]
         ? {
             name: post._embedded.author[0].name,
@@ -202,7 +204,7 @@ export async function getAllPostsREST() {
       categories:
         post._embedded?.['wp:term']?.[0]?.map((cat) => ({
           id: cat.id,
-          name: cat.name,
+          name: decodeHtmlEntitiesSafe(cat.name),
           slug: cat.slug,
         })) || [],
       featuredImage: post._embedded?.['wp:featuredmedia']?.[0]
@@ -281,10 +283,10 @@ export async function getCategoriesREST() {
 
     const categories = data.map((category) => ({
       id: category.id,
-      name: category.name,
+      name: decodeHtmlEntitiesSafe(category.name),
       slug: category.slug,
       count: category.count,
-      description: category.description,
+      description: decodeHtmlEntitiesSafe(category.description || ''),
     }));
 
     return { categories };
@@ -307,12 +309,12 @@ export async function getPostsByCategoryREST(categoryId) {
 
     const posts = data.map((post) => ({
       id: post.id,
-      title: post.title.rendered,
+      title: decodeHtmlEntitiesSafe(post.title.rendered),
       slug: post.slug,
       date: post.date,
       modified: post.modified,
       content: post.content.rendered,
-      excerpt: post.excerpt?.rendered,
+      excerpt: decodeHtmlEntitiesSafe(post.excerpt?.rendered || ''),
       author: post._embedded?.author?.[0]
         ? {
             name: post._embedded.author[0].name,
@@ -322,7 +324,7 @@ export async function getPostsByCategoryREST(categoryId) {
       categories:
         post._embedded?.['wp:term']?.[0]?.map((cat) => ({
           id: cat.id,
-          name: cat.name,
+          name: decodeHtmlEntitiesSafe(cat.name),
           slug: cat.slug,
         })) || [],
       featuredImage: post._embedded?.['wp:featuredmedia']?.[0]
@@ -399,9 +401,9 @@ export async function getTripsREST(options = {}) {
           // Extract and format trip data
           return {
             id: trip.id,
-            title: trip.title?.rendered || 'رحلة بدون عنوان',
+            title: decodeHtmlEntitiesSafe(trip.title?.rendered || 'رحلة بدون عنوان'),
             slug: trip.slug || `trip-${trip.id}`,
-            excerpt: trip.excerpt?.rendered || '',
+            excerpt: decodeHtmlEntitiesSafe(trip.excerpt?.rendered || ''),
             content: trip.content?.rendered || '',
             featuredImage: featuredImage,
             tripSettings: {

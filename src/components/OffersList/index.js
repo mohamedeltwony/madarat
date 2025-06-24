@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from '../OfferTrips/OfferTrips.module.scss';
 import SparkleEffect from '../OfferTrips/SparkleEffect';
+import { decodeHtmlEntitiesSafe } from '@/lib/util';
 
 // SVG Icons as components
 const LocationIcon = () => (
@@ -79,23 +80,9 @@ export default function OffersList({ trips, pagination, onPageChange }) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
-  // Decode HTML entities in titles
+  // Decode HTML entities in titles - use enhanced utility function
   const decodeHTML = (html) => {
-    if (typeof window === 'undefined') {
-      return (
-        html
-          ?.replace(/&amp;/g, '&')
-          .replace(/&lt;/g, '<')
-          .replace(/&gt;/g, '>')
-          .replace(/&quot;/g, '"')
-          .replace(/&#039;/g, "'")
-          .replace(/&#8211;/g, '–') || ''
-      );
-    }
-
-    const txt = document.createElement('textarea');
-    txt.innerHTML = html;
-    return txt.value;
+    return decodeHtmlEntitiesSafe(html);
   };
 
   // Handle mouse enter and leave for sparkle effects

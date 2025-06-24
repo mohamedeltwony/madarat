@@ -7,6 +7,7 @@ import Container from '@/components/Container';
 import Section from '@/components/Section';
 import Meta from '@/components/Meta';
 import styles from '@/styles/pages/DestinationTrips.module.scss';
+import { decodeHtmlEntitiesSafe } from '@/lib/util';
 
 // Function to decode HTML entities and clean HTML
 function parseHtml(htmlString) {
@@ -15,30 +16,8 @@ function parseHtml(htmlString) {
   // Remove HTML tags first
   const textWithEntities = htmlString.replace(/<[^>]*>?/gm, '');
   
-  // Parse HTML entities
-  try {
-    // Client-side parsing
-    if (typeof DOMParser !== 'undefined') {
-      const parser = new DOMParser();
-      const dom = parser.parseFromString(`<!doctype html><body>${textWithEntities}`, 'text/html');
-      return dom.body.textContent || '';
-    }
-    
-    // Server-side fallback - handle common entities
-    return textWithEntities
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#039;/g, "'")
-      .replace(/&#39;/g, "'")
-      .replace(/&#8211;/g, '-')
-      .replace(/&#8212;/g, '--')
-      .replace(/&#8230;/g, '...');
-  } catch (e) {
-    console.error('Error parsing HTML:', e);
-    return textWithEntities;
-  }
+  // Use enhanced HTML entity decoding
+  return decodeHtmlEntitiesSafe(textWithEntities);
 }
 
 export default function DestinationPage({ destination, trips = [] }) {
