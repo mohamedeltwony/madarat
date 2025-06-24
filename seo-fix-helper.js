@@ -232,7 +232,7 @@ import Head from 'next/head';
         file: 'trips.js',
         title: 'Travel Packages & Tours - Madarat Travel Destinations',
         description: 'Explore our curated collection of travel packages and tours. From cultural adventures to luxury getaways, find your perfect trip with Madarat Travel.',
-        url: '/trips'
+        url: '/trip'
       },
       {
         file: 'destinations.js',

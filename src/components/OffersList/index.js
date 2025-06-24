@@ -222,7 +222,7 @@ export default function OffersList({ trips, pagination, onPageChange }) {
         {trips.map((trip) => (
           <div key={trip.id} className={styles.gridItem}>
             <Link
-              href={`/trips/${trip.slug}`}
+              href={`/trip/${trip.slug}`}
               className={styles.tripCard}
               onMouseEnter={() => handleMouseEnter(trip.id)}
               onMouseLeave={handleMouseLeave}

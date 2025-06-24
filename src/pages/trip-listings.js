@@ -66,7 +66,7 @@ export default function TripListingsPage({
               {dynamicTrips.map((trip) => (
                 <div key={trip.id} className={styles.tripCard}>
                   <Link 
-                    href={`/trips/${trip.slug}`} 
+                    href={`/trip/${trip.slug}`} 
                     className={styles.tripLink}
                   >
                     <div className={styles.tripContent}>
@@ -83,7 +83,7 @@ export default function TripListingsPage({
                           </span>
                         )}
                       </div>
-                      <span className={styles.tripPath}>/trips/{trip.slug}</span>
+                      <span className={styles.tripPath}>/trip/{trip.slug}</span>
                     </div>
                   </Link>
                 </div>

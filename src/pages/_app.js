@@ -70,7 +70,7 @@ function App({ Component, pageProps = {} }) {
   // Optimized trip page detection
   const isTripPage = useCallback(() => {
     const tripPaths = [
-      '-trip', '/trips/', '/generic-trip', '/international-licence-trip',
+      '-trip', '/trip/', '/generic-trip', '/international-licence-trip',
       '/schengen-visa-trip', '/bosnia-trip', '/georgia-trip', '/azerbaijan-trip',
       '/poland-trip', '/italy-trip', '/russia-trip', '/turkey-trip',
       '/trabzon-wider-north-turkey', '/cruise-italy-spain-france', '/london-scotland-trip'

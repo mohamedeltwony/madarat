@@ -44,6 +44,17 @@ const nextConfig = {
         destination: '/destinations/:slug',
         permanent: true, // 301 redirect
       },
+      // Redirect from trips to trip (singular)
+      {
+        source: '/trips',
+        destination: '/trip',
+        permanent: true, // 301 redirect
+      },
+      {
+        source: '/trips/:slug*',
+        destination: '/trip/:slug*',
+        permanent: true, // 301 redirect
+      },
     ];
   },
   

@@ -87,18 +87,18 @@ export default function Sitemap({ metadata, menus, posts, pages, trips }) {
                 <h2 className={styles.sectionTitle}>الرحلات</h2>
                 <ul className={styles.sitemapList}>
                   <li>
-                    <Link href="/trips">جميع الرحلات</Link>
+                    <Link href="/trip">جميع الرحلات</Link>
                     <ul>
                       {trips.slice(0, 20).map((trip) => (
                         <li key={trip.id}>
-                          <Link href={`/trips/${trip.slug}`}>
+                          <Link href={`/trip/${trip.slug}`}>
                             {trip.title}
                           </Link>
                         </li>
                       ))}
                       {trips.length > 20 && (
                         <li>
-                          <Link href="/trips">
+                          <Link href="/trip">
                             ... و {trips.length - 20} رحلة أخرى
                           </Link>
                         </li>

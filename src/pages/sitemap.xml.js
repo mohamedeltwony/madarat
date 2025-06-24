@@ -20,7 +20,7 @@ const createSitemap = () => {
       lastmod: currentDate
     },
     {
-      url: '/trips',
+      url: '/trip',
       changefreq: 'weekly', 
       priority: '0.9',
       lastmod: currentDate

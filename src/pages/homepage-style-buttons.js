@@ -77,7 +77,7 @@ const HomepageStyleButtonsPage = () => {
             >
               <HomepageStyleButton
                 text="عرض كل الرحلات"
-                href="/trips"
+                href="/trip"
                 icon={<ArrowIcon />}
               />
             </div>

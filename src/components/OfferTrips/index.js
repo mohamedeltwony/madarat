@@ -132,7 +132,7 @@ export default function OfferTrips() {
         {trips.map((trip) => (
           <div key={trip.id} className={styles.gridItem}>
             <Link 
-              href={`/trips/${trip.slug}`} 
+              href={`/trip/${trip.slug}`} 
               className={styles.tripCard}
               onMouseEnter={() => handleMouseEnter(trip.id)}
               onMouseLeave={handleMouseLeave}
@@ -193,7 +193,7 @@ export default function OfferTrips() {
       </div>
 
       <div className={styles.viewAllContainer}>
-        <Link href="/trips" className={styles.viewAllButton}>
+        <Link href="/trip" className={styles.viewAllButton}>
           <span>عرض كل الرحلات</span>
           <span className={styles.buttonIcon}><ArrowRightIcon /></span>
         </Link>

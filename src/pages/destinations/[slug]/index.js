@@ -135,7 +135,7 @@ export default function DestinationPage({ destination, trips = [] }) {
                 {filteredTrips.map((trip) => (
                   <Link
                     key={trip.id}
-                    href={`/trips/${trip.slug}`}
+                    href={`/trip/${trip.slug}`}
                     className={styles.tripCard}
                   >
                     <div className={styles.tripImage}>

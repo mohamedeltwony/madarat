@@ -23,7 +23,7 @@ const Footer = () => {
 
   // Check if current page is a trip landing page
   const isTripPage = router.pathname.includes('-trip') || 
-                     router.pathname.startsWith('/trips/') ||
+                     router.pathname.startsWith('/trip/') ||
                      router.pathname === '/generic-trip' ||
                      router.pathname === '/international-licence-trip' ||
                      router.pathname === '/schengen-visa-trip' ||

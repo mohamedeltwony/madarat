@@ -23,9 +23,9 @@
     const urlParts = currentUrl.split('/');
     
     // Only process if we're on a trip page
-    if (currentUrl.includes('/trips/')) {
-      // Find the slug part in the URL (it will be after /trips/)
-      const tripsIndex = urlParts.indexOf('trips') + 1;
+      if (currentUrl.includes('/trip/')) {
+    // Find the slug part in the URL (it will be after /trip/)
+      const tripsIndex = urlParts.indexOf('trip') + 1;
       if (tripsIndex < urlParts.length) {
         const encodedSlug = urlParts[tripsIndex];
         const decodedSlug = decodeArabicUrl(encodedSlug);

@@ -84,7 +84,7 @@ export default function TripCard({ trip = {} }) {
 
   return (
     <div className={styles.gridItem}>
-      <Link href={`/trips/${slug}`} className={styles.tripCard}>
+      <Link href={`/trip/${slug}`} className={styles.tripCard}>
         <div className={styles.tripImageContainer}>
           <Image
             src={imageUrl}

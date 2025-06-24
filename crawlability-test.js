@@ -467,7 +467,7 @@ class CrawlabilityTester {
       '',
       '/about',
       '/contact',
-      '/trips',
+      '/trip',
       '/destinations',
       '/blog'
     ];

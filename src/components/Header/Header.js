@@ -22,7 +22,7 @@ const Header = ({ menus }) => {
   const { pathname } = router;
   const isHomePage = pathname === '/';
   const isTripPage =
-    (pathname.includes('/trips/') && pathname !== '/trips') ||
+    (pathname.includes('/trip/') && pathname !== '/trip') ||
     pathname === '/book-now' ||
     pathname.includes('-trip') ||
     pathname === '/generic-trip' ||
@@ -278,7 +278,7 @@ const Header = ({ menus }) => {
                 </div>
                 {activeDropdown === 'trips' && (
                   <ul className={styles.sidebarSubmenu}>
-                    <li><LocalizedLink href="/trips">جميع الرحلات</LocalizedLink></li>
+                    <li><LocalizedLink href="/trip">جميع الرحلات</LocalizedLink></li>
                   </ul>
                 )}
               </li>
@@ -384,7 +384,7 @@ const Header = ({ menus }) => {
               </LocalizedLink>
             </li>
             <li className={styles.menuItem}>
-              <LocalizedLink href="/trips" className={styles.menuLink}>
+                                <LocalizedLink href="/trip" className={styles.menuLink}>
                 الرحلات
               </LocalizedLink>
             </li>

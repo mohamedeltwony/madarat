@@ -78,7 +78,7 @@ const SimpleGoldButtonsPage = () => {
             <h3 style={{ color: 'white', marginBottom: '15px' }}>With Icon:</h3>
             <SimpleGoldButton
               text="عرض كل الرحلات"
-              href="/trips"
+                              href="/trip"
               icon={<ArrowIcon />}
             />
           </div>
