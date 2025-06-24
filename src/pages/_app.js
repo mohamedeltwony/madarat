@@ -78,6 +78,11 @@ function App({ Component, pageProps = {} }) {
     return tripPaths.some(path => router.pathname.includes(path));
   }, [router.pathname]);
 
+  // Check if current page is a thank you page
+  const isThankYouPage = useCallback(() => {
+    return router.pathname.includes('thank-you');
+  }, [router.pathname]);
+
   // Optimized initialization with performance monitoring
   useEffect(() => {
     // Set RTL direction and language
@@ -246,7 +251,7 @@ function App({ Component, pageProps = {} }) {
         <NextNProgress height={4} color={variables.progressbarColor} />
       </Suspense>
       <Component {...pageProps} />
-      {!isTripPage() && (
+      {!isTripPage() && !isThankYouPage() && (
         <Suspense fallback={null}>
           <FloatingButtons />
         </Suspense>
