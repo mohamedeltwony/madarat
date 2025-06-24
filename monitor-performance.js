@@ -12,7 +12,7 @@ const ENDPOINTS = [
   '/',
   '/api/health',
   '/trips/من-براغ-إلى-باريس',
-  '/destinations/spain/trips',
+  '/destinations/spain',
   '/schengen-visa-trip'
 ];
 

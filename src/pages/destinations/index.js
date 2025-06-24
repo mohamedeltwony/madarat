@@ -159,7 +159,7 @@ export default function Destinations({ metadata, menus, destinations = [], error
               {filteredDestinations.map((destination) => (
                 <Link
                   key={destination.id}
-                  href={`/destinations/${destination.slug}/trips`}
+                  href={`/destinations/${destination.slug}`}
                   className={styles.destinationCard}
                 >
                   <div className={styles.destinationImage}>

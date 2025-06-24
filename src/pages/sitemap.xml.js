@@ -1,5 +1,5 @@
 const createSitemap = () => {
-  const baseUrl = 'https://madaratalkon.com';
+  const baseUrl = 'https://madaratalkon.sa';
   const currentDate = new Date().toISOString();
   
   // Define different update frequencies and priorities for different page types
@@ -166,39 +166,39 @@ const createSitemap = () => {
       lastmod: currentDate
     },
     
-    // Popular destination trip pages - high priority for SEO
+    // Popular destination pages - high priority for SEO
     {
-      url: '/destinations/turkey/trips',
+      url: '/destinations/turkey',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
     },
     {
-      url: '/destinations/georgia/trips',
+      url: '/destinations/georgia',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
     },
     {
-      url: '/destinations/azerbaijan/trips',
+      url: '/destinations/azerbaijan',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
     },
     {
-      url: '/destinations/italy/trips',
+      url: '/destinations/italy',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
     },
     {
-      url: '/destinations/bosnia/trips',
+      url: '/destinations/bosnia',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
     },
     {
-      url: '/destinations/poland/trips',
+      url: '/destinations/poland',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate

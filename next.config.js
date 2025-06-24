@@ -35,6 +35,17 @@ const nextConfig = {
       },
     ];
   },
+
+  // 301 Redirects for SEO - Old destination URLs to new structure
+  async redirects() {
+    return [
+      {
+        source: '/destinations/:slug/trips',
+        destination: '/destinations/:slug',
+        permanent: true, // 301 redirect
+      },
+    ];
+  },
   
   // URL encoding settings
   trailingSlash: false,

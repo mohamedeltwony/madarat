@@ -175,7 +175,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
     return (
       <Link
         key={destination.id}
-        href={`/destinations/${destination.slug}/trips`}
+        href={`/destinations/${destination.slug}`}
         className={styles.destinationCard}
         aria-label={`View trips for ${destination.title || 'Unknown destination'}`}
       >
