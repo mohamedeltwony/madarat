@@ -1,9 +1,32 @@
-const createSitemap = () => {
+import { getAllPosts } from '@/lib/posts';
+import { getAllPages } from '@/lib/pages';
+import { getAllTrips } from '@/lib/trips';
+
+const createSitemap = async () => {
   const baseUrl = 'https://madaratalkon.sa';
   const currentDate = new Date().toISOString();
   
-  // Define different update frequencies and priorities for different page types
-  const pages = [
+  // Fetch dynamic content
+  let posts = [];
+  let pages = [];
+  let trips = [];
+  
+  try {
+    const [postsData, pagesData, tripsData] = await Promise.all([
+      getAllPosts({ first: 1000 }).catch(() => ({ posts: [] })),
+      getAllPages().catch(() => ({ pages: [] })),
+      getAllTrips({ first: 1000 }).catch(() => ({ trips: [] }))
+    ]);
+    
+    posts = postsData.posts || [];
+    pages = pagesData.pages || [];
+    trips = tripsData.trips || [];
+  } catch (error) {
+    console.error('Error fetching dynamic content for sitemap:', error);
+  }
+  
+  // Define static pages with priorities and change frequencies
+  const staticPages = [
     // Homepage - highest priority, updated daily
     {
       url: '',
@@ -66,6 +89,12 @@ const createSitemap = () => {
       lastmod: currentDate
     },
     {
+      url: '/posts',
+      changefreq: 'weekly',
+      priority: '0.7',
+      lastmod: currentDate
+    },
+    {
       url: '/categories',
       changefreq: 'weekly',
       priority: '0.6',
@@ -92,83 +121,9 @@ const createSitemap = () => {
       lastmod: currentDate
     },
     
-    // Specific trip pages - high priority for SEO
-    {
-      url: '/turkey-trip',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/georgia-trip',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/azerbaijan-trip',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/italy-trip',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/bosnia-trip',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/poland-trip',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/russia-trip',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/london-scotland-trip',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/cruise-italy-spain-france',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/trabzon-wider-north-turkey',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/international-licence-trip',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/schengen-visa-trip',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    
     // Popular destination pages - high priority for SEO
     {
-              url: '/destination/turkey',
+      url: '/destination/turkey',
       changefreq: 'weekly',
       priority: '0.8',
       lastmod: currentDate
@@ -201,56 +156,6 @@ const createSitemap = () => {
       url: '/destination/poland',
       changefreq: 'weekly',
       priority: '0.8',
-      lastmod: currentDate
-    },
-    
-    // Package category pages
-    {
-      url: '/packages',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/packages/honeymoon',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/packages/family',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/packages/adventure',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/packages/luxury',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/packages/budget',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/packages/religious',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/packages/medical',
-      changefreq: 'weekly',
-      priority: '0.7',
       lastmod: currentDate
     },
     
@@ -298,20 +203,6 @@ const createSitemap = () => {
       lastmod: currentDate
     },
     
-    // Thank you and confirmation pages
-    {
-      url: '/thank-you-citizen',
-      changefreq: 'yearly',
-      priority: '0.3',
-      lastmod: currentDate
-    },
-    {
-      url: '/thank-you-resident',
-      changefreq: 'yearly',
-      priority: '0.3',
-      lastmod: currentDate
-    },
-    
     // Legal and policy pages - lowest priority, rarely updated
     {
       url: '/privacy-policy',
@@ -339,9 +230,48 @@ const createSitemap = () => {
     }
   ];
   
+  // Create dynamic URLs for posts
+  const postUrls = posts.map(post => ({
+    url: `/posts/${post.slug}`,
+    changefreq: 'monthly',
+    priority: '0.6',
+    lastmod: post.modified || post.date || currentDate
+  }));
+  
+  // Create dynamic URLs for pages
+  const pageUrls = pages.map(page => ({
+    url: page.uri || `/${page.slug}`,
+    changefreq: 'monthly',
+    priority: '0.5',
+    lastmod: page.modified || page.date || currentDate
+  }));
+  
+  // Create dynamic URLs for trips
+  const tripUrls = trips.map(trip => ({
+    url: `/trip/${trip.slug}`,
+    changefreq: 'weekly',
+    priority: '0.8',
+    lastmod: trip.modified || trip.date || currentDate
+  }));
+  
+  // Combine all URLs
+  const allPages = [
+    ...staticPages,
+    ...postUrls,
+    ...pageUrls,
+    ...tripUrls,
+  ];
+  
+  // Remove duplicates and invalid URLs
+  const uniquePages = allPages.filter((page, index, self) => 
+    index === self.findIndex(p => p.url === page.url) && 
+    page.url !== undefined && 
+    page.url !== null
+  );
+  
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${pages.map(page => `  <url>
+${uniquePages.map(page => `  <url>
     <loc>${baseUrl}${page.url}</loc>
     <lastmod>${page.lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
@@ -356,13 +286,21 @@ export default function SitemapXml() {
 
 export async function getServerSideProps({ res }) {
   try {
-    // Generate the XML sitemap with only Next.js pages
-    const sitemap = createSitemap();
+    // Generate the XML sitemap with dynamic content
+    const sitemap = await createSitemap();
 
-    // Set proper headers for XML sitemap
+    // Set proper headers for XML sitemap with optimized caching
     res.setHeader('Content-Type', 'text/xml; charset=utf-8');
-    res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=43200');
-    res.setHeader('X-Robots-Tag', 'noindex'); // Prevent sitemap itself from being indexed
+    
+    // Cache for 6 hours, allow stale for 12 hours for better performance
+    res.setHeader('Cache-Control', 'public, s-maxage=21600, stale-while-revalidate=43200');
+    
+    // Prevent sitemap itself from being indexed
+    res.setHeader('X-Robots-Tag', 'noindex');
+    
+    // Add ETag for better caching
+    const etag = Buffer.from(sitemap).toString('base64').slice(0, 16);
+    res.setHeader('ETag', `"${etag}"`);
     
     res.write(sitemap);
     res.end();

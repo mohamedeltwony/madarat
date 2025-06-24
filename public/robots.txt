@@ -145,6 +145,12 @@ Disallow: /_next/
 # SITEMAP & CRAWLING CONFIGURATION
 # =============================================================================
 
-# Sitemap for .sa domain
+# Main sitemap index for better organization and performance
+Sitemap: https://madaratalkon.sa/sitemap-index.xml
+
+# Individual sitemaps for different content types
 Sitemap: https://madaratalkon.sa/sitemap.xml
+Sitemap: https://madaratalkon.sa/sitemap-posts.xml
+Sitemap: https://madaratalkon.sa/sitemap-trips.xml
+Sitemap: https://madaratalkon.sa/sitemap-destinations.xml
 
