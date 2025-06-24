@@ -25,9 +25,7 @@ export default function TripsPage({
   const [error, setError] = useState(null);
   const [trips, setTrips] = useState(initialTrips);
   const [pagination, setPagination] = useState(initialPagination);
-  const [currentPage, setCurrentPage] = useState(
-    parseInt(router.query.page) || 1
-  );
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch trips when page changes
   useEffect(() => {
@@ -93,7 +91,9 @@ export default function TripsPage({
       undefined,
       { shallow: true }
     );
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -124,14 +124,8 @@ export default function TripsPage({
         ]}
       />
 
-      {/* Hero Section with hardcoded image */}
-      <div
-        className={styles.tripsHeroSection}
-        style={{
-          backgroundImage: 'url("/images/hero-background-new.png")',
-          backgroundPosition: 'center center',
-        }}
-      >
+      {/* Hero Section using CSS modules only */}
+      <div className={styles.tripsHeroSection}>
         <div className={styles.tripsHeroOverlay}></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className={styles.tripsHeroContent}>
