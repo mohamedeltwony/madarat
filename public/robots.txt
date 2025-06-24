@@ -1,5 +1,5 @@
-# Robots.txt for Madarat Alkawn Travel Website
-# Allow all search engines to crawl the site
+# Robots.txt for madaratalkon.sa
+# Primary domain - allows crawling
 
 User-agent: *
 Allow: /
@@ -44,132 +44,107 @@ Disallow: /_next/
 # =============================================================================
 
 # Block development and testing directories
-Disallow: /examples/
-Disallow: /test/
-Disallow: /tests/
-Disallow: /dev/
-Disallow: /staging/
+# Disallow: /examples/
+# Disallow: /test/
+# Disallow: /tests/
+# Disallow: /dev/
+# Disallow: /staging/
 
 # Block draft and preview content
-Disallow: /drafts/
-Disallow: /preview/
-Disallow: /preview-*
-Disallow: /*preview=*
-Disallow: /*draft=*
+# Disallow: /drafts/
+# Disallow: /preview/
+# Disallow: /preview-*
+# Disallow: /*preview=*
+# Disallow: /*draft=*
 
 # =============================================================================
 # SEARCH & DUPLICATE CONTENT - Prevent duplicate content issues
 # =============================================================================
 
 # Block search pages and parameters
-Disallow: /search
-Disallow: /search?*
-Disallow: /?s=
-Disallow: /*?search=*
-Disallow: /*?filter=*
-Disallow: /*?sort=*
+# Disallow: /search
+# Disallow: /search?*
+# Disallow: /?s=
+# Disallow: /*?search=*
+# Disallow: /*?filter=*
+# Disallow: /*?sort=*
 
 # Block pagination parameters
-Disallow: /*?page=*
-Disallow: /*?p=*
-Disallow: /*?m=
+# Disallow: /*?page=*
+# Disallow: /*?p=*
+# Disallow: /*?m=
 
 # =============================================================================
 # TRACKING & ANALYTICS PARAMETERS - Block tracking URLs
 # =============================================================================
 
 # Block common tracking parameters
-Disallow: /*?*utm_
-Disallow: /*?fbclid=*
-Disallow: /*?gclid=*
-Disallow: /*?ref=*
-Disallow: /*?*_ga=
-Disallow: /*?*_gl=
-Disallow: /*?*_gcl_au=
-Disallow: /*bdsid=
-Disallow: /*bd_prev_page=
+# Disallow: /*?*utm_
+# Disallow: /*?fbclid=*
+# Disallow: /*?gclid=*
+# Disallow: /*?ref=*
+# Disallow: /*?*_ga=
+# Disallow: /*?*_gl=
+# Disallow: /*?*_gcl_au=
+# Disallow: /*bdsid=
+# Disallow: /*bd_prev_page=
 
 # Block complex parameter combinations
-Disallow: /*?*&*&*
+# Disallow: /*?*&*&*
 
 # =============================================================================
 # FILE TYPE RESTRICTIONS - Block specific file types
 # =============================================================================
 
 # Block PHP and HTML files with parameters
-Disallow: /*.php?*
-Disallow: /*.htm$
+# Disallow: /*.php?*
+# Disallow: /*.htm$
 
 # =============================================================================
 # EXPLICITLY ALLOWED CONTENT - Important for SEO
 # =============================================================================
 
 # Allow important static resources
-Allow: /sitemap.xml
-Allow: /favicon.ico
-Allow: /robots.txt
-Allow: /site.webmanifest
-Allow: /web-manifest.json
+# Allow: /sitemap.xml
+# Allow: /favicon.ico
+# Allow: /robots.txt
+# Allow: /site.webmanifest
+# Allow: /web-manifest.json
 
 # Allow important content directories
-Allow: /post/
-Allow: /posts/
-Allow: /destinations/
-Allow: /trips/
-Allow: /blog/
-Allow: /about/
-Allow: /contact/
+# Allow: /post/
+# Allow: /posts/
+# Allow: /destinations/
+# Allow: /trips/
+# Allow: /blog/
+# Allow: /about/
+# Allow: /contact/
 
 # =============================================================================
 # MEDIA & ASSET FILES - Allow all media types for SEO and performance
 # =============================================================================
 
 # Allow CSS and JS files - Essential for proper page rendering analysis
-Allow: /*.css$
-Allow: /*.js$
+# Allow: /*.css$
+# Allow: /*.js$
 
 # Allow image and media files
-Allow: /*.jpg$
-Allow: /*.jpeg$
-Allow: /*.png$
-Allow: /*.gif$
-Allow: /*.svg$
-Allow: /*.webp$
-Allow: /*.ico$
+# Allow: /*.jpg$
+# Allow: /*.jpeg$
+# Allow: /*.png$
+# Allow: /*.gif$
+# Allow: /*.svg$
+# Allow: /*.webp$
+# Allow: /*.ico$
 
 # Allow font files
-Allow: /*.woff$
-Allow: /*.woff2$
+# Allow: /*.woff$
+# Allow: /*.woff2$
 
 # =============================================================================
 # SITEMAP & CRAWLING CONFIGURATION
 # =============================================================================
 
-# Sitemap location
-Sitemap: https://madaratalkon.com/sitemap.xml
+# Sitemap for .sa domain
+Sitemap: https://madaratalkon.sa/sitemap.xml
 
-# Optional: Crawl delay for respectful crawling
-# Uncomment if you experience server load issues
-# Crawl-delay: 1
-
-# =============================================================================
-# SEARCH ENGINE SPECIFIC RULES (Optional)
-# =============================================================================
-
-# Specific rules for different search engines (if needed)
-# User-agent: Googlebot
-# Allow: /
-
-# User-agent: Bingbot
-# Allow: /
-
-# Block specific problematic bots if needed
-# User-agent: BadBot
-# Disallow: /
-
-# Rate limiting for aggressive crawlers
-# User-agent: AhrefsBot
-# Crawl-delay: 10
-
-# User-agent: SemrushBot
-# Crawl-delay: 10

@@ -4,6 +4,7 @@ import { getCsrfToken } from '@/utils/csrf';
 import { trackFormSubmission, trackTripBooking, sendGTMEvent } from '../../lib/gtm';
 import { saveUserProfile, getUserTrackingData } from '@/utils/userIdentification';
 import { useGeolocation } from '@/hooks/useGeolocation';
+import { validateSaudiPhone, isSnapchatTraffic, getPhoneFromURL, normalizePhoneNumber } from '@/utils/phoneValidation';
 // Lazy load the SparkleButton component
 const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), { 
   ssr: false,
@@ -43,6 +44,25 @@ export default function TripForm({
   useEffect(() => {
     setFormData(initialFormData);
   }, [initialFormData]);
+
+  // Handle auto-population from URL parameters (common with Snapchat ads)
+  useEffect(() => {
+    const phoneFromURL = getPhoneFromURL();
+    if (phoneFromURL && !formData.phone) {
+      const isFromSnapchat = isSnapchatTraffic();
+      const isValid = validateSaudiPhone(phoneFromURL, isFromSnapchat);
+      
+      setFormData(prev => ({ ...prev, phone: phoneFromURL }));
+      setIsPhoneValid(isValid);
+      setPhoneTouched(true);
+      
+      console.log('Phone auto-populated from URL:', {
+        phone: phoneFromURL,
+        isValid: isValid,
+        isFromSnapchat: isFromSnapchat
+      });
+    }
+  }, [formData.phone]);
 
   const getBrowserAndDeviceInfo = (userAgent) => {
     const info = { browser: 'Unknown', os: 'Unknown', device: 'Unknown' };
@@ -103,9 +123,22 @@ export default function TripForm({
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     if (name === 'phone') {
       setPhoneTouched(true);
-      const phoneRegex = /^(0|5|966)([0-9]{8,12})$/;
-      currentPhoneValid = phoneRegex.test(value);
+      
+      // Enhanced validation with Snapchat support
+      const isFromSnapchat = isSnapchatTraffic();
+      currentPhoneValid = validateSaudiPhone(value, isFromSnapchat);
       setIsPhoneValid(currentPhoneValid);
+      
+      // Log for debugging Snapchat issues
+      if (isFromSnapchat) {
+        console.log('Snapchat phone validation:', {
+          input: value,
+          normalized: normalizePhoneNumber(value),
+          isValid: currentPhoneValid,
+          userAgent: navigator.userAgent,
+          referrer: document.referrer
+        });
+      }
     }
     if (
       !formStarted &&

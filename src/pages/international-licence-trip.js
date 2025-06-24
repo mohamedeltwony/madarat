@@ -114,10 +114,35 @@ export default function InternationalLicence() {
 
     if (name === 'phone') {
       setPhoneTouched(true);
-      // Updated phone validation regex to be consistent with cruise and schengen pages
+      
+      // Enhanced validation with Snapchat support
+      const isFromSnapchat = typeof window !== 'undefined' && (
+        new URLSearchParams(window.location.search).get('sc_click_id') ||
+        document.referrer.includes('snapchat.com') ||
+        navigator.userAgent.includes('Snapchat')
+      );
+      
+      // Enhanced phone validation
       const phoneRegex = /^(0|5|966)([0-9]{8,12})$/;
-      currentPhoneValid = phoneRegex.test(value);
+      const internationalRegex = /^(\+?966|0)?[5][0-9]{8}$/;
+      const numbersOnly = value.replace(/[^0-9]/g, '');
+      
+      currentPhoneValid = phoneRegex.test(value) || 
+                        (isFromSnapchat && internationalRegex.test(value)) ||
+                        (numbersOnly.length === 9 && numbersOnly.startsWith('5')) ||
+                        (numbersOnly.length === 10 && numbersOnly.startsWith('05')) ||
+                        (numbersOnly.length === 12 && numbersOnly.startsWith('966') && numbersOnly.substring(3).startsWith('5'));
+      
       setIsPhoneValid(currentPhoneValid);
+      
+      // Log for debugging Snapchat issues
+      if (isFromSnapchat) {
+        console.log('Snapchat phone validation (international-licence):', {
+          input: value,
+          isValid: currentPhoneValid,
+          userAgent: navigator.userAgent
+        });
+      }
     }
 
     // Trigger InitiateCheckout logic (Keep original logic)

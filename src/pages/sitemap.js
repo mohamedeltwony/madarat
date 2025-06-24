@@ -333,13 +333,13 @@ export async function getServerSideProps(context) {
     const pageMetadata = {
       title: 'خريطة الموقع - مدارات الكون',
       description: 'استعرض كامل هيكل موقع مدارات الكون وجميع الصفحات والأقسام المتاحة',
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/sitemap`,
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/sitemap`,
       robots: 'index, follow',
       og: {
         title: 'خريطة الموقع - مدارات الكون',
         description: 'استعرض كامل هيكل موقع مدارات الكون وجميع الصفحات والأقسام المتاحة',
         type: 'website',
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/sitemap`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/sitemap`,
         siteName: 'مدارات الكون',
       },
       twitter: {
