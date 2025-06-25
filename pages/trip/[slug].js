@@ -438,68 +438,99 @@ export default function SingleTrip({ trip, metadata, menus }) {
   }
   
   // Safe access to properties with fallbacks
-  const title = trip.title || '';
-  const decodedTitle = typeof window !== 'undefined' ? decodeHtmlEntities(title) : title;
-  const description = trip.description || '';
-  const hasItineraries = trip.itineraries && Array.isArray(trip.itineraries) && trip.itineraries.length > 0;
-  const hasFaqs = trip.faqs && Array.isArray(trip.faqs) && trip.faqs.length > 0;
-  const featuredImage = trip.gallery && trip.gallery.length > 0 ? trip.gallery[0].src : '/images/placeholder.jpg';
-  const price = (trip.wp_travel_engine_setting_trip_actual_price || trip.price || 4999).toLocaleString('en-US');
+  const rawTitle = trip?.title || '';
+  const title = decodeHtmlEntitiesSafe(rawTitle);
+  const description = trip?.description || '';
+  const hasItineraries = trip?.itineraries && Array.isArray(trip.itineraries) && trip.itineraries.length > 0;
+  const hasFaqs = trip?.faqs && Array.isArray(trip.faqs) && trip.faqs.length > 0;
+  const featuredImage = trip?.gallery && trip.gallery.length > 0 ? trip.gallery[0].src : '/images/placeholder.jpg';
+  const price = (trip?.wp_travel_engine_setting_trip_actual_price || trip?.price || 4999).toLocaleString('en-US');
   const handleBookNow = () => setIsBookingModalOpen(true);
   
   // Generate optimized SEO title for trip
   const generateTripSEOTitle = () => {
-    let title = decodedTitle || trip.title || 'رحلة سياحية';
+    // Start with the decoded title, ensuring we have a proper fallback
+    let seoTitle = title || trip?.title || 'رحلة سياحية مميزة';
     
-    // Clean the title from HTML entities and extra spaces
-    title = title.replace(/&[^;]+;/g, '').trim();
+    // Clean the title from any remaining HTML entities and extra spaces
+    seoTitle = seoTitle.replace(/&[^;]+;/g, '').replace(/\s+/g, ' ').trim();
     
-    // Add destination context if available
-    if (trip.destination && !title.includes(trip.destination)) {
-      title = `${title} - ${trip.destination}`;
+    // If title is still empty or just whitespace, use a meaningful fallback
+    if (!seoTitle || seoTitle.length === 0) {
+      // Try to create a title from destination + duration
+      const destinationName = trip?.destination?.title || trip?.destination?.name || trip?.destination || '';
+      const durationText = trip?.duration?.days ? `${trip.duration.days} أيام` : '';
+      
+      if (destinationName && durationText) {
+        seoTitle = `رحلة ${destinationName} ${durationText}`;
+      } else if (destinationName) {
+        seoTitle = `رحلة ${destinationName}`;
+      } else {
+        seoTitle = 'رحلة سياحية مميزة';
+      }
     }
     
-    // Add duration if available
-    if (trip.duration && !title.includes(trip.duration)) {
-      title = `${title} ${trip.duration}`;
+    // Add destination context if available and not already included
+    const destinationName = trip?.destination?.title || trip?.destination?.name || trip?.destination || '';
+    if (destinationName && !seoTitle.includes(destinationName)) {
+      seoTitle = `${seoTitle} - ${destinationName}`;
     }
     
-    // Add brand name
-    if (!title.includes('مدارات الكون')) {
-      title = `${title} | مدارات الكون`;
+    // Add duration if available and not already included
+    const durationText = trip?.duration?.days ? `${trip.duration.days} أيام` : '';
+    if (durationText && !seoTitle.includes(durationText)) {
+      seoTitle = `${seoTitle} ${durationText}`;
     }
     
-    // Ensure optimal length (max 60 characters for Arabic)
-    if (title.length > 60) {
-      const parts = title.split(' | ');
+    // Add brand name if not already included
+    if (!seoTitle.includes('مدارات الكون')) {
+      seoTitle = `${seoTitle} | مدارات الكون`;
+    }
+    
+    // Ensure optimal length (max 60 characters for Arabic SEO)
+    if (seoTitle.length > 60) {
+      const parts = seoTitle.split(' | ');
       if (parts[0].length > 45) {
         parts[0] = parts[0].substring(0, 42) + '...';
       }
-      title = parts.join(' | ');
+      seoTitle = parts.join(' | ');
     }
     
-    return title;
+    return seoTitle;
   };
 
   // Generate meta description for trip
   const generateTripDescription = () => {
-    if (description) {
-      const cleanDesc = description.replace(/<[^>]*>/g, '').trim();
-      return cleanDesc.length > 155 ? cleanDesc.substring(0, 152) + '...' : cleanDesc;
+    // If we have a description, clean it and use it
+    if (description && description.trim().length > 0) {
+      const cleanDesc = description.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, '').trim();
+      if (cleanDesc.length > 0) {
+        return cleanDesc.length > 155 ? cleanDesc.substring(0, 152) + '...' : cleanDesc;
+      }
     }
     
-    let desc = `احجز رحلة ${decodedTitle || trip.title || 'سياحية مميزة'}`;
+    // Build description from available data
+    const tripTitle = title || trip?.title || '';
+    const cleanTripTitle = tripTitle.replace(/&[^;]+;/g, '').trim();
     
-    if (trip.destination) {
-      desc += ` إلى ${trip.destination}`;
+    let desc = `احجز رحلة ${cleanTripTitle || 'سياحية مميزة'}`;
+    
+    // Add destination information
+    const destinationName = trip?.destination?.title || trip?.destination?.name || trip?.destination || '';
+    if (destinationName) {
+      desc += ` إلى ${destinationName}`;
     }
     
-    if (trip.duration) {
-      desc += ` لمدة ${trip.duration}`;
+    // Add duration information
+    const durationDays = trip?.duration?.days;
+    if (durationDays) {
+      desc += ` لمدة ${durationDays} أيام`;
     }
     
-    if (trip.price) {
-      desc += ` بسعر ${trip.price.toLocaleString('en-US')} ريال`;
+    // Add price information
+    const tripPrice = trip?.wp_travel_engine_setting_trip_actual_price || trip?.price;
+    if (tripPrice) {
+      desc += ` بسعر ${tripPrice.toLocaleString('en-US')} ريال`;
     }
     
     desc += ' مع مدارات الكون. أفضل العروض السياحية والخدمات المتميزة.';
@@ -511,18 +542,30 @@ export default function SingleTrip({ trip, metadata, menus }) {
   const generateTripKeywords = () => {
     const keywords = ['مدارات الكون', 'رحلات سياحية', 'حجز رحلة', 'عروض سفر'];
     
-    if (trip.destination) {
-      keywords.push(trip.destination, `رحلات ${trip.destination}`, `السياحة في ${trip.destination}`);
+    // Add destination-related keywords
+    const destinationName = trip?.destination?.title || trip?.destination?.name || trip?.destination || '';
+    if (destinationName) {
+      keywords.push(destinationName, `رحلات ${destinationName}`, `السياحة في ${destinationName}`);
     }
     
-    if (trip.title) {
-      keywords.push(trip.title.replace(/&[^;]+;/g, '').trim());
+    // Add cleaned trip title
+    const cleanTitle = title || trip?.title || '';
+    if (cleanTitle) {
+      const cleanedTitle = cleanTitle.replace(/&[^;]+;/g, '').trim();
+      if (cleanedTitle && cleanedTitle.length > 0) {
+        keywords.push(cleanedTitle);
+      }
     }
     
     // Add relevant travel keywords
-    keywords.push('سياحة', 'سفر', 'عطلات', 'إجازات', 'فنادق', 'طيران');
+    keywords.push('سياحة', 'سفر', 'عطلات', 'إجازات', 'فنادق', 'طيران', 'باكج سياحي', 'برنامج سياحي');
     
-    return keywords.join(', ');
+    // Remove duplicates and empty keywords (ensure all are strings)
+    const uniqueKeywords = [...new Set(keywords.filter(keyword => 
+      keyword && typeof keyword === 'string' && keyword.trim().length > 0
+    ))];
+    
+    return uniqueKeywords.join(', ');
   };
 
   return (
@@ -538,22 +581,24 @@ export default function SingleTrip({ trip, metadata, menus }) {
         <meta property="og:description" content={generateTripDescription()} />
         <meta property="og:type" content="product" />
         <meta property="og:url" content={`https://madaratalkon.sa/trip/${trip.slug}`} />
-        <meta property="og:image" content={trip.images?.[0]?.src || '/images/default-trip.jpg'} />
+        <meta property="og:image" content={trip?.gallery?.[0]?.src || featuredImage || '/images/default-trip.jpg'} />
         <meta property="og:site_name" content="مدارات الكون" />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={generateTripSEOTitle()} />
         <meta name="twitter:description" content={generateTripDescription()} />
-        <meta name="twitter:image" content={trip.images?.[0]?.src || '/images/default-trip.jpg'} />
+        <meta name="twitter:image" content={trip?.gallery?.[0]?.src || featuredImage || '/images/default-trip.jpg'} />
         
         {/* Product/Trip Specific Meta */}
-        <meta name="product:price:amount" content={trip.price} />
+        <meta name="product:price:amount" content={trip?.wp_travel_engine_setting_trip_actual_price || trip?.price || '4999'} />
         <meta name="product:price:currency" content="SAR" />
         <meta name="product:availability" content="InStock" />
         
         {/* Location Meta */}
-        {trip.destination && <meta name="geo.placename" content={trip.destination} />}
+        {(trip?.destination?.title || trip?.destination?.name || trip?.destination) && (
+          <meta name="geo.placename" content={trip?.destination?.title || trip?.destination?.name || trip?.destination} />
+        )}
         
         {/* Canonical URL */}
         <link rel="canonical" href={`https://madaratalkon.sa/trip/${trip.slug}`} />
@@ -568,7 +613,7 @@ export default function SingleTrip({ trip, metadata, menus }) {
         <div className={styles.heroImage}>
           <Image 
             src={featuredImage} 
-            alt={decodedTitle}
+            alt={title || trip?.title || 'رحلة سياحية مميزة'}
             fill
             sizes="100vw"
             quality={90} 
@@ -578,7 +623,7 @@ export default function SingleTrip({ trip, metadata, menus }) {
         </div>
         <Container>
           <div className={styles.heroContent}>
-            <h1>{decodeHtmlEntitiesSafe(title)}</h1>
+            <h1>{title || 'رحلة سياحية مميزة'}</h1>
             <div className={styles.tripInfo}>
               <div className={styles.infoItem}>
                 <FaCalendarAlt />
@@ -588,10 +633,10 @@ export default function SingleTrip({ trip, metadata, menus }) {
                 <FaMoneyBillWave />
                 <span>{price} {trip.currency?.code || 'ريال'}</span>
               </div>
-              {trip.destination && (
+              {(trip?.destination?.title || trip?.destination?.name || trip?.destination) && (
                 <div className={styles.infoItem}>
                   <FaMapMarkerAlt />
-                  <span>{trip.destination.title || ''}</span>
+                  <span>{trip?.destination?.title || trip?.destination?.name || trip?.destination}</span>
                 </div>
               )}
             </div>
@@ -762,7 +807,7 @@ export default function SingleTrip({ trip, metadata, menus }) {
               zapierConfig={{
                 endpoint: '/api/zapier-proxy',
                 extraPayload: {
-                  destination: decodedTitle || 'رحلة سياحية',
+                  destination: title || trip?.title || 'رحلة سياحية',
                   tripName: trip?.slug || 'dynamic-trip',
                   price: parseInt(price.replace(/,/g, '')) || 0,
                 },
