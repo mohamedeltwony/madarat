@@ -4,6 +4,12 @@ import Image from 'next/image';
 import { getSiteMetadata } from '@/lib/site';
 import { getAllMenus } from '@/lib/menus';
 import { 
+  extractWordPressMetaDescription, 
+  extractWordPressTitle, 
+  extractWordPressCanonical,
+  extractWordPressRobots 
+} from '@/utils/wordpress-meta';
+import { 
   FaCalendarAlt, 
   FaMapMarkerAlt, 
   FaMoneyBillWave, 
@@ -479,121 +485,15 @@ export default function SingleTrip({ trip, metadata, menus }) {
   const hasFaqs = trip?.faqs && Array.isArray(trip.faqs) && trip.faqs.length > 0;
   const handleBookNow = () => setIsBookingModalOpen(true);
   
-  // Generate optimized SEO title for trip
-  const generateTripSEOTitle = () => {
-    // Start with the cleaned title (which now has proper fallbacks)
-    let seoTitle = title || '';
-    
-    // Clean the title from any remaining HTML entities and extra spaces
-    seoTitle = seoTitle.replace(/&[^;]+;/g, '').replace(/\s+/g, ' ').trim();
-    
-    // Enhanced safety check - create meaningful fallback if title is still empty
-    if (!seoTitle || seoTitle.length === 0) {
-      // Try to create a meaningful title from trip data
-      const destinationName = trip?.destination?.title || trip?.destination?.name || trip?.destination || '';
-      const durationText = trip?.duration?.days ? `${trip.duration.days} أيام` : '';
-      
-      if (destinationName && durationText) {
-        seoTitle = `رحلة ${destinationName} ${durationText}`;
-      } else if (destinationName) {
-        seoTitle = `رحلة ${destinationName}`;
-      } else {
-        seoTitle = 'رحلة سياحية مميزة';
-      }
-    }
-    
-    // Add destination context if available and not already included
-    const destinationName = trip?.destination?.title || trip?.destination?.name || trip?.destination || '';
-    if (destinationName && !seoTitle.includes(destinationName)) {
-      seoTitle = `${seoTitle} - ${destinationName}`;
-    }
-    
-    // Add duration if available and not already included
-    const durationText = trip?.duration?.days ? `${trip.duration.days} أيام` : '';
-    if (durationText && !seoTitle.includes(durationText)) {
-      seoTitle = `${seoTitle} ${durationText}`;
-    }
-    
-    // Add brand name if not already included
-    if (!seoTitle.includes('مدارات الكون')) {
-      seoTitle = `${seoTitle} | مدارات الكون`;
-    }
-    
-    // Ensure optimal length (max 60 characters for Arabic SEO)
-    if (seoTitle.length > 60) {
-      const parts = seoTitle.split(' | ');
-      if (parts[0].length > 45) {
-        parts[0] = parts[0].substring(0, 42) + '...';
-      }
-      seoTitle = parts.join(' | ');
-    }
-    
-    return seoTitle;
-  };
-
-  // Generate meta description for trip
-  const generateTripDescription = () => {
-    // 1. First try Yoast SEO description from WordPress backend
-    if (trip.yoast_head_json?.description) {
-      return trip.yoast_head_json.description;
-    }
-    
-    // 2. Then try Yoast OG description
-    if (trip.yoast_head_json?.og_description) {
-      return trip.yoast_head_json.og_description;
-    }
-    
-    // 3. Then try excerpt (clean HTML)
-    if (trip.excerpt?.rendered) {
-      const cleanExcerpt = trip.excerpt.rendered
-        .replace(/<[^>]*>/g, '')
-        .replace(/&[^;]+;/g, '')
-        .replace(/\[&hellip;\]/g, '')
-        .trim();
-      if (cleanExcerpt.length > 0) {
-        return cleanExcerpt.length > 155 
-          ? cleanExcerpt.substring(0, 152) + '...' 
-          : cleanExcerpt;
-      }
-    }
-    
-    // 4. Finally, generate from trip data as fallback
-    // If we have a description, clean it and use it
-    if (description && description.trim().length > 0) {
-      const cleanDesc = description.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, '').trim();
-      if (cleanDesc.length > 0) {
-        return cleanDesc.length > 155 ? cleanDesc.substring(0, 152) + '...' : cleanDesc;
-      }
-    }
-    
-    // Build description from available data  
-    // Use the cleaned title which now has proper fallbacks
-    const cleanTripTitle = (title || 'رحلة سياحية مميزة').replace(/&[^;]+;/g, '').trim();
-    
-    let desc = `احجز رحلة ${cleanTripTitle}`;
-    
-    // Add destination information
-    const destinationName = trip?.destination?.title || trip?.destination?.name || trip?.destination || '';
-    if (destinationName) {
-      desc += ` إلى ${destinationName}`;
-    }
-    
-    // Add duration information
-    const durationDays = trip?.duration?.days;
-    if (durationDays) {
-      desc += ` لمدة ${durationDays} أيام`;
-    }
-    
-    // Add price information
-    const tripPrice = trip?.wp_travel_engine_setting_trip_actual_price || trip?.price;
-    if (tripPrice) {
-      desc += ` بسعر ${tripPrice.toLocaleString('en-US')} ريال`;
-    }
-    
-    desc += ' مع مدارات الكون. أفضل العروض السياحية والخدمات المتميزة.';
-    
-    return desc.length > 155 ? desc.substring(0, 152) + '...' : desc;
-  };
+  // WordPress-first SEO data extraction
+  const seoTitle = extractWordPressTitle(trip, title || 'رحلة سياحية مميزة');
+  const seoDescription = extractWordPressMetaDescription(trip, {
+    fallbackTitle: title,
+    fallbackType: 'trip',
+    maxLength: 155
+  });
+  const canonicalUrl = extractWordPressCanonical(trip, `https://madaratalkon.sa/trip/${trip.slug}`);
+  const robotsDirective = extractWordPressRobots(trip);
 
   // Generate keywords for trip
   const generateTripKeywords = () => {
@@ -624,24 +524,24 @@ export default function SingleTrip({ trip, metadata, menus }) {
 
   return (
     <Layout metadata={metadata} menus={menus}>
-      {/* Comprehensive SEO Head Section */}
+      {/* WordPress-First SEO Head Section */}
       <Head>
-        <title>{generateTripSEOTitle()}</title>
-        <meta name="description" content={generateTripDescription()} />
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
         <meta name="keywords" content={generateTripKeywords()} />
         
         {/* Open Graph */}
-        <meta property="og:title" content={generateTripSEOTitle()} />
-        <meta property="og:description" content={generateTripDescription()} />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
         <meta property="og:type" content="product" />
-        <meta property="og:url" content={`https://madaratalkon.sa/trip/${trip.slug}`} />
+        <meta property="og:url" content={canonicalUrl} />
         <meta property="og:image" content={trip?.gallery?.[0]?.src || featuredImage || '/images/default-trip.jpg'} />
         <meta property="og:site_name" content="مدارات الكون" />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={generateTripSEOTitle()} />
-        <meta name="twitter:description" content={generateTripDescription()} />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
         <meta name="twitter:image" content={trip?.gallery?.[0]?.src || featuredImage || '/images/default-trip.jpg'} />
         
         {/* Product/Trip Specific Meta */}
@@ -655,10 +555,10 @@ export default function SingleTrip({ trip, metadata, menus }) {
         )}
         
         {/* Canonical URL */}
-        <link rel="canonical" href={`https://madaratalkon.sa/trip/${trip.slug}`} />
+        <link rel="canonical" href={canonicalUrl} />
         
         {/* Additional SEO */}
-        <meta name="robots" content="index, follow" />
+        <meta name="robots" content={robotsDirective} />
         <meta name="author" content="مدارات الكون" />
       </Head>
       

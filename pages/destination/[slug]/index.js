@@ -5,9 +5,14 @@ import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import Container from '@/components/Container';
 import Section from '@/components/Section';
-import Meta from '@/components/Meta';
 import styles from '@/styles/pages/DestinationTrips.module.scss';
 import { decodeHtmlEntitiesSafe } from '@/lib/util';
+import { 
+  extractWordPressMetaDescription, 
+  extractWordPressTitle, 
+  extractWordPressCanonical,
+  extractWordPressRobots 
+} from '@/utils/wordpress-meta';
 
 // Function to decode HTML entities and clean HTML
 function parseHtml(htmlString) {
@@ -64,20 +69,32 @@ export default function DestinationPage({ destination, trips = [] }) {
     );
   }
 
+  // WordPress-first SEO data extraction for destination
+  const seoTitle = extractWordPressTitle(destination, `${destination.title} | رحلات مدارات`);
+  const seoDescription = extractWordPressMetaDescription(destination, {
+    fallbackTitle: destination.title,
+    fallbackType: 'destination',
+    maxLength: 155
+  });
+  const canonicalUrl = extractWordPressCanonical(destination, `https://madaratalkon.sa/destination/${destination.slug}`);
+  const robotsDirective = extractWordPressRobots(destination);
+
   return (
     <Layout>
       <Head>
-        <title>{destination.title} | رحلات مدارات</title>
-        <meta
-          name="description"
-          content={`اكتشف رحلات مدارات في ${destination.title}. مجموعة مميزة من الرحلات السياحية في ${destination.title}.`}
-        />
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="مدارات الكون" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta name="robots" content={robotsDirective} />
       </Head>
-
-      <Meta
-        title={`${destination.title} | رحلات مدارات`}
-        description={`اكتشف رحلات مدارات في ${destination.title}. مجموعة مميزة من الرحلات السياحية في ${destination.title}.`}
-      />
 
       <div className={styles.destinationTrips}>
         <Section className={styles.heroSection}>
