@@ -700,7 +700,7 @@ export default function ThankYouCitizen() {
     // Use a small delay to ensure fbq might be ready if loaded async
     const timer = setTimeout(trackLeadEventWithData, 500);
     return () => clearTimeout(timer);
-  }, [router.isReady, router.query]);
+  }, [router.isReady, router.query, router]);
   
   // Direct server event for Conversion API
   const sendServerEvent = async (eventName, eventData, eventId) => {

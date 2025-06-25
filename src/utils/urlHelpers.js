@@ -52,6 +52,7 @@ export const containsArabic = (text) => {
 export const containsNonASCII = (text) => {
   if (!text) return false;
   // ASCII characters are in the range 0-127
+  // eslint-disable-next-line no-control-regex
   return /[^\x00-\x7F]/.test(text);
 };
 
@@ -151,7 +152,7 @@ export const validateUrlASCII = (url) => {
   }
 
   // Check for other problematic characters
-  const problematicChars = /[<>"\s{}|\\^`\[\]]/;
+  const problematicChars = /[<>"\s{}|\\^`[\]]/;
   if (problematicChars.test(url)) {
     issues.push('Contains problematic characters for URLs');
   }

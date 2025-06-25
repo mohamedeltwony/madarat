@@ -384,7 +384,7 @@ export default function SingleTrip({ trip, metadata, menus }) {
     // Track after a short delay to ensure page is loaded
     const timer = setTimeout(trackViewContent, 1000);
     return () => clearTimeout(timer);
-  }, [trip?.slug, router]);
+  }, [trip?.slug, router, trip]);
 
   // Handle form success - redirect to thank you pages
   const handleFormSuccess = ({ processedPhone, externalId, leadEventId, nationality, email, name, firstName, lastName }) => {
