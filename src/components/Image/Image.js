@@ -1,5 +1,6 @@
 import ClassName from '@/models/classname';
 import { useState, useEffect } from 'react';
+import { toASCIISafeUrl, containsNonASCII } from '@/utils/urlHelpers';
 
 import styles from './Image.module.scss';
 
@@ -27,11 +28,41 @@ const Image = ({
   imageClassName.addIf(isLoaded, styles.loaded);
   imageClassName.addIf(isError, styles.error);
 
-  // Reset loading state when src changes
+  // Reset loading state when src changes and ensure ASCII-safe URLs
   useEffect(() => {
     setIsLoaded(false);
     setIsError(false);
-    setImageSrc(src);
+    
+    // Ensure the image source is ASCII-safe for better compatibility
+    if (src) {
+      try {
+        // For external URLs, encode only if they contain non-ASCII characters
+        if (src.startsWith('http') && containsNonASCII(src)) {
+          const url = new URL(src);
+          // Encode only the pathname and search params, keep domain intact
+          if (containsNonASCII(url.pathname)) {
+            const encodedPath = url.pathname.split('/').map(segment => 
+              segment && containsNonASCII(segment) ? encodeURIComponent(segment) : segment
+            ).join('/');
+            url.pathname = encodedPath;
+          }
+          if (containsNonASCII(url.search)) {
+            url.search = toASCIISafeUrl(url.search);
+          }
+          setImageSrc(url.toString());
+        } else if (!src.startsWith('http') && containsNonASCII(src)) {
+          // For relative URLs, encode the entire path
+          setImageSrc(toASCIISafeUrl(src));
+        } else {
+          setImageSrc(src);
+        }
+      } catch (error) {
+        console.warn('Error processing image URL:', error);
+        setImageSrc(src); // Fallback to original src
+      }
+    } else {
+      setImageSrc(src);
+    }
   }, [src]);
 
   const handleLoad = () => {

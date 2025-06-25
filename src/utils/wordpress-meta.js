@@ -193,13 +193,43 @@ export function extractWordPressTitle(wordpressData = {}, fallbackTitle = '') {
 }
 
 /**
- * Extracts WordPress canonical URL
+ * Extracts WordPress canonical URL with ASCII encoding for SEO compliance
  * @param {Object} wordpressData - WordPress data
  * @param {string} fallbackUrl - Fallback URL
- * @returns {string} - Canonical URL
+ * @returns {string} - ASCII-safe canonical URL
  */
 export function extractWordPressCanonical(wordpressData = {}, fallbackUrl = '') {
-  return wordpressData.yoast_head_json?.canonical || fallbackUrl;
+  // Import URL helpers dynamically to avoid circular dependencies
+  const { toASCIISafeUrl, containsNonASCII } = require('./urlHelpers');
+  
+  let canonicalUrl = wordpressData.yoast_head_json?.canonical || fallbackUrl;
+  
+  if (!canonicalUrl) return 'https://madaratalkon.sa';
+  
+  // Ensure the URL is ASCII-safe for SEO compliance
+  try {
+    const url = new URL(canonicalUrl);
+    
+    // Check if path contains non-ASCII characters
+    if (containsNonASCII(url.pathname)) {
+      // Encode only the path segments that contain non-ASCII characters
+      const pathSegments = url.pathname.split('/');
+      const encodedSegments = pathSegments.map(segment => {
+        if (segment && containsNonASCII(segment)) {
+          return encodeURIComponent(segment);
+        }
+        return segment;
+      });
+      
+      url.pathname = encodedSegments.join('/');
+      return url.toString();
+    }
+    
+    return canonicalUrl;
+  } catch (error) {
+    console.error('Error processing canonical URL:', error);
+    return canonicalUrl;
+  }
 }
 
 /**

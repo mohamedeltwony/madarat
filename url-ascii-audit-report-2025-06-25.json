@@ -1,0 +1,719 @@
+{
+  "summary": {
+    "totalUrls": 28,
+    "compliantUrls": 0,
+    "nonCompliantUrls": 28,
+    "highPriority": 20,
+    "mediumPriority": 1,
+    "lowPriority": 7,
+    "categories": {
+      "trip": 20,
+      "image": 1,
+      "nextImage": 7,
+      "other": 0
+    }
+  },
+  "auditDate": "2025-06-25T16:41:59.573Z",
+  "nonCompliantUrls": [
+    {
+      "originalUrl": "https://madaratalkon.sa/images/مدارات.png",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Fimages%2F%D9%85%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA.png"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/images/مدارات.png",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Fimages%2F%D9%85%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA.png",
+        "decoded": "https://madaratalkon.sa/images/مدارات.png",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.571Z",
+      "category": "image",
+      "priority": "MEDIUM",
+      "recommendation": "Rename image file to ASCII-safe name or ensure proper encoding in image references: https%3A%2F%2Fmadaratalkon.sa%2Fimages%2F%D9%85%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA.png"
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/سياحة-إيطاليا-7-أيام",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9-%D8%A5%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-7-%D8%A3%D9%8A%D8%A7%D9%85"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/سياحة-إيطاليا-7-أيام",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9-%D8%A5%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-7-%D8%A3%D9%8A%D8%A7%D9%85",
+        "decoded": "https://madaratalkon.sa/trip/سياحة-إيطاليا-7-أيام",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.572Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9-%D8%A5%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-7-%D8%A3%D9%8A%D8%A7%D9%85. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-اوروبا-13-يوم-مع-سائق-خاص",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-13-%D9%8A%D9%88%D9%85-%D9%85%D8%B9-%D8%B3%D8%A7%D8%A6%D9%82-%D8%AE%D8%A7%D8%B5"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-اوروبا-13-يوم-مع-سائق-خاص",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-13-%D9%8A%D9%88%D9%85-%D9%85%D8%B9-%D8%B3%D8%A7%D8%A6%D9%82-%D8%AE%D8%A7%D8%B5",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-اوروبا-13-يوم-مع-سائق-خاص",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-13-%D9%8A%D9%88%D9%85-%D9%85%D8%B9-%D8%B3%D8%A7%D8%A6%D9%82-%D8%AE%D8%A7%D8%B5. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/السياحة-في-اسبانيا-7-أيام",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9-%D9%81%D9%8A-%D8%A7%D8%B3%D8%A8%D8%A7%D9%86%D9%8A%D8%A7-7-%D8%A3%D9%8A%D8%A7%D9%85"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/السياحة-في-اسبانيا-7-أيام",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9-%D9%81%D9%8A-%D8%A7%D8%B3%D8%A8%D8%A7%D9%86%D9%8A%D8%A7-7-%D8%A3%D9%8A%D8%A7%D9%85",
+        "decoded": "https://madaratalkon.sa/trip/السياحة-في-اسبانيا-7-أيام",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9-%D9%81%D9%8A-%D8%A7%D8%B3%D8%A8%D8%A7%D9%86%D9%8A%D8%A7-7-%D8%A3%D9%8A%D8%A7%D9%85. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-سياحية-إلى-أوروبا-9-أيام",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B3%D9%8A%D8%A7%D8%AD%D9%8A%D8%A9-%D8%A5%D9%84%D9%89-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A3%D9%8A%D8%A7%D9%85"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-سياحية-إلى-أوروبا-9-أيام",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B3%D9%8A%D8%A7%D8%AD%D9%8A%D8%A9-%D8%A5%D9%84%D9%89-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A3%D9%8A%D8%A7%D9%85",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-سياحية-إلى-أوروبا-9-أيام",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B3%D9%8A%D8%A7%D8%AD%D9%8A%D8%A9-%D8%A5%D9%84%D9%89-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A3%D9%8A%D8%A7%D9%85. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-شرق-اوروبا-وايطاليا-11-يوم",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B4%D8%B1%D9%82-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D9%88%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-11-%D9%8A%D9%88%D9%85"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-شرق-اوروبا-وايطاليا-11-يوم",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B4%D8%B1%D9%82-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D9%88%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-11-%D9%8A%D9%88%D9%85",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-شرق-اوروبا-وايطاليا-11-يوم",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B4%D8%B1%D9%82-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D9%88%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-11-%D9%8A%D9%88%D9%85. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-براغ-وباريس-9-أيام",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A8%D8%B1%D8%A7%D8%BA-%D9%88%D8%A8%D8%A7%D8%B1%D9%8A%D8%B3-9-%D8%A3%D9%8A%D8%A7%D9%85"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-براغ-وباريس-9-أيام",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A8%D8%B1%D8%A7%D8%BA-%D9%88%D8%A8%D8%A7%D8%B1%D9%8A%D8%B3-9-%D8%A3%D9%8A%D8%A7%D9%85",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-براغ-وباريس-9-أيام",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A8%D8%B1%D8%A7%D8%BA-%D9%88%D8%A8%D8%A7%D8%B1%D9%8A%D8%B3-9-%D8%A3%D9%8A%D8%A7%D9%85. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-إلى-هولندا-وفرنسا-6-أيام",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A5%D9%84%D9%89-%D9%87%D9%88%D9%84%D9%86%D8%AF%D8%A7-%D9%88%D9%81%D8%B1%D9%86%D8%B3%D8%A7-6-%D8%A3%D9%8A%D8%A7%D9%85"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-إلى-هولندا-وفرنسا-6-أيام",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A5%D9%84%D9%89-%D9%87%D9%88%D9%84%D9%86%D8%AF%D8%A7-%D9%88%D9%81%D8%B1%D9%86%D8%B3%D8%A7-6-%D8%A3%D9%8A%D8%A7%D9%85",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-إلى-هولندا-وفرنسا-6-أيام",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A5%D9%84%D9%89-%D9%87%D9%88%D9%84%D9%86%D8%AF%D8%A7-%D9%88%D9%81%D8%B1%D9%86%D8%B3%D8%A7-6-%D8%A3%D9%8A%D8%A7%D9%85. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/عروض-سويسرا",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B9%D8%B1%D9%88%D8%B6-%D8%B3%D9%88%D9%8A%D8%B3%D8%B1%D8%A7"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/عروض-سويسرا",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B9%D8%B1%D9%88%D8%B6-%D8%B3%D9%88%D9%8A%D8%B3%D8%B1%D8%A7",
+        "decoded": "https://madaratalkon.sa/trip/عروض-سويسرا",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B9%D8%B1%D9%88%D8%B6-%D8%B3%D9%88%D9%8A%D8%B3%D8%B1%D8%A7. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/بريطانيا-وسكوتلاندا",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A8%D8%B1%D9%8A%D8%B7%D8%A7%D9%86%D9%8A%D8%A7-%D9%88%D8%B3%D9%83%D9%88%D8%AA%D9%84%D8%A7%D9%86%D8%AF%D8%A7"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/بريطانيا-وسكوتلاندا",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A8%D8%B1%D9%8A%D8%B7%D8%A7%D9%86%D9%8A%D8%A7-%D9%88%D8%B3%D9%83%D9%88%D8%AA%D9%84%D8%A7%D9%86%D8%AF%D8%A7",
+        "decoded": "https://madaratalkon.sa/trip/بريطانيا-وسكوتلاندا",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A8%D8%B1%D9%8A%D8%B7%D8%A7%D9%86%D9%8A%D8%A7-%D9%88%D8%B3%D9%83%D9%88%D8%AA%D9%84%D8%A7%D9%86%D8%AF%D8%A7. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-الى-اوروبا-9-أيام-للعوائل",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%84%D9%89-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A3%D9%8A%D8%A7%D9%85-%D9%84%D9%84%D8%B9%D9%88%D8%A7%D8%A6%D9%84"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-الى-اوروبا-9-أيام-للعوائل",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%84%D9%89-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A3%D9%8A%D8%A7%D9%85-%D9%84%D9%84%D8%B9%D9%88%D8%A7%D8%A6%D9%84",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-الى-اوروبا-9-أيام-للعوائل",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%84%D9%89-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A3%D9%8A%D8%A7%D9%85-%D9%84%D9%84%D8%B9%D9%88%D8%A7%D8%A6%D9%84. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/عروض-اوروبا-من-الشرق-إلى-الغرب",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B9%D8%B1%D9%88%D8%B6-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D9%85%D9%86-%D8%A7%D9%84%D8%B4%D8%B1%D9%82-%D8%A5%D9%84%D9%89-%D8%A7%D9%84%D8%BA%D8%B1%D8%A8"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/عروض-اوروبا-من-الشرق-إلى-الغرب",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B9%D8%B1%D9%88%D8%B6-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D9%85%D9%86-%D8%A7%D9%84%D8%B4%D8%B1%D9%82-%D8%A5%D9%84%D9%89-%D8%A7%D9%84%D8%BA%D8%B1%D8%A8",
+        "decoded": "https://madaratalkon.sa/trip/عروض-اوروبا-من-الشرق-إلى-الغرب",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B9%D8%B1%D9%88%D8%B6-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D9%85%D9%86-%D8%A7%D9%84%D8%B4%D8%B1%D9%82-%D8%A5%D9%84%D9%89-%D8%A7%D9%84%D8%BA%D8%B1%D8%A8. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-سياحية-في-اوروبا",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B3%D9%8A%D8%A7%D8%AD%D9%8A%D8%A9-%D9%81%D9%8A-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-سياحية-في-اوروبا",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B3%D9%8A%D8%A7%D8%AD%D9%8A%D8%A9-%D9%81%D9%8A-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-سياحية-في-اوروبا",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B3%D9%8A%D8%A7%D8%AD%D9%8A%D8%A9-%D9%81%D9%8A-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلات-الى-ايطاليا-11-يوم",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A7%D8%AA-%D8%A7%D9%84%D9%89-%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-11-%D9%8A%D9%88%D9%85"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلات-الى-ايطاليا-11-يوم",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A7%D8%AA-%D8%A7%D9%84%D9%89-%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-11-%D9%8A%D9%88%D9%85",
+        "decoded": "https://madaratalkon.sa/trip/رحلات-الى-ايطاليا-11-يوم",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A7%D8%AA-%D8%A7%D9%84%D9%89-%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-11-%D9%8A%D9%88%D9%85. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-سويسرا",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B3%D9%88%D9%8A%D8%B3%D8%B1%D8%A7"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-سويسرا",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B3%D9%88%D9%8A%D8%B3%D8%B1%D8%A7",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-سويسرا",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%B3%D9%88%D9%8A%D8%B3%D8%B1%D8%A7. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/عروض-ايطاليا",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B9%D8%B1%D9%88%D8%B6-%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/عروض-ايطاليا",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B9%D8%B1%D9%88%D8%B6-%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7",
+        "decoded": "https://madaratalkon.sa/trip/عروض-ايطاليا",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B9%D8%B1%D9%88%D8%B6-%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-الى-دول-اوروبا-9-ايام-للسعوديين",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%84%D9%89-%D8%AF%D9%88%D9%84-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A7%D9%8A%D8%A7%D9%85-%D9%84%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D9%8A%D9%86"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-الى-دول-اوروبا-9-ايام-للسعوديين",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%84%D9%89-%D8%AF%D9%88%D9%84-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A7%D9%8A%D8%A7%D9%85-%D9%84%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D9%8A%D9%86",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-الى-دول-اوروبا-9-ايام-للسعوديين",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%84%D9%89-%D8%AF%D9%88%D9%84-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A7%D9%8A%D8%A7%D9%85-%D9%84%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D9%8A%D9%86. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-اوروبا-9-أيام-للسعوديين",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A3%D9%8A%D8%A7%D9%85-%D9%84%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D9%8A%D9%86"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-اوروبا-9-أيام-للسعوديين",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A3%D9%8A%D8%A7%D9%85-%D9%84%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D9%8A%D9%86",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-اوروبا-9-أيام-للسعوديين",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-9-%D8%A3%D9%8A%D8%A7%D9%85-%D9%84%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D9%8A%D9%86. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/رحلة-إلى-براغ-والنمسا-وتشيك",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A5%D9%84%D9%89-%D8%A8%D8%B1%D8%A7%D8%BA-%D9%88%D8%A7%D9%84%D9%86%D9%85%D8%B3%D8%A7-%D9%88%D8%AA%D8%B4%D9%8A%D9%83"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/رحلة-إلى-براغ-والنمسا-وتشيك",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A5%D9%84%D9%89-%D8%A8%D8%B1%D8%A7%D8%BA-%D9%88%D8%A7%D9%84%D9%86%D9%85%D8%B3%D8%A7-%D9%88%D8%AA%D8%B4%D9%8A%D9%83",
+        "decoded": "https://madaratalkon.sa/trip/رحلة-إلى-براغ-والنمسا-وتشيك",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%B1%D8%AD%D9%84%D8%A9-%D8%A5%D9%84%D9%89-%D8%A8%D8%B1%D8%A7%D8%BA-%D9%88%D8%A7%D9%84%D9%86%D9%85%D8%B3%D8%A7-%D9%88%D8%AA%D8%B4%D9%8A%D9%83. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/النرويج-من-كوبنهاجن",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A7%D9%84%D9%86%D8%B1%D9%88%D9%8A%D8%AC-%D9%85%D9%86-%D9%83%D9%88%D8%A8%D9%86%D9%87%D8%A7%D8%AC%D9%86"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/النرويج-من-كوبنهاجن",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A7%D9%84%D9%86%D8%B1%D9%88%D9%8A%D8%AC-%D9%85%D9%86-%D9%83%D9%88%D8%A8%D9%86%D9%87%D8%A7%D8%AC%D9%86",
+        "decoded": "https://madaratalkon.sa/trip/النرويج-من-كوبنهاجن",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A7%D9%84%D9%86%D8%B1%D9%88%D9%8A%D8%AC-%D9%85%D9%86-%D9%83%D9%88%D8%A8%D9%86%D9%87%D8%A7%D8%AC%D9%86. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/trip/بكجات-سفر-اوروبا-بأسعار-رخيصة",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A8%D9%83%D8%AC%D8%A7%D8%AA-%D8%B3%D9%81%D8%B1-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D8%A8%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1-%D8%B1%D8%AE%D9%8A%D8%B5%D8%A9"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/trip/بكجات-سفر-اوروبا-بأسعار-رخيصة",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A8%D9%83%D8%AC%D8%A7%D8%AA-%D8%B3%D9%81%D8%B1-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D8%A8%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1-%D8%B1%D8%AE%D9%8A%D8%B5%D8%A9",
+        "decoded": "https://madaratalkon.sa/trip/بكجات-سفر-اوروبا-بأسعار-رخيصة",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "trip",
+      "priority": "HIGH",
+      "recommendation": "Update canonical URLs in trip pages to use encoded version: https%3A%2F%2Fmadaratalkon.sa%2Ftrip%2F%D8%A8%D9%83%D8%AC%D8%A7%D8%AA-%D8%B3%D9%81%D8%B1-%D8%A7%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D8%A8%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1-%D8%B1%D8%AE%D9%8A%D8%B5%D8%A9. Consider creating URL redirects from Arabic URLs to encoded versions."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fايطاليا-وسويسرا.jpg&w=2048&q=75",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-%D9%88%D8%B3%D9%88%D9%8A%D8%B3%D8%B1%D8%A7.jpg%26w%3D2048%26q%3D75"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fايطاليا-وسويسرا.jpg&w=2048&q=75",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-%D9%88%D8%B3%D9%88%D9%8A%D8%B3%D8%B1%D8%A7.jpg%26w%3D2048%26q%3D75",
+        "decoded": "https://madaratalkon.sa/_next/image?url=https://en4ha1dlwxxhwad.madaratalkon.com/wp-content/uploads/2025/05/ايطاليا-وسويسرا.jpg&w=2048&q=75",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "next-image",
+      "priority": "LOW",
+      "recommendation": "Next.js Image component should handle encoding automatically. Verify image source URLs are properly encoded."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fш-5.jpg&w=2048&q=75",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": false,
+        "issues": [
+          "Contains non-ASCII characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D1%88-5.jpg%26w%3D2048%26q%3D75"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fш-5.jpg&w=2048&q=75",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D1%88-5.jpg%26w%3D2048%26q%3D75",
+        "decoded": "https://madaratalkon.sa/_next/image?url=https://en4ha1dlwxxhwad.madaratalkon.com/wp-content/uploads/2025/05/ш-5.jpg&w=2048&q=75",
+        "hasNonASCII": true,
+        "hasArabic": false
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "next-image",
+      "priority": "LOW",
+      "recommendation": "Next.js Image component should handle encoding automatically. Verify image source URLs are properly encoded."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fاسرار.jpg&w=2048&q=75",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D8%A7%D8%B3%D8%B1%D8%A7%D8%B1.jpg%26w%3D2048%26q%3D75"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fاسرار.jpg&w=2048&q=75",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D8%A7%D8%B3%D8%B1%D8%A7%D8%B1.jpg%26w%3D2048%26q%3D75",
+        "decoded": "https://madaratalkon.sa/_next/image?url=https://en4ha1dlwxxhwad.madaratalkon.com/wp-content/uploads/2025/05/اسرار.jpg&w=2048&q=75",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "next-image",
+      "priority": "LOW",
+      "recommendation": "Next.js Image component should handle encoding automatically. Verify image source URLs are properly encoded."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/_next/image?url=%2Fimages%2Fشهادة%20الضريبة-1%20copy.webp&w=1920&q=100",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3D%252Fimages%252F%D8%B4%D9%87%D8%A7%D8%AF%D8%A9%2520%D8%A7%D9%84%D8%B6%D8%B1%D9%8A%D8%A8%D8%A9-1%2520copy.webp%26w%3D1920%26q%3D100"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/_next/image?url=%2Fimages%2Fشهادة%20الضريبة-1%20copy.webp&w=1920&q=100",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3D%252Fimages%252F%D8%B4%D9%87%D8%A7%D8%AF%D8%A9%2520%D8%A7%D9%84%D8%B6%D8%B1%D9%8A%D8%A8%D8%A9-1%2520copy.webp%26w%3D1920%26q%3D100",
+        "decoded": "https://madaratalkon.sa/_next/image?url=/images/شهادة الضريبة-1 copy.webp&w=1920&q=100",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "next-image",
+      "priority": "LOW",
+      "recommendation": "Next.js Image component should handle encoding automatically. Verify image source URLs are properly encoded."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fш-5.jpg&w=2048&q=90",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": false,
+        "issues": [
+          "Contains non-ASCII characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D1%88-5.jpg%26w%3D2048%26q%3D90"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fш-5.jpg&w=2048&q=90",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D1%88-5.jpg%26w%3D2048%26q%3D90",
+        "decoded": "https://madaratalkon.sa/_next/image?url=https://en4ha1dlwxxhwad.madaratalkon.com/wp-content/uploads/2025/05/ш-5.jpg&w=2048&q=90",
+        "hasNonASCII": true,
+        "hasArabic": false
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "next-image",
+      "priority": "LOW",
+      "recommendation": "Next.js Image component should handle encoding automatically. Verify image source URLs are properly encoded."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fايطاليا-وسويسرا.jpg&w=2048&q=90",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-%D9%88%D8%B3%D9%88%D9%8A%D8%B3%D8%B1%D8%A7.jpg%26w%3D2048%26q%3D90"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fايطاليا-وسويسرا.jpg&w=2048&q=90",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D8%A7%D9%8A%D8%B7%D8%A7%D9%84%D9%8A%D8%A7-%D9%88%D8%B3%D9%88%D9%8A%D8%B3%D8%B1%D8%A7.jpg%26w%3D2048%26q%3D90",
+        "decoded": "https://madaratalkon.sa/_next/image?url=https://en4ha1dlwxxhwad.madaratalkon.com/wp-content/uploads/2025/05/ايطاليا-وسويسرا.jpg&w=2048&q=90",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "next-image",
+      "priority": "LOW",
+      "recommendation": "Next.js Image component should handle encoding automatically. Verify image source URLs are properly encoded."
+    },
+    {
+      "originalUrl": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fاسرار.jpg&w=2048&q=90",
+      "validation": {
+        "isValid": false,
+        "isASCII": false,
+        "hasArabic": true,
+        "issues": [
+          "Contains non-ASCII characters",
+          "Contains Arabic characters"
+        ],
+        "suggestion": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D8%A7%D8%B3%D8%B1%D8%A7%D8%B1.jpg%26w%3D2048%26q%3D90"
+      },
+      "versions": {
+        "original": "https://madaratalkon.sa/_next/image?url=https%3A%2F%2Fen4ha1dlwxxhwad.madaratalkon.com%2Fwp-content%2Fuploads%2F2025%2F05%2Fاسرار.jpg&w=2048&q=90",
+        "encoded": "https%3A%2F%2Fmadaratalkon.sa%2F_next%2Fimage%3Furl%3Dhttps%253A%252F%252Fen4ha1dlwxxhwad.madaratalkon.com%252Fwp-content%252Fuploads%252F2025%252F05%252F%D8%A7%D8%B3%D8%B1%D8%A7%D8%B1.jpg%26w%3D2048%26q%3D90",
+        "decoded": "https://madaratalkon.sa/_next/image?url=https://en4ha1dlwxxhwad.madaratalkon.com/wp-content/uploads/2025/05/اسرار.jpg&w=2048&q=90",
+        "hasNonASCII": true,
+        "hasArabic": true
+      },
+      "timestamp": "2025-06-25T16:41:59.573Z",
+      "category": "next-image",
+      "priority": "LOW",
+      "recommendation": "Next.js Image component should handle encoding automatically. Verify image source URLs are properly encoded."
+    }
+  ],
+  "recommendations": [
+    {
+      "category": "Trip URLs",
+      "issue": "Arabic characters in trip page URLs",
+      "solution": "Update canonical URLs to use percent-encoded format",
+      "implementation": "Already implemented in extractWordPressCanonical function",
+      "impact": "HIGH - Improves SEO ranking stability and crawlability"
+    },
+    {
+      "category": "Image Files",
+      "issue": "Arabic characters in image filenames",
+      "solution": "Rename files to ASCII-safe names or use proper encoding",
+      "implementation": "Update image references in components and WordPress",
+      "impact": "MEDIUM - Improves image SEO and accessibility"
+    },
+    {
+      "category": "Next.js Images",
+      "issue": "Non-ASCII characters in Next.js image optimization URLs",
+      "solution": "Ensure source URLs are properly encoded before passing to Image component",
+      "implementation": "Update Image component usage to encode src URLs",
+      "impact": "LOW - Next.js handles most encoding automatically"
+    },
+    {
+      "category": "Canonical URLs",
+      "issue": "Non-ASCII canonical URLs in meta tags",
+      "solution": "Use ASCII-encoded versions in canonical link tags",
+      "implementation": "Update SEO components to use extractWordPressCanonical",
+      "impact": "HIGH - Critical for search engine understanding"
+    }
+  ]
+}
