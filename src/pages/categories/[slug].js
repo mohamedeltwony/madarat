@@ -3,6 +3,7 @@ import { getPostsByCategoryId } from '@/lib/posts';
 import usePageMetadata from '@/hooks/use-page-metadata';
 import { getSiteMetadata } from '@/lib/site';
 import { getAllMenus } from '@/lib/menus';
+import { generateSEOTitle, generateSEODescription } from '@/utils/seo-helpers';
 import Head from 'next/head';
 
 import ArchiveTemplate from '@/templates/archive';
@@ -11,59 +12,31 @@ import Title from '@/components/Title';
 export default function Category({ category, posts, siteMetadata, menus }) {
   const { name, description, slug } = category;
 
-  // Generate optimized SEO title for category
-  const generateCategorySEOTitle = () => {
-    const siteName = siteMetadata?.title || 'مدارات الكون';
-    let categoryTitle = name || 'فئة';
-    
-    // Clean category name from HTML entities
-    categoryTitle = categoryTitle.replace(/&[^;]+;/g, '').trim();
-    
-    // Create descriptive title based on category
-    const postsCount = posts?.length || 0;
-    let seoTitle = '';
-    
-    if (postsCount > 0) {
-      seoTitle = `${categoryTitle} - ${postsCount} مقال | ${siteName}`;
-    } else {
-      seoTitle = `${categoryTitle} - مقالات السفر والسياحة | ${siteName}`;
-    }
-    
-    // Ensure optimal length
-    if (seoTitle.length > 60) {
-      const parts = seoTitle.split(' | ');
-      if (parts[0].length > 45) {
-        parts[0] = parts[0].substring(0, 42) + '...';
-      }
-      seoTitle = parts.join(' | ');
-    }
-    
-    return seoTitle;
-  };
+  // Generate optimized SEO title for category using enhanced helper
+  const optimizedTitle = generateSEOTitle({
+    title: name || '',
+    type: 'category',
+    extras: { postsCount: posts?.length || 0 }
+  });
 
-  // Generate meta description for category
-  const generateCategoryDescription = () => {
-    if (description) {
-      return description.replace(/<[^>]*>/g, '').trim();
-    }
-    
-    const postsCount = posts?.length || 0;
-    return `استكشف ${postsCount} مقال في فئة ${name}. اكتشف أفضل النصائح والمعلومات حول ${name} مع مدارات الكون - دليلك الشامل للسفر والسياحة.`;
-  };
-
-  const optimizedTitle = generateCategorySEOTitle();
-  const optimizedDescription = generateCategoryDescription();
+  // Generate meta description for category using enhanced helper
+  const optimizedDescription = generateSEODescription({
+    title: name || '',
+    type: 'category',
+    description: description || '',
+    extras: { postsCount: posts?.length || 0 }
+  });
 
   // Generate keywords for category
   const generateKeywords = () => {
     const baseKeywords = [name, 'مدارات الكون', 'سياحة', 'سفر', 'مقالات'];
     
     // Add related keywords based on category name
-    if (name.includes('البوسنة')) {
+    if (name && name.includes('البوسنة')) {
       baseKeywords.push('البوسنة والهرسك', 'سراييفو', 'رحلات البوسنة');
-    } else if (name.includes('تركيا')) {
+    } else if (name && name.includes('تركيا')) {
       baseKeywords.push('اسطنبول', 'رحلات تركيا', 'السياحة في تركيا');
-    } else if (name.includes('السياحة')) {
+    } else if (name && name.includes('السياحة')) {
       baseKeywords.push('وجهات سياحية', 'عروض سفر', 'حجز رحلات');
     }
     
