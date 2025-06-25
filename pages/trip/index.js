@@ -106,9 +106,9 @@ export default function TripsPage({
         />
         <meta property="og:title" content="الرحلات السياحية - مدارات الكون | أفضل العروض السياحية والرحلات المميزة" />
         <meta property="og:description" content="اكتشف مجموعتنا المتنوعة من الرحلات السياحية والعروض المميزة مع مدارات الكون. رحلات إلى أجمل الوجهات العالمية بأسعار تنافسية وخدمات عالية الجودة." />
-        <meta property="og:url" content="https://madaratalkon.com/trip" />
+        <meta property="og:url" content="https://madaratalkon.sa/trip" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://madaratalkon.com/images/trips-og-image.jpg" />
+        <meta property="og:image" content="https://madaratalkon.sa/images/trips-og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="الرحلات السياحية - مدارات الكون" />
         <meta name="twitter:description" content="اكتشف مجموعتنا المتنوعة من الرحلات السياحية والعروض المميزة مع مدارات الكون." />

@@ -171,21 +171,21 @@ export async function getStaticProps() {
     const pageMetadata = {
       title: 'الكتّاب - مدارات الكون',
       description: `تعرف على فريق الكتّاب المتميزين في مدارات الكون. ${sortedAuthors.length} كاتب يشاركونك خبراتهم في السفر والسياحة`,
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/authors`,
+              canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/authors`,
       robots: 'index, follow',
       og: {
         title: 'الكتّاب - مدارات الكون',
         description: `تعرف على فريق الكتّاب المتميزين في مدارات الكون. ${sortedAuthors.length} كاتب يشاركونك خبراتهم في السفر والسياحة`,
         type: 'website',
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/authors`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/authors`,
         siteName: 'مدارات الكون',
-        image: sortedAuthors[0]?.avatar?.url || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/authors-og.jpg`,
+        image: sortedAuthors[0]?.avatar?.url || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/images/authors-og.jpg`,
       },
       twitter: {
         card: 'summary_large_image',
         title: 'الكتّاب - مدارات الكون',
         description: `تعرف على فريق الكتّاب المتميزين في مدارات الكون. ${sortedAuthors.length} كاتب يشاركونك خبراتهم في السفر والسياحة`,
-        image: sortedAuthors[0]?.avatar?.url || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/authors-og.jpg`,
+        image: sortedAuthors[0]?.avatar?.url || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/images/authors-og.jpg`,
       },
     };
 

@@ -109,8 +109,8 @@ export default function Home({
         />
         <meta property="og:description" content="اكتشف معنا أجمل الوجهات السياحية حول العالم مع مدارات الكون. نقدم لك أفضل العروض السياحية والرحلات المميزة إلى البوسنة وتركيا وجورجيا وأذربيجان بأسعار تنافسية وخدمات عالية الجودة." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://madaratalkon.com/" />
-        <meta property="og:image" content="https://madaratalkon.com/images/homepage-og-image.jpg" />
+        <meta property="og:url" content="https://madaratalkon.sa/" />
+        <meta property="og:image" content="https://madaratalkon.sa/images/homepage-og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي" />
         <meta name="twitter:description" content="اكتشف معنا أجمل الوجهات السياحية حول العالم مع مدارات الكون. أفضل العروض السياحية والرحلات المميزة." />

@@ -286,8 +286,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 "@context": "https://schema.org",
                 "@type": "Organization",
                 "name": "مدارات الكون",
-                "url": "https://madaratalkon.com",
-                "logo": "https://madaratalkon.com/Madarat-logo-768x238.png",
+                        "url": "https://madaratalkon.sa",
+        "logo": "https://madaratalkon.sa/Madarat-logo-768x238.png",
                 "description": "شركة مدارات الكون للسياحة والسفر - اكتشف معنا أجمل الوجهات السياحية حول العالم",
                 "address": {
                   "@type": "PostalAddress",

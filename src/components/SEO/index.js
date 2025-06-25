@@ -25,7 +25,7 @@ const SEO = ({
   canonical,
 }) => {
   const router = useRouter();
-  const siteUrl = 'https://madaratalkon.com';
+  const siteUrl = 'https://madaratalkon.sa';
   const currentUrl = `${siteUrl}${router.asPath}`;
   
   // Default values

@@ -70,9 +70,9 @@ export default function Destinations({ metadata, menus, destinations = [], error
         />
         <meta property="og:title" content="الوجهات السياحية - مدارات الكون | اكتشف أجمل الوجهات حول العالم" />
         <meta property="og:description" content="اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل الأماكن حول العالم مع مدارات الكون. وجهات متنوعة في أوروبا وآسيا وأفريقيا بأفضل الأسعار والخدمات." />
-        <meta property="og:url" content="https://madaratalkon.com/destination" />
+        <meta property="og:url" content="https://madaratalkon.sa/destination" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://madaratalkon.com/images/destinations-og-image.jpg" />
+        <meta property="og:image" content="https://madaratalkon.sa/images/destinations-og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="الوجهات السياحية - مدارات الكون" />
         <meta name="twitter:description" content="اكتشف وجهاتنا السياحية المميزة واستمتع برحلات لا تُنسى في أجمل الأماكن حول العالم." />
@@ -300,21 +300,21 @@ export async function getStaticProps() {
       const pageMetadata = {
         title: 'الوجهات السياحية - مدارات الكون',
         description: `اكتشف ${formattedDestinations.length} وجهة سياحية مميزة مع مدارات الكون. رحلات لا تُنسى في أجمل الأماكن حول العالم`,
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/destination`,
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/destination`,
         robots: 'index, follow',
         og: {
           title: 'الوجهات السياحية - مدارات الكون',
           description: `اكتشف ${formattedDestinations.length} وجهة سياحية مميزة مع مدارات الكون`,
           type: 'website',
-          url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/destination`,
+          url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/destination`,
           siteName: 'مدارات الكون',
-          image: formattedDestinations[0]?.image || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/destinations-og.jpg`,
+          image: formattedDestinations[0]?.image || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/images/destinations-og.jpg`,
         },
         twitter: {
           card: 'summary_large_image',
           title: 'الوجهات السياحية - مدارات الكون',
           description: `اكتشف ${formattedDestinations.length} وجهة سياحية مميزة مع مدارات الكون`,
-          image: formattedDestinations[0]?.image || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/images/destinations-og.jpg`,
+          image: formattedDestinations[0]?.image || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/images/destinations-og.jpg`,
         },
       };
 

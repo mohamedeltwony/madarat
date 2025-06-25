@@ -21,9 +21,9 @@ export default function Blog() {
         />
         <meta property="og:title" content="مدونة مدارات الكون - نصائح السفر والسياحة والوجهات المميزة" />
         <meta property="og:description" content="تصفح أحدث المقالات والنصائح حول السفر والسياحة من خبراء مدارات الكون. اكتشف الوجهات المميزة، نصائح التخطيط للرحلات، وأفضل العروض السياحية حول العالم." />
-        <meta property="og:url" content="https://madaratalkon.com/blog" />
+        <meta property="og:url" content="https://madaratalkon.sa/blog" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://madaratalkon.com/images/blog-og-image.jpg" />
+        <meta property="og:image" content="https://madaratalkon.sa/images/blog-og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="مدونة مدارات الكون - نصائح السفر والسياحة" />
         <meta name="twitter:description" content="تصفح أحدث المقالات والنصائح حول السفر والسياحة من خبراء مدارات الكون." />

@@ -45,9 +45,9 @@ export default function About() {
         />
         <meta property="og:title" content="عن مدارات الكون - شركة السياحة والسفر الرائدة في السعودية" />
         <meta property="og:description" content="تعرف على مدارات الكون للسياحة والسفر - شركة سعودية رائدة في تنظيم الرحلات حول العالم. نقدم تجارب سفر فريدة ومخصصة تلبي كافة احتياجاتك مع خبرة سنوات في مجال السياحة والسفر." />
-        <meta property="og:url" content="https://madaratalkon.com/about" />
+        <meta property="og:url" content="https://madaratalkon.sa/about" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://madaratalkon.com/images/about-og-image.jpg" />
+        <meta property="og:image" content="https://madaratalkon.sa/images/about-og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="عن مدارات الكون - شركة السياحة والسفر الرائدة في السعودية" />
         <meta name="twitter:description" content="تعرف على مدارات الكون للسياحة والسفر - شركة سعودية رائدة في تنظيم الرحلات حول العالم." />

@@ -1,0 +1,87 @@
+# Complete Search Engine Block for WordPress Backend
+# This file should be placed in the root directory of your WordPress backend
+
+# Block all search engines from the entire site
+User-agent: *
+Disallow: /
+
+# Specifically block major search engines
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /
+
+User-agent: Slurp
+Disallow: /
+
+User-agent: DuckDuckBot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: facebookexternalhit
+Disallow: /
+
+User-agent: Twitterbot
+Disallow: /
+
+# Block specific WordPress areas (additional protection)
+User-agent: *
+Disallow: /wp-admin/
+Disallow: /wp-includes/
+Disallow: /wp-content/uploads/
+Disallow: /wp-content/themes/
+Disallow: /wp-content/plugins/
+Disallow: /wp-json/
+Disallow: /feed/
+Disallow: /comments/feed/
+Disallow: /?feed=
+Disallow: /xmlrpc.php
+Disallow: /wp-login.php
+Disallow: /wp-register.php
+Disallow: /wp-config.php
+Disallow: /readme.html
+Disallow: /license.txt
+
+# Block query parameters that might expose sensitive data
+Disallow: /*?*
+Disallow: /*&*
+Disallow: /?s=
+Disallow: /*?s=*
+Disallow: /*?p=*
+Disallow: /*?page_id=*
+Disallow: /*?author=*
+Disallow: /*?cat=*
+Disallow: /*?tag=*
+Disallow: /*?m=*
+Disallow: /*?year=*
+Disallow: /*?monthnum=*
+Disallow: /*?day=*
+Disallow: /*?attachment_id=*
+Disallow: /*?preview=*
+Disallow: /*?_ga=*
+
+# Block common WordPress endpoints
+Disallow: /author/
+Disallow: /date/
+Disallow: /category/
+Disallow: /tag/
+Disallow: /page/
+Disallow: /search/
+Disallow: /archives/
+
+# No sitemap reference since we don't want indexing
+# Sitemap: (intentionally removed)
+
+# Additional security measures
+Disallow: /cgi-bin/
+Disallow: /.htaccess
+Disallow: /error_log
+Disallow: /wp-config-sample.php
+Disallow: /install.php
+Disallow: /upgrade.php 

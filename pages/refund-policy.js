@@ -217,13 +217,13 @@ export async function getServerSideProps(context) {
     const pageMetadata = {
       title: 'سياسة الاسترداد - مدارات الكون',
       description: 'سياسة الاسترداد والإلغاء الخاصة بشركة مدارات الكون للسياحة والسفر. تعرف على شروط وأحكام الاسترداد والإلغاء.',
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/refund-policy`,
+              canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/refund-policy`,
       robots: 'index, follow',
       og: {
         title: 'سياسة الاسترداد - مدارات الكون',
         description: 'سياسة الاسترداد والإلغاء الخاصة بشركة مدارات الكون للسياحة والسفر',
         type: 'article',
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.com'}/refund-policy`,
+                  url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/refund-policy`,
         siteName: 'مدارات الكون',
       },
       twitter: {

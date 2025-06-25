@@ -116,9 +116,9 @@ const ContactPage = () => {
         />
         <meta property="og:title" content="تواصل معنا - مدارات الكون | خدمة عملاء متميزة" />
         <meta property="og:description" content="تواصل مع فريق مدارات الكون للسياحة والسفر. نحن هنا لمساعدتك في تخطيط رحلتك القادمة وتقديم أفضل الخدمات السياحية. اتصل بنا الآن للحصول على استشارة مجانية." />
-        <meta property="og:url" content="https://madaratalkon.com/contact" />
+        <meta property="og:url" content="https://madaratalkon.sa/contact" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://madaratalkon.com/images/contact-og-image.jpg" />
+        <meta property="og:image" content="https://madaratalkon.sa/images/contact-og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="تواصل معنا - مدارات الكون" />
         <meta name="twitter:description" content="تواصل مع فريق مدارات الكون للسياحة والسفر للحصول على أفضل الخدمات السياحية." />

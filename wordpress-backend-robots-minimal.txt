@@ -1,0 +1,9 @@
+# Minimal WordPress Backend Blocking (Corrected Version)
+# This fixes the typos in your current robots.txt
+
+User-agent: *
+Disallow: /wp-admin/
+Disallow: /?_ga=
+
+# Sitemap removed for backend blocking
+# Sitemap: https://madaratalkon.com/?sitemap.xml 
