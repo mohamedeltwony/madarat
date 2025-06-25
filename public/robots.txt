@@ -30,14 +30,14 @@ Disallow: /saiga/
 # NEXT.JS & TECHNICAL DIRECTORIES
 # =============================================================================
 
-# Block Next.js internal directories (but allow specific static assets)
+# Block Next.js internal directories EXCEPT essential static assets
 Disallow: /.next/
-# Allow specific static assets for performance
-Allow: /_next/static/css/
-Allow: /_next/static/js/
+# Allow essential static assets for SEO and performance
+Allow: /_next/static/
 Allow: /_next/image
-# Block other _next paths
-Disallow: /_next/
+# Block other _next paths (build-time only, not static assets)
+Disallow: /_next/data/
+Disallow: /_next/webpack-hmr
 
 # =============================================================================
 # DEVELOPMENT & TESTING - Block non-production content
