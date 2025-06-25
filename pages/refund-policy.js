@@ -1,25 +1,50 @@
 import React from 'react';
+import Head from 'next/head';
 import { getSiteMetadata } from '@/lib/site';
 import { getAllMenus } from '@/lib/menus';
 import { getPageByUri } from '@/lib/pages';
 
-import Layout from '@/components/Layout';
+import LegalLayout from '@/components/LegalLayout';
 import Container from '@/components/Container';
 import Section from '@/components/Section';
-import Header from '@/components/Header';
+import PageHero from '@/components/PageHero';
 import Link from 'next/link';
 import styles from '@/styles/pages/Legal.module.scss';
 
 export default function RefundPolicy({ metadata, menus, pageContent, lastUpdated }) {
   return (
-    <Layout metadata={metadata} menus={menus}>
-      <Header>
+    <LegalLayout>
+      <Head>
+        <title>سياسة الاسترداد - مدارات الكون</title>
+        <meta
+          name="description"
+          content="سياسة الاسترداد والإلغاء الخاصة بشركة مدارات الكون للسياحة والسفر. تعرف على شروط وأحكام الاسترداد والإلغاء."
+        />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/refund-policy`} />
+        
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="سياسة الاسترداد - مدارات الكون" />
+        <meta property="og:description" content="سياسة الاسترداد والإلغاء الخاصة بشركة مدارات الكون للسياحة والسفر" />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://madaratalkon.sa'}/refund-policy`} />
+        <meta property="og:site_name" content="مدارات الكون" />
+        
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="سياسة الاسترداد - مدارات الكون" />
+        <meta name="twitter:description" content="سياسة الاسترداد والإلغاء الخاصة بشركة مدارات الكون للسياحة والسفر" />
+      </Head>
+
+      <PageHero
+        title="سياسة الاسترداد"
+        breadcrumb="سياسة الاسترداد"
+        featuredImage="/images/hero-background.jpg"
+      />
+
+      <Section>
         <Container>
-          <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>سياسة الاسترداد</h1>
-            <div className={styles.heroBreadcrumb}>
-              <Link href="/">الرئيسية</Link> / <span>سياسة الاسترداد</span>
-            </div>
+          <div className={styles.legalContent}>
             {lastUpdated && (
               <p className={styles.lastUpdated}>
                 آخر تحديث: {new Date(lastUpdated).toLocaleDateString('ar-EG', {
@@ -29,13 +54,7 @@ export default function RefundPolicy({ metadata, menus, pageContent, lastUpdated
                 })}
               </p>
             )}
-          </div>
-        </Container>
-      </Header>
-
-      <Section>
-        <Container>
-          <div className={styles.legalContent}>
+            
             {pageContent ? (
               // If we have dynamic content from WordPress, use it
               <div dangerouslySetInnerHTML={{ __html: pageContent }} />
@@ -196,7 +215,7 @@ export default function RefundPolicy({ metadata, menus, pageContent, lastUpdated
           </div>
         </Container>
       </Section>
-    </Layout>
+    </LegalLayout>
   );
 }
 
