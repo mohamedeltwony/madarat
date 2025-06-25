@@ -424,11 +424,16 @@ export default function SingleTrip({ trip, metadata, menus }) {
   // Handle case where trip is not found
   if (!trip) {
     return (
-      <Layout>
+      <Layout metadata={metadata} menus={menus}>
+        <Head>
+          <title>رحلة سياحية مميزة | مدارات الكون</title>
+          <meta name="description" content="استكشف أفضل الرحلات السياحية مع مدارات الكون" />
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
         <Section>
           <Container>
             <div className={styles.error}>
-              <h2>عذراً، لم نجد الرحلة</h2>
+              <h1>عذراً، لم نجد الرحلة</h1>
               <p>الرحلة التي تبحث عنها غير موجودة</p>
             </div>
           </Container>
@@ -437,27 +442,54 @@ export default function SingleTrip({ trip, metadata, menus }) {
     );
   }
   
-  // Safe access to properties with fallbacks
-  const rawTitle = trip?.title || '';
-  const title = decodeHtmlEntitiesSafe(rawTitle);
-  const description = trip?.description || '';
+  // Enhanced fallback logic for missing trip data
+  // If trip is null or undefined, the page will show error content but still needs proper SEO
+  let title, description, featuredImage, price;
+  
+  if (!trip) {
+    // Default values when trip data is not available
+    title = 'رحلة سياحية مميزة';
+    description = '';
+    featuredImage = '/images/placeholder.jpg';
+    price = '0';
+  } else {
+    // Normal processing when trip data exists - use already cleaned title from getStaticProps
+    title = trip.title || '';
+    
+    // Double-check that title is never empty - add additional fallback
+    if (!title || title.trim().length === 0) {
+      const destinationName = trip?.destination?.title || trip?.destination?.name || trip?.destination || '';
+      const durationText = trip?.duration?.days ? `${trip.duration.days} أيام` : '';
+      
+      if (destinationName && durationText) {
+        title = `رحلة ${destinationName} ${durationText}`;
+      } else if (destinationName) {
+        title = `رحلة ${destinationName}`;
+      } else {
+        title = 'رحلة سياحية مميزة';
+      }
+    }
+    
+    description = trip.description || '';
+    featuredImage = trip?.gallery && trip.gallery.length > 0 ? trip.gallery[0].src : '/images/placeholder.jpg';
+    price = (trip?.wp_travel_engine_setting_trip_actual_price || trip?.price || 4999).toLocaleString('en-US');
+  }
+  
   const hasItineraries = trip?.itineraries && Array.isArray(trip.itineraries) && trip.itineraries.length > 0;
   const hasFaqs = trip?.faqs && Array.isArray(trip.faqs) && trip.faqs.length > 0;
-  const featuredImage = trip?.gallery && trip.gallery.length > 0 ? trip.gallery[0].src : '/images/placeholder.jpg';
-  const price = (trip?.wp_travel_engine_setting_trip_actual_price || trip?.price || 4999).toLocaleString('en-US');
   const handleBookNow = () => setIsBookingModalOpen(true);
   
   // Generate optimized SEO title for trip
   const generateTripSEOTitle = () => {
-    // Start with the decoded title, ensuring we have a proper fallback
-    let seoTitle = title || trip?.title || 'رحلة سياحية مميزة';
+    // Start with the cleaned title (which now has proper fallbacks)
+    let seoTitle = title || '';
     
     // Clean the title from any remaining HTML entities and extra spaces
     seoTitle = seoTitle.replace(/&[^;]+;/g, '').replace(/\s+/g, ' ').trim();
     
-    // If title is still empty or just whitespace, use a meaningful fallback
+    // Enhanced safety check - create meaningful fallback if title is still empty
     if (!seoTitle || seoTitle.length === 0) {
-      // Try to create a title from destination + duration
+      // Try to create a meaningful title from trip data
       const destinationName = trip?.destination?.title || trip?.destination?.name || trip?.destination || '';
       const durationText = trip?.duration?.days ? `${trip.duration.days} أيام` : '';
       
@@ -501,6 +533,31 @@ export default function SingleTrip({ trip, metadata, menus }) {
 
   // Generate meta description for trip
   const generateTripDescription = () => {
+    // 1. First try Yoast SEO description from WordPress backend
+    if (trip.yoast_head_json?.description) {
+      return trip.yoast_head_json.description;
+    }
+    
+    // 2. Then try Yoast OG description
+    if (trip.yoast_head_json?.og_description) {
+      return trip.yoast_head_json.og_description;
+    }
+    
+    // 3. Then try excerpt (clean HTML)
+    if (trip.excerpt?.rendered) {
+      const cleanExcerpt = trip.excerpt.rendered
+        .replace(/<[^>]*>/g, '')
+        .replace(/&[^;]+;/g, '')
+        .replace(/\[&hellip;\]/g, '')
+        .trim();
+      if (cleanExcerpt.length > 0) {
+        return cleanExcerpt.length > 155 
+          ? cleanExcerpt.substring(0, 152) + '...' 
+          : cleanExcerpt;
+      }
+    }
+    
+    // 4. Finally, generate from trip data as fallback
     // If we have a description, clean it and use it
     if (description && description.trim().length > 0) {
       const cleanDesc = description.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, '').trim();
@@ -509,11 +566,11 @@ export default function SingleTrip({ trip, metadata, menus }) {
       }
     }
     
-    // Build description from available data
-    const tripTitle = title || trip?.title || '';
-    const cleanTripTitle = tripTitle.replace(/&[^;]+;/g, '').trim();
+    // Build description from available data  
+    // Use the cleaned title which now has proper fallbacks
+    const cleanTripTitle = (title || 'رحلة سياحية مميزة').replace(/&[^;]+;/g, '').trim();
     
-    let desc = `احجز رحلة ${cleanTripTitle || 'سياحية مميزة'}`;
+    let desc = `احجز رحلة ${cleanTripTitle}`;
     
     // Add destination information
     const destinationName = trip?.destination?.title || trip?.destination?.name || trip?.destination || '';
@@ -548,13 +605,10 @@ export default function SingleTrip({ trip, metadata, menus }) {
       keywords.push(destinationName, `رحلات ${destinationName}`, `السياحة في ${destinationName}`);
     }
     
-    // Add cleaned trip title
-    const cleanTitle = title || trip?.title || '';
-    if (cleanTitle) {
-      const cleanedTitle = cleanTitle.replace(/&[^;]+;/g, '').trim();
-      if (cleanedTitle && cleanedTitle.length > 0) {
-        keywords.push(cleanedTitle);
-      }
+    // Add cleaned trip title (which now always has a meaningful value)
+    const cleanedTitle = (title || 'رحلة سياحية مميزة').replace(/&[^;]+;/g, '').trim();
+    if (cleanedTitle && cleanedTitle.length > 0) {
+      keywords.push(cleanedTitle);
     }
     
     // Add relevant travel keywords
@@ -998,9 +1052,29 @@ export async function getStaticProps({ params }) {
     console.log('Final gallery images count:', galleryImages.length);
     
     // Format trip data with safe defaults
+    // Ensure title is never empty by creating intelligent fallbacks
+    let tripTitle = trip.title?.rendered || '';
+    
+    // Clean and decode the title
+    tripTitle = tripTitle.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, '').trim();
+    
+    // If title is still empty, create a meaningful one from trip data
+    if (!tripTitle || tripTitle.length === 0) {
+      const destinationName = trip.destination?.title || trip.destination?.name || trip.destination || '';
+      const durationText = trip.duration?.days ? `${trip.duration.days} أيام` : '';
+      
+      if (destinationName && durationText) {
+        tripTitle = `رحلة ${destinationName} ${durationText}`;
+      } else if (destinationName) {
+        tripTitle = `رحلة ${destinationName}`;
+      } else {
+        tripTitle = 'رحلة سياحية مميزة';
+      }
+    }
+
     const formattedTrip = {
       id: trip.id || 0,
-      title: trip.title?.rendered || 'رحلة سياحية',
+      title: tripTitle,
       slug: trip.slug || '',
       description: trip.content?.rendered || '',
       featured_image: trip.featured_image || null,
