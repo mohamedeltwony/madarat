@@ -6,8 +6,19 @@ import {
   PureDivGoldButton,
   OptimizedGoldButton,
   PureBlackGoldButton,
-} from '../components/UI';
-import styles from '../styles/TestButtons.module.css';
+} from '../src/components/UI';
+
+// Create minimal styles since the CSS file doesn't exist
+const styles = {
+  container: '',
+  main: '',
+  title: '',
+  description: '',
+  comparisonContainer: '',
+  sectionTitle: '',
+  buttonRow: '',
+  buttonWithLabel: ''
+};
 
 export default function ButtonComparisonPage() {
   return (

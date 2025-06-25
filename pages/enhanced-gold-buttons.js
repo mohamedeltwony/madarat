@@ -3,8 +3,19 @@ import Head from 'next/head';
 import {
   EnhancedGoldButton,
   EnhancedGoldDropdownButton,
-} from '../components/UI';
-import styles from '../styles/TestButtons.module.css';
+} from '../src/components/UI';
+
+// Create minimal styles since the CSS file doesn't exist
+const styles = {
+  container: '',
+  main: '',
+  title: '',
+  description: '',
+  comparisonContainer: '',
+  sectionTitle: '',
+  buttonRow: '',
+  buttonWithLabel: ''
+};
 import { FiChevronRight, FiChevronDown } from 'react-icons/fi';
 
 export default function EnhancedGoldButtonsPage() {

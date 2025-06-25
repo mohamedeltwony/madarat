@@ -7,8 +7,8 @@ import {
   FaUser,
   FaPaperPlane,
 } from 'react-icons/fa';
-import LocalizedLink from '../components/LocalizedLink';
-import styles from '../styles/pages/Feedback.module.scss';
+import LocalizedLink from '../src/components/LocalizedLink';
+import styles from '../src/styles/pages/Feedback.module.scss';
 
 const FeedbackPage = () => {
   const [formData, setFormData] = useState({

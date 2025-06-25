@@ -2,7 +2,7 @@ import React from 'react';
 import {
   OptimizedGoldButton,
   OptimizedGoldDropdownButton,
-} from '../components/UI';
+} from '../src/components/UI';
 import Head from 'next/head';
 import Link from 'next/link';
 

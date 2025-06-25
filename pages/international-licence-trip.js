@@ -11,7 +11,7 @@ const SparkleButton = dynamic(() => import('@/components/UI/SparkleButton'), {
 import styles from '@/styles/pages/LondonScotland.module.scss'; // Keep using the same styles for cloning
 // Removed getSiteMetadata import as it's no longer fetched here
 import { getAllMenus } from '@/lib/menus'; // Keep menu import for now, though unused in getStaticProps
-import TripForm from '../components/TripForm/TripForm';
+import TripForm from '../src/components/TripForm';
 import { getCsrfToken } from '@/utils/csrf';
 
 // Removed SVG Icon imports

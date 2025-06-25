@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import ButtonTest from '../components/UI/ButtonTest';
+import ButtonTest from '../src/components/UI/ButtonTest';
 
 const ButtonTestPage = () => {
   return (

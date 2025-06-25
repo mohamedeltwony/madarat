@@ -1,5 +1,5 @@
 import React from 'react';
-import { UltimateButton, UltimateDropdownButton } from '../components/UI';
+import { UltimateButton, UltimateDropdownButton } from '../src/components/UI';
 
 const UltimateButtonsPage = () => {
   return (

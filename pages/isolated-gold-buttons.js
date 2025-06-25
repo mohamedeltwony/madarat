@@ -2,7 +2,7 @@ import React from 'react';
 import {
   IsolatedGoldButton,
   IsolatedGoldDropdownButton,
-} from '../components/UI';
+} from '../src/components/UI';
 
 const IsolatedGoldButtonsPage = () => {
   return (

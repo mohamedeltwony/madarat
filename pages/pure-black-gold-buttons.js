@@ -2,7 +2,7 @@ import React from 'react';
 import {
   PureBlackGoldButton,
   PureBlackGoldDropdownButton,
-} from '../components/UI';
+} from '../src/components/UI';
 import Head from 'next/head';
 import Link from 'next/link';
 

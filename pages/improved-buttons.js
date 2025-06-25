@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImprovedButton, ImprovedDropdownButton } from '../components/UI';
+import { ImprovedButton, ImprovedDropdownButton } from '../src/components/UI';
 
 const ImprovedButtonsPage = () => {
   return (

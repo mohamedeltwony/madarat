@@ -3,12 +3,12 @@ import { getSiteMetadata } from '@/lib/site';
 import { getAllMenus } from '@/lib/menus';
 import Head from 'next/head';
 
-import Layout from '../../components/Layout';
-import Container from '../../components/Container';
-import Section from '../../components/Section';
-import Header from '../../components/Header';
+import Layout from '../../src/components/Layout';
+import Container from '../../src/components/Container';
+import Section from '../../src/components/Section';
+import Header from '../../src/components/Header';
 import Link from 'next/link';
-import styles from '../../styles/pages/Destinations.module.scss';
+import styles from '../../src/styles/pages/Destinations.module.scss';
 
 export default function Destinations({ metadata, menus, destinations = [], error }) {
   const [filteredDestinations, setFilteredDestinations] = useState(destinations);

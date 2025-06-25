@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { HomepageStyleButton } from '../components/UI';
+import { HomepageStyleButton } from '../src/components/UI';
 
 const HomepageStyleButtonsPage = () => {
   // Arrow icon for "View All" button

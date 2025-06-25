@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { SimpleGoldButton } from '../components/UI';
+import { SimpleGoldButton } from '../src/components/UI';
 
 const SimpleGoldButtonsPage = () => {
   // Arrow right icon
