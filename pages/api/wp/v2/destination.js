@@ -4,111 +4,51 @@ import { fetchAPI } from '@/lib/rest-api';
 const fallbackDestinations = [
   {
     id: 1,
-    name: 'تركيا',
+    title: 'تركيا',
     slug: 'turkey',
     description: 'اكتشف جمال تركيا مع رحلات مميزة',
-    thumbnail: {
-      source_url: '/images/destinations/turkey.jpg',
-      sizes: {
-        full: {
-          source_url: '/images/destinations/turkey.jpg'
-        },
-        'destination-thumb-size': {
-          source_url: '/images/destinations/turkey.jpg'
-        }
-      }
-    },
-    count: 12
+    image: '/images/destinations/turkey.jpg',
+    tripCount: 12
   },
   {
     id: 2,
-    name: 'جورجيا',
+    title: 'جورجيا',
     slug: 'georgia',
     description: 'رحلات رائعة إلى جورجيا',
-    thumbnail: {
-      source_url: '/images/destinations/georgia.jpg',
-      sizes: {
-        full: {
-          source_url: '/images/destinations/georgia.jpg'
-        },
-        'destination-thumb-size': {
-          source_url: '/images/destinations/georgia.jpg'
-        }
-      }
-    },
-    count: 8
+    image: '/images/destinations/georgia.jpg',
+    tripCount: 8
   },
   {
     id: 3,
-    name: 'أذربيجان',
+    title: 'أذربيجان',
     slug: 'azerbaijan',
     description: 'استمتع بجمال أذربيجان',
-    thumbnail: {
-      source_url: '/images/destinations/azerbaijan.jpg',
-      sizes: {
-        full: {
-          source_url: '/images/destinations/azerbaijan.jpg'
-        },
-        'destination-thumb-size': {
-          source_url: '/images/destinations/azerbaijan.jpg'
-        }
-      }
-    },
-    count: 6
+    image: '/images/destinations/azerbaijan.jpg',
+    tripCount: 6
   },
   {
     id: 4,
-    name: 'إيطاليا',
+    title: 'إيطاليا',
     slug: 'italy',
     description: 'رحلات مميزة إلى إيطاليا',
-    thumbnail: {
-      source_url: '/images/destinations/italy.jpg',
-      sizes: {
-        full: {
-          source_url: '/images/destinations/italy.jpg'
-        },
-        'destination-thumb-size': {
-          source_url: '/images/destinations/italy.jpg'
-        }
-      }
-    },
-    count: 5
+    image: '/images/destinations/italy.jpg',
+    tripCount: 5
   },
   {
     id: 5,
-    name: 'البوسنة',
+    title: 'البوسنة',
     slug: 'bosnia',
     description: 'استكشف جمال البوسنة الطبيعي',
-    thumbnail: {
-      source_url: '/images/destinations/bosnia.jpg',
-      sizes: {
-        full: {
-          source_url: '/images/destinations/bosnia.jpg'
-        },
-        'destination-thumb-size': {
-          source_url: '/images/destinations/bosnia.jpg'
-        }
-      }
-    },
-    count: 4
+    image: '/images/destinations/bosnia.jpg',
+    tripCount: 4
   },
   {
     id: 6,
-    name: 'بولندا',
+    title: 'بولندا',
     slug: 'poland',
     description: 'رحلات إلى بولندا بأسعار مميزة',
-    thumbnail: {
-      source_url: '/images/destinations/poland.jpg',
-      sizes: {
-        full: {
-          source_url: '/images/destinations/poland.jpg'
-        },
-        'destination-thumb-size': {
-          source_url: '/images/destinations/poland.jpg'
-        }
-      }
-    },
-    count: 3
+    image: '/images/destinations/poland.jpg',
+    tripCount: 3
   }
 ];
 
@@ -132,53 +72,67 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Get query parameters from the request
-    const { per_page, orderby, order, page, slug, _fields } = req.query;
+    // Fetch destinations from WordPress API
+    const destinationsResponse = await fetch(
+      'https://en4ha1dlwxxhwad.madaratalkon.com/wp-json/wp/v2/destination?per_page=100',
+      {
+        headers: {
+          Accept: 'application/json',
+          'User-Agent': 'Madarat-Website/1.0',
+        },
+        timeout: 10000, // 10 second timeout
+      }
+    );
 
-    // Prepare params object for fetchAPI
-    const params = {};
-    if (per_page) params.per_page = per_page;
-    if (orderby) params.orderby = orderby;
-    if (order) params.order = order;
-    if (page) params.page = page;
-    if (slug) params.slug = slug;
-    if (_fields) params._fields = _fields;
-    
-    // For _embed parameter
-    if (req.query._embed) params._embed = true;
+    if (!destinationsResponse.ok) {
+      throw new Error(`WordPress API error: ${destinationsResponse.status}`);
+    }
 
-    // Use fetchAPI from lib/rest-api with improved error handling and caching
-    const data = await fetchAPI('/wp/v2/destination', params, {
-      useCache: true, 
-      ttl: 3600000, // 1 hour cache
+    const destinations = await destinationsResponse.json();
+
+    // Format destinations data to match expected structure
+    const formattedDestinations = destinations.map((dest) => {
+      // Get the best image URL from thumbnail sizes
+      let imageUrl = null;
+      if (dest.thumbnail) {
+        // If destination-thumb-size exists, use it
+        if (dest.thumbnail.sizes && dest.thumbnail.sizes['destination-thumb-size']) {
+          imageUrl = dest.thumbnail.sizes['destination-thumb-size'].source_url;
+        } 
+        // Fallback to full image
+        else if (dest.thumbnail.sizes && dest.thumbnail.sizes.full) {
+          imageUrl = dest.thumbnail.sizes.full.source_url;
+        }
+        // Final fallback if no sizes are available
+        else if (dest.thumbnail.source_url) {
+          imageUrl = dest.thumbnail.source_url;
+        }
+      }
+
+      // Parse description from rendered HTML content
+      let description = '';
+      if (dest.description) {
+        description = dest.description;
+        // Remove HTML tags if needed
+        description = description.replace(/<[^>]*>?/gm, '');
+      }
+
+      return {
+        id: dest.id,
+        title: dest.name || '',
+        slug: dest.slug || '',
+        description: description || `استكشف رحلاتنا المميزة إلى ${dest.name || 'هذه الوجهة الرائعة'}`,
+        image: imageUrl,
+        tripCount: dest.count || 0, // Use count field for trip count
+      };
     });
 
-    // If we got data from the API, return it
-    if (data && Array.isArray(data) && data.length > 0) {
-      return res.status(200).json(data);
-    }
-    
-    // If requested specific fields, filter the fallback data
-    if (_fields) {
-      const fields = _fields.split(',');
-      const filteredData = fallbackDestinations.map(dest => {
-        const newObj = {};
-        fields.forEach(field => {
-          if (field === 'id') newObj.id = dest.id;
-          if (field === 'name') newObj.name = dest.name;
-          // Add other fields as needed
-        });
-        return newObj;
-      });
-      return res.status(200).json(filteredData);
-    }
-    
-    // Return all fallback data
-    return res.status(200).json(fallbackDestinations);
+    res.status(200).json(formattedDestinations);
+
   } catch (error) {
-    console.error('Error in destination API route:', error);
+    console.error('Error fetching destinations:', error);
     
-    // Return fallback data on any error
-    return res.status(200).json(fallbackDestinations);
+    // Return fallback data instead of error
+    res.status(200).json(fallbackDestinations);
   }
 } 

@@ -11,7 +11,8 @@ const fallbackDestinations = [
     slug: 'turkey',
     description: 'اكتشف جمال تركيا مع رحلات مميزة',
     image: '/images/destinations/turkey.jpg',
-    tripCount: 12
+    tripCount: 12,
+    count: 12
   },
   {
     id: 2,
@@ -19,7 +20,8 @@ const fallbackDestinations = [
     slug: 'georgia',
     description: 'رحلات رائعة إلى جورجيا',
     image: '/images/destinations/georgia.jpg',
-    tripCount: 8
+    tripCount: 8,
+    count: 8
   },
   {
     id: 3,
@@ -27,7 +29,8 @@ const fallbackDestinations = [
     slug: 'azerbaijan',
     description: 'استمتع بجمال أذربيجان',
     image: '/images/destinations/azerbaijan.jpg',
-    tripCount: 6
+    tripCount: 6,
+    count: 6
   },
   {
     id: 4,
@@ -35,7 +38,8 @@ const fallbackDestinations = [
     slug: 'italy',
     description: 'رحلات مميزة إلى إيطاليا',
     image: '/images/destinations/italy.jpg',
-    tripCount: 5
+    tripCount: 5,
+    count: 5
   },
   {
     id: 5,
@@ -43,7 +47,8 @@ const fallbackDestinations = [
     slug: 'bosnia',
     description: 'استكشف جمال البوسنة الطبيعي',
     image: '/images/destinations/bosnia.jpg',
-    tripCount: 4
+    tripCount: 4,
+    count: 4
   },
   {
     id: 6,
@@ -51,7 +56,8 @@ const fallbackDestinations = [
     slug: 'poland',
     description: 'رحلات إلى بولندا بأسعار مميزة',
     image: '/images/destinations/poland.jpg',
-    tripCount: 3
+    tripCount: 3,
+    count: 3
   }
 ];
 
@@ -61,13 +67,17 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
   const [topDestinations, setTopDestinations] = useState([]);
   const [remainingDestinations, setRemainingDestinations] = useState([]);
   const [isButtonAnimating, setIsButtonAnimating] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [usingFallback, setUsingFallback] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
   const expandedGridRef = useRef(null);
 
   // Sort destinations by trip count to find most popular ones
   useEffect(() => {
-    setIsLoading(true);
+    // Don't show loading if we already have data (including fallback)
+    if (!hasInitialized && (!destinations || destinations.length === 0)) {
+      setIsLoading(true);
+    }
     
     // Use fallback data if destinations is empty or contains invalid data
     const destinationsToUse = 
@@ -75,7 +85,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
         ? fallbackDestinations 
         : destinations;
     
-    if (destinationsToUse !== destinations) {
+    if (destinationsToUse === fallbackDestinations && destinations !== fallbackDestinations) {
       setUsingFallback(true);
       console.log('Using fallback destinations data');
     }
@@ -83,7 +93,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
     try {
       // Sort by trip count (highest first)
       const sorted = [...destinationsToUse].sort(
-        (a, b) => (b.count || 0) - (a.count || 0)
+        (a, b) => (b.count || b.tripCount || 0) - (a.count || a.tripCount || 0)
       );
 
       setSortedDestinations(sorted);
@@ -92,10 +102,15 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
       // Get remaining destinations
       setRemainingDestinations(sorted.slice(12));
 
-      // Small delay to ensure smooth rendering
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 300);
+      // Small delay to ensure smooth rendering only if we were loading
+      if (isLoading) {
+        setTimeout(() => {
+          setIsLoading(false);
+          setHasInitialized(true);
+        }, 300);
+      } else {
+        setHasInitialized(true);
+      }
     } catch (err) {
       console.error('Error processing destinations data:', err);
       // Fallback to default data in case of any error
@@ -104,8 +119,9 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
       setRemainingDestinations(fallbackDestinations.slice(6));
       setUsingFallback(true);
       setIsLoading(false);
+      setHasInitialized(true);
     }
-  }, [destinations]);
+  }, [destinations, hasInitialized, isLoading]);
 
   const toggleShowAll = useCallback(() => {
     setIsButtonAnimating(true);
@@ -129,7 +145,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
     }, 300);
   }, [showAll]);
 
-  if (error && !usingFallback) {
+  if (error && !usingFallback && (!sortedDestinations || sortedDestinations.length === 0)) {
     return (
       <div className={styles.error}>
         <p>{error}</p>
@@ -137,7 +153,18 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
     );
   }
 
-  if (!destinations || destinations.length === 0) {
+  // Show loading only if we're actually loading and don't have any data
+  if (isLoading && (!sortedDestinations || sortedDestinations.length === 0)) {
+    return (
+      <div className={styles.loadingIndicator}>
+        <div className={styles.spinner}></div>
+        <p>جاري تحميل الوجهات السياحية...</p>
+      </div>
+    );
+  }
+
+  // If no destinations and not loading, show empty state
+  if (!sortedDestinations || sortedDestinations.length === 0) {
     return (
       <div className={styles.noDestinations}>
         <p>لا توجد وجهات متاحة حالياً</p>
@@ -177,7 +204,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
         key={destination.id}
         href={`/destination/${destination.slug}`}
         className={styles.destinationCard}
-        aria-label={`View trips for ${destination.title || 'Unknown destination'}`}
+        aria-label={`View trips for ${destination.title || destination.name || 'Unknown destination'}`}
       >
         {/* Card Sparkles */}
         <div className={styles.sparkleContainer}>
@@ -195,10 +222,10 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
 
         <div className={styles.tripCount}>
           <span className={styles.countNumber}>
-            {destination.count || 0}
+            {destination.count || destination.tripCount || 0}
           </span>
           <span className={styles.countLabel}>
-            {destination.count === 1 ? 'رحلة' : 'رحلات'}
+            {(destination.count || destination.tripCount || 0) === 1 ? 'رحلة' : 'رحلات'}
           </span>
         </div>
         <div className={styles.imageWrapper}>
@@ -218,7 +245,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
           <h3 className={styles.title}>
             {destination.title || destination.name || 'وجهة غير معروفة'}
           </h3>
-          {destination.description && (
+          {(destination.description) && (
             <p className={styles.description}>{destination.description}</p>
           )}
         </div>
@@ -301,7 +328,7 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
 
   return (
     <div
-      className={`${styles.destinationsContainer} ${isLoading ? styles.loading : styles.loaded}`}
+      className={`${styles.destinationsContainer} ${hasInitialized ? styles.loaded : styles.loading}`}
     >
       <GlassDecoration />
 
@@ -310,21 +337,14 @@ const BentoDestinations = ({ destinations = [], error = null }) => {
         <p>اكتشف معنا أفضل الوجهات حول العالم</p>
         {usingFallback && (
           <div className={styles.fallbackNotice}>
-            <p>يتم عرض بيانات محلية بسبب مشكلة في الاتصال بخادم البيانات</p>
+            <p>⚠️ يتم عرض بيانات محلية بسبب مشكلة في الاتصال بخادم البيانات</p>
           </div>
         )}
       </div>
 
-      {/* Loading Indicator */}
-      {isLoading && (
-        <div className={styles.loadingIndicator}>
-          <div className={styles.spinner}></div>
-        </div>
-      )}
-
       {/* Top Destinations Grid */}
       <div
-        className={`${styles.destinationsGrid} ${!isLoading ? styles.fadeIn : ''}`}
+        className={`${styles.destinationsGrid} ${hasInitialized ? styles.fadeIn : ''}`}
       >
         {topDestinations.map((destination, index) =>
           renderDestinationCard(destination, index, true)
