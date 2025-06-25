@@ -578,7 +578,7 @@ export default function SingleTrip({ trip, metadata, menus }) {
         </div>
         <Container>
           <div className={styles.heroContent}>
-            <h1 dangerouslySetInnerHTML={{ __html: title }}></h1>
+            <h1>{decodeHtmlEntitiesSafe(title)}</h1>
             <div className={styles.tripInfo}>
               <div className={styles.infoItem}>
                 <FaCalendarAlt />

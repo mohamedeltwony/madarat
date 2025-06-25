@@ -3,6 +3,7 @@ import styles from './PostSidebar.module.scss';
 import FormPopup from '../FormPopup';
 import Link from 'next/link';
 import { FaPhone } from 'react-icons/fa';
+import { decodeHtmlEntitiesSafe } from '@/lib/util';
 
 const PostSidebar = ({ post, recentPosts = [] }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -52,7 +53,7 @@ const PostSidebar = ({ post, recentPosts = [] }) => {
               />
             </div>
           )}
-          <h2 className={styles.title}>{post.title}</h2>
+          <h2 className={styles.title}>{decodeHtmlEntitiesSafe(post.title)}</h2>
           <p className={styles.subtitle}>
             تواصل معنا للحصول على معلومات أكثر حول رحلاتنا وعروضنا المميزة
           </p>
@@ -109,7 +110,7 @@ const PostSidebar = ({ post, recentPosts = [] }) => {
                   <div className={styles.popularPostContent}>
                     <h4 className={styles.popularPostTitle}>
                       <Link href={`/posts/${recentPost.slug || ''}`}>
-                        {recentPost.title || ''}
+                        {decodeHtmlEntitiesSafe(recentPost.title || '')}
                       </Link>
                     </h4>
                     <div className={styles.popularPostMeta}>

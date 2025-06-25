@@ -19,7 +19,7 @@ const createTripsSitemap = async () => {
   // Get only first 50 trips for this sitemap (page 1)
   const tripsPage1 = trips.slice(0, 50);
   
-  // Create URLs for first 50 trips with proper URL decoding
+  // Create URLs for first 50 trips ONLY - static trip pages are in main sitemap
   const tripUrls = tripsPage1.map(trip => {
     // Decode the URL-encoded slug for proper sitemap URLs
     const decodedSlug = decodeURIComponent(trip.slug);
@@ -31,33 +31,14 @@ const createTripsSitemap = async () => {
     };
   });
   
-  // Add static trip-related pages
-  const staticTripPages = [
-    {
-      url: '/trip',
-      changefreq: 'daily',
-      priority: '0.9',
-      lastmod: currentDate
-    },
-    {
-      url: '/book-now',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/offers',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    }
-  ];
-  
-  const allTripPages = [...staticTripPages, ...tripUrls];
+  // Remove duplicates if any exist
+  const uniqueTripUrls = tripUrls.filter((trip, index, self) => 
+    index === self.findIndex(t => t.url === trip.url)
+  );
   
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${allTripPages.map(page => `  <url>
+${uniqueTripUrls.map(page => `  <url>
     <loc>${baseUrl}${page.url}</loc>
     <lastmod>${page.lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>

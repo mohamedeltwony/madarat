@@ -2,27 +2,37 @@ const createSitemapIndex = () => {
   const baseUrl = 'https://madaratalkon.sa';
   const currentDate = new Date().toISOString();
   
-  // Define different sitemap files for better organization
+  // Define all sitemaps with their purposes
   const sitemaps = [
     {
       loc: `${baseUrl}/sitemap.xml`,
       lastmod: currentDate,
-      priority: 1.0
+      description: 'Static pages and main navigation'
     },
     {
       loc: `${baseUrl}/sitemap-posts.xml`,
       lastmod: currentDate,
-      priority: 0.8
+      description: 'Blog posts and articles'
     },
     {
-      loc: `${baseUrl}/sitemap-trips-index.xml`,
+      loc: `${baseUrl}/sitemap-trips.xml`,
       lastmod: currentDate,
-      priority: 0.9
+      description: 'Trip packages (page 1)'
+    },
+    {
+      loc: `${baseUrl}/sitemap-trips-2.xml`,
+      lastmod: currentDate,
+      description: 'Trip packages (page 2)'
+    },
+    {
+      loc: `${baseUrl}/sitemap-trips-3.xml`,
+      lastmod: currentDate,
+      description: 'Trip packages (page 3)'
     },
     {
       loc: `${baseUrl}/sitemap-destinations.xml`,
       lastmod: currentDate,
-      priority: 0.9
+      description: 'Destination pages'
     }
   ];
   

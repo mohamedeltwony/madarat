@@ -89,27 +89,9 @@ const createSitemap = async () => {
       lastmod: currentDate
     },
     {
-      url: '/posts',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/categories',
-      changefreq: 'weekly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
       url: '/authors',
       changefreq: 'monthly',
       priority: '0.5',
-      lastmod: currentDate
-    },
-    {
-      url: '/search',
-      changefreq: 'monthly',
-      priority: '0.4',
       lastmod: currentDate
     },
     
@@ -159,49 +141,7 @@ const createSitemap = async () => {
       lastmod: currentDate
     },
     
-    // Service pages
-    {
-      url: '/services',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/services/visa',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/services/flights',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/services/hotels',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/services/transportation',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/services/cruises',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/accommodation',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
+
     
     // Legal and policy pages - lowest priority, rarely updated
     {

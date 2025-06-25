@@ -6,26 +6,7 @@ const createSitemap = async () => {
   const baseUrl = 'https://madaratalkon.sa';
   const currentDate = new Date().toISOString();
   
-  // Fetch dynamic content
-  let posts = [];
-  let pages = [];
-  let trips = [];
-  
-  try {
-    const [postsData, pagesData, tripsData] = await Promise.all([
-      getAllPosts({ first: 1000 }).catch(() => ({ posts: [] })),
-      getAllPages().catch(() => ({ pages: [] })),
-      getAllTrips({ first: 1000 }).catch(() => ({ trips: [] }))
-    ]);
-    
-    posts = postsData.posts || [];
-    pages = pagesData.pages || [];
-    trips = tripsData.trips || [];
-  } catch (error) {
-    console.error('Error fetching dynamic content for sitemap:', error);
-  }
-  
-  // Define static pages with priorities and change frequencies
+  // Define ONLY static pages - no dynamic content that appears in other sitemaps
   const staticPages = [
     // Homepage - highest priority, updated daily
     {
@@ -81,7 +62,7 @@ const createSitemap = async () => {
       lastmod: currentDate
     },
     
-    // Blog and content pages
+    // Blog and content pages (main pages only, not individual posts)
     {
       url: '/blog',
       changefreq: 'weekly',
@@ -89,27 +70,9 @@ const createSitemap = async () => {
       lastmod: currentDate
     },
     {
-      url: '/posts',
-      changefreq: 'weekly',
-      priority: '0.7',
-      lastmod: currentDate
-    },
-    {
-      url: '/categories',
-      changefreq: 'weekly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
       url: '/authors',
       changefreq: 'monthly',
       priority: '0.5',
-      lastmod: currentDate
-    },
-    {
-      url: '/search',
-      changefreq: 'monthly',
-      priority: '0.4',
       lastmod: currentDate
     },
     
@@ -121,87 +84,7 @@ const createSitemap = async () => {
       lastmod: currentDate
     },
     
-    // Popular destination pages - high priority for SEO
-    {
-      url: '/destination/turkey',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/destination/georgia',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/destination/azerbaijan',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/destination/italy',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/destination/bosnia',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    {
-      url: '/destination/poland',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: currentDate
-    },
-    
-    // Service pages
-    {
-      url: '/services',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/services/visa',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/services/flights',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/services/hotels',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/services/transportation',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/services/cruises',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
-    {
-      url: '/accommodation',
-      changefreq: 'monthly',
-      priority: '0.6',
-      lastmod: currentDate
-    },
+
     
     // Legal and policy pages - lowest priority, rarely updated
     {
@@ -230,48 +113,12 @@ const createSitemap = async () => {
     }
   ];
   
-  // Create dynamic URLs for posts
-  const postUrls = posts.map(post => ({
-    url: `/posts/${post.slug}`,
-    changefreq: 'monthly',
-    priority: '0.6',
-    lastmod: post.modified || post.date || currentDate
-  }));
-  
-  // Create dynamic URLs for pages
-  const pageUrls = pages.map(page => ({
-    url: page.uri || `/${page.slug}`,
-    changefreq: 'monthly',
-    priority: '0.5',
-    lastmod: page.modified || page.date || currentDate
-  }));
-  
-  // Create dynamic URLs for trips
-  const tripUrls = trips.map(trip => ({
-    url: `/trip/${trip.slug}`,
-    changefreq: 'weekly',
-    priority: '0.8',
-    lastmod: trip.modified || trip.date || currentDate
-  }));
-  
-  // Combine all URLs
-  const allPages = [
-    ...staticPages,
-    ...postUrls,
-    ...pageUrls,
-    ...tripUrls,
-  ];
-  
-  // Remove duplicates and invalid URLs
-  const uniquePages = allPages.filter((page, index, self) => 
-    index === self.findIndex(p => p.url === page.url) && 
-    page.url !== undefined && 
-    page.url !== null
-  );
+  // NOTE: Removed all dynamic content (posts, trips, destination pages) 
+  // as they are now handled by specialized sitemaps to eliminate duplications
   
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${uniquePages.map(page => `  <url>
+${staticPages.map(page => `  <url>
     <loc>${baseUrl}${page.url}</loc>
     <lastmod>${page.lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
@@ -286,7 +133,7 @@ export default function SitemapXml() {
 
 export async function getServerSideProps({ res }) {
   try {
-    // Generate the XML sitemap with dynamic content
+    // Generate the XML sitemap with static content only
     const sitemap = await createSitemap();
 
     // Set proper headers for XML sitemap with optimized caching

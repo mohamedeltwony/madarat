@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/legacy/image';
 import { formatDate } from 'lib/datetime';
 import { postPathBySlug } from 'lib/posts';
+import { decodeHtmlEntitiesSafe } from '@/lib/util';
 import styles from './BentoPosts.module.scss';
 
 const BentoPosts = ({ posts }) => {
@@ -45,7 +46,7 @@ const BentoPosts = ({ posts }) => {
             {post.categories && post.categories[0] && (
               <span className={styles.category}>{post.categories[0].name}</span>
             )}
-            <h3 className={styles.title}>{post.title}</h3>
+            <h3 className={styles.title}>{decodeHtmlEntitiesSafe(post.title)}</h3>
           </Link>
         );
       })}

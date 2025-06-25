@@ -72,8 +72,8 @@ const GoldLinkButtonsPage = () => {
             Large Internal Link:
           </h3>
           <GoldLinkButton
-            text="تصفح خدماتنا"
-            href="/services"
+            text="تصفح وجهاتنا"
+            href="/destination"
             width={300}
             height={60}
           />

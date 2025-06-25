@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { decodeHtmlEntitiesSafe } from '@/lib/util';
 import styles from './PostCard.module.scss';
 
 const PostCard = memo(({ post }) => {
@@ -65,7 +66,7 @@ const PostCard = memo(({ post }) => {
       <div className={styles.content}>
         <h2 className={styles.title}>
           <Link href={`/posts/${slug}`}>
-            <span dangerouslySetInnerHTML={{ __html: title }} />
+            {decodeHtmlEntitiesSafe(title)}
           </Link>
         </h2>
 

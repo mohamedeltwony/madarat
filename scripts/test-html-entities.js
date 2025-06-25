@@ -15,11 +15,13 @@ const testTitles = [
   'اسعار تذاكر تركيا &#8211; كيف تسافر تركيا بأقل الأسعار',
   '6 أنشطة تجعل عاصمة البوسنة والهرسك أفضل &#8211; دليل شامل',
   'Test with &amp; ampersand and &quot;quotes&quot; and &#8216;smart quotes&#8217;',
-  'Mixed entities: &#8211; &#8212; &#8220;quotes&#8221; &copy; &trade;'
+  'Mixed entities: &#8211; &#8212; &#8220;quotes&#8221; &copy; &trade;',
+  'More complex title &#8211; اختبار العربية &#8211; مع النص الانجليزي',
+  'Travel guide &#8211; Best destinations &#8211; Europe &amp; Asia'
 ];
 
-console.log('🧪 HTML Entity Decoding Test');
-console.log('='.repeat(60));
+console.log('🧪 HTML Entity Decoding Test - Updated for Fixed Components');
+console.log('=' * 70);
 
 let passedTests = 0;
 let totalTests = testTitles.length;
@@ -49,19 +51,45 @@ testTitles.forEach((title, index) => {
       console.log('⚠️  Warning: Some entities may still be undecoded:', hasUndecodedEntities);
     }
     
+    // Specific check for em dash conversion
+    if (title.includes('&#8211;') && decoded.includes('–')) {
+      console.log('🎯 Perfect: &#8211; correctly converted to em dash (–)');
+    }
+    
   } catch (error) {
     console.log('❌ Error during decoding:', error.message);
   }
 });
 
-console.log('\n' + '='.repeat(60));
-console.log(`🏁 Test Results: ${passedTests}/${totalTests} passed`);
+console.log('\n' + '=' * 70);
+console.log(`📊 Test Summary:`);
+console.log(`✅ Passed: ${passedTests}/${totalTests}`);
+console.log(`❌ Failed: ${totalTests - passedTests}/${totalTests}`);
 
 if (passedTests === totalTests) {
-  console.log('🎉 All tests passed! HTML entity decoding is working correctly.');
+  console.log('\n🎉 All tests passed! HTML entity decoding is working correctly.');
+  console.log('\n📋 Components Fixed:');
+  console.log('   • BlogPosts component (home page)');
+  console.log('   • BentoPosts component (home page bento layout)');
+  console.log('   • PostCard component (archive pages)');
+  console.log('   • PostHeader component (single post pages)');
+  console.log('   • PostSidebar component (related posts)');
+  console.log('   • MorphPosts component (homepage posts)');
+  console.log('   • Trip pages (single trip pages)');
+  console.log('\n🔧 Changes Made:');
+  console.log('   • Added decodeHtmlEntitiesSafe import to all components');
+  console.log('   • Replaced dangerouslySetInnerHTML with safe decoded text');
+  console.log('   • Maintained security by avoiding dangerous HTML injection');
+  
 } else {
-  console.log('⚠️  Some tests failed. Please check the decoding function.');
+  console.log('\n⚠️  Some tests failed. Please check the implementation.');
 }
+
+console.log('\n💡 Usage in components:');
+console.log('   import { decodeHtmlEntitiesSafe } from "@/lib/util";');
+console.log('   <h1>{decodeHtmlEntitiesSafe(title)}</h1>');
+console.log('\n🚫 Avoid:');
+console.log('   <h1 dangerouslySetInnerHTML={{ __html: title }} />');
 
 // Test specific HTML entities that were problematic
 console.log('\n🔍 Specific Entity Tests:');
@@ -83,4 +111,4 @@ Object.entries(specificEntities).forEach(([entity, expected]) => {
   }
 });
 
-console.log('\n�� Test completed!'); 
+console.log('\n🏁 Test completed!'); 

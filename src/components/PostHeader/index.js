@@ -3,6 +3,7 @@ import { FaChevronDown } from 'react-icons/fa';
 import styles from './PostHeader.module.scss';
 import { categoryPathBySlug } from 'lib/categories';
 import { formatDate } from 'lib/datetime';
+import { decodeHtmlEntitiesSafe } from '@/lib/util';
 
 const PostHeader = ({
   title,
@@ -46,7 +47,7 @@ const PostHeader = ({
               </div>
             )}
 
-            <h1 className={styles.title}>{title}</h1>
+            <h1 className={styles.title}>{decodeHtmlEntitiesSafe(title)}</h1>
 
             <div className={styles.meta}>
               {author && (
@@ -104,7 +105,7 @@ const PostHeader = ({
             </div>
           )}
 
-          <h1 className={styles.title}>{title}</h1>
+          <h1 className={styles.title}>{decodeHtmlEntitiesSafe(title)}</h1>
 
           <div className={styles.meta}>
             {author && (

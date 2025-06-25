@@ -172,32 +172,7 @@ export default function Sitemap({ metadata, menus, posts, pages, trips }) {
               </ul>
             </div>
 
-            {/* Services Section */}
-            <div className={styles.sitemapSection}>
-              <h2 className={styles.sectionTitle}>الخدمات</h2>
-              <ul className={styles.sitemapList}>
-                <li>
-                  <Link href="/services">جميع الخدمات</Link>
-                  <ul>
-                    <li>
-                      <Link href="/services/visa">خدمات التأشيرة</Link>
-                    </li>
-                    <li>
-                      <Link href="/services/flights">حجز الطيران</Link>
-                    </li>
-                    <li>
-                      <Link href="/services/hotels">حجز الفنادق</Link>
-                    </li>
-                    <li>
-                      <Link href="/services/transportation">خدمات النقل</Link>
-                    </li>
-                    <li>
-                      <Link href="/services/cruises">رحلات بحرية</Link>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
+
 
             {/* Dynamic Blog Section */}
             {posts && posts.length > 0 && (
@@ -223,9 +198,7 @@ export default function Sitemap({ metadata, menus, posts, pages, trips }) {
                       )}
                     </ul>
                   </li>
-                  <li>
-                    <Link href="/categories">التصنيفات</Link>
-                  </li>
+
                   <li>
                     <Link href="/archives">الأرشيف</Link>
                   </li>

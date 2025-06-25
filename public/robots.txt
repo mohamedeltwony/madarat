@@ -61,8 +61,19 @@ Disallow: /_next/
 # SEARCH & DUPLICATE CONTENT - Prevent duplicate content issues
 # =============================================================================
 
-# Block search pages and parameters
-# Disallow: /search
+# Block removed pages and search parameters
+Disallow: /posts
+Disallow: /categories
+Disallow: /search
+Disallow: /services
+Disallow: /services/visa
+Disallow: /services/flights
+Disallow: /services/hotels
+Disallow: /services/transportation
+Disallow: /services/cruises
+Disallow: /accommodation
+
+# Block search and filter parameters
 # Disallow: /search?*
 # Disallow: /?s=
 # Disallow: /*?search=*
@@ -142,18 +153,24 @@ Disallow: /_next/
 # Allow: /*.woff2$
 
 # =============================================================================
-# SITEMAP & CRAWLING CONFIGURATION
+# SITEMAP & CRAWLING CONFIGURATION - OPTIMIZED & DUPLICATE-FREE
 # =============================================================================
 
-# Main sitemap index for better organization and performance
+# 🎯 MAIN SITEMAP INDEX - Use this for search engine submission
+# This is the primary sitemap that references all other clean, duplicate-free sitemaps
 Sitemap: https://madaratalkon.sa/sitemap-index.xml
 
-# Individual sitemaps for different content types
+# 📋 INDIVIDUAL SITEMAPS - Each has a specific purpose, no duplications
+# Static pages and main navigation
 Sitemap: https://madaratalkon.sa/sitemap.xml
+# Individual blog posts only
 Sitemap: https://madaratalkon.sa/sitemap-posts.xml
-Sitemap: https://madaratalkon.sa/sitemap-trips-index.xml
+# Trip packages (paginated for performance)
 Sitemap: https://madaratalkon.sa/sitemap-trips.xml
 Sitemap: https://madaratalkon.sa/sitemap-trips-2.xml
 Sitemap: https://madaratalkon.sa/sitemap-trips-3.xml
+# Individual destination pages only
 Sitemap: https://madaratalkon.sa/sitemap-destinations.xml
+
+# Note: sitemap-trips-index.xml removed - redundant with sitemap-index.xml
 

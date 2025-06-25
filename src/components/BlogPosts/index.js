@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { FiCalendar, FiUser, FiArrowRight } from 'react-icons/fi';
 import { BsCameraFill } from 'react-icons/bs';
 import styles from './BlogPosts.module.scss';
+import { decodeHtmlEntitiesSafe } from '@/lib/util';
 
 // SVG Icons as components
 const CalendarIcon = () => (
@@ -221,8 +222,9 @@ const BlogPosts = () => {
               <div className={styles.postContent}>
                 <h3
                   className={styles.postTitle}
-                  dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-                />
+                >
+                  {decodeHtmlEntitiesSafe(post.title.rendered)}
+                </h3>
                 <div className={styles.postMeta}>
                   <span className={styles.postDate}>
                     <span className={styles.dateIcon}>
@@ -252,7 +254,7 @@ const BlogPosts = () => {
       </div>
 
       <div className={styles.viewAllContainer}>
-        <Link href="/posts" className={styles.viewAllButton}>
+        <Link href="/blog" className={styles.viewAllButton}>
           عرض جميع المقالات
           <span className={styles.buttonIcon}>
             <ArrowRightIcon />

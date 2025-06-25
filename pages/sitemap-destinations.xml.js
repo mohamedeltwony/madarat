@@ -2,16 +2,8 @@ const createDestinationsSitemap = () => {
   const baseUrl = 'https://madaratalkon.sa';
   const currentDate = new Date().toISOString();
   
-  // Define destination pages with different priorities
+  // Define individual destination pages ONLY - main /destination page is in main sitemap
   const destinationPages = [
-    // Main destinations page
-    {
-      url: '/destination',
-      changefreq: 'daily',
-      priority: '0.9',
-      lastmod: currentDate
-    },
-    
     // Popular destinations - high priority for SEO
     {
       url: '/destination/turkey',

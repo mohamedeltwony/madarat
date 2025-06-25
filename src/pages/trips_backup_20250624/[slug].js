@@ -48,6 +48,7 @@ import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
 import jwt_decode from 'jwt-decode';
 import TripForm from '@/components/TripForm';
 import { trackSnapchatViewContent } from '@/utils/snapchatTracking';
+import { decodeHtmlEntitiesSafe } from '@/lib/util';
 
 // Function to decode HTML entities
 const decodeHtmlEntities = (text) => {
@@ -452,7 +453,7 @@ export default function SingleTrip({ trip, metadata, menus }) {
   return (
     <Layout metadata={metadata} menus={menus}>
       <Head>
-        <title>{decodedTitle} | مدارات الكون</title>
+        <title>{decodeHtmlEntitiesSafe(title)} | مدارات الكون</title>
         <meta name="description" content={description?.substring(0, 160)} />
       </Head>
       
@@ -471,7 +472,7 @@ export default function SingleTrip({ trip, metadata, menus }) {
         </div>
         <Container>
           <div className={styles.heroContent}>
-            <h1 dangerouslySetInnerHTML={{ __html: title }}></h1>
+            <h1>{decodeHtmlEntitiesSafe(title)}</h1>
             <div className={styles.tripInfo}>
               <div className={styles.infoItem}>
                 <FaCalendarAlt />

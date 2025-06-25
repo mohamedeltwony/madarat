@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { postPathBySlug } from 'lib/posts';
+import { decodeHtmlEntitiesSafe } from '@/lib/util';
 import styles from './MorphPosts.module.scss';
 
 const MorphPosts = ({ posts }) => {
@@ -22,7 +23,7 @@ const MorphPosts = ({ posts }) => {
             {post?.categories?.[0] && (
               <span className={styles.glassTag}>{post.categories[0].name}</span>
             )}
-            <h3>{post?.title}</h3>
+            <h3>{decodeHtmlEntitiesSafe(post?.title)}</h3>
           </div>
         </Link>
       ))}
