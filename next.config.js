@@ -265,16 +265,6 @@ const nextConfig = {
     WORDPRESS_GRAPHQL_ENDPOINT: process.env.WORDPRESS_GRAPHQL_ENDPOINT,
     WORDPRESS_REST_API: process.env.WORDPRESS_REST_API,
   },
-  // Add exportPathMap to control which paths get pre-rendered
-  exportPathMap: async function () {
-    // Only export the homepage and other static pages
-    // Skip dynamic routes like [slug] that might have errors
-    return {
-      '/': { page: '/' },
-      '/404': { page: '/404' },
-      '/500': { page: '/500' },
-    };
-  },
 };
 
 // Wrap the config with the analyzer

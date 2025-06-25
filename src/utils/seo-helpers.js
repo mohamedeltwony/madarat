@@ -113,11 +113,12 @@ export const generateSEODescription = ({
       generatedDesc += ' - أفضل العروض السياحية مع مدارات الكون';
       break;
       
-    case 'category':
+    case 'category': {
       const postsCount = extras.postsCount || 0;
       generatedDesc = `استكشف ${postsCount} مقال في ${cleanTitle}`;
       generatedDesc += ' - اكتشف أفضل النصائح والمعلومات مع مدارات الكون';
       break;
+    }
       
     case 'destination':
       generatedDesc = `اكتشف ${cleanTitle} مع مدارات الكون`;
@@ -266,7 +267,7 @@ export const validateSEOMetadata = (metadata) => {
   };
 };
 
-export default {
+const seoHelpers = {
   generateSEOTitle,
   generateSEODescription,
   generateSEOKeywords,
@@ -274,3 +275,5 @@ export default {
   validateSEOMetadata,
   cleanText
 };
+
+export default seoHelpers;
