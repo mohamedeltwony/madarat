@@ -15,6 +15,23 @@ export default function PrivacyPolicy() {
           name="description"
           content="سياسة الخصوصية وشروط استخدام موقع مدارات الكون للسياحة والسفر"
         />
+        <link rel="canonical" href="https://madaratalkon.sa/privacy-policy" />
+        
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="سياسة الخصوصية - مدارات الكون" />
+        <meta property="og:description" content="سياسة الخصوصية وشروط استخدام موقع مدارات الكون للسياحة والسفر" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://madaratalkon.sa/privacy-policy" />
+        <meta property="og:site_name" content="مدارات الكون" />
+        
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="سياسة الخصوصية - مدارات الكون" />
+        <meta name="twitter:description" content="سياسة الخصوصية وشروط استخدام موقع مدارات الكون للسياحة والسفر" />
+        
+        {/* Additional SEO */}
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="مدارات الكون" />
       </Head>
 
       <PageHero

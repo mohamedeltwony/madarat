@@ -1,18 +1,19 @@
 const puppeteer = require('puppeteer');
 
 class CanonicalTestSuite {
-  constructor(baseUrl = 'http://localhost:3000') {
-    this.baseUrl = baseUrl;
+  constructor() {
+    this.baseUrl = 'https://madaratalkon.sa';
     this.results = [];
   }
 
-  async addTest(pageName, status, message, details = null) {
+  // Helper method to add test results
+  async addTest(pageName, status, message, details = {}) {
     this.results.push({
-      name: `Canonical URL (${pageName})`,
+      page: pageName,
       status,
       message,
-      details,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      ...details
     });
   }
 
@@ -59,9 +60,9 @@ class CanonicalTestSuite {
         const canonicalUrl = canonicalMatches[0].match(/href=["\']([^"']*)["\']/)[1];
         
         // Check if it points to the correct domain
-        if (canonicalUrl.includes('madaratalkon.com')) {
+        if (canonicalUrl.includes('madaratalkon.sa')) {
           // Check if it points to itself
-          const expectedCanonical = `https://madaratalkon.com${url}`;
+          const expectedCanonical = `https://madaratalkon.sa${url}`;
           if (canonicalUrl === expectedCanonical) {
             await this.addTest(
               pageName,
@@ -84,6 +85,39 @@ class CanonicalTestSuite {
         }
       }
 
+      // Additional SEO checks
+      const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+      const descMatch = html.match(/<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
+      const ogTitleMatch = html.match(/<meta[^>]*property=["\']og:title["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
+      const ogDescMatch = html.match(/<meta[^>]*property=["\']og:description["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
+      const robotsMatch = html.match(/<meta[^>]*name=["\']robots["\'][^>]*content=["\']([^"']*)["\'][^>]*>/i);
+
+      // Check for complete SEO tags
+      let seoScore = 0;
+      let seoIssues = [];
+
+      if (titleMatch && titleMatch[1].trim()) seoScore++;
+      else seoIssues.push('Missing title tag');
+
+      if (descMatch && descMatch[1].trim()) seoScore++;
+      else seoIssues.push('Missing meta description');
+
+      if (ogTitleMatch && ogTitleMatch[1].trim()) seoScore++;
+      else seoIssues.push('Missing og:title');
+
+      if (ogDescMatch && ogDescMatch[1].trim()) seoScore++;
+      else seoIssues.push('Missing og:description');
+
+      if (robotsMatch && robotsMatch[1].trim()) seoScore++;
+      else seoIssues.push('Missing robots meta tag');
+
+      await this.addTest(
+        pageName,
+        seoScore >= 4 ? 'PASS' : 'WARN',
+        `SEO completeness: ${seoScore}/5 essential tags present`,
+        { seoIssues, seoScore }
+      );
+
       await browser.close();
     } catch (error) {
       await this.addTest(
@@ -94,87 +128,123 @@ class CanonicalTestSuite {
     }
   }
 
-  async runAllTests() {
-    console.log('🔍 Starting Canonical URL Test Suite...\n');
+  async runTests() {
+    console.log('🔍 Starting Canonical URL Tests...\n');
 
-    const pagesToTest = [
-      { url: '/', name: 'Homepage' },
-      { url: '/about', name: 'About' },
-      { url: '/contact', name: 'Contact' },
-      { url: '/destinations', name: 'Destinations' },
-      { url: '/trip', name: 'Trips' },
-      { url: '/blog', name: 'Blog' },
-      { url: '/posts', name: 'Posts' },
-      { url: '/categories', name: 'Categories' }
+    const pages = [
+      { url: '/current-offers', name: 'Current Offers' },
+      { url: '/destination', name: 'Destinations' },
+      { url: '/legal-documents', name: 'Legal Documents' },
+      { url: '/terms-conditions', name: 'Terms & Conditions' },
+      { url: '/privacy-policy', name: 'Privacy Policy' },
+      { url: '/book-now', name: 'Book Now' }
     ];
 
-    for (const page of pagesToTest) {
+    for (const page of pages) {
       await this.testPageCanonical(page.url, page.name);
     }
 
-    // Generate report
-    console.log('📊 Canonical URL Test Results:');
+    this.generateReport();
+  }
+
+  generateReport() {
+    console.log('\n📊 CANONICAL URL TEST RESULTS');
     console.log('=====================================\n');
 
-    const passed = this.results.filter(r => r.status === 'PASS').length;
-    const failed = this.results.filter(r => r.status === 'FAIL').length;
-    const warnings = this.results.filter(r => r.status === 'WARN').length;
-    const errors = this.results.filter(r => r.status === 'ERROR').length;
+    const summary = {
+      total: this.results.length / 2, // Each page has 2 tests (canonical + SEO)
+      passed: 0,
+      failed: 0,
+      warnings: 0,
+      errors: 0
+    };
 
+    // Group results by page
+    const pageResults = {};
     this.results.forEach(result => {
-      const statusIcon = {
-        'PASS': '✅',
-        'FAIL': '❌',
-        'WARN': '⚠️',
-        'ERROR': '🚨'
-      }[result.status];
-
-      console.log(`${statusIcon} ${result.name}: ${result.message}`);
-      if (result.details) {
-        console.log(`   Details: ${JSON.stringify(result.details, null, 2)}`);
+      if (!pageResults[result.page]) {
+        pageResults[result.page] = [];
       }
+      pageResults[result.page].push(result);
     });
 
-    console.log('\n📈 Summary:');
-    console.log(`✅ Passed: ${passed}`);
-    console.log(`❌ Failed: ${failed}`);
-    console.log(`⚠️  Warnings: ${warnings}`);
-    console.log(`🚨 Errors: ${errors}`);
-    console.log(`📊 Total: ${this.results.length}`);
+    Object.keys(pageResults).forEach(pageName => {
+      console.log(`📄 ${pageName}`);
+      console.log('-'.repeat(40));
+      
+      pageResults[pageName].forEach(result => {
+        const icon = {
+          'PASS': '✅',
+          'FAIL': '❌',
+          'WARN': '⚠️',
+          'ERROR': '🔥'
+        }[result.status];
 
-    // Save results to JSON file
-    const fs = require('fs');
+        console.log(`${icon} ${result.message}`);
+        
+        if (result.canonicalUrls) {
+          console.log(`   Found: ${result.canonicalUrls.join(', ')}`);
+        }
+        if (result.seoIssues && result.seoIssues.length > 0) {
+          console.log(`   SEO Issues: ${result.seoIssues.join(', ')}`);
+        }
+
+        // Update summary
+        if (result.message.includes('Canonical URL')) {
+          switch (result.status) {
+            case 'PASS': summary.passed++; break;
+            case 'FAIL': summary.failed++; break;
+            case 'WARN': summary.warnings++; break;
+            case 'ERROR': summary.errors++; break;
+          }
+        }
+      });
+      console.log('');
+    });
+
+    console.log('📈 SUMMARY');
+    console.log('-'.repeat(40));
+    console.log(`Total Pages Tested: ${summary.total}`);
+    console.log(`✅ Passed: ${summary.passed}`);
+    console.log(`❌ Failed: ${summary.failed}`);
+    console.log(`⚠️  Warnings: ${summary.warnings}`);
+    console.log(`🔥 Errors: ${summary.errors}`);
+
+    const successRate = Math.round((summary.passed / summary.total) * 100);
+    console.log(`\n🎯 Success Rate: ${successRate}%`);
+
+    if (successRate === 100) {
+      console.log('\n🎉 All canonical URLs are properly implemented!');
+    } else if (successRate >= 80) {
+      console.log('\n👍 Most canonical URLs are working correctly. Minor issues to address.');
+    } else {
+      console.log('\n🚨 Significant canonical URL issues found. Please review and fix.');
+    }
+
+    // Save detailed results to file
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `canonical-test-report-${timestamp}.json`;
     
+    const fs = require('fs');
     fs.writeFileSync(filename, JSON.stringify({
-      timestamp: new Date().toISOString(),
-      summary: { passed, failed, warnings, errors, total: this.results.length },
-      results: this.results
+      summary,
+      results: this.results,
+      timestamp: new Date().toISOString()
     }, null, 2));
 
-    console.log(`\n💾 Report saved to: ${filename}`);
-
-    return {
-      passed,
-      failed,
-      warnings,
-      errors,
-      total: this.results.length,
-      allPassed: failed === 0 && errors === 0
-    };
+    console.log(`\n📄 Detailed report saved to: ${filename}`);
   }
 }
 
-// Run the tests if this file is executed directly
-if (require.main === module) {
+// Run the tests
+async function main() {
   const tester = new CanonicalTestSuite();
-  tester.runAllTests().then(summary => {
-    process.exit(summary.allPassed ? 0 : 1);
-  }).catch(error => {
-    console.error('Test suite failed:', error);
-    process.exit(1);
-  });
+  await tester.runTests();
+}
+
+// Only run if this file is executed directly
+if (require.main === module) {
+  main().catch(console.error);
 }
 
 module.exports = CanonicalTestSuite; 

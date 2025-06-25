@@ -62,10 +62,27 @@ export default function BookNowPage({ metadata, menus, destinations = [] }) {
     <Layout>
       <Head>
         <title>احجز رحلتك الآن | مدارات الكون</title>
-        <Meta
-          title="احجز رحلتك الآن | مدارات الكون"
-          description="احجز رحلتك السياحية المثالية مع مدارات الكون واستمتع بتجربة سفر لا تُنسى بأفضل الأسعار والخدمات"
+        <meta 
+          name="description" 
+          content="احجز رحلتك السياحية المثالية مع مدارات الكون واستمتع بتجربة سفر لا تُنسى بأفضل الأسعار والخدمات"
         />
+        <link rel="canonical" href="https://madaratalkon.sa/book-now" />
+        
+        {/* Open Graph Tags */}
+        <meta property="og:title" content="احجز رحلتك الآن | مدارات الكون" />
+        <meta property="og:description" content="احجز رحلتك السياحية المثالية مع مدارات الكون واستمتع بتجربة سفر لا تُنسى بأفضل الأسعار والخدمات" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://madaratalkon.sa/book-now" />
+        <meta property="og:site_name" content="مدارات الكون" />
+        
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="احجز رحلتك الآن | مدارات الكون" />
+        <meta name="twitter:description" content="احجز رحلتك السياحية المثالية مع مدارات الكون واستمتع بتجربة سفر لا تُنسى بأفضل الأسعار والخدمات" />
+        
+        {/* Additional SEO */}
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="مدارات الكون" />
       </Head>
 
       <div className="rtl">
