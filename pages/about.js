@@ -110,9 +110,9 @@ export default function About() {
         <div className={styles.bentoContainer}>
           {/* Intro Box */}
           <div className={`${styles.bentoBox} ${styles.introBox}`}>
-            <h2>مغامرات لا تنتهي!</h2>
+            <h3>مغامرات لا تنتهي!</h3>
             <div className={styles.subtitleWrapper}>
-              <h3>رحــلات لا تنسى!</h3>
+              <h4>رحــلات لا تنسى!</h4>
             </div>
           </div>
 

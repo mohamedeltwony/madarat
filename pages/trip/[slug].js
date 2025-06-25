@@ -617,10 +617,10 @@ export default function SingleTrip({ trip, metadata, menus }) {
           <div className={styles.bentoGrid}>
             {/* Included Services Box */}
             <div className={`${styles.bentoBox} ${styles.includedServices}`}>
-              <h2 className={styles.sectionTitle}>
+              <h3 className={styles.sectionTitle}>
                 الخدمات المشمولة
                 <span className={styles.titleLine}></span>
-              </h2>
+              </h3>
               <div className={styles.includedList}>
                 {trip.cost_includes ? (
                   <ul>
@@ -636,10 +636,10 @@ export default function SingleTrip({ trip, metadata, menus }) {
 
             {/* Excluded Services Box */}
             <div className={`${styles.bentoBox} ${styles.excludedServices}`}>
-              <h2 className={styles.sectionTitle}>
+              <h3 className={styles.sectionTitle}>
                 غير مشمول
                 <span className={styles.titleLine}></span>
-              </h2>
+              </h3>
               <div className={styles.excludedList}>
                 {trip.cost_excludes ? (
                   <ul>
@@ -657,10 +657,10 @@ export default function SingleTrip({ trip, metadata, menus }) {
           {/* Itinerary Box */}
           {hasItineraries && (
             <div className={`${styles.bentoBox} ${styles.itineraryBox}`}>
-              <h2 className={styles.sectionTitle}>
+              <h3 className={styles.sectionTitle}>
                 برنامج الرحلة
                 <span className={styles.titleLine}></span>
-              </h2>
+              </h3>
               <div className={styles.accordion}>
                 {trip.itineraries.map((day, index) => (
                   <AccordionItem
@@ -677,10 +677,10 @@ export default function SingleTrip({ trip, metadata, menus }) {
           {/* FAQs Box */}
           {hasFaqs && (
             <div className={`${styles.bentoBox} ${styles.faqBox}`}>
-              <h2 className={styles.sectionTitle}>
+              <h3 className={styles.sectionTitle}>
                 الأسئلة الشائعة
                 <span className={styles.titleLine}></span>
-              </h2>
+              </h3>
               <div className={styles.accordion}>
                 {trip.faqs.map((faq, index) => (
                   <AccordionItem

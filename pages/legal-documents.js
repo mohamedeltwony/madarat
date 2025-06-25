@@ -70,6 +70,7 @@ export default function LegalDocuments() {
       <Section>
         <Container>
           <div className={styles.legalContent}>
+            <h2>الوثائق القانونية والتراخيص</h2>
             <div className={styles.termsIntro}>
               <p>
                 فيما يلي الأوراق والمستندات القانونية الخاصة بشركة مدارات الكون
@@ -81,7 +82,7 @@ export default function LegalDocuments() {
             <div className={styles.documentsGrid}>
               {/* Commercial Register */}
               <div className={styles.documentCard}>
-                <h2 className={styles.documentTitle}>السجل التجاري</h2>
+                <h3 className={styles.documentTitle}>السجل التجاري</h3>
                 <div
                   className={styles.documentImageContainer}
                   onClick={() =>
@@ -104,7 +105,7 @@ export default function LegalDocuments() {
 
               {/* Travel License */}
               <div className={styles.documentCard}>
-                <h2 className={styles.documentTitle}>ترخيص السياحة</h2>
+                <h3 className={styles.documentTitle}>ترخيص السياحة</h3>
                 <div
                   className={styles.documentImageContainer}
                   onClick={() =>
@@ -127,7 +128,7 @@ export default function LegalDocuments() {
 
               {/* Tax Certificate */}
               <div className={styles.documentCard}>
-                <h2 className={styles.documentTitle}>شهادة الضريبة</h2>
+                <h3 className={styles.documentTitle}>شهادة الضريبة</h3>
                 <div
                   className={styles.documentImageContainer}
                   onClick={() =>

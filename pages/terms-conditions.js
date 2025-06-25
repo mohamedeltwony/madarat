@@ -43,6 +43,7 @@ export default function TermsConditions() {
       <Section>
         <Container>
           <div className={styles.legalContent}>
+            <h2>الشروط والأحكام العامة</h2>
             <div className={styles.termsIntro}>
               <p>
                 لأننا نهتم بحقوقكم، تقدم شركة مدارات الكون للسياحة والسفر الشروط
@@ -59,8 +60,8 @@ export default function TermsConditions() {
             </div>
 
             <div className={styles.termsSection}>
-              <h2>الحجوزات والبرامج والعروض</h2>
-              <h3>الشروط والأحكام:</h3>
+              <h3>الحجوزات والبرامج والعروض</h3>
+              <h4>الشروط والأحكام:</h4>
               <ul className={styles.termsList}>
                 <li>
                   يحق للعميل إلغاء طلب الحجز في أي وقت قبل إتمام عملية الدفع
@@ -144,7 +145,7 @@ export default function TermsConditions() {
             </div>
 
             <div className={styles.termsSection}>
-              <h3>سياسة الإلغاء والتعديل:</h3>
+              <h4>سياسة الإلغاء والتعديل:</h4>
               <ul className={styles.termsList}>
                 <li>
                   سوف يتم توضيح سياسة الإلغاء (حيث تختلف باختلاف البرنامج
@@ -164,7 +165,7 @@ export default function TermsConditions() {
             </div>
 
             <div className={styles.termsSection}>
-              <h2>الفيز والتأشيرات</h2>
+              <h3>الفيز والتأشيرات</h3>
               <ul className={styles.termsList}>
                 <li>
                   عند التقدم للحصول على تأشيرة سياحية وتم رفضها من قبل سفارة
@@ -184,7 +185,7 @@ export default function TermsConditions() {
             </div>
 
             <div className={styles.termsSection}>
-              <h2>الطيران</h2>
+              <h3>الطيران</h3>
               <ul className={styles.termsList}>
                 <li>
                   الأسعار المعلن عنها متغيرة حسب وقت الحجوزات وتوفر المقاعد.
@@ -208,7 +209,7 @@ export default function TermsConditions() {
             </div>
 
             <div className={styles.termsSection}>
-              <h2>احترام الثقافات</h2>
+              <h3>احترام الثقافات</h3>
               <div className={styles.culturalNote}>
                 <p>
                   عميلنا العزيز: تُعد الثقافة في حد ذاتها مصطلح معقد، وغالباً ما

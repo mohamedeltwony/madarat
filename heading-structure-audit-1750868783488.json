@@ -1,0 +1,192 @@
+{
+  "timestamp": "2025-06-25T16:26:23.487Z",
+  "totalPages": 8,
+  "pagesWithIssues": 7,
+  "summary": {
+    "pagesWithoutH1": 5,
+    "pagesWithMultipleH1": 2,
+    "pagesWithManyH2s": 0
+  },
+  "detailedResults": [
+    {
+      "file": "pages/index.js",
+      "h1Count": 0,
+      "h2Count": 1,
+      "h3Count": 1,
+      "h1Tags": [],
+      "h2Tags": [
+        "<h2 className={styles.sectionTitle}>Latest Stories</h2>"
+      ],
+      "h3Tags": [
+        "<h3>انضم إلينا الآن</h3>"
+      ],
+      "issues": [
+        "No H1 tag found"
+      ],
+      "recommendations": [
+        "Add a single H1 tag as the main page heading"
+      ]
+    },
+    {
+      "file": "pages/destination/index.js",
+      "h1Count": 2,
+      "h2Count": 1,
+      "h3Count": 2,
+      "h1Tags": [
+        "<h1>الوجهات السياحية</h1>",
+        "<h1 className={styles.pageTitle}>استكشف الوجهات السياحية</h1>"
+      ],
+      "h2Tags": [
+        "<h2>عذراً، حدث خطأ</h2>"
+      ],
+      "h3Tags": [
+        "<h3>لم نجد وجهات تطابق بحثك</h3>",
+        "<h3>لا توجد وجهات متاحة حالياً</h3>"
+      ],
+      "issues": [
+        "Multiple H1 tags found: 2"
+      ],
+      "recommendations": [
+        "Use only one H1 tag per page",
+        "Use H3 for destination subsections"
+      ]
+    },
+    {
+      "file": "pages/about.js",
+      "h1Count": 1,
+      "h2Count": 1,
+      "h3Count": 2,
+      "h1Tags": [
+        "<h1>عن الشركة</h1>"
+      ],
+      "h2Tags": [
+        "<h2 className={styles.mainTitle}>اكتشف الكون مع مدارات الكون</h2>"
+      ],
+      "h3Tags": [
+        "<h3>مغامرات لا تنتهي!</h3>",
+        "<h3>تواصل معنا</h3>"
+      ],
+      "issues": [],
+      "recommendations": [
+        "Use H3 for subsections under \"About\" H2"
+      ]
+    },
+    {
+      "file": "pages/terms-conditions.js",
+      "h1Count": 0,
+      "h2Count": 1,
+      "h3Count": 4,
+      "h1Tags": [],
+      "h2Tags": [
+        "<h2>الشروط والأحكام العامة</h2>"
+      ],
+      "h3Tags": [
+        "<h3>الحجوزات والبرامج والعروض</h3>",
+        "<h3>الفيز والتأشيرات</h3>",
+        "<h3>الطيران</h3>",
+        "<h3>احترام الثقافات</h3>"
+      ],
+      "issues": [
+        "No H1 tag found"
+      ],
+      "recommendations": [
+        "Add a single H1 tag as the main page heading"
+      ]
+    },
+    {
+      "file": "pages/legal-documents.js",
+      "h1Count": 0,
+      "h2Count": 1,
+      "h3Count": 3,
+      "h1Tags": [],
+      "h2Tags": [
+        "<h2>الوثائق القانونية والتراخيص</h2>"
+      ],
+      "h3Tags": [
+        "<h3 className={styles.documentTitle}>السجل التجاري</h3>",
+        "<h3 className={styles.documentTitle}>ترخيص السياحة</h3>",
+        "<h3 className={styles.documentTitle}>شهادة الضريبة</h3>"
+      ],
+      "issues": [
+        "No H1 tag found"
+      ],
+      "recommendations": [
+        "Add a single H1 tag as the main page heading"
+      ]
+    },
+    {
+      "file": "pages/refund-policy.js",
+      "h1Count": 0,
+      "h2Count": 1,
+      "h3Count": 6,
+      "h1Tags": [],
+      "h2Tags": [
+        "<h2>سياسة الإلغاء والاسترداد</h2>"
+      ],
+      "h3Tags": [
+        "<h3>السياسة العامة</h3>",
+        "<h3>الرحلات والبرامج السياحية الخاصة</h3>",
+        "<h3>الظروف القاهرة</h3>",
+        "<h3>طريقة الاسترداد</h3>",
+        "<h3>للاستفسارات والدعم</h3>",
+        "<h3>صفحات ذات صلة</h3>"
+      ],
+      "issues": [
+        "No H1 tag found"
+      ],
+      "recommendations": [
+        "Add a single H1 tag as the main page heading"
+      ]
+    },
+    {
+      "file": "pages/trip/[slug].js",
+      "h1Count": 2,
+      "h2Count": 1,
+      "h3Count": 4,
+      "h1Tags": [
+        "<h1>عذراً، لم نجد الرحلة</h1>",
+        "<h1>{title || 'رحلة سياحية مميزة'}</h1>"
+      ],
+      "h2Tags": [
+        "<h2>جاري تحميل الرحلة...</h2>"
+      ],
+      "h3Tags": [
+        "<h3>{title}</h3>",
+        "<h3>الدفع بالتقسيط على أربع دفعات</h3>",
+        "<h3>السعر لكل شخص</h3>",
+        "<h3>الدفع بالتقسيط على أربع دفعات</h3>"
+      ],
+      "issues": [
+        "Multiple H1 tags found: 2"
+      ],
+      "recommendations": [
+        "Use only one H1 tag per page"
+      ]
+    },
+    {
+      "file": "pages/privacy-policy.js",
+      "h1Count": 0,
+      "h2Count": 1,
+      "h3Count": 7,
+      "h1Tags": [],
+      "h2Tags": [
+        "<h2>سياسة الخصوصية وشروط الاستخدام</h2>"
+      ],
+      "h3Tags": [
+        "<h3>النزاعات والقانون المطبق</h3>",
+        "<h3>قيود العمر</h3>",
+        "<h3>المدفوعات والبيانات المالية</h3>",
+        "<h3>الخصوصية</h3>",
+        "<h3>حقوق النشر</h3>",
+        "<h3>العلامات التجارية</h3>",
+        "<h3>استخدام البيانات للتسويق</h3>"
+      ],
+      "issues": [
+        "No H1 tag found"
+      ],
+      "recommendations": [
+        "Add a single H1 tag as the main page heading"
+      ]
+    }
+  ]
+}

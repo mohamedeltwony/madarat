@@ -69,8 +69,9 @@ export default function RefundPolicy({ metadata, menus, pageContent, lastUpdated
                   </p>
                 </div>
 
+                <h2>سياسة الإلغاء والاسترداد</h2>
                 <div className={styles.termsSection}>
-                  <h2>سياسة الإلغاء والاسترداد العامة</h2>
+                  <h3>السياسة العامة</h3>
                   <ul className={styles.termsList}>
                     <li>
                       تختلف سياسة الإلغاء باختلاف نوع الحجز والبرنامج السياحي، وسيتم
@@ -110,7 +111,7 @@ export default function RefundPolicy({ metadata, menus, pageContent, lastUpdated
                 </div>
 
                 <div className={styles.termsSection}>
-                  <h2>الرحلات والبرامج السياحية الخاصة</h2>
+                  <h3>الرحلات والبرامج السياحية الخاصة</h3>
                   <ul className={styles.termsList}>
                     <li>
                       الرحلات والبرامج السياحية المخصصة حسب طلب العميل لها سياسة
@@ -124,7 +125,7 @@ export default function RefundPolicy({ metadata, menus, pageContent, lastUpdated
                 </div>
 
                 <div className={styles.termsSection}>
-                  <h2>الظروف القاهرة</h2>
+                  <h3>الظروف القاهرة</h3>
                   <p>
                     في حالة الظروف القاهرة (مثل الكوارث الطبيعية، الأوبئة، قرارات
                     حكومية) التي تؤثر على إمكانية تنفيذ الرحلة أو البرنامج السياحي،
@@ -146,7 +147,7 @@ export default function RefundPolicy({ metadata, menus, pageContent, lastUpdated
                 </div>
 
                 <div className={styles.termsSection}>
-                  <h2>طريقة الاسترداد</h2>
+                  <h3>طريقة الاسترداد</h3>
                   <ul className={styles.termsList}>
                     <li>
                       يتم إرجاع المبالغ المستردة بنفس طريقة الدفع الأصلية في غضون
