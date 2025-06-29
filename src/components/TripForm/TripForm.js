@@ -40,9 +40,17 @@ export default function TripForm({
     setCsrfToken(getCsrfToken());
   }, []);
 
-  // Update form data only when initialFormData changes
+  // Update form data only when initialFormData changes (but preserve existing values)
   useEffect(() => {
-    setFormData(initialFormData);
+    setFormData(prevData => {
+      // Only update if there are actual changes and don't overwrite existing data
+      const hasChanges = JSON.stringify(prevData) !== JSON.stringify(initialFormData);
+      if (hasChanges && Object.keys(prevData).every(key => !prevData[key])) {
+        console.log('🔄 TripForm: Updating initial form data:', initialFormData);
+        return initialFormData;
+      }
+      return prevData;
+    });
   }, [initialFormData]);
 
   // Handle auto-population from URL parameters (common with Snapchat ads)
@@ -62,7 +70,7 @@ export default function TripForm({
         isFromSnapchat: isFromSnapchat
       });
     }
-  }, [formData.phone]);
+  }, []); // ✅ Fixed: Remove formData.phone dependency to prevent infinite loop
 
   const getBrowserAndDeviceInfo = (userAgent) => {
     const info = { browser: 'Unknown', os: 'Unknown', device: 'Unknown' };
@@ -120,7 +128,11 @@ export default function TripForm({
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
     let currentPhoneValid = isPhoneValid;
+    
+    console.log('📝 TripForm: Input change:', { fieldName: name, value: value });
+    
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    
     if (name === 'phone') {
       setPhoneTouched(true);
       
@@ -128,6 +140,12 @@ export default function TripForm({
       const isFromSnapchat = isSnapchatTraffic();
       currentPhoneValid = validateSaudiPhone(value, isFromSnapchat);
       setIsPhoneValid(currentPhoneValid);
+      
+      console.log('📞 Phone validation result:', {
+        input: value,
+        isValid: currentPhoneValid,
+        isSnapchat: isFromSnapchat
+      });
       
       // Log for debugging Snapchat issues
       if (isFromSnapchat) {
@@ -330,6 +348,15 @@ export default function TripForm({
       });
 
       // Call onSuccess with comprehensive data
+      console.log('🎯 TripForm: Calling onSuccess with data:', {
+        processedPhone,
+        externalId,
+        leadEventId,
+        nationality: formData.nationality,
+        email: formData.email,
+        name: formData.name
+      });
+      
       onSuccess({
         processedPhone,
         externalId,
@@ -347,6 +374,8 @@ export default function TripForm({
     } catch (error) {
       setIsLoading(false);
       
+      console.error('❌ TripForm submission error:', error);
+      
       // Track form submission error
       sendGTMEvent({
         event: 'form_submission_error',
@@ -356,7 +385,15 @@ export default function TripForm({
         timestamp: new Date().toISOString()
       });
       
-      alert('حدث خطأ في تقديم النموذج. يرجى المحاولة مرة أخرى.');
+      // Better error message based on error type
+      let errorMessage = 'حدث خطأ في تقديم النموذج. يرجى المحاولة مرة أخرى.';
+      if (error.message && error.message.includes('CSRF')) {
+        errorMessage = 'انتهت صلاحية الجلسة. يرجى إعادة تحميل الصفحة والمحاولة مرة أخرى.';
+      } else if (error.message && error.message.includes('Network')) {
+        errorMessage = 'مشكلة في الاتصال. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.';
+      }
+      
+      alert(errorMessage);
     }
   };
 
