@@ -612,6 +612,10 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   padding: 1.5rem;
   background: rgba($color-secondary, 0.05);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; // Align all items to the right
+  text-align: right; // Ensure text alignment is also right
 
   @media (max-width: 768px) {
     padding: 1rem;
@@ -621,9 +625,8 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
     font-size: 1.1rem;
     color: $color-primary;
     margin: 0.5rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    width: 100%; // Take full width
+    text-align: right; // Align text to right
 
     @media (max-width: 768px) {
       font-size: 0.95rem;
@@ -632,11 +635,29 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
 }
 
 .installmentIcon {
+  // For SVG icons
   color: $color-secondary;
   font-size: 1.5rem;
+  align-self: flex-end; // Align to the right within flex container
+  margin-bottom: 0.5rem; // Add spacing below the icon
+  
+  // For image logos (like Tabby)
+  &[src] {
+    width: 5rem; // Double the previous width (was 2.5rem)
+    height: auto;
+    max-height: 4rem; // Double the max-height as well
+    object-fit: contain;
+    color: initial; // Reset color for images
+    margin-left: auto; // Ensure right alignment
+  }
 
   @media (max-width: 768px) {
     font-size: 1.2rem;
+    
+    &[src] {
+      width: 4rem; // Double the previous mobile width (was 2rem)
+      max-height: 3rem; // Double the max-height for mobile
+    }
   }
 }
 
@@ -644,6 +665,8 @@ $visa-gradient: linear-gradient(135deg, #FF9F1C, #FFBF69);
   font-size: 1.2rem;
   color: $color-secondary;
   font-weight: 600;
+  width: 100%; // Take full width
+  text-align: right; // Align text to right
 
   @media (max-width: 768px) {
     font-size: 1rem;

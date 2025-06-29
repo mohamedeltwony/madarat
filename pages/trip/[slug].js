@@ -32,7 +32,7 @@ import {
   FaShoppingBag,
   FaWineGlassAlt,
   FaGift,
-  FaCreditCard,
+
   FaGoogle,
   FaEnvelope,
   FaUser
@@ -188,12 +188,16 @@ const TripGallery = ({ images }) => {
 // Simplified contact form component
 const ContactForm = ({ price }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const installmentAmount = Math.ceil(price / 4);
+  const installmentAmount = Math.ceil((price / 4) * 1.08); // Add 8% markup
 
   return (
     <div className={styles.contactForm}>
       <div className={styles.installmentInfo}>
-        <FaCreditCard className={styles.installmentIcon} />
+        <img 
+          src="/icons/tabby-logo.png" 
+          alt="Tabby" 
+          className={styles.installmentIcon}
+        />
         <h3>الدفع بالتقسيط على أربع دفعات</h3>
         <div className={styles.installmentAmount}>
           <span>{installmentAmount.toLocaleString('en-US')}</span> ريال / شهرياً
@@ -587,12 +591,7 @@ export default function SingleTrip({ trip, metadata, menus }) {
                 <FaMoneyBillWave />
                 <span>{price} {trip.currency?.code || 'ريال'}</span>
               </div>
-              {(trip?.destination?.title || trip?.destination?.name || trip?.destination) && (
-                <div className={styles.infoItem}>
-                  <FaMapMarkerAlt />
-                  <span>{trip?.destination?.title || trip?.destination?.name || trip?.destination}</span>
-                </div>
-              )}
+
             </div>
           </div>
         </Container>
@@ -723,10 +722,14 @@ export default function SingleTrip({ trip, metadata, menus }) {
             </div>
             
             <div className={styles.installmentInfo}>
-              <FaCreditCard className={styles.installmentIcon} />
+              <img 
+                src="/icons/tabby-logo.png" 
+                alt="Tabby" 
+                className={styles.installmentIcon}
+              />
               <h3>الدفع بالتقسيط على أربع دفعات</h3>
               <div className={styles.installmentAmount}>
-                <span>{Math.ceil(parseInt(price.replace(/,/g, '')) / 4).toLocaleString('en-US')}</span> ريال / شهرياً
+                <span>{Math.ceil((parseInt(price.replace(/,/g, '')) / 4) * 1.08).toLocaleString('en-US')}</span> ريال / شهرياً
               </div>
             </div>
 
