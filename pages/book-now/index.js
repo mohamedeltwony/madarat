@@ -5,6 +5,7 @@ import { getSiteMetadataREST, getAllMenusREST } from '@/lib/rest-api';
 import styles from '@/styles/pages/BookNow.module.scss';
 import Layout from '@/components/Layout';
 import Footer from '@/components/Footer';
+import { getCsrfToken } from '@/utils/csrf';
 
 export default function BookNowPage({ metadata, menus, destinations = [] }) {
   const [formData, setFormData] = useState({
@@ -17,6 +18,12 @@ export default function BookNowPage({ metadata, menus, destinations = [] }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [error, setError] = useState(null);
+  const [csrfToken, setCsrfToken] = useState('');
+
+  // Initialize CSRF token
+  useEffect(() => {
+    setCsrfToken(getCsrfToken());
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -152,6 +159,7 @@ export default function BookNowPage({ metadata, menus, destinations = [] }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'csrf-token': csrfToken,
         },
         body: JSON.stringify(zapierPayload),
       });
