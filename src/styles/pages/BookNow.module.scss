@@ -481,3 +481,89 @@ $text-color-light: #707070;
     padding: 1rem;
   }
 }
+
+// Nationality Radio Buttons
+.nationalityGroup {
+  margin-bottom: 1rem;
+}
+
+.radioGroup {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid rgba($primary-color, 0.15);
+
+  @media (max-width: 768px) {
+    gap: 1rem;
+    padding: 0.75rem;
+  }
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: $text-color;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: $primary-color;
+  }
+
+  input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba($primary-color, 0.3);
+    border-radius: 50%;
+    appearance: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+
+    &:checked {
+      border-color: $primary-color;
+      background-color: $primary-color;
+    }
+
+    &:checked::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: white;
+    }
+
+    &:hover {
+      border-color: $primary-color;
+    }
+  }
+
+  span {
+    font-size: 1rem;
+    color: inherit;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    
+    input[type="radio"] {
+      width: 18px;
+      height: 18px;
+    }
+    
+    span {
+      font-size: 0.9rem;
+    }
+  }
+}

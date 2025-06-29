@@ -12,6 +12,7 @@ export default function BookNowPage({ metadata, menus, destinations = [] }) {
     name: '',
     email: '',
     destination: '— الرجاء تحديد اختيار —',
+    nationality: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -40,16 +41,129 @@ export default function BookNowPage({ metadata, menus, destinations = [] }) {
       return;
     }
 
+    // Validate nationality
+    if (!formData.nationality) {
+      setError('الرجاء اختيار الجنسية');
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 
     try {
-      // Here you would typically send the form data to your backend
-      // For now, we'll simulate a successful submission
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Generate unique IDs for tracking
+      const leadEventId = crypto.randomUUID();
+      const externalId = crypto.randomUUID();
 
-      console.log('Form submitted:', formData);
-      setFormSubmitted(true);
+      // Helper function to get browser and device information
+      const getBrowserAndDeviceInfo = (userAgent) => {
+        const info = {
+          browser: 'Unknown',
+          os: 'Unknown',
+          device: 'Unknown',
+        };
+        
+        // Browser detection
+        if (/Firefox/i.test(userAgent)) info.browser = 'Firefox';
+        else if (/Chrome/i.test(userAgent) && !/Edg/i.test(userAgent) && !/OPR/i.test(userAgent)) info.browser = 'Chrome';
+        else if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)) info.browser = 'Safari';
+        else if (/Edg/i.test(userAgent)) info.browser = 'Edge';
+        else if (/OPR/i.test(userAgent)) info.browser = 'Opera';
+        else if (/MSIE|Trident/i.test(userAgent)) info.browser = 'Internet Explorer';
+        
+        // OS detection
+        if (/Windows/i.test(userAgent)) info.os = 'Windows';
+        else if (/Macintosh|Mac OS X/i.test(userAgent)) info.os = 'macOS';
+        else if (/Android/i.test(userAgent)) info.os = 'Android';
+        else if (/iPhone|iPad|iPod/i.test(userAgent)) info.os = 'iOS';
+        else if (/Linux/i.test(userAgent)) info.os = 'Linux';
+        
+        // Device vendor detection (simplified)
+        if (/iPhone|iPad|iPod/i.test(userAgent)) info.device = 'Apple';
+        else if (/Android.*Samsung/i.test(userAgent)) info.device = 'Samsung';
+        else if (/Android.*Pixel/i.test(userAgent)) info.device = 'Google';
+        else if (/Android.*Huawei/i.test(userAgent)) info.device = 'Huawei';
+        else if (/Macintosh|Mac OS X/i.test(userAgent)) info.device = 'Apple';
+        else if (/Windows/i.test(userAgent)) info.device = 'PC';
+        
+        return info;
+      };
+
+      // Helper function to get cookie value
+      const getCookie = (name) => {
+        if (typeof document === 'undefined') return null;
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+      };
+
+      // Get URL parameters and browser info
+      const queryParams = new URLSearchParams(window.location.search);
+      const userAgent = navigator.userAgent;
+      const browserInfo = getBrowserAndDeviceInfo(userAgent);
+      
+      console.log('Browser detection result:', browserInfo); // Debug log
+
+      // Collect all tracking data
+      const clientData = {
+        utm_source: queryParams.get('utm_source') || 'direct',
+        utm_medium: queryParams.get('utm_medium') || 'none',
+        utm_campaign: queryParams.get('utm_campaign') || 'none',
+        utm_term: queryParams.get('utm_term') || 'none',
+        utm_content: queryParams.get('utm_content') || 'none',
+        screen_width: typeof window !== 'undefined' ? window.screen.width : null,
+        screen_height: typeof window !== 'undefined' ? window.screen.height : null,
+        device_vendor: browserInfo.device,
+        operating_system: browserInfo.os,
+        browser: browserInfo.browser,
+        user_agent: userAgent,
+        fb_browser_id: getCookie('_fbp') || 'none',
+        fb_click_id: getCookie('_fbc') || 'none',
+        referrer: document.referrer || 'direct',
+      };
+
+      // Prepare payload for Zapier with all comprehensive data
+      const zapierPayload = {
+        phone: formData.phone,
+        name: formData.name,
+        email: formData.email,
+        destination: formData.destination,
+        tripName: 'Book Now General Inquiry',
+        price: 0,
+        nationality: formData.nationality,
+        pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+        timestamp: new Date().toISOString(),
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        leadEventId: leadEventId,
+        externalId: externalId,
+        emails: [
+          'mohammed@madaratalkon.com',
+          'hesham@madaratalkon.com',
+        ],
+        formSource: 'book-now-page',
+        // Add all the tracking data
+        ...clientData
+      };
+
+      // Send data to Zapier proxy
+      const response = await fetch('/api/zapier-proxy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(zapierPayload),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log('Form submitted successfully:', formData);
+        setFormSubmitted(true);
+      } else {
+        throw new Error(result.error || 'Failed to submit form');
+      }
     } catch (err) {
       console.error('Error submitting form:', err);
       setError('حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.');
@@ -130,6 +244,7 @@ export default function BookNowPage({ metadata, menus, destinations = [] }) {
                         name: '',
                         email: '',
                         destination: '— الرجاء تحديد اختيار —',
+                        nationality: '',
                       });
                       setFormSubmitted(false);
                     }}
@@ -233,6 +348,34 @@ export default function BookNowPage({ metadata, menus, destinations = [] }) {
                       <label htmlFor="destination" className={styles.formLabel}>
                         الوجهة
                       </label>
+                    </div>
+
+                    {/* Nationality radio group */}
+                    <div className={`${styles.formGroup} ${styles.nationalityGroup}`}>
+                      <div className={styles.radioGroup}>
+                        <label className={styles.radioLabel}>
+                          <input
+                            type="radio"
+                            name="nationality"
+                            value="مواطن"
+                            checked={formData.nationality === 'مواطن'}
+                            onChange={handleChange}
+                            required
+                          />
+                          <span>مواطن</span>
+                        </label>
+                        <label className={styles.radioLabel}>
+                          <input
+                            type="radio"
+                            name="nationality"
+                            value="مقيم"
+                            checked={formData.nationality === 'مقيم'}
+                            onChange={handleChange}
+                            required
+                          />
+                          <span>مقيم</span>
+                        </label>
+                      </div>
                     </div>
 
                     <button
