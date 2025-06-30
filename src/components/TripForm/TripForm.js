@@ -284,6 +284,39 @@ export default function TripForm({
       
       console.log('Zapier submission successful, preparing redirect data...');
       
+      // --- BACKUP: Send Lead Email via API Route (Non-blocking) ---
+      // Don't await this - let it run in background to avoid blocking redirect
+      fetch('/api/send-lead-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: processedPhone,
+          email: formData.email,
+          nationality: formData.nationality,
+          destination: zapierConfig.extraPayload?.destination || 'Unknown',
+          formName: `${zapierConfig.extraPayload?.tripName || 'Trip'} Form (TripForm)`,
+          pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+          ...clientData,
+        }),
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(errorData => {
+            console.error('Failed to send backup lead email:', errorData.message);
+          });
+        } else {
+          console.log('Backup lead email sent successfully');
+        }
+      })
+      .catch(error => {
+        console.error('Error sending backup lead email:', error);
+        // Log error but continue - don't block user flow
+      });
+      // --- End Backup Email ---
+
       // Add GTM tracking for successful form submission (now enhanced with persistent data)
       const formTrackingData = {
         form_location: window.location.pathname,
@@ -304,11 +337,14 @@ export default function TripForm({
         ...clientData,
       };
 
-      // Track form submission with enhanced data
-      await trackFormSubmission('trip_booking_form', formTrackingData);
+      // Track form submission with enhanced data (Non-blocking)
+      trackFormSubmission('trip_booking_form', formTrackingData).catch(error => {
+        console.error('Form submission tracking failed:', error);
+      });
 
-      // Track trip booking with enhanced data
-      await trackTripBooking(zapierConfig.extraPayload?.tripName || 'unknown', {
+      // Track trip booking with enhanced data (Non-blocking)
+      trackTripBooking({
+        tripName: zapierConfig.extraPayload?.tripName || 'unknown',
         destination: zapierConfig.extraPayload?.destination || 'unknown',
         price: zapierConfig.extraPayload?.price || 0,
         nationality: formData.nationality,
@@ -321,8 +357,8 @@ export default function TripForm({
         name: formData.name
       });
 
-      // Enhanced ecommerce tracking
-      await sendGTMEvent({
+      // Enhanced ecommerce tracking (Non-blocking)
+      sendGTMEvent({
         event: 'purchase_intent',
         ecommerce: {
           currency: 'SAR',
@@ -345,6 +381,8 @@ export default function TripForm({
           name: formData.name
         },
         ...formTrackingData
+      }).catch(error => {
+        console.error('GTM event tracking failed:', error);
       });
 
       // Call onSuccess with comprehensive data

@@ -1,7 +1,5 @@
-import config from './config';
+import config, { API_URL } from './config';
 import { decodeHtmlEntitiesSafe } from './util';
-
-const { API_URL } = config;
 
 import { updateUserAvatar } from '@/lib/users';
 import { sortObjectsByDate } from '@/lib/datetime';

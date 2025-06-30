@@ -166,16 +166,31 @@ export default function Home({
         <GoogleReviewsSection />
         */}
 
-        {posts.length > 0 && (
-          <>
-            <Section>
-              <Container>
-                <h2 className={styles.sectionTitle}>Latest Stories</h2>
-                <BentoPosts posts={posts.slice(3, 9)} />
-              </Container>
-            </Section>
-          </>
-        )}
+        <Section className={styles.postsSection}>
+          <Container>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>أحدث المقالات والقصص</h2>
+              <p className={styles.sectionDescription}>
+                اكتشف أحدث القصص والمقالات عن السفر والوجهات السياحية المميزة
+              </p>
+            </div>
+            {posts && posts.length > 0 ? (
+              <>
+                <BentoPosts posts={posts.slice(0, 6)} />
+                <div className={styles.sectionFooter}>
+                  <Link href="/posts" className={styles.viewAllButton}>
+                    عرض جميع المقالات
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <div className={styles.noPosts}>
+                <p>لا توجد مقالات متوفرة حالياً</p>
+                <p style={{fontSize: '0.9rem', opacity: 0.7}}>جاري العمل على إضافة محتوى جديد قريباً</p>
+              </div>
+            )}
+          </Container>
+        </Section>
 
         {/* New Features Section */}
         {/* Removed Explore Our Site features section */}
