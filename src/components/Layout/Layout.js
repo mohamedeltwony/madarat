@@ -9,6 +9,8 @@ import Footer from '@/components/Footer';
 import Meta from '@/components/Meta';
 import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton'; // Import the new component
 import Analytics from '@/components/Analytics';
+import JoinMission from '@/components/JoinMission';
+import PageIndicator from '@/components/PageIndicator';
 
 const Layout = ({ children, metadata: propsMetadata, menus: propsMenus }) => {
   const router = useRouter();
@@ -112,9 +114,12 @@ const Layout = ({ children, metadata: propsMetadata, menus: propsMenus }) => {
       <Analytics />
       <Header menus={propsMenus} />
       <Main>{children}</Main>
+      {!isTripPage && <JoinMission />}
       {!isTripPage && <Footer />}
       {/* Conditionally render WhatsApp button - hide on trip pages and thank you pages */}
       {!isTripPage && !isThankYouPage && <WhatsAppButton />}
+      {/* Page scroll indicator - shows on all pages on desktop */}
+      <PageIndicator />
     </div>
   );
 };

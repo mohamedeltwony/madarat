@@ -1,0 +1,167 @@
+@use 'styles/_variables' as vars;
+@use 'sass:color';
+
+$primary-color: #104c44;
+$accent-color: #cc9c64;
+
+.missionSection {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 600px;
+  color: white;
+  overflow: hidden;
+  font-family: 'Cairo', 'Tajawal', Arial, sans-serif;
+}
+
+.sectionBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-image: url('/images/16ed41f3ec304b7e93ccfa0aa6517e2a.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(0px, 0px) scale(1);
+  transition: transform 0.3s ease-out;
+  
+  &:hover {
+    transform: translate(-5.763389px, 1.2px) scale(1.05);
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.sectionContent {
+  position: relative;
+  z-index: 3;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding:   25rem  1.5rem 25rem 1.5rem;
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  font-family: 'Cairo', 'Tajawal', Arial, sans-serif;
+  margin-bottom: 2rem;
+  
+  @media (min-width: 768px) {
+    font-size: 3.75rem;
+  }
+}
+
+.description {
+  font-size: 1.25rem;
+  max-width: 768px;
+  margin: 0 auto 3rem auto;
+  color: #d1d5db;
+  font-family: 'Cairo', 'Tajawal', Arial, sans-serif;
+  line-height: 1.6;
+  
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+  }
+}
+
+.ctaButton {
+  background: linear-gradient(135deg, $accent-color, color.adjust($accent-color, $lightness: -10%));
+  color: white;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-family: 'Cairo', 'Tajawal', Arial, sans-serif;
+  margin-bottom: 3rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba($accent-color, 0.4);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  
+  &:hover {
+    background: linear-gradient(135deg, color.adjust($accent-color, $lightness: -10%), $accent-color);
+    box-shadow: 0 6px 15px rgba($accent-color, 0.5);
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 8px rgba($accent-color, 0.3);
+  }
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 1024px;
+  margin: 0 auto;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gridItem {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1.5rem;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  border: 1px solid rgba($accent-color, 0.2);
+  
+  &:hover {
+    transform: translateY(-5px);
+    background: rgba($primary-color, 0.3);
+    border-color: rgba($accent-color, 0.4);
+    box-shadow: 0 8px 25px rgba($primary-color, 0.2);
+  }
+}
+
+.iconContainer {
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+  color: $accent-color;
+  background: rgba($accent-color, 0.1);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba($accent-color, 0.2);
+    transform: scale(1.05);
+  }
+}
+
+.gridTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: 'Cairo', 'Tajawal', Arial, sans-serif;
+  margin-bottom: 0.5rem;
+  color: $accent-color;
+}
+
+.gridDescription {
+  color: #d1d5db;
+  line-height: 1.6;
+  font-family: 'Cairo', 'Tajawal', Arial, sans-serif;
+} 
