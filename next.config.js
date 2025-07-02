@@ -82,6 +82,7 @@ const nextConfig = {
       'secure.gravatar.com',
       'res.cloudinary.com',
       'wp.example.org',
+      'drive.google.com',
     ],
     remotePatterns: [
       {
@@ -129,6 +130,12 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'loremflickr.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'drive.google.com',
         port: '',
         pathname: '/**',
       }

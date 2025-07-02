@@ -187,6 +187,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap"
             rel="stylesheet"
           />
+          
+          {/* RemixIcon for UI Icons */}
+          <link 
+            href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" 
+            rel="stylesheet"
+          />
 
           {/* Favicon and App Icons */}
           <link rel="icon" type="image/png" href="/favicon.png" />

@@ -11,8 +11,10 @@ import { FaTimes } from 'react-icons/fa';
 
 export default function LegalDocuments() {
   // Paths to the legal document images
-  const taxCertificatePath = '/images/شهادة الضريبة-1 copy.webp';
-  const commercialRegisterPath = '/images/CR.jpeg';
+  const taxCertificateThumbnail = 'https://drive.google.com/thumbnail?id=1pcPm83fBpPhVa7pJbGDIJM2hOtuW2jos&sz=w800';
+  const taxCertificateFullUrl = 'https://drive.google.com/file/d/1pcPm83fBpPhVa7pJbGDIJM2hOtuW2jos/view?usp=sharing';
+  const commercialRegisterThumbnail = 'https://drive.google.com/thumbnail?id=1_N7raN714JBT-ZZFe5ElBUhGwoQxuJxk&sz=w800';
+  const commercialRegisterFullUrl = 'https://drive.google.com/file/d/1_N7raN714JBT-ZZFe5ElBUhGwoQxuJxk/view?usp=sharing';
   const travelLicensePath = '/images/travel-licence.webp';
 
   // State for lightbox
@@ -87,13 +89,13 @@ export default function LegalDocuments() {
                   className={styles.documentImageContainer}
                   onClick={() =>
                     openLightbox(
-                      commercialRegisterPath,
+                      commercialRegisterThumbnail,
                       'السجل التجاري - مدارات الكون'
                     )
                   }
                 >
                   <Image
-                    src={commercialRegisterPath}
+                    src={commercialRegisterThumbnail}
                     alt="السجل التجاري - مدارات الكون"
                     width={800}
                     height={1130}
@@ -133,13 +135,13 @@ export default function LegalDocuments() {
                   className={styles.documentImageContainer}
                   onClick={() =>
                     openLightbox(
-                      taxCertificatePath,
+                      taxCertificateThumbnail,
                       'شهادة الضريبة - مدارات الكون'
                     )
                   }
                 >
                   <Image
-                    src={taxCertificatePath}
+                    src={taxCertificateThumbnail}
                     alt="شهادة الضريبة - مدارات الكون"
                     width={800}
                     height={1130}
@@ -175,6 +177,24 @@ export default function LegalDocuments() {
               className={styles.lightboxImage}
               onClick={(e) => e.stopPropagation()}
             />
+            {/* Show PDF link if this is a Google Drive document */}
+            {lightboxImage.includes('drive.google.com') && (
+              <div className={styles.lightboxPdfLink}>
+                <a 
+                  href={
+                    lightboxImage.includes('1_N7raN714JBT-ZZFe5ElBUhGwoQxuJxk') 
+                      ? commercialRegisterFullUrl 
+                      : taxCertificateFullUrl
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.lightboxPdfButton}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  📄 عرض PDF كاملاً أو تحميل
+                </a>
+              </div>
+            )}
           </div>
         </div>
       )}
