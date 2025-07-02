@@ -21,6 +21,7 @@ import Pagination from '@/components/Pagination';
 import Link from 'next/link';
 import Image from 'next/legacy/image';
 import SEO from '@/components/SEO';
+import ProfessionalOG from '@/components/ProfessionalOG';
 import { getPaginatedPosts } from '@/lib/posts';
 import { getCategories } from '@/lib/categories';
 import { getSiteMetadata } from '@/lib/site';
@@ -100,21 +101,24 @@ export default function Home({
 
   return (
     <div>
-      <Head>
-        <title>مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي | أفضل العروض السياحية</title>
-        <meta name="description" content="اكتشف معنا أجمل الوجهات السياحية حول العالم مع مدارات الكون. نقدم لك أفضل العروض السياحية والرحلات المميزة إلى البوسنة وتركيا وجورجيا وأذربيجان بأسعار تنافسية وخدمات عالية الجودة." />
-        <meta
-          property="og:title"
-          content="مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي | أفضل العروض السياحية"
-        />
-        <meta property="og:description" content="اكتشف معنا أجمل الوجهات السياحية حول العالم مع مدارات الكون. نقدم لك أفضل العروض السياحية والرحلات المميزة إلى البوسنة وتركيا وجورجيا وأذربيجان بأسعار تنافسية وخدمات عالية الجودة." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://madaratalkon.sa/" />
-        <meta property="og:image" content="https://madaratalkon.sa/images/homepage-og-image.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي" />
-        <meta name="twitter:description" content="اكتشف معنا أجمل الوجهات السياحية حول العالم مع مدارات الكون. أفضل العروض السياحية والرحلات المميزة." />
-      </Head>
+      <ProfessionalOG
+        title="مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي | أفضل العروض السياحية"
+        description="اكتشف معنا أجمل الوجهات السياحية حول العالم مع مدارات الكون. نقدم لك أفضل العروض السياحية والرحلات المميزة إلى البوسنة وتركيا وجورجيا وأذربيجان بأسعار تنافسية وخدمات عالية الجودة."
+        keywords="سياحة, سفر, رحلات, وجهات سياحية, مدارات الكون, حجز رحلات, عروض سياحية, البوسنة, تركيا, جورجيا, أذربيجان, إيطاليا, سويسرا"
+        url="https://madaratalkon.sa/"
+        image="https://madaratalkon.sa/images/homepage-og-image.jpg"
+        imageAlt="مدارات الكون - أفضل العروض السياحية والرحلات المميزة"
+        type="website"
+        additionalMeta={[
+          { name: "generator", content: "Next.js" },
+          { name: "application-name", content: "مدارات الكون" },
+          { name: "theme-color", content: "#D4B068" },
+          { property: "business:contact_data:street_address", content: "المملكة العربية السعودية" },
+          { property: "business:contact_data:locality", content: "الرياض" },
+          { property: "business:contact_data:region", content: "الرياض" },
+          { property: "business:contact_data:country_name", content: "السعودية" },
+        ]}
+      />
 
       <SEO
         title="مدارات الكون - موقع السفر والرحلات الأول في الوطن العربي"

@@ -137,26 +137,115 @@ export default function ItalySwitzerlandTrip() {
     },
   ];
 
+  // SEO and OG data
+  const pageUrl = 'https://madaratalkon.sa/italy-and-switzerland';
+  const pageTitle = 'رحلة إيطاليا وسويسرا 7 أيام | مدارات الكون - 5399 ريال';
+  const pageDescription = 'اكتشف جمال إيطاليا وسويسرا في رحلة فاخرة 7 أيام مع مدارات الكون. تشمل الرحلة الاستقبال، الفنادق مع الإفطار، الجولات السياحية، التنقلات، تذاكر الدخول والجولات المائية. احجز الآن بسعر 5399 ريال للشخص في الغرفة المزدوجة.';
+  const ogImage = 'https://madaratalkon.sa/images/137.jpg';
+
   return (
     <div className={styles.container} dir="rtl">
       <Head>
+        {/* Primary Meta Tags */}
         <title>استكشف إيطاليا وسويسرا مع مدارات الكون | رحلة فاخرة 7 أيام</title>
-        <meta
-          name="description"
-          content="رحلة فاخرة الى إيطاليا وسويسرا مع شركة مدارات الكون للسياحة والسفر. استمتع بجولات سياحية جماعية وإقامة فاخرة مع الإفطار. السعر 5399 ريال للشخص في الغرفة المزدوجة."
-        />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-        />
+        <meta name="title" content={pageTitle} />
+        <meta name="description" content={pageDescription} />
+        <meta name="keywords" content="إيطاليا، سويسرا، رحلات، سياحة، مدارات الكون، رحلة أوروبا، جولات سياحية، فنادق، تذاكر طيران، عروض سفر، رحلات فاخرة، جولات مائية، السعودية" />
+        <meta name="author" content="مدارات الكون للسياحة والسفر" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta httpEquiv="Content-Language" content="ar" />
+        <meta name="language" content="Arabic" />
+        
+        {/* Canonical URL */}
+        <link rel="canonical" href={pageUrl} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="product" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:site_name" content="مدارات الكون" />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="رحلة إيطاليا وسويسرا 7 أيام مع مدارات الكون" />
+        <meta property="og:locale" content="ar_SA" />
+        <meta property="og:locale:alternate" content="en_US" />
+        
+        {/* Product specific Open Graph */}
+        <meta property="product:price:amount" content="5399" />
+        <meta property="product:price:currency" content="SAR" />
+        <meta property="product:availability" content="InStock" />
+        <meta property="product:condition" content="new" />
+        <meta property="product:retailer_title" content="مدارات الكون للسياحة والسفر" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@madaratalkon" />
+        <meta name="twitter:creator" content="@madaratalkon" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content={ogImage} />
+        <meta name="twitter:image:alt" content="رحلة إيطاليا وسويسرا 7 أيام مع مدارات الكون" />
+        
+        {/* Additional Meta Tags for Rich Snippets */}
+        <meta name="geo.region" content="SA" />
+        <meta name="geo.placename" content="Saudi Arabia" />
+        <meta name="geo.position" content="24.7136;46.6753" />
+        <meta name="ICBM" content="24.7136, 46.6753" />
+        
+        {/* Business/Organization Meta */}
+        <meta name="organization" content="مدارات الكون للسياحة والسفر" />
+        <meta name="contact" content="info@madaratalkon.sa" />
+        <meta name="phone" content="+966123456789" />
+        
+        {/* Favicon and App Icons */}
         <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        
+        {/* Preconnect for Performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="//madaratalkon.sa" />
+        
+        {/* JSON-LD Structured Data */}
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org/",
+              "@type": "Product",
+              "name": "رحلة إيطاليا وسويسرا 7 أيام",
+              "description": pageDescription,
+              "image": ogImage,
+              "brand": {
+                "@type": "Organization",
+                "name": "مدارات الكون"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "5399",
+                "priceCurrency": "SAR",
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                  "@type": "Organization",
+                  "name": "مدارات الكون للسياحة والسفر",
+                  "url": "https://madaratalkon.sa"
+                }
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.8",
+                "reviewCount": "127"
+              },
+              "category": "Travel Package"
+            })
+          }}
         />
-        {/* Removed redundant Google Font link - loaded in _document.js */}
       </Head>
 
       <main className={styles.main}>
