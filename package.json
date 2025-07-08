@@ -6,7 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "ANALYZE=true npm run build",
+    "build:prod": "NODE_ENV=production next build",
+    "export": "next export",
+    "bundle-analyzer": "npm run build && npx @next/bundle-analyzer",
+    "perf": "npm run build && npm run start",
+    "size": "size-limit",
+    "lighthouse": "lhci autorun"
   },
   "dependencies": {
     "@apollo/client": "^3.12.5",
@@ -29,7 +36,38 @@
     "swr": "^2.2.4"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.12.0",
+    "@next/bundle-analyzer": "^14.2.30",
+    "@size-limit/preset-big-lib": "^8.2.6",
     "eslint": "^9.18.0",
-    "eslint-config-next": "^15.1.4"
+    "eslint-config-next": "^15.1.4",
+    "size-limit": "^8.2.6",
+    "web-vitals": "^5.0.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "size-limit": [
+    {
+      "path": ".next/static/js/**/*.js",
+      "limit": "500 KB"
+    },
+    {
+      "path": ".next/static/css/**/*.css",
+      "limit": "100 KB"
+    }
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }

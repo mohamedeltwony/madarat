@@ -1,15 +1,102 @@
-
-
+/* Optimized CSS Loading */
 @import './vendors.css';
 @import './main.css';
 @import './custom.css';
 
-@import "swiper/css";
-@import "swiper/css/pagination";
-@import "swiper/css/navigation";
-@import "swiper/css/scrollbar";
-@import "swiper/css/effect-cards";
-@import "swiper/css/effect-cards";
+/* Swiper CSS - Load critical styles inline */
+@import "swiper/css/bundle";
+
+/* Third-party CSS */
 @import 'react-modal-video/css/modal-video.css';
 @import '../../node_modules/aos/dist/aos.css';
-@import "react-multi-date-picker/styles/colors/yellow.css"
+@import "react-multi-date-picker/styles/colors/yellow.css";
+
+/* Performance-optimized loading styles */
+.component-loading, .section-loading, .page-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+  padding: 2rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.loading-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(248, 249, 250, 0.9);
+  z-index: 9999;
+}
+
+/* Critical CSS for above-the-fold content */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.hero__title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero__text {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Spinner optimization */
+.spinner-border {
+  animation-duration: 0.75s;
+}
+
+/* Image optimization classes */
+.optimized-image {
+  transition: opacity 0.3s ease;
+}
+
+.optimized-image[data-loaded="false"] {
+  opacity: 0;
+}
+
+.optimized-image[data-loaded="true"] {
+  opacity: 1;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .spinner-border {
+    animation: none;
+  }
+  
+  [data-aos] {
+    animation: none !important;
+    transition: none !important;
+  }
+}
