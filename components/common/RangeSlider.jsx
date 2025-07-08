@@ -1,52 +1,60 @@
 "use client";
 import { useState } from "react";
-import Slider from "@mui/material/Slider";
-import { ThemeProvider } from "@mui/material/styles";
 
-import { createTheme } from "@mui/material/styles";
+// Lightweight dual range slider implementation using native <input type="range">.
+// Removes the heavy @mui/material dependency and keeps the same public API.
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#EB662B", // Change this color to your desired primary color
-    },
-    secondary: {
-      main: "#f50057", // Change this color to your desired secondary color
-    },
-  },
-});
+export default function RangeSlider({
+  min = 0,
+  max = 100000,
+  step = 100,
+  initialValue = [200, 60000],
+}) {
+  const [value, setValue] = useState(initialValue);
 
-export default function RangeSlider() {
-  const [value, setValue] = useState([200, 60000]);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  // Ensure sliders cannot cross over each other.
+  const updateValue = (index) => (e) => {
+    const newVal = Number(e.target.value);
+    setValue((prev) => {
+      const next = [...prev];
+      next[index] = newVal;
+      // Keep the lower value first
+      return next.sort((a, b) => a - b);
+    });
   };
-  return (
-    <>
-      <div className="js-price-rangeSlider" style={{ padding: "20px 15px" }}>
-        <div className="px-5">
-          <ThemeProvider theme={theme}>
-            <Slider
-              getAriaLabel={() => "Minimum distance"}
-              value={value}
-              onChange={handleChange}
-              valueLabelDisplay="auto"
-              max={100000}
-              min={0}
-              disableSwap
-            />
-          </ThemeProvider>
-        </div>
 
-        <div className="d-flex justify-between mt-20">
-          <div className="">
-            <span className="">Price:</span>
-            <span className="fw-500 js-lower">{value[0]}</span>
-            <span> - </span>
-            <span className="fw-500 js-upper">{value[1]}</span>
-          </div>
-        </div>
+  return (
+    <div className="js-price-rangeSlider" style={{ padding: "20px 15px" }}>
+      <div className="px-5">
+        {/* Lower bound */}
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value[0]}
+          onChange={updateValue(0)}
+          className="w-100" // Use existing utility classes for full-width
+        />
+
+        {/* Upper bound */}
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value[1]}
+          onChange={updateValue(1)}
+          className="w-100 mt-2"
+        />
       </div>
-    </>
+
+      <div className="d-flex justify-between mt-20">
+        <span>Price:</span>
+        <span className="fw-500 js-lower">{value[0]}</span>
+        <span> - </span>
+        <span className="fw-500 js-upper">{value[1]}</span>
+      </div>
+    </div>
   );
 }
