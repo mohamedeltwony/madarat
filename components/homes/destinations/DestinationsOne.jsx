@@ -1,7 +1,7 @@
 "use client";
 
 import { destinations } from "@/data/destinations";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from "@/utils/NoSSRSwiper";
 import { Navigation, Pagination } from "swiper/modules";
 import { useEffect, useState } from "react";
 import Image from "next/image";

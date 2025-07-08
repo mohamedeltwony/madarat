@@ -6,11 +6,12 @@ import RangeSlider from "../common/RangeSlider";
 import { tourDataThree } from "@/data/tours";
 import Stars from "../common/Stars";
 import Pagination from "../common/Pagination";
-import Map from "./Map";
-import { speedFeatures } from "@/data/tourFilteringOptions";
+import dynamic from "next/dynamic";
 import ToggleSidebar from "./ToggleSidebar";
 import Image from "next/image";
 import Link from "next/link";
+
+const Map = dynamic(() => import("./Map"), { ssr: false, loading: () => <div style={{height:'100%'}} /> });
 
 export default function TourList6() {
   const [sortOption, setSortOption] = useState("");

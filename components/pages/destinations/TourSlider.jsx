@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from "@/utils/NoSSRSwiper";
 import { Navigation, Pagination } from "swiper/modules";
 import { useEffect, useState } from "react";
 import Stars from "@/components/common/Stars";

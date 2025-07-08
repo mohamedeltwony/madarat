@@ -1,6 +1,6 @@
 "use client";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from "@/utils/NoSSRSwiper";
 import { Navigation, Pagination } from "swiper/modules";
 import { tourData } from "@/data/tours";
 import Image from "next/image";

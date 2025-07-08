@@ -2,7 +2,7 @@
 
 import Stars from "@/components/common/Stars";
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from "@/utils/NoSSRSwiper";
 import { Navigation, Pagination } from "swiper/modules";
 import Image from "next/image";
 

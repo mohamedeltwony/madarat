@@ -1,6 +1,6 @@
 "use client";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from "@/utils/NoSSRSwiper";
 import { Navigation, Pagination } from "swiper/modules";
 import { useEffect, useState } from "react";
 import { testimonialsOne } from "@/data/testimonials";
