@@ -67,9 +67,15 @@ const nextConfig = {
   // URL encoding settings
   trailingSlash: false,
   
+  // Remove all console.* statements in production builds
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+
   // Experimental features
   experimental: {
     urlImports: ['https://themer.sanity.build/'],
+    scrollRestoration: true,
     // Modern browser options (remove incompatible flags)
   },
   
