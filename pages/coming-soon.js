@@ -5,8 +5,8 @@ export default function ComingSoon() {
   return (
     <>
       <Head>
-        <title>الموقع مغلق مؤقتاً - Madarat</title>
-        <meta name="description" content="الموقع مغلق مؤقتاً لأعمال الصيانة والتطوير" />
+        <title>الموقع معلق - عدم سداد رسوم التطوير</title>
+        <meta name="description" content="الموقع معلق نهائياً بسبب عدم سداد رسوم التطوير والتصميم المستحقة للمطور" />
         <meta name="robots" content="noindex, nofollow" />
 
       </Head>
@@ -19,24 +19,30 @@ export default function ComingSoon() {
           </div>
           
           <div className={styles.mainMessage}>
-            <h2>الموقع مغلق مؤقتاً</h2>
+            <h2>الموقع معلق نهائياً</h2>
             <p className={styles.subtitle}>
-              نعتذر عن الإزعاج - الموقع مغلق حالياً لحين سداد رسوم التطوير والصيانة
+              تم إيقاف الموقع بسبب عدم سداد رسوم التطوير والتصميم المستحقة للمطور
             </p>
           </div>
           
           <div className={styles.description}>
             <p>
-              نحن نعمل على تحسين تجربتك معنا. سيتم إعادة تشغيل الموقع قريباً بمميزات جديدة ومحسنة.
+              <strong>تنبيه مهم:</strong> الموقع محجوب حالياً بسبب تأخر سداد المستحقات المالية المتفق عليها.
             </p>
             <p>
-              شكراً لصبركم وتفهمكم.
+              لن يتم إعادة تشغيل الموقع إلا بعد تسوية جميع المستحقات المالية كاملة.
+            </p>
+            <p>
+              هذا الإجراء ضروري لحماية حقوق المطور وضمان استمرارية الخدمة.
             </p>
           </div>
           
           <div className={styles.contactInfo}>
-            <h3>للاستفسارات</h3>
-            <p>يرجى التواصل مع فريق التطوير</p>
+            <h3>لتسوية المستحقات</h3>
+            <p>يرجى التواصل فوراً مع المطور لتسوية المبالغ المستحقة</p>
+            <p style={{ color: '#e53e3e', fontWeight: 'bold', marginTop: '1rem' }}>
+              ⚠️ الموقع سيبقى معلقاً حتى السداد الكامل
+            </p>
           </div>
           
           <div className={styles.loadingBar}>
