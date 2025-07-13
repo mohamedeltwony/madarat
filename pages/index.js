@@ -267,7 +267,7 @@ export default function Home({
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   // Site maintenance mode - redirect to coming soon page
   return {
     redirect: {

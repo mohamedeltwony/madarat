@@ -25,19 +25,12 @@ export default function Posts({ posts, pagination }) {
   );
 }
 
-export async function getStaticProps() {
-  const { posts, pagination } = await getPaginatedPosts({
-    currentPage: 1,
-    queryIncludes: 'archive',
-  });
-
+export async function getServerSideProps() {
+  // Site maintenance mode - redirect to coming soon page
   return {
-    props: {
-      posts,
-      pagination: {
-        ...pagination,
-        basePath: '/posts',
-      },
+    redirect: {
+      destination: '/coming-soon',
+      permanent: false,
     },
   };
 } 

@@ -649,13 +649,12 @@ export default function CruiseItalySpainFrance() {
   );
 }
 
-export async function getStaticProps() {
-  // No longer fetching getSiteMetadata here to improve build/revalidation speed.
-  // Ensure necessary <Head> tags (title, meta description, OG tags)
-  // are added directly within the CruiseItalySpainFrance component's JSX.
-
+export async function getServerSideProps() {
+  // Site maintenance mode - redirect to coming soon page
   return {
-    props: {}, // Return empty props
-    revalidate: 600, // Revalidate every 10 minutes (keeps ISR active)
+    redirect: {
+      destination: '/coming-soon',
+      permanent: false,
+    },
   };
 }

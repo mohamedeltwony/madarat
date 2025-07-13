@@ -19,6 +19,9 @@ class MyDocument extends Document {
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link rel="preconnect" href="https://en4ha1dlwxxhwad.madaratalkon.com" />
           
+          {/* Google Fonts */}
+          <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
+          
           {/* DNS Prefetch for external domains */}
           <link rel="dns-prefetch" href="//www.google-analytics.com" />
           <link rel="dns-prefetch" href="//connect.facebook.net" />
