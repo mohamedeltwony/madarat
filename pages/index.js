@@ -268,6 +268,16 @@ export default function Home({
 }
 
 export async function getStaticProps() {
+  // Site maintenance mode - redirect to coming soon page
+  return {
+    redirect: {
+      destination: '/coming-soon',
+      permanent: false,
+    },
+  };
+
+  // Original code (commented out during maintenance)
+  /*
   try {
     const { posts } = await getPaginatedPosts({
       queryIncludes: 'archive',
@@ -361,4 +371,5 @@ export async function getStaticProps() {
       revalidate: 3600,
     };
   }
-} 
+  */ 
+}
